@@ -200,8 +200,3 @@ Icon
 *.lai
 *.la
 *.a
-Stabilizer/profiles
-Stabilizer/dist
-kinectStreamerSettings.json*.json
-Stabilizer/Stabilizer.sublime-project
-Stabilizer/Stabilizer.sublime-workspace
