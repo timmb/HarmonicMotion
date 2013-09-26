@@ -7,11 +7,22 @@
 //
 
 #pragma once
+#include "Common.h"
 
-// testing stuff
-class Pipeline
+namespace hm
 {
-public:
-	int test();
-};
+	// testing stuff
+	class Pipeline
+	{
+	public:
+		std::vector<NodePtr> nodes() const;
+		
+		void addNode(NodePtr node);
+		void removeNode(NodePtr node);
+		
+	private:
+		std::vector<NodePtr> mNodes;
+	};
+	
+}
 

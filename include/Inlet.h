@@ -6,9 +6,23 @@
 //  Copyright (c) 2013 Tim Murray-Browne. All rights reserved.
 //
 
-#ifndef __HarmonicMotion__Inlet__
-#define __HarmonicMotion__Inlet__
+#pragma once
+#include "Common.h"
 
-#include <iostream>
-
-#endif /* defined(__HarmonicMotion__Inlet__) */
+namespace hm
+{
+	class Inlet
+	{
+	public:
+		Inlet(Type type, std::string const& name, std::string const& helpText);
+		
+		Type type() const { return mType; }
+		virtual std::string name() const { return mName; }
+		virtual std::string helpText() const { return mHelpText; }
+		
+	private:
+		Type mType;
+		std::string mName;
+		std::string mHelpText;
+	};
+}

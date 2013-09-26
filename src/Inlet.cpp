@@ -7,3 +7,14 @@
 //
 
 #include "Inlet.h"
+
+using namespace hm;
+using namespace std;
+
+Inlet::Inlet(Type type, string const& name, string const& helpText)
+: mType(type)
+, mName(name)
+, mHelpText(helpText)
+{
+	assert(type!=UNDEFINED);
+}

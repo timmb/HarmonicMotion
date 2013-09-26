@@ -7,3 +7,13 @@
 //
 
 #include "Node.h"
+
+using namespace hm;
+using namespace std;
+
+Node::Node(string const& className)
+: mClassName(className)
+{
+	assert(mClassName != "");
+}
+

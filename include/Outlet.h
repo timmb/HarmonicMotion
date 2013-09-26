@@ -6,9 +6,35 @@
 //  Copyright (c) 2013 Tim Murray-Browne. All rights reserved.
 //
 
-#ifndef __HarmonicMotion__Outlet__
-#define __HarmonicMotion__Outlet__
+#pragma once
+#include "Common.h"
 
-#include <iostream>
+namespace hm
+{
+	class Outlet
+	{
+	public:
+		Outlet(Type type, std::string const& name, std::string const& helpText);
+		
+		Type type() const { return mType; }
+		std::string name() const { return mName; }
+		std::string helpText() const { return mHelpText; }
+		bool hasConnections() const;
+		
+		void incrementNumConnections();
+		void decrementNumConnections();
+		
+		bool waitForNewData(int maxMillisToWait);
+		Data data();
+		
+		void outputNewData(Data& data);
 
-#endif /* defined(__HarmonicMotion__Outlet__) */
+	private:
+		Type mType;
+		std::string mName;
+		std::string mHelpText;
+		int mNumConnections;
+		Data mData;
+	};
+	
+}

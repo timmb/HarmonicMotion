@@ -68,6 +68,7 @@
 		22197F8017F48EE3003B1883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		22197F8217F4900D003B1883 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8117F4900D003B1883 /* QTKit.framework */; };
 		22197F8417F49044003B1883 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8317F49044003B1883 /* CoreVideo.framework */; };
+		22197F8817F4A4F3003B1883 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
 		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
 		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
@@ -111,6 +112,9 @@
 		22197F1017F47293003B1883 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../../../../../../System/Library/Frameworks/CoreAudio.framework; sourceTree = "<group>"; };
 		22197F8117F4900D003B1883 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../../../../System/Library/Frameworks/QTKit.framework; sourceTree = "<group>"; };
 		22197F8317F49044003B1883 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = ../../../../../../System/Library/Frameworks/CoreVideo.framework; sourceTree = "<group>"; };
+		22197F8517F4996F003B1883 /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../include/Common.h; sourceTree = "<group>"; };
+		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
+		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -199,6 +203,9 @@
 				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
 				22197F0317F44B76003B1883 /* Pipeline.h */,
 				22197F0417F44B76003B1883 /* Resources.h */,
+				22197F8517F4996F003B1883 /* Common.h */,
+				22197F8617F4A4F3003B1883 /* Data.cpp */,
+				22197F8717F4A4F3003B1883 /* Data.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -519,6 +526,7 @@
 				22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */,
 				22197EDA17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
 				22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */,
+				22197F8817F4A4F3003B1883 /* Data.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
