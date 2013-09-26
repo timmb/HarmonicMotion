@@ -1,0 +1,618 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		57D497B211CE44638B69452A /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = B2F11ABDB07647DBA032636C /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				B94386A419544719B68B2A93 /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+		86C5DEED69A44A32B1420358 /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = E3929CB8446C463C97C38266 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				08BA5542E6D64251A0868ADB /* CMake Rules */,
+			);
+			dependencies = (
+				EB9F3962F263487C83FC8D58 /* PBXTargetDependency */,
+				DB2BB32C359D4D6D9E3EEF94 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		ACDD585DD5E84799897B9FBD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5442311C35344A81921DD9B0 /* main.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		BCDC2C9812DC427889A9B9E0 /* qrc_myresources.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 4C29678492434073A21EFB18 /* qrc_myresources.cxx */; settings = {COMPILER_FLAGS = ""; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1BAA95FE5EB4429699C38C79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E3AADCA2C9B74DD3A7B4A749 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 57D497B211CE44638B69452A;
+			remoteInfo = ZERO_CHECK;
+		};
+		B3BA3E961B0A45EB88643DB6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E3AADCA2C9B74DD3A7B4A749 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9B6A069B2514D1387DA503B;
+			remoteInfo = HarmonicMotionGui;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4C29678492434073A21EFB18 /* qrc_myresources.cxx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = qrc_myresources.cxx; path = ../xcode/qrc_myresources.cxx; sourceTree = SOURCE_ROOT; };
+		5442311C35344A81921DD9B0 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		57E008C876704D2DA655DCB2 /* HarmonicMotionGui */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = HarmonicMotionGui; sourceTree = BUILT_PRODUCTS_DIR; };
+		8020A2D3702140E1AF599490 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		8CB3C66B5E3947D0A9189A0A /* myresources.qrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode; name = myresources.qrc; path = ../resources/myresources.qrc; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0114B1335A9F4878B278E019 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		0DEB626DB7CF40F89688B08E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		2DED53146F49457E8DF7A4B5 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		54629A4A370A4C50B6B1111D /* HarmonicMotionGui */ = {
+			isa = PBXGroup;
+			children = (
+				BB474BA98CE14555AF69EC6C /* Source Files */,
+				8020A2D3702140E1AF599490 /* CMakeLists.txt */,
+				8CB3C66B5E3947D0A9189A0A /* myresources.qrc */,
+			);
+			name = HarmonicMotionGui;
+			sourceTree = "<group>";
+		};
+		701661F258594AB182BAAAA2 /* ZERO_CHECK */ = {
+			isa = PBXGroup;
+			children = (
+				2DED53146F49457E8DF7A4B5 /* CMake Rules */,
+				8020A2D3702140E1AF599490 /* CMakeLists.txt */,
+			);
+			name = ZERO_CHECK;
+			sourceTree = "<group>";
+		};
+		754885B7AA604BF482898B86 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E68B414ABF6546AAA2D72C88 /* ALL_BUILD */,
+				54629A4A370A4C50B6B1111D /* HarmonicMotionGui */,
+				701661F258594AB182BAAAA2 /* ZERO_CHECK */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		BB474BA98CE14555AF69EC6C /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5442311C35344A81921DD9B0 /* main.cpp */,
+				4C29678492434073A21EFB18 /* qrc_myresources.cxx */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		D1C238D8F2804A7D99E513D3 = {
+			isa = PBXGroup;
+			children = (
+				754885B7AA604BF482898B86 /* Sources */,
+				0DEB626DB7CF40F89688B08E /* Resources */,
+				EA8AD36B46B44E5D928C014D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E68B414ABF6546AAA2D72C88 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				0114B1335A9F4878B278E019 /* CMake Rules */,
+				8020A2D3702140E1AF599490 /* CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		EA8AD36B46B44E5D928C014D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				57E008C876704D2DA655DCB2 /* HarmonicMotionGui */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C9B6A069B2514D1387DA503B /* HarmonicMotionGui */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 356DDFAFCC1E4549818DE3A7 /* Build configuration list for PBXNativeTarget "HarmonicMotionGui" */;
+			buildPhases = (
+				1EE6CCAF080B46C893351F4E /* CMake Rules */,
+				8F6E5AB218F24288BDFCC782 /* Sources */,
+				9548F5915C61481AA8535DDF /* CMake PostBuild Rules */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DB2BB32C359D4D6D9E3EEF94 /* PBXTargetDependency */,
+			);
+			name = HarmonicMotionGui;
+			productName = HarmonicMotionGui;
+			productReference = 57E008C876704D2DA655DCB2 /* HarmonicMotionGui */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E3AADCA2C9B74DD3A7B4A749 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = A3C3D5D4F07D4EF8ACA334AC /* Build configuration list for PBXProject "HarmonicMotionGui" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D1C238D8F2804A7D99E513D3;
+			projectDirPath = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src;
+			projectRoot = "";
+			targets = (
+				86C5DEED69A44A32B1420358 /* ALL_BUILD */,
+				C9B6A069B2514D1387DA503B /* HarmonicMotionGui */,
+				57D497B211CE44638B69452A /* ZERO_CHECK */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		08BA5542E6D64251A0868ADB /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		1EE6CCAF080B46C893351F4E /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/CMakeScripts/HarmonicMotionGui_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		9548F5915C61481AA8535DDF /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/CMakeScripts/HarmonicMotionGui_postBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		B94386A419544719B68B2A93 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8F6E5AB218F24288BDFCC782 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACDD585DD5E84799897B9FBD /* main.cpp in Sources */,
+				BCDC2C9812DC427889A9B9E0 /* qrc_myresources.cxx in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DB2BB32C359D4D6D9E3EEF94 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 57D497B211CE44638B69452A /* ZERO_CHECK */;
+			targetProxy = 1BAA95FE5EB4429699C38C79 /* PBXContainerItemProxy */;
+		};
+		EB9F3962F263487C83FC8D58 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9B6A069B2514D1387DA503B /* HarmonicMotionGui */;
+			targetProxy = B3BA3E961B0A45EB88643DB6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		062A51D79521493BA4B751A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_NO_KEYWORDS,
+					QT_DLL,
+					QT_OPENGL_LIB,
+					QT_GUI_LIB,
+					QT_CORE_LIB,
+					QT_NO_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtOpenGL.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src,
+				);
+				INSTALL_PATH = "";
+				OTHER_CFLAGS = (
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		13112B837FEF4EBEBF287AE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_NO_KEYWORDS,
+					QT_DLL,
+					QT_OPENGL_LIB,
+					QT_GUI_LIB,
+					QT_CORE_LIB,
+					QT_NO_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtOpenGL.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src/../../bin/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src/../../bin,
+				);
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DNDEBUG",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-framework",
+					QtOpenGL,
+					"-framework",
+					QtGui,
+					"-framework",
+					QtCore,
+					"-lHarmonicMotion",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HarmonicMotionGui;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		2DCBE78CAFC64D8EA9A65051 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk;
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/build;
+			};
+			name = Release;
+		};
+		5B3319C3E3734C6EA03D43BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_NO_KEYWORDS,
+					QT_DLL,
+					QT_OPENGL_LIB,
+					QT_GUI_LIB,
+					QT_CORE_LIB,
+					_DEBUG,
+					QT_DEBUG,
+					"'CMAKE_INTDIR=\"Debug\"'",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtOpenGL.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src,
+				);
+				INSTALL_PATH = "";
+				OTHER_CFLAGS = (
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		604F1332F4634552AAE1BC47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_NO_KEYWORDS,
+					QT_DLL,
+					QT_OPENGL_LIB,
+					QT_GUI_LIB,
+					QT_CORE_LIB,
+					_DEBUG,
+					QT_DEBUG,
+					"'CMAKE_INTDIR=\"Debug\"'",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtOpenGL.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src,
+				);
+				INSTALL_PATH = "";
+				OTHER_CFLAGS = (
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		83BE66213D2A4C18AD681D41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_NO_KEYWORDS,
+					QT_DLL,
+					QT_OPENGL_LIB,
+					QT_GUI_LIB,
+					QT_CORE_LIB,
+					QT_NO_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtOpenGL.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src,
+				);
+				INSTALL_PATH = "";
+				OTHER_CFLAGS = (
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Release;
+		};
+		FE94E6376CE74984873C1B23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_NO_KEYWORDS,
+					QT_DLL,
+					QT_OPENGL_LIB,
+					QT_GUI_LIB,
+					QT_CORE_LIB,
+					_DEBUG,
+					QT_DEBUG,
+					"'CMAKE_INTDIR=\"Debug\"'",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Library/Frameworks/QtOpenGL.framework/Headers,
+					/Library/Frameworks/QtGui.framework/Headers,
+					/Library/Frameworks/QtCore.framework/Headers,
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src/../../bin/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
+					/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/src/../../bin,
+				);
+				OTHER_CFLAGS = (
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+				);
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-framework",
+					QtOpenGL,
+					"-framework",
+					QtGui,
+					"-framework",
+					QtCore,
+					"-lHarmonicMotiond",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = HarmonicMotionGui;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Debug;
+		};
+		FFA39A9FD8AC4E52B43BC0BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk;
+				SYMROOT = /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/build;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		356DDFAFCC1E4549818DE3A7 /* Build configuration list for PBXNativeTarget "HarmonicMotionGui" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE94E6376CE74984873C1B23 /* Debug */,
+				13112B837FEF4EBEBF287AE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A3C3D5D4F07D4EF8ACA334AC /* Build configuration list for PBXProject "HarmonicMotionGui" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFA39A9FD8AC4E52B43BC0BE /* Debug */,
+				2DCBE78CAFC64D8EA9A65051 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B2F11ABDB07647DBA032636C /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B3319C3E3734C6EA03D43BC /* Debug */,
+				83BE66213D2A4C18AD681D41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E3929CB8446C463C97C38266 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				604F1332F4634552AAE1BC47 /* Debug */,
+				062A51D79521493BA4B751A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E3AADCA2C9B74DD3A7B4A749 /* Project object */;
+}
