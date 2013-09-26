@@ -1,6 +1,10 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
 PROJECT (HarmonicMotionGui CXX C)
 
+# Currently only setup for OSX
+SET(STATIC_LIBRARY_EXTENSION a)
+
+
 # Setup only debug and release
 if(CMAKE_CONFIGURATION_TYPES)
    set(CMAKE_CONFIGURATION_TYPES Debug Release)
@@ -13,9 +17,47 @@ if(CMAKE_CONFIGURATION_TYPES)
 FIND_PACKAGE(Qt4 REQUIRED) 
 #FIND_PACKAGE(OpenGL REQUIRED)
 
+# Cinder dependencies for OSX
+# http://www.itk.org/Wiki/CMake:HowToUseExistingOSXFrameworks
+FIND_LIBRARY(ACCELERATE_FRAMEWORK Accelerate)
+FIND_LIBRARY(APPKIT_FRAMEWORK AppKit)
+FIND_LIBRARY(AUDIOTOOLBOX_FRAMEWORK AudioToolbox)
+FIND_LIBRARY(AUDIOUNIT_FRAMEWORK AudioUnit)
+FIND_LIBRARY(COCOA_FRAMEWORK Cocoa)
+FIND_LIBRARY(COREAUDIO_FRAMEWORK CoreAudio)
+FIND_LIBRARY(COREVIDEO_FRAMEWORK CoreVideo)
+FIND_LIBRARY(FOUNDATION_FRAMEWORK Foundation)
+FIND_LIBRARY(OPENGL_FRAMEWORK OpenGL)
+FIND_LIBRARY(QTKIT_FRAMEWORK QTKit)
+
+MARK_AS_ADVANCED(ACCELERATE_FRAMEWORK AUDIOTOOLBOX_FRAMEWORK AUDIOUNIT_FRAMEWORK COCOA_FRAMEWORK COREAUDIO_FRAMEWORK COREVIDEO_FRAMEWORK OPENGL_FRAMEWORK APPKIT_FRAMEWORK FOUNDATION_FRAMEWORK QTKIT_FRAMEWORK)
+
+SET(CINDER_DEPENDENCIES 
+${ACCELERATE_FRAMEWORK}
+${APPKIT_FRAMEWORK}
+${AUDIOTOOLBOX_FRAMEWORK}
+${AUDIOUNIT_FRAMEWORK}
+${COCOA_FRAMEWORK}
+${COREAUDIO_FRAMEWORK}
+${COREVIDEO_FRAMEWORK}
+${FOUNDATION_FRAMEWORK}
+${OPENGL_FRAMEWORK}
+${QTKIT_FRAMEWORK}
+libboost_date_time.${STATIC_LIBRARY_EXTENSION}
+libboost_filesystem.${STATIC_LIBRARY_EXTENSION}
+libboost_system.${STATIC_LIBRARY_EXTENSION}
+libz.${STATIC_LIBRARY_EXTENSION}
+)
+
+# Cinder dependency requires C++11
+# This enables it in Xcode.
+set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+
 #Remove Qt keywords
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
-#set QL libraries
+#set QT libraries
 SET(QT_USE_QTOPENGL TRUE)
 #This will addQT header location
 INCLUDE(${QT_USE_FILE})
@@ -25,9 +67,6 @@ INCLUDE(${QT_USE_FILE})
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 FILE(GLOB FoundHeaders *.h)
 FILE(GLOB myprj_src *.cpp)
-
-# Currently only setup for OSX
-SET(STATIC_LIBRARY_EXTENSION a)
 
 
 #Here we add our source files
@@ -65,15 +104,17 @@ QT4_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
 
 # Include directories - one per line
 INCLUDE_DIRECTORIES(
+	${PROJECT_SOURCE_DIR}/../../include
 )
 
 # Link directories - one per line
 LINK_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../bin
-
+	${PROJECT_SOURCE_DIR}/../../lib
+	${PROJECT_SOURCE_DIR}/../../lib/macosx
 )
 
-ADD_EXECUTABLE(HarmonicMotionGui ${myprj_src} ${myprj_ui_hdrs} ${myprj_moh_srcs} ${myprj_rccs_srcs} )
+ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE ${myprj_src} ${myprj_ui_hdrs} ${myprj_moh_srcs} ${myprj_rccs_srcs} )
 
 # Preprocessor definitions
 set_property(
@@ -98,4 +139,7 @@ ${QT_LIBRARIES}
 # prefix with debug/optimized to only include in that configuration
 optimized libHarmonicMotion.${STATIC_LIBRARY_EXTENSION}
 debug libHarmonicMotiond.${STATIC_LIBRARY_EXTENSION}
+optimized libcinder.${STATIC_LIBRARY_EXTENSION}
+debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
+${CINDER_DEPENDENCIES}
 )

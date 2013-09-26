@@ -11,12 +11,12 @@ default:
 # link.  This forces Xcode to relink the targets from scratch.  It
 # does not seem to check these dependencies itself.
 PostBuild.HarmonicMotionGui.Debug:
-/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Debug/HarmonicMotionGui:
-	/bin/rm -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Debug/HarmonicMotionGui
+/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Debug/HarmonicMotionGui.app/Contents/MacOS/HarmonicMotionGui:
+	/bin/rm -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Debug/HarmonicMotionGui.app/Contents/MacOS/HarmonicMotionGui
 
 
 PostBuild.HarmonicMotionGui.Release:
-/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Release/HarmonicMotionGui:
-	/bin/rm -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Release/HarmonicMotionGui
+/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Release/HarmonicMotionGui.app/Contents/MacOS/HarmonicMotionGui:
+	/bin/rm -f /Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/xcode/Release/HarmonicMotionGui.app/Contents/MacOS/HarmonicMotionGui
 
 
