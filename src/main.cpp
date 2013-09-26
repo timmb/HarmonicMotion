@@ -1,4 +1,10 @@
-int main()
+#include <QMainWindow>
+#include <QApplication>
+
+int main(int argc, char** argv)
 {
-	return 0;
+	QApplication app(argc, argv);
+	QMainWindow* w = new QMainWindow;
+	w->show();
+	return app.exec();
 }

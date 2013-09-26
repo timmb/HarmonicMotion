@@ -1,6 +1,13 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
 PROJECT (HarmonicMotionGui CXX C)
 
+# Setup only debug and release
+if(CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_CONFIGURATION_TYPES Debug Release)
+   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+     "Reset the configurations to what we need"
+     FORCE)
+ endif()
 
 #find required packages for the project
 FIND_PACKAGE(Qt4 REQUIRED) 
@@ -19,7 +26,8 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 FILE(GLOB FoundHeaders *.h)
 FILE(GLOB myprj_src *.cpp)
 
-
+# Currently only setup for OSX
+SET(STATIC_LIBRARY_EXTENSION a)
 
 
 #Here we add our source files
@@ -57,11 +65,11 @@ QT4_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
 
 # Include directories - one per line
 INCLUDE_DIRECTORIES(
-
 )
 
 # Link directories - one per line
 LINK_DIRECTORIES(
+	${PROJECT_SOURCE_DIR}/../../bin
 
 )
 
@@ -88,4 +96,6 @@ TARGET_LINK_LIBRARIES(HarmonicMotionGui
 ${QT_LIBRARIES} 
 # Additional libraries - one per line
 # prefix with debug/optimized to only include in that configuration
+optimized libHarmonicMotion.${STATIC_LIBRARY_EXTENSION}
+debug libHarmonicMotiond.${STATIC_LIBRARY_EXTENSION}
 )
