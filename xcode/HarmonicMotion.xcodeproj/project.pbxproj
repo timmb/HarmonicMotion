@@ -13,6 +13,57 @@
 		00B784B50FF439BC000DE1D7 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B10FF439BC000DE1D7 /* AudioUnit.framework */; };
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		14AE91028D3E457C94F76ACD /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF253A52FD1499F8539D0F7 /* OscPrintReceivedElements.cpp */; };
+		22197ECB17F4489A003B1883 /* HarmonicMotionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */; };
+		22197ED217F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */; };
+		22197ED317F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */; };
+		22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECD17F44B1B003B1883 /* Inlet.cpp */; };
+		22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECD17F44B1B003B1883 /* Inlet.cpp */; };
+		22197ED617F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
+		22197ED717F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
+		22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
+		22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
+		22197EDA17F44B1B003B1883 /* OutputOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED017F44B1B003B1883 /* OutputOsc.cpp */; };
+		22197EDB17F44B1B003B1883 /* OutputOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED017F44B1B003B1883 /* OutputOsc.cpp */; };
+		22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
+		22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
+		22197EDE17F44B4F003B1883 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */; };
+		22197EDF17F44B4F003B1883 /* OscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971E0AC2F4364D21B058718F /* OscBundle.cpp */; };
+		22197EE017F44B4F003B1883 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
+		22197EE117F44B4F003B1883 /* OscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C475A0063E924B01A67D0B00 /* OscMessage.cpp */; };
+		22197EE217F44B4F003B1883 /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
+		22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F52E0884EA104563B765C094 /* IpEndpointName.cpp */; };
+		22197EE417F44B4F003B1883 /* IpEndpointName.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F5BCBB581BC487CB496A960 /* IpEndpointName.h */; };
+		22197EE517F44B4F003B1883 /* NetworkingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 2274DEF4B83E44D38B12614E /* NetworkingUtils.h */; };
+		22197EE617F44B4F003B1883 /* PacketListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 190469A09B9C4359B61715F5 /* PacketListener.h */; };
+		22197EE717F44B4F003B1883 /* TimerListener.h in Headers */ = {isa = PBXBuildFile; fileRef = AF236C47E07A417F9F7A81D7 /* TimerListener.h */; };
+		22197EE817F44B4F003B1883 /* UdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = E96CC15C31A54B8B8D30B074 /* UdpSocket.h */; };
+		22197EE917F44B4F003B1883 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8243BE64E706494C8C11A0B8 /* NetworkingUtils.cpp */; };
+		22197EEA17F44B4F003B1883 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
+		22197EEB17F44B4F003B1883 /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00D0B577A695452F8729F95B /* OscOutboundPacketStream.cpp */; };
+		22197EEC17F44B4F003B1883 /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF253A52FD1499F8539D0F7 /* OscPrintReceivedElements.cpp */; };
+		22197EED17F44B4F003B1883 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCA07E28394A4DE2A0C75053 /* OscReceivedElements.cpp */; };
+		22197EEE17F44B4F003B1883 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 245157AC12684402B9CE4270 /* OscTypes.cpp */; };
+		22197EEF17F44B4F003B1883 /* MessageMappingOscPacketListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D82E4E07408451887DC09BB /* MessageMappingOscPacketListener.h */; };
+		22197EF017F44B4F003B1883 /* OscException.h in Headers */ = {isa = PBXBuildFile; fileRef = D95EFB8CF6E1441790F6F9E0 /* OscException.h */; };
+		22197EF117F44B4F003B1883 /* OscHostEndianness.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B41705BDB4F437F899186F7 /* OscHostEndianness.h */; };
+		22197EF217F44B4F003B1883 /* OscOutboundPacketStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DCEA716492547B396FEA488 /* OscOutboundPacketStream.h */; };
+		22197EF317F44B4F003B1883 /* OscPacketListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 217CFF40045345C49B48BFD3 /* OscPacketListener.h */; };
+		22197EF417F44B4F003B1883 /* OscPrintReceivedElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 06EC1943AD51497FB8F0BB97 /* OscPrintReceivedElements.h */; };
+		22197EF517F44B4F003B1883 /* OscReceivedElements.h in Headers */ = {isa = PBXBuildFile; fileRef = F76A2E8059BE452BAE8C4270 /* OscReceivedElements.h */; };
+		22197EF617F44B4F003B1883 /* OscTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 833FF891C262404D93C00D48 /* OscTypes.h */; };
+		22197EF717F44B4F003B1883 /* OscArg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F238FBF13FA4A85966A5A89 /* OscArg.h */; };
+		22197EF817F44B4F003B1883 /* OscBundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D9EB33D127F4CA6AF985D2D /* OscBundle.h */; };
+		22197EF917F44B4F003B1883 /* OscListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BB9C6EC0FD44828BA81EF6F /* OscListener.h */; };
+		22197EFA17F44B4F003B1883 /* OscMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 498C0072AC6647318164B760 /* OscMessage.h */; };
+		22197EFB17F44B4F003B1883 /* OscSender.h in Headers */ = {isa = PBXBuildFile; fileRef = 61187A33DC904F65A91CFA6D /* OscSender.h */; };
+		22197EFC17F44B54003B1883 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = E18406B5E23F4FE6B09BCDA7 /* Resources.h */; };
+		22197F0517F44B76003B1883 /* GeneratorConstantValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFE17F44B76003B1883 /* GeneratorConstantValue.h */; };
+		22197F0617F44B76003B1883 /* Inlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFF17F44B76003B1883 /* Inlet.h */; };
+		22197F0717F44B76003B1883 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0017F44B76003B1883 /* Node.h */; };
+		22197F0817F44B76003B1883 /* Outlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0117F44B76003B1883 /* Outlet.h */; };
+		22197F0917F44B76003B1883 /* OutputOsc.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0217F44B76003B1883 /* OutputOsc.h */; };
+		22197F0A17F44B76003B1883 /* Pipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0317F44B76003B1883 /* Pipeline.h */; };
+		22197F0B17F44B76003B1883 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0417F44B76003B1883 /* Resources.h */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
 		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
 		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
@@ -43,7 +94,20 @@
 		190469A09B9C4359B61715F5 /* PacketListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PacketListener.h; path = ../../Cinder/blocks/OSC/src/ip/PacketListener.h; sourceTree = "<group>"; };
 		1F5BCBB581BC487CB496A960 /* IpEndpointName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = ../../Cinder/blocks/OSC/src/ip/IpEndpointName.h; sourceTree = "<group>"; };
 		217CFF40045345C49B48BFD3 /* OscPacketListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscPacketListener.h; path = ../../Cinder/blocks/OSC/src/osc/OscPacketListener.h; sourceTree = "<group>"; };
-		22197EC717F447BF003B1883 /* libHarmonicMotionLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHarmonicMotionLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		22197EC717F447BF003B1883 /* libHarmonicMotionLibd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHarmonicMotionLibd.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeneratorConstantValue.cpp; sourceTree = "<group>"; };
+		22197ECD17F44B1B003B1883 /* Inlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inlet.cpp; sourceTree = "<group>"; };
+		22197ECE17F44B1B003B1883 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
+		22197ECF17F44B1B003B1883 /* Outlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Outlet.cpp; sourceTree = "<group>"; };
+		22197ED017F44B1B003B1883 /* OutputOsc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputOsc.cpp; sourceTree = "<group>"; };
+		22197ED117F44B1B003B1883 /* Pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pipeline.cpp; sourceTree = "<group>"; };
+		22197EFE17F44B76003B1883 /* GeneratorConstantValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeneratorConstantValue.h; path = ../include/GeneratorConstantValue.h; sourceTree = "<group>"; };
+		22197EFF17F44B76003B1883 /* Inlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Inlet.h; path = ../include/Inlet.h; sourceTree = "<group>"; };
+		22197F0017F44B76003B1883 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../include/Node.h; sourceTree = "<group>"; };
+		22197F0117F44B76003B1883 /* Outlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Outlet.h; path = ../include/Outlet.h; sourceTree = "<group>"; };
+		22197F0217F44B76003B1883 /* OutputOsc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputOsc.h; path = ../include/OutputOsc.h; sourceTree = "<group>"; };
+		22197F0317F44B76003B1883 /* Pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pipeline.h; path = ../include/Pipeline.h; sourceTree = "<group>"; };
+		22197F0417F44B76003B1883 /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -118,7 +182,20 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */,
+				22197EFE17F44B76003B1883 /* GeneratorConstantValue.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
+				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
+				22197EFF17F44B76003B1883 /* Inlet.h */,
+				22197ECE17F44B1B003B1883 /* Node.cpp */,
+				22197F0017F44B76003B1883 /* Node.h */,
+				22197ECF17F44B1B003B1883 /* Outlet.cpp */,
+				22197F0117F44B76003B1883 /* Outlet.h */,
+				22197ED017F44B1B003B1883 /* OutputOsc.cpp */,
+				22197F0217F44B76003B1883 /* OutputOsc.h */,
+				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
+				22197F0317F44B76003B1883 /* Pipeline.h */,
+				22197F0417F44B76003B1883 /* Resources.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -171,7 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				8D1107320486CEB800E47090 /* HarmonicMotion.app */,
-				22197EC717F447BF003B1883 /* libHarmonicMotionLib.a */,
+				22197EC717F447BF003B1883 /* libHarmonicMotionLibd.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -288,15 +365,42 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22197EDE17F44B4F003B1883 /* CinderOpenCV.h in Headers */,
+				22197EE417F44B4F003B1883 /* IpEndpointName.h in Headers */,
+				22197EE517F44B4F003B1883 /* NetworkingUtils.h in Headers */,
+				22197EE617F44B4F003B1883 /* PacketListener.h in Headers */,
+				22197EE717F44B4F003B1883 /* TimerListener.h in Headers */,
+				22197EE817F44B4F003B1883 /* UdpSocket.h in Headers */,
+				22197EEF17F44B4F003B1883 /* MessageMappingOscPacketListener.h in Headers */,
+				22197EF017F44B4F003B1883 /* OscException.h in Headers */,
+				22197EF117F44B4F003B1883 /* OscHostEndianness.h in Headers */,
+				22197EF217F44B4F003B1883 /* OscOutboundPacketStream.h in Headers */,
+				22197EF317F44B4F003B1883 /* OscPacketListener.h in Headers */,
+				22197EF417F44B4F003B1883 /* OscPrintReceivedElements.h in Headers */,
+				22197EF517F44B4F003B1883 /* OscReceivedElements.h in Headers */,
+				22197EF617F44B4F003B1883 /* OscTypes.h in Headers */,
+				22197EF717F44B4F003B1883 /* OscArg.h in Headers */,
+				22197EF817F44B4F003B1883 /* OscBundle.h in Headers */,
+				22197EF917F44B4F003B1883 /* OscListener.h in Headers */,
+				22197EFA17F44B4F003B1883 /* OscMessage.h in Headers */,
+				22197EFB17F44B4F003B1883 /* OscSender.h in Headers */,
+				22197EFC17F44B54003B1883 /* Resources.h in Headers */,
+				22197F0517F44B76003B1883 /* GeneratorConstantValue.h in Headers */,
+				22197F0617F44B76003B1883 /* Inlet.h in Headers */,
+				22197F0717F44B76003B1883 /* Node.h in Headers */,
+				22197F0817F44B76003B1883 /* Outlet.h in Headers */,
+				22197F0917F44B76003B1883 /* OutputOsc.h in Headers */,
+				22197F0A17F44B76003B1883 /* Pipeline.h in Headers */,
+				22197F0B17F44B76003B1883 /* Resources.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		22197EC617F447BF003B1883 /* HarmonicMotionLib */ = {
+		22197EC617F447BF003B1883 /* HarmonicMotion */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 22197EC817F447BF003B1883 /* Build configuration list for PBXNativeTarget "HarmonicMotionLib" */;
+			buildConfigurationList = 22197EC817F447BF003B1883 /* Build configuration list for PBXNativeTarget "HarmonicMotion" */;
 			buildPhases = (
 				22197EC317F447BF003B1883 /* Sources */,
 				22197EC417F447BF003B1883 /* Frameworks */,
@@ -306,9 +410,9 @@
 			);
 			dependencies = (
 			);
-			name = HarmonicMotionLib;
+			name = HarmonicMotion;
 			productName = HarmonicMotionLib;
-			productReference = 22197EC717F447BF003B1883 /* libHarmonicMotionLib.a */;
+			productReference = 22197EC717F447BF003B1883 /* libHarmonicMotionLibd.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		8D1107260486CEB800E47090 /* HarmonicMotionApp */ = {
@@ -349,7 +453,7 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* HarmonicMotionApp */,
-				22197EC617F447BF003B1883 /* HarmonicMotionLib */,
+				22197EC617F447BF003B1883 /* HarmonicMotion */,
 			);
 		};
 /* End PBXProject section */
@@ -370,6 +474,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22197ECB17F4489A003B1883 /* HarmonicMotionApp.cpp in Sources */,
+				22197ED317F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */,
+				22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */,
+				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
+				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
+				22197EDB17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
+				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
+				22197EDF17F44B4F003B1883 /* OscBundle.cpp in Sources */,
+				22197EE017F44B4F003B1883 /* OscListener.cpp in Sources */,
+				22197EE117F44B4F003B1883 /* OscMessage.cpp in Sources */,
+				22197EE217F44B4F003B1883 /* OscSender.cpp in Sources */,
+				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
+				22197EE917F44B4F003B1883 /* NetworkingUtils.cpp in Sources */,
+				22197EEA17F44B4F003B1883 /* UdpSocket.cpp in Sources */,
+				22197EEB17F44B4F003B1883 /* OscOutboundPacketStream.cpp in Sources */,
+				22197EEC17F44B4F003B1883 /* OscPrintReceivedElements.cpp in Sources */,
+				22197EED17F44B4F003B1883 /* OscReceivedElements.cpp in Sources */,
+				22197EEE17F44B4F003B1883 /* OscTypes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +511,12 @@
 				B1B4A3FF90E94360BFE023CC /* OscTypes.cpp in Sources */,
 				D446572B6E354FF8A1195B97 /* NetworkingUtils.cpp in Sources */,
 				37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */,
+				22197ED217F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */,
+				22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */,
+				22197ED617F44B1B003B1883 /* Node.cpp in Sources */,
+				22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */,
+				22197EDA17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
+				22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +526,6 @@
 		22197EC917F447BF003B1883 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -419,15 +546,13 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)d";
 			};
 			name = Debug;
 		};
 		22197ECA17F447BF003B1883 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -485,7 +610,6 @@
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_videostab.a\"",
 				);
 				PRODUCT_NAME = HarmonicMotion;
-				SYMROOT = ./build;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include\" \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include/opencv2\" $(CINDER_PATH)/blocks/OSC/src";
 				WRAPPER_EXTENSION = app;
 			};
@@ -528,7 +652,6 @@
 				);
 				PRODUCT_NAME = HarmonicMotion;
 				STRIP_INSTALLED_PRODUCT = YES;
-				SYMROOT = ./build;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include\" \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include/opencv2\" $(CINDER_PATH)/blocks/OSC/src";
 				WRAPPER_EXTENSION = app;
 			};
@@ -538,10 +661,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
-				CINDER_PATH = ../Cinder;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CINDER_PATH = ../../Cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
@@ -555,10 +679,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
-				CINDER_PATH = ../Cinder;
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CINDER_PATH = ../../Cinder;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
@@ -571,13 +696,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		22197EC817F447BF003B1883 /* Build configuration list for PBXNativeTarget "HarmonicMotionLib" */ = {
+		22197EC817F447BF003B1883 /* Build configuration list for PBXNativeTarget "HarmonicMotion" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				22197EC917F447BF003B1883 /* Debug */,
 				22197ECA17F447BF003B1883 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HarmonicMotionApp" */ = {
 			isa = XCConfigurationList;
