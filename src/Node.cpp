@@ -14,25 +14,57 @@ using namespace std;
 
 Node::Node(string const& className)
 : mClassName(className)
-, mDestructorHasBeenCalled(false)
+, mThreadIsRequestedToStop(false)
+, mStartHasBeenCalled(false)
+, mThreadIsRunning(false)
+, mThread(nullptr)
 {
 	assert(mClassName != "");
 }
 
 Node::~Node()
 {
-	boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
-	mDestructorHasBeenCalled = true;
+	{
+		boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
+		mThreadIsRequestedToStop = true;
+	}
+	mWasNotifiedWaitCondition.notify_all();
+	if (mStartHasBeenCalled)
+	{
+		assert(mThread != nullptr);
+		// wait 2 seconds then give up.
+		bool ended = mThread->timed_join(boost::posix_time::seconds(2.));
+		assert(ended);
+	}
+}
+
+void Node::start()
+{
+	mStartHasBeenCalled = true;
+	mThreadIsRunning = true;
+	mThread = std::unique_ptr<boost::thread>(new boost::thread([this](){ run(); mThreadIsRunning = false; }));
 }
 
 void Node::addInlet(InletPtr inlet)
 {
+	if (mStartHasBeenCalled)
+	{
+		// TODO: error message
+		assert(!mStartHasBeenCalled);
+		return;
+	}
 	inlet->setNotifyCallback([=]() { this->callbackNewInletData(); });
 	mInlets.push_back(inlet);
 }
 
 void Node::addOutlet(OutletPtr outlet)
 {
+	if (mStartHasBeenCalled)
+	{
+		// TODO: error message
+		assert(!mStartHasBeenCalled);
+		return;
+	}
 	mOutlets.push_back(outlet);
 }
 
@@ -53,13 +85,13 @@ bool Node::waitForNewData(int inlet) const
 	{
 		boost::unique_lock<boost::mutex>(mWasNotifiedMutex);
 		mWasNotified = false;
-		while (!mDestructorHasBeenCalled && !mWasNotified)
+		while (true)
 		{
-			mWasNotifiedWaitCondition.wait(mWasNotifiedMutex);
-			if (mDestructorHasBeenCalled)
-				return false;
 			if (mWasNotified)
 				return true;
+			if (mThreadIsRequestedToStop)
+				return false;
+			mWasNotifiedWaitCondition.wait(mWasNotifiedMutex);
 		}
 	}
 	else if (inlet < mInlets.size())
@@ -67,9 +99,6 @@ bool Node::waitForNewData(int inlet) const
 		InletPtr in = mInlets[inlet];
 		return in->waitForNewData(in->dataTimestamp());
 	}
-	else
-	{
-		assert(inlet < mInlets.size());
-		return false;
-	}
+	assert(inlet < mInlets.size());
+	return false;
 }

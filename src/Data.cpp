@@ -7,9 +7,11 @@
 //
 
 #include "Data.h"
+#include <sstream>
 
 using namespace hm;
 using namespace std;
+
 
 Data::Data()
 : mType(UNDEFINED)
@@ -36,4 +38,24 @@ Value const& Data::asValue() const
 Value& Data::asValue()
 {
 	return boost::get<Value&>(mData);
+}
+
+std::string Data::toString() const
+{
+	std::stringstream ss;
+	switch (mType)
+	{
+		case VALUE:
+			ss << asValue();
+			break;
+		default:
+			ss << "Unable to convert datatype into string";
+			break;
+	}
+	return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& out, Data& rhs)
+{
+	return out << rhs.toString();
 }

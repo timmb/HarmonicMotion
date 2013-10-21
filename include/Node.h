@@ -10,6 +10,7 @@
 
 #include "Data.h"
 #include <boost/thread.hpp>
+#include <atomic>
 
 namespace hm
 {
@@ -24,10 +25,17 @@ namespace hm
 		virtual ~Node();
 		std::string const& type() const { return mClassName; }
 		
+		/// Starts the thread
+		void start();
+		/// Thread is running
+		bool isRunning() const;
+		
 	protected:
 		Node(std::string const& className);
 		
+		/// Cannot be called after start() has been called
 		void addInlet(InletPtr inlet);
+		/// Cannot be called after start() has been called
 		void addOutlet(OutletPtr outlet);
 		
 		/// \return true if new data arrived. Otherwise, derived
@@ -37,6 +45,13 @@ namespace hm
 		/// new data.
 		/// \param inlet Which inlet to wait for, or -1 for any inlet
 		bool waitForNewData(int inlet=-1) const;
+		
+		/// Override this: Process incoming data until isRequestedToStop()
+		/// becomes true
+		virtual void run() = 0;
+		/// Return from run() at the earliest opportunity when this
+		/// becomes false
+		bool isRequestedToStop() const { return mThreadIsRequestedToStop; }
 
 	private:
 		std::vector<InletPtr> mInlets;
@@ -44,10 +59,16 @@ namespace hm
 		std::string mClassName;
 		/// Callback for inlets
 		void callbackNewInletData();
+		/// Callback for when the thread ends
+		void callbackThreadEnded();
 		/// An inlet notified of new data. Used by waitForNewData and the callback above
 		mutable bool mWasNotified;
 		mutable boost::mutex mWasNotifiedMutex;
 		mutable boost::condition_variable mWasNotifiedWaitCondition;
-		bool mDestructorHasBeenCalled;
+		std::atomic<bool> mThreadIsRequestedToStop;
+		bool mStartHasBeenCalled;
+		
+		std::atomic<bool> mThreadIsRunning;
+		std::unique_ptr<boost::thread> mThread;
 	};
 }

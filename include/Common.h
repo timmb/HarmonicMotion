@@ -24,6 +24,9 @@ namespace hm
 	typedef std::shared_ptr<Outlet> OutletPtr;
 	typedef std::shared_ptr<Node> NodePtr;
 	
+	/// \return number of seconds since the program began
+	double elapsedTime();
+	
 	// Data types used in the pipeline
 	enum Type
 	{

@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
 		14AE91028D3E457C94F76ACD /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF253A52FD1499F8539D0F7 /* OscPrintReceivedElements.cpp */; };
-		22197ED217F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */; };
-		22197ED317F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */; };
+		22197ED217F44B1B003B1883 /* GeneratorSineWave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */; };
+		22197ED317F44B1B003B1883 /* GeneratorSineWave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */; };
 		22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECD17F44B1B003B1883 /* Inlet.cpp */; };
 		22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECD17F44B1B003B1883 /* Inlet.cpp */; };
 		22197ED617F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
@@ -42,7 +42,7 @@
 		22197EFA17F44B4F003B1883 /* OscMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 498C0072AC6647318164B760 /* OscMessage.h */; };
 		22197EFB17F44B4F003B1883 /* OscSender.h in Headers */ = {isa = PBXBuildFile; fileRef = 61187A33DC904F65A91CFA6D /* OscSender.h */; };
 		22197EFC17F44B54003B1883 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = E18406B5E23F4FE6B09BCDA7 /* Resources.h */; };
-		22197F0517F44B76003B1883 /* GeneratorConstantValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFE17F44B76003B1883 /* GeneratorConstantValue.h */; };
+		22197F0517F44B76003B1883 /* GeneratorSineWave.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFE17F44B76003B1883 /* GeneratorSineWave.h */; };
 		22197F0617F44B76003B1883 /* Inlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFF17F44B76003B1883 /* Inlet.h */; };
 		22197F0717F44B76003B1883 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0017F44B76003B1883 /* Node.h */; };
 		22197F0817F44B76003B1883 /* Outlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0117F44B76003B1883 /* Outlet.h */; };
@@ -69,6 +69,11 @@
 		22197F8217F4900D003B1883 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8117F4900D003B1883 /* QTKit.framework */; };
 		22197F8417F49044003B1883 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8317F49044003B1883 /* CoreVideo.framework */; };
 		22197F8817F4A4F3003B1883 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
+		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
+		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
+		22261AAD181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */; };
+		22261AAE181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */; };
+		22261AAF181577C800DBA3F8 /* OutputConsolePrintout.h in Headers */ = {isa = PBXBuildFile; fileRef = 22261AAC181577C800DBA3F8 /* OutputConsolePrintout.h */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
 		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
 		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
@@ -92,13 +97,13 @@
 		1F5BCBB581BC487CB496A960 /* IpEndpointName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IpEndpointName.h; path = ../../Cinder/blocks/OSC/src/ip/IpEndpointName.h; sourceTree = "<group>"; };
 		217CFF40045345C49B48BFD3 /* OscPacketListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscPacketListener.h; path = ../../Cinder/blocks/OSC/src/osc/OscPacketListener.h; sourceTree = "<group>"; };
 		22197EC717F447BF003B1883 /* libHarmonicMotionLibd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libHarmonicMotionLibd.a; path = libHarmonicMotiond.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeneratorConstantValue.cpp; sourceTree = "<group>"; };
+		22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeneratorSineWave.cpp; sourceTree = "<group>"; };
 		22197ECD17F44B1B003B1883 /* Inlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inlet.cpp; sourceTree = "<group>"; };
 		22197ECE17F44B1B003B1883 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
 		22197ECF17F44B1B003B1883 /* Outlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Outlet.cpp; sourceTree = "<group>"; };
 		22197ED017F44B1B003B1883 /* OutputOsc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputOsc.cpp; sourceTree = "<group>"; };
 		22197ED117F44B1B003B1883 /* Pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pipeline.cpp; sourceTree = "<group>"; };
-		22197EFE17F44B76003B1883 /* GeneratorConstantValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeneratorConstantValue.h; path = ../include/GeneratorConstantValue.h; sourceTree = "<group>"; };
+		22197EFE17F44B76003B1883 /* GeneratorSineWave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeneratorSineWave.h; path = ../include/GeneratorSineWave.h; sourceTree = "<group>"; };
 		22197EFF17F44B76003B1883 /* Inlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Inlet.h; path = ../include/Inlet.h; sourceTree = "<group>"; };
 		22197F0017F44B76003B1883 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../include/Node.h; sourceTree = "<group>"; };
 		22197F0117F44B76003B1883 /* Outlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Outlet.h; path = ../include/Outlet.h; sourceTree = "<group>"; };
@@ -114,7 +119,10 @@
 		22197F8317F49044003B1883 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = ../../../../../../System/Library/Frameworks/CoreVideo.framework; sourceTree = "<group>"; };
 		22197F8517F4996F003B1883 /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../include/Common.h; sourceTree = "<group>"; };
 		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
-		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
+		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../include/Data.h; sourceTree = "<group>"; };
+		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
+		22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrintout.cpp; sourceTree = "<group>"; };
+		22261AAC181577C800DBA3F8 /* OutputConsolePrintout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputConsolePrintout.h; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -189,8 +197,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				22197ECC17F44B1B003B1883 /* GeneratorConstantValue.cpp */,
-				22197EFE17F44B76003B1883 /* GeneratorConstantValue.h */,
+				22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */,
+				22197EFE17F44B76003B1883 /* GeneratorSineWave.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
 				22197EFF17F44B76003B1883 /* Inlet.h */,
@@ -203,9 +211,12 @@
 				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
 				22197F0317F44B76003B1883 /* Pipeline.h */,
 				22197F0417F44B76003B1883 /* Resources.h */,
+				22261AA6181574AC00DBA3F8 /* Common.cpp */,
 				22197F8517F4996F003B1883 /* Common.h */,
 				22197F8617F4A4F3003B1883 /* Data.cpp */,
 				22197F8717F4A4F3003B1883 /* Data.h */,
+				22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */,
+				22261AAC181577C800DBA3F8 /* OutputConsolePrintout.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -395,13 +406,14 @@
 				22197EFA17F44B4F003B1883 /* OscMessage.h in Headers */,
 				22197EFB17F44B4F003B1883 /* OscSender.h in Headers */,
 				22197EFC17F44B54003B1883 /* Resources.h in Headers */,
-				22197F0517F44B76003B1883 /* GeneratorConstantValue.h in Headers */,
+				22197F0517F44B76003B1883 /* GeneratorSineWave.h in Headers */,
 				22197F0617F44B76003B1883 /* Inlet.h in Headers */,
 				22197F0717F44B76003B1883 /* Node.h in Headers */,
 				22197F0817F44B76003B1883 /* Outlet.h in Headers */,
 				22197F0917F44B76003B1883 /* OutputOsc.h in Headers */,
 				22197F0A17F44B76003B1883 /* Pipeline.h in Headers */,
 				22197F0B17F44B76003B1883 /* Resources.h in Headers */,
+				22261AAF181577C800DBA3F8 /* OutputConsolePrintout.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,7 +496,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22197ED317F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */,
+				22197ED317F44B1B003B1883 /* GeneratorSineWave.cpp in Sources */,
 				22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */,
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
 				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
@@ -501,6 +513,8 @@
 				22197F1817F47306003B1883 /* OscPrintReceivedElements.cpp in Sources */,
 				22197F1917F47306003B1883 /* OscReceivedElements.cpp in Sources */,
 				22197F1A17F47306003B1883 /* OscTypes.cpp in Sources */,
+				22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */,
+				22261AAE181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,13 +534,15 @@
 				B1B4A3FF90E94360BFE023CC /* OscTypes.cpp in Sources */,
 				D446572B6E354FF8A1195B97 /* NetworkingUtils.cpp in Sources */,
 				37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */,
-				22197ED217F44B1B003B1883 /* GeneratorConstantValue.cpp in Sources */,
+				22197ED217F44B1B003B1883 /* GeneratorSineWave.cpp in Sources */,
 				22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */,
 				22197ED617F44B1B003B1883 /* Node.cpp in Sources */,
 				22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */,
 				22197EDA17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
 				22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197F8817F4A4F3003B1883 /* Data.cpp in Sources */,
+				22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */,
+				22261AAD181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,6 +634,8 @@
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ts.a\"",
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_video.a\"",
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_videostab.a\"",
+					"\"$(CINDER_PATH)/lib/macosx/libboost_date_time.a\"",
+					"\"$(CINDER_PATH)/lib/macosx/libboost_system.a\"",
 				);
 				PRODUCT_NAME = HarmonicMotion;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include\" \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include/opencv2\" $(CINDER_PATH)/blocks/OSC/src";
@@ -659,6 +677,8 @@
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ts.a\"",
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_video.a\"",
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_videostab.a\"",
+					"\"$(CINDER_PATH)/lib/macosx/libboost_date_time.a\"",
+					"\"$(CINDER_PATH)/lib/macosx/libboost_system.a\"",
 				);
 				PRODUCT_NAME = HarmonicMotion;
 				STRIP_INSTALLED_PRODUCT = YES;
