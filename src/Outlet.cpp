@@ -7,6 +7,7 @@
 //
 
 #include "Outlet.h"
+#include "Inlet.h"
 
 using namespace std;
 using namespace hm;
@@ -15,24 +16,27 @@ Outlet::Outlet(Type type, string const& name, string const& helpText)
 : mType(type)
 , mName(name)
 , mHelpText(helpText)
-, mNumConnections(0)
 {
 	
 }
 
-void Outlet::incrementNumConnections()
+
+bool Outlet::connect(InletPtr inlet)
 {
-	mNumConnections++;
+	if (inlet->type() != type())
+	{
+		return false;
+	}
+	mOutputs.push_back(inlet);
+	inlet->incrementNumConnections();
+	return true;
 }
 
-void Outlet::decrementNumConnections()
-{
-	assert(mNumConnections>0);
-	mNumConnections--;
-}
 
-bool Outlet::hasConnections() const
+void Outlet::outputNewData(Data& data)
 {
-	return mNumConnections;
+	for (InletPtr out: mOutputs)
+	{
+		out->provideNewData(data);
+	}
 }
-

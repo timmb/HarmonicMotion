@@ -16,8 +16,13 @@ namespace hm
 	class Data
 	{
 	public:
+		/// Creates a null (i.e. undefined) Data object with timestamp
+		/// -42.
 		Data();
+		Data(Value& value, double timestamp);
+
 		Type type() const { return mType; }
+		double timestamp() const { return mTimestamp; }
 		
 		bool isValue() const;
 		Value const& asValue() const;
@@ -27,5 +32,6 @@ namespace hm
 		typedef boost::variant<Value> Variant;
 		Type mType;
 		Variant mData;
+		double mTimestamp;
 	};
 }

@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Common.h"
+#include "Data.h"
 
 namespace hm
 {
@@ -19,22 +20,20 @@ namespace hm
 		Type type() const { return mType; }
 		std::string name() const { return mName; }
 		std::string helpText() const { return mHelpText; }
-		bool hasConnections() const;
 		
-		void incrementNumConnections();
-		void decrementNumConnections();
-		
-		bool waitForNewData(int maxMillisToWait);
-		Data data();
-		
+		/// \return false if cannot connect with inlet due to being wrong
+		/// type
+		bool connect(InletPtr inlet);
 		void outputNewData(Data& data);
+		/// \return true if this outlet is connected to any inlets
+		int numInlets() const { return mOutputs.size(); }
 
 	private:
+		
 		Type mType;
 		std::string mName;
 		std::string mHelpText;
-		int mNumConnections;
-		Data mData;
+		std::vector<InletPtr> mOutputs;
 	};
 	
 }

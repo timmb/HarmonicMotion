@@ -14,6 +14,13 @@ using namespace std;
 Data::Data()
 : mType(UNDEFINED)
 , mData(0.)
+, mTimestamp(-42.)
+{}
+
+Data::Data(Value& value, double timestamp)
+: mType(VALUE)
+, mData(value)
+, mTimestamp(timestamp)
 {}
 
 bool Data::isValue() const
