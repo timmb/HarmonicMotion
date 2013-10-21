@@ -59,14 +59,16 @@ namespace hm
 		bool isRequestedToStop() const { return mThreadIsRequestedToStop; }
 
 	private:
-		std::vector<InletPtr> mInlets;
-		std::vector<OutletPtr> mOutlets;
-		std::string mClassName;
 		/// Callback for inlets
 		void callbackNewInletData();
 		/// Callback for when the thread ends
 		void callbackThreadEnded();
+		/// Function run by the thread. Delegates to run()
+		void threadFunction();
 		/// An inlet notified of new data. Used by waitForNewData and the callback above
+		std::vector<InletPtr> mInlets;
+		std::vector<OutletPtr> mOutlets;
+		std::string mClassName;
 		mutable bool mWasNotified;
 		mutable boost::mutex mWasNotifiedMutex;
 		mutable boost::condition_variable mWasNotifiedWaitCondition;

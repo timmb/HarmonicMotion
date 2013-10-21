@@ -42,8 +42,23 @@ Node::~Node()
 void Node::start()
 {
 	mStartHasBeenCalled = true;
+	mThread = std::unique_ptr<boost::thread>(new boost::thread([this](){ threadFunction(); }));
+}
+
+void Node::threadFunction()
+{
 	mThreadIsRunning = true;
-	mThread = std::unique_ptr<boost::thread>(new boost::thread([this](){ run(); mThreadIsRunning = false; }));
+//	try
+	{
+		run();
+	}
+//	catch (exception& e)
+//	{
+//		cerr << "Exception from thread for "<<toString()<<':'<<endl
+//		<< e.what() << endl;
+//		throw e;
+//	}
+	mThreadIsRunning = false;
 }
 
 InletPtr Node::inlet(int index)
@@ -104,7 +119,7 @@ bool Node::waitForNewData(int inlet) const
 {
 	if (inlet==-1)
 	{
-		boost::unique_lock<boost::mutex>(mWasNotifiedMutex);
+		boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
 		mWasNotified = false;
 		while (true)
 		{
@@ -112,7 +127,7 @@ bool Node::waitForNewData(int inlet) const
 				return true;
 			if (mThreadIsRequestedToStop)
 				return false;
-			mWasNotifiedWaitCondition.wait(mWasNotifiedMutex);
+			mWasNotifiedWaitCondition.wait(lock);
 		}
 	}
 	else if (inlet < mInlets.size())
