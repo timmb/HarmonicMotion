@@ -6,7 +6,7 @@
 //
 //
 
-#include "OutputConsolePrintout.h"
+#include "OutputConsolePrinter.h"
 #include "Inlet.h"
 
 using namespace hm;

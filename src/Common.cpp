@@ -9,9 +9,14 @@
 #include "Common.h"
 #include "cinder/Timer.h"
 
-ci::Timer programTimer(true);
-
-double elapsedTime()
+namespace hm
 {
-	return programTimer.getSeconds();
+	
+	ci::Timer programTimer(true);
+	
+	double elapsedTime()
+	{
+		return programTimer.getSeconds();
+	}
+	
 }

@@ -7,8 +7,44 @@
 //
 
 #include "Pipeline.h"
+#include "Node.h"
+#include <algorithm>
 
 //#include <XnOpenNI.h>
 
 using namespace hm;
 
+Pipeline::Pipeline()
+: mIsRunning(false)
+{
+	hm_debug("Pipeline constructed");
+}
+
+std::vector<NodePtr> const& Pipeline::nodes() const
+{
+	return mNodes;
+}
+
+void Pipeline::addNode(NodePtr node)
+{
+	mNodes.push_back(node);
+	hm_debug("Added node "+node->toString());
+}
+
+void Pipeline::removeNode(NodePtr node)
+{
+	auto it = std::find(mNodes.begin(), mNodes.end(), node);
+	if (it != mNodes.end())
+	{
+		mNodes.erase(it);
+	}
+}
+
+void Pipeline::start()
+{
+	mIsRunning = true;
+	for (auto p: mNodes)
+	{
+		p->start();
+	}
+}

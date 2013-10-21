@@ -20,6 +20,7 @@ namespace hm
 		/// -42.
 		Data();
 		Data(Value& value, double timestamp);
+		Data(Point3d& value, double timestamp);
 
 		Type type() const { return mType; }
 		double timestamp() const { return mTimestamp; }
@@ -28,10 +29,14 @@ namespace hm
 		Value const& asValue() const;
 		Value& asValue();
 		
+		bool isPoint3d() const;
+		Point3d const& asPoint3d() const;
+		Point3d& asPoint3d();
+		
 		std::string toString() const;
 		
 	private:
-		typedef boost::variant<Value> Variant;
+		typedef boost::variant<Value, Point3d> Variant;
 		Type mType;
 		Variant mData;
 		double mTimestamp;
@@ -39,5 +44,8 @@ namespace hm
 		friend std::ostream& operator<<(std::ostream&, Data&);
 	};
 	
-	std::ostream& operator<<(std::ostream&, Data&);
+	inline std::ostream& operator<<(std::ostream& out, Data& rhs)
+	{
+		return out << rhs.toString();
+	}
 }

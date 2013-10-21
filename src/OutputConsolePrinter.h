@@ -15,7 +15,7 @@ namespace hm
 	class OutputConsolePrinter : public Node
 	{
 	public:
-		OutputConsolePrinter(std::string const& printerName, std::string const& className="OutputConsolePrinter");
+		OutputConsolePrinter(std::string const& printerName="printer", std::string const& className="OutputConsolePrinter");
 		
 	protected:
 		virtual void run() override;

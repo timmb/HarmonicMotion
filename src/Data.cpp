@@ -25,6 +25,12 @@ Data::Data(Value& value, double timestamp)
 , mTimestamp(timestamp)
 {}
 
+Data::Data(Point3d& x, double timestamp)
+: mType(POINT3D)
+, mData(x)
+, mTimestamp(timestamp)
+{}
+
 bool Data::isValue() const
 {
 	return mType == VALUE;
@@ -40,22 +46,35 @@ Value& Data::asValue()
 	return boost::get<Value&>(mData);
 }
 
+bool Data::isPoint3d() const
+{
+	return mType == POINT3D;
+}
+
+Point3d const& Data::asPoint3d() const
+{
+	return boost::get<Point3d const&>(mData);
+}
+
+Point3d& Data::asPoint3d()
+{
+	return boost::get<Point3d&>(mData);
+}
+
 std::string Data::toString() const
 {
 	std::stringstream ss;
 	switch (mType)
 	{
 		case VALUE:
+		case POINT3D:
 			ss << asValue();
 			break;
 		default:
 			ss << "Unable to convert datatype into string";
+			assert(false);
 			break;
 	}
 	return ss.str();
 }
 
-std::ostream& operator<<(std::ostream& out, Data& rhs)
-{
-	return out << rhs.toString();
-}

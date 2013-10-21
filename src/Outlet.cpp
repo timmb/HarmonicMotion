@@ -35,6 +35,7 @@ bool Outlet::connect(InletPtr inlet)
 
 void Outlet::outputNewData(Data& data)
 {
+	hm_debug("New data at outlet: "+data.toString());
 	for (InletPtr out: mOutputs)
 	{
 		out->provideNewData(data);

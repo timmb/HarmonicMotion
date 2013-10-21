@@ -71,9 +71,14 @@
 		22197F8817F4A4F3003B1883 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
 		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
-		22261AAD181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */; };
-		22261AAE181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */; };
-		22261AAF181577C800DBA3F8 /* OutputConsolePrintout.h in Headers */ = {isa = PBXBuildFile; fileRef = 22261AAC181577C800DBA3F8 /* OutputConsolePrintout.h */; };
+		22261AAD181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */; };
+		22261AAE181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */; };
+		22261AAF181577C800DBA3F8 /* OutputConsolePrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */; };
+		22293670181586F2008CAA09 /* HarmonicMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229366F181586F2008CAA09 /* HarmonicMotion.h */; };
+		22293672181591A2008CAA09 /* Skeleton3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293671181591A2008CAA09 /* Skeleton3d.h */; };
+		22293674181591AD008CAA09 /* Skeleton3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293673181591AD008CAA09 /* Skeleton3d.cpp */; };
+		22293675181591AD008CAA09 /* Skeleton3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293673181591AD008CAA09 /* Skeleton3d.cpp */; };
+		2229367618159B01008CAA09 /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F8517F4996F003B1883 /* Common.h */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
 		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
 		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
@@ -121,8 +126,11 @@
 		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
 		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../include/Data.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
-		22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrintout.cpp; sourceTree = "<group>"; };
-		22261AAC181577C800DBA3F8 /* OutputConsolePrintout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputConsolePrintout.h; sourceTree = "<group>"; };
+		22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrinter.cpp; sourceTree = "<group>"; };
+		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputConsolePrinter.h; sourceTree = "<group>"; };
+		2229366F181586F2008CAA09 /* HarmonicMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HarmonicMotion.h; path = ../include/HarmonicMotion.h; sourceTree = "<group>"; };
+		22293671181591A2008CAA09 /* Skeleton3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Skeleton3d.h; path = ../include/Skeleton3d.h; sourceTree = "<group>"; };
+		22293673181591AD008CAA09 /* Skeleton3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton3d.cpp; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -197,6 +205,9 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				22293671181591A2008CAA09 /* Skeleton3d.h */,
+				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
+				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */,
 				22197EFE17F44B76003B1883 /* GeneratorSineWave.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
@@ -215,8 +226,8 @@
 				22197F8517F4996F003B1883 /* Common.h */,
 				22197F8617F4A4F3003B1883 /* Data.cpp */,
 				22197F8717F4A4F3003B1883 /* Data.h */,
-				22261AAB181577C800DBA3F8 /* OutputConsolePrintout.cpp */,
-				22261AAC181577C800DBA3F8 /* OutputConsolePrintout.h */,
+				22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */,
+				22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -413,7 +424,10 @@
 				22197F0917F44B76003B1883 /* OutputOsc.h in Headers */,
 				22197F0A17F44B76003B1883 /* Pipeline.h in Headers */,
 				22197F0B17F44B76003B1883 /* Resources.h in Headers */,
-				22261AAF181577C800DBA3F8 /* OutputConsolePrintout.h in Headers */,
+				22261AAF181577C800DBA3F8 /* OutputConsolePrinter.h in Headers */,
+				22293670181586F2008CAA09 /* HarmonicMotion.h in Headers */,
+				22293672181591A2008CAA09 /* Skeleton3d.h in Headers */,
+				2229367618159B01008CAA09 /* Common.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,7 +528,8 @@
 				22197F1917F47306003B1883 /* OscReceivedElements.cpp in Sources */,
 				22197F1A17F47306003B1883 /* OscTypes.cpp in Sources */,
 				22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */,
-				22261AAE181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */,
+				22261AAE181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */,
+				22293675181591AD008CAA09 /* Skeleton3d.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,7 +557,8 @@
 				22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197F8817F4A4F3003B1883 /* Data.cpp in Sources */,
 				22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */,
-				22261AAD181577C800DBA3F8 /* OutputConsolePrintout.cpp in Sources */,
+				22261AAD181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */,
+				22293674181591AD008CAA09 /* Skeleton3d.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,8 +650,10 @@
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ts.a\"",
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_video.a\"",
 					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_videostab.a\"",
-					"\"$(CINDER_PATH)/lib/macosx/libboost_date_time.a\"",
-					"\"$(CINDER_PATH)/lib/macosx/libboost_system.a\"",
+					"\"$(LIB_PATH)/macosx/libboost_date_time.a\"",
+					"\"$(LIB_PATH)/macosx/libboost_system.a\"",
+					"$(LIB_PATH)/macosx/libboost_chrono.a",
+					"$(LIB_PATH)/macosx/libboost_thread.a",
 				);
 				PRODUCT_NAME = HarmonicMotion;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include\" \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include/opencv2\" $(CINDER_PATH)/blocks/OSC/src";
@@ -699,6 +717,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				LIB_PATH = ../lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"../../Cinder/blocks/Cinder-OpenCV/include\" \"../../Cinder/blocks/Cinder-OpenCV/include/opencv2\" ../../Cinder/blocks/OSC/src";
@@ -717,6 +736,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/boost\"";
+				LIB_PATH = ../lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"../../Cinder/blocks/Cinder-OpenCV/include\" \"../../Cinder/blocks/Cinder-OpenCV/include/opencv2\" ../../Cinder/blocks/OSC/src";

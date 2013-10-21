@@ -11,17 +11,22 @@
 
 namespace hm
 {
-	// testing stuff
 	class Pipeline
 	{
 	public:
-		std::vector<NodePtr> nodes() const;
+		Pipeline();
+		
+		std::vector<NodePtr> const& nodes() const;
 		
 		void addNode(NodePtr node);
 		void removeNode(NodePtr node);
 		
+		/// Starts all nodes
+		void start();
+		
 	private:
 		std::vector<NodePtr> mNodes;
+		bool mIsRunning;
 	};
 	
 }

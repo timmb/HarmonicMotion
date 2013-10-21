@@ -20,6 +20,7 @@ Node::Node(string const& className)
 , mThread(nullptr)
 {
 	assert(mClassName != "");
+	hm_debug("Node constructed: "+className);
 }
 
 Node::~Node()
@@ -43,6 +44,26 @@ void Node::start()
 	mStartHasBeenCalled = true;
 	mThreadIsRunning = true;
 	mThread = std::unique_ptr<boost::thread>(new boost::thread([this](){ run(); mThreadIsRunning = false; }));
+}
+
+InletPtr Node::inlet(int index)
+{
+	assert(0 <= index && index < mInlets.size());
+	return mInlets[index];
+}
+
+OutletPtr Node::outlet(int index)
+{
+	assert(0 <= index && index < mOutlets.size());
+	return mOutlets[index];
+}
+
+std::string Node::toString() const
+{
+	stringstream ss;
+	ss << "Node "<<mClassName<<" inlets:"<<mInlets.size()<<" outlets:"
+	<<mOutlets.size()<<" isRunning:"<<isRunning();
+	return ss.str();
 }
 
 void Node::addInlet(InletPtr inlet)

@@ -18,6 +18,8 @@ namespace hm
 	class Node;
 	// data types
 	typedef float Value;
+	typedef ci::Vec3f Point3d;
+	class Skeleton3d;
 	
 	// typedefs
 	typedef std::shared_ptr<Inlet> InletPtr;
@@ -26,6 +28,16 @@ namespace hm
 	
 	/// \return number of seconds since the program began
 	double elapsedTime();
+
+#if defined(DEBUG) || defined(_DEBUG)
+#define HM_LOG_DEBUG
+#endif
+	
+#ifdef HM_LOG_DEBUG
+	#define hm_debug(message) std::cerr << __FILE__ << ' ' <<__LINE__<<' '<<message<<std::endl;
+#else
+#define hm_debug(message)
+#endif
 	
 	// Data types used in the pipeline
 	enum Type

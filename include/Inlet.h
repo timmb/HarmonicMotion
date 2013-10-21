@@ -9,7 +9,7 @@
 #pragma once
 #include "Common.h"
 #include "Data.h"
-#include <boost/thread/mutex.hpp>
+#include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
 namespace hm
@@ -54,8 +54,8 @@ namespace hm
 		double mDataTimestamp;
 		int mNumConnections;
 		
-		mutable boost::mutex mMutex;
-		mutable boost::condition_variable mWaitCondition;
+		mutable boost::shared_mutex mMutex;
+		mutable boost::condition_variable_any mWaitCondition;
 		std::function<void(void)> mNotifyCallback;
 		bool mDestructorHasBeenCalled;
 		

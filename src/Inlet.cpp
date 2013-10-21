@@ -44,6 +44,18 @@ void Inlet::decrementNumConnections()
 	mNumConnections--;
 }
 
+Data Inlet::data() const
+{
+	boost::shared_lock<boost::shared_mutex> lock(mMutex);
+	return mData;
+}
+
+double Inlet::dataTimestamp() const
+{
+	boost::shared_lock<boost::shared_mutex> lock(mMutex);
+	return mData.timestamp();
+}
+
 void Inlet::setNotifyCallback(std::function<void ()> function)
 {
 	mNotifyCallback = function;
@@ -52,7 +64,7 @@ void Inlet::setNotifyCallback(std::function<void ()> function)
 
 bool Inlet::waitForNewData(double lastTimestampReceived) const
 {
-	boost::unique_lock<boost::mutex> lock(mMutex);
+	boost::unique_lock<boost::shared_mutex> lock(mMutex);
 	while (true)
 	{
 		if (mDestructorHasBeenCalled)
@@ -65,9 +77,10 @@ bool Inlet::waitForNewData(double lastTimestampReceived) const
 
 void Inlet::provideNewData(Data const& data)
 {
-	boost::unique_lock<boost::mutex> lock(mMutex);
+	boost::unique_lock<boost::shared_mutex> lock(mMutex);
 	mData = data;
 	mDataTimestamp = data.timestamp();
+	hm_debug("New data at inlet: "+data.toString());
 	mWaitCondition.notify_all();
 	if (mNotifyCallback)
 		mNotifyCallback();

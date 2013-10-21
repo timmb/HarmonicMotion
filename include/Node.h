@@ -28,7 +28,12 @@ namespace hm
 		/// Starts the thread
 		void start();
 		/// Thread is running
-		bool isRunning() const;
+		bool isRunning() const { return mThreadIsRunning; }
+		
+		InletPtr inlet(int index);
+		OutletPtr outlet(int index);
+		
+		std::string toString() const;
 		
 	protected:
 		Node(std::string const& className);
