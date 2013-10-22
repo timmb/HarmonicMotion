@@ -25,6 +25,7 @@ Node::Node(string const& className)
 
 Node::~Node()
 {
+	hm_debug("Destructor called on "+toString());
 	{
 		boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
 		mThreadIsRequestedToStop = true;
@@ -34,7 +35,16 @@ Node::~Node()
 	{
 		assert(mThread != nullptr);
 		// wait 2 seconds then give up.
+		hm_debug(toString()+": waiting for thread to finish.");
 		bool ended = mThread->timed_join(boost::posix_time::seconds(2.));
+		if (ended)
+		{
+			hm_debug(toString()+": thread finished successfully.");
+		}
+		else
+		{
+			hm_debug(toString()+": thread did not finish in time.");
+		}
 		assert(ended);
 	}
 }

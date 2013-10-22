@@ -23,7 +23,7 @@ void HarmonicMotionApp::setup()
 {
 	std::cout << "Hello world" << std::endl;
 	auto gen = NodePtr(new NodeKinect);
-	auto printer = NodePtr(new OutputConsolePrinter);
+	auto printer = NodePtr(new NodeAccumulator);
 	gen->outlet(0)->connect(printer->inlet(0));
 	mPipeline.addNode(gen);
 	mPipeline.addNode(printer);

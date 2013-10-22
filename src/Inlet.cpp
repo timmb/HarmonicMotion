@@ -50,6 +50,12 @@ Data Inlet::data() const
 	return mData;
 }
 
+Data Inlet::dataIfNewerThan(double timestamp) const
+{
+	boost::shared_lock<boost::shared_mutex> lock(mMutex);
+	return mData.timestamp()>timestamp? mData : Data();
+}
+
 double Inlet::dataTimestamp() const
 {
 	boost::shared_lock<boost::shared_mutex> lock(mMutex);

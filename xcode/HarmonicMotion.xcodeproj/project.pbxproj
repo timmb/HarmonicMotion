@@ -69,6 +69,21 @@
 		22197F8217F4900D003B1883 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8117F4900D003B1883 /* QTKit.framework */; };
 		22197F8417F49044003B1883 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8317F49044003B1883 /* CoreVideo.framework */; };
 		22197F8817F4A4F3003B1883 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
+		221E90221816E0CD0028EAFD /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
+		221E90231816E10C0028EAFD /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F8717F4A4F3003B1883 /* Data.h */; };
+		221E90281816E40B0028EAFD /* NodeAccumulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90271816E40A0028EAFD /* NodeAccumulator.cpp */; };
+		221E90291816E40B0028EAFD /* NodeAccumulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90271816E40A0028EAFD /* NodeAccumulator.cpp */; };
+		221E902B1816E4130028EAFD /* NodeAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E902A1816E4130028EAFD /* NodeAccumulator.h */; };
+		221E90311817242A0028EAFD /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E902F181724290028EAFD /* DataType.cpp */; };
+		221E90321817242A0028EAFD /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E902F181724290028EAFD /* DataType.cpp */; };
+		221E9035181724460028EAFD /* DataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9034181724450028EAFD /* DataType.h */; };
+		221E9037181725A10028EAFD /* Type.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9036181725A10028EAFD /* Type.h */; };
+		221E903A1817270D0028EAFD /* Point3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90381817270C0028EAFD /* Point3d.cpp */; };
+		221E903B1817270D0028EAFD /* Point3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90381817270C0028EAFD /* Point3d.cpp */; };
+		221E903F181727240028EAFD /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E903D181727220028EAFD /* Value.cpp */; };
+		221E9040181727240028EAFD /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E903D181727220028EAFD /* Value.cpp */; };
+		221E90441817273C0028EAFD /* Point3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E90421817273B0028EAFD /* Point3d.h */; };
+		221E90451817273C0028EAFD /* Value.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E90431817273C0028EAFD /* Value.h */; };
 		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AAD181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */; };
@@ -241,6 +256,15 @@
 		22197F8517F4996F003B1883 /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../include/Common.h; sourceTree = "<group>"; };
 		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
 		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../include/Data.h; sourceTree = "<group>"; };
+		221E90271816E40A0028EAFD /* NodeAccumulator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeAccumulator.cpp; sourceTree = "<group>"; };
+		221E902A1816E4130028EAFD /* NodeAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeAccumulator.h; path = ../include/NodeAccumulator.h; sourceTree = "<group>"; };
+		221E902F181724290028EAFD /* DataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataType.cpp; sourceTree = "<group>"; };
+		221E9034181724450028EAFD /* DataType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataType.h; path = ../include/DataType.h; sourceTree = "<group>"; };
+		221E9036181725A10028EAFD /* Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Type.h; path = ../include/Type.h; sourceTree = "<group>"; };
+		221E90381817270C0028EAFD /* Point3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Point3d.cpp; sourceTree = "<group>"; };
+		221E903D181727220028EAFD /* Value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Value.cpp; sourceTree = "<group>"; };
+		221E90421817273B0028EAFD /* Point3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3d.h; path = ../include/Point3d.h; sourceTree = "<group>"; };
+		221E90431817273C0028EAFD /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Value.h; path = ../include/Value.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
 		22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrinter.cpp; sourceTree = "<group>"; };
 		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputConsolePrinter.h; path = ../include/OutputConsolePrinter.h; sourceTree = "<group>"; };
@@ -436,23 +460,23 @@
 			isa = PBXGroup;
 			children = (
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
-				2229375518168E67008CAA09 /* Scene3d.h */,
-				2229375218168E5F008CAA09 /* Scene3d.cpp */,
+				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
+				221E902A1816E4130028EAFD /* NodeAccumulator.h */,
+				221E90271816E40A0028EAFD /* NodeAccumulator.cpp */,
 				2229374F18167E6F008CAA09 /* NodeKinect.cpp */,
 				2229374D18167E63008CAA09 /* NodeKinect.h */,
-				22293671181591A2008CAA09 /* Skeleton3d.h */,
-				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
-				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */,
 				22197EFE17F44B76003B1883 /* GeneratorSineWave.h */,
-				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
-				22197EFF17F44B76003B1883 /* Inlet.h */,
-				22197ECE17F44B1B003B1883 /* Node.cpp */,
-				22197F0017F44B76003B1883 /* Node.h */,
-				22197ECF17F44B1B003B1883 /* Outlet.cpp */,
-				22197F0117F44B76003B1883 /* Outlet.h */,
+				22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */,
+				22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */,
 				22197ED017F44B1B003B1883 /* OutputOsc.cpp */,
 				22197F0217F44B76003B1883 /* OutputOsc.h */,
+				22197ECE17F44B1B003B1883 /* Node.cpp */,
+				22197F0017F44B76003B1883 /* Node.h */,
+				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
+				22197EFF17F44B76003B1883 /* Inlet.h */,
+				22197ECF17F44B1B003B1883 /* Outlet.cpp */,
+				22197F0117F44B76003B1883 /* Outlet.h */,
 				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
 				22197F0317F44B76003B1883 /* Pipeline.h */,
 				22197F0417F44B76003B1883 /* Resources.h */,
@@ -460,8 +484,17 @@
 				22197F8517F4996F003B1883 /* Common.h */,
 				22197F8617F4A4F3003B1883 /* Data.cpp */,
 				22197F8717F4A4F3003B1883 /* Data.h */,
-				22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */,
-				22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */,
+				221E902F181724290028EAFD /* DataType.cpp */,
+				221E9034181724450028EAFD /* DataType.h */,
+				2229375518168E67008CAA09 /* Scene3d.h */,
+				2229375218168E5F008CAA09 /* Scene3d.cpp */,
+				22293671181591A2008CAA09 /* Skeleton3d.h */,
+				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
+				221E9036181725A10028EAFD /* Type.h */,
+				221E90381817270C0028EAFD /* Point3d.cpp */,
+				221E90421817273B0028EAFD /* Point3d.h */,
+				221E903D181727220028EAFD /* Value.cpp */,
+				221E90431817273C0028EAFD /* Value.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -922,6 +955,12 @@
 				22293740181677C8008CAA09 /* VOpenNIUser.h in Headers */,
 				2229374E18167E63008CAA09 /* NodeKinect.h in Headers */,
 				2229375618168E67008CAA09 /* Scene3d.h in Headers */,
+				221E90231816E10C0028EAFD /* Data.h in Headers */,
+				221E902B1816E4130028EAFD /* NodeAccumulator.h in Headers */,
+				221E9035181724460028EAFD /* DataType.h in Headers */,
+				221E9037181725A10028EAFD /* Type.h in Headers */,
+				221E90441817273C0028EAFD /* Point3d.h in Headers */,
+				221E90451817273C0028EAFD /* Value.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1033,6 +1072,11 @@
 				2229373F181677C8008CAA09 /* VOpenNIUser.cpp in Sources */,
 				2229375118167E70008CAA09 /* NodeKinect.cpp in Sources */,
 				2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */,
+				221E90221816E0CD0028EAFD /* Data.cpp in Sources */,
+				221E90291816E40B0028EAFD /* NodeAccumulator.cpp in Sources */,
+				221E90321817242A0028EAFD /* DataType.cpp in Sources */,
+				221E903B1817270D0028EAFD /* Point3d.cpp in Sources */,
+				221E9040181727240028EAFD /* Value.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1071,6 +1115,10 @@
 				2229373E181677C8008CAA09 /* VOpenNIUser.cpp in Sources */,
 				2229375018167E70008CAA09 /* NodeKinect.cpp in Sources */,
 				2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */,
+				221E90281816E40B0028EAFD /* NodeAccumulator.cpp in Sources */,
+				221E90311817242A0028EAFD /* DataType.cpp in Sources */,
+				221E903A1817270D0028EAFD /* Point3d.cpp in Sources */,
+				221E903F181727240028EAFD /* Value.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1094,7 +1142,6 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1119,7 +1166,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

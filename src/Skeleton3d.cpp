@@ -1,5 +1,6 @@
 #include "Skeleton3d.h"
 #include <sstream>
+#include "Point3d.h"
 
 namespace hm
 {

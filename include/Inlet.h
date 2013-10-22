@@ -31,6 +31,9 @@ namespace hm
 		
 		Data data() const;
 		double dataTimestamp() const;
+		/// Returns data if it is newer than \p timestamp, or a null data object
+		/// if it is not. Use this to avoid race conditions between dataTimestamp() and data() calls
+		Data dataIfNewerThan(double timestamp) const;
 		/// will block until:
 		/// - This inlet's destructor is called (returning false)
 		/// - dataTimestamp() > lastTimestampReceived (returning true)

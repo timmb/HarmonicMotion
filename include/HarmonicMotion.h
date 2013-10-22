@@ -10,3 +10,4 @@
 #include "OutputConsolePrinter.h"
 #include "OutputOsc.h"
 #include "NodeKinect.h"
+#include "NodeAccumulator.h"

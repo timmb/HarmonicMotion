@@ -2,6 +2,8 @@
 #include "Common.h"
 #include <cassert>
 #include <vector>
+#include "DataType.h"
+#include "Point3d.h"
 
 //XN_SKEL_HEAD			= 1,
 //XN_SKEL_NECK			= 2,
@@ -66,7 +68,7 @@ namespace hm
 	
 	
 	// --------------------------------------------------------------
-	class Skeleton3d
+	class Skeleton3d : public DataType
 	{
 	public:
 		Skeleton3d();
@@ -86,7 +88,8 @@ namespace hm
 		int& id() { return mId; }
 		int const& id() const { return mId; }
 		
-		std::string toString() const;
+		virtual std::string toString() const override;
+		virtual Type type() const override { return SKELETON3D; }
 		
 	private:
 		int mId;

@@ -10,6 +10,8 @@
 #include "Common.h"
 #include "Skeleton3d.h"
 #include "Scene3d.h"
+#include "Point3d.h"
+#include "Value.h"
 #include <boost/variant.hpp>
 
 namespace hm
@@ -31,6 +33,10 @@ namespace hm
 
 		Type type() const { return mType; }
 		double timestamp() const { return mTimestamp; }
+		
+		/// True if this object was constructed using the
+		/// default constructor and has no type or data.
+		bool isNull() const { return mType==UNDEFINED; }
 		
 		bool isValue() const;
 		Value const& asValue() const;

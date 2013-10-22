@@ -24,16 +24,14 @@ GeneratorSineWave::GeneratorSineWave(Params const& params, std::string const& cl
 
 void GeneratorSineWave::run()
 {
-//	Duration delta(mParams.outputDelta);
 	const double maxSleepDuration(0.2);
 	
 	
-	mStartTime = elapsedTime();// Time::clock::now();
+	mStartTime = elapsedTime();
 	mTimeOfLastOutput = mStartTime - mParams.outputDelta;
 	while (!isRequestedToStop())
 	{
 		double now = elapsedTime();
-//		Time now = Time::clock::now();
 		if (now - mTimeOfLastOutput > mParams.outputDelta)
 		{
 			emitValue(now);
@@ -47,7 +45,7 @@ void GeneratorSineWave::run()
 void GeneratorSineWave::emitValue(double now)
 {
 	double t = now - mStartTime;
-	float value = sinf(float((t * mParams.frequency + mParams.phase) * 2. * M_PI )) * float(mParams.amplitude);
+	Value value = sinf(float((t * mParams.frequency + mParams.phase) * 2. * M_PI )) * float(mParams.amplitude);
 	Data data(value, elapsedTime());
 	mOutlet->outputNewData(data);
 }
