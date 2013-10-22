@@ -15,13 +15,13 @@ using namespace std;
 
 Data::Data()
 : mType(UNDEFINED)
-, mData(0.)
+, mData()
 , mTimestamp(-42.)
 {}
 
 Data::Data(Type type, double timestamp)
 : mType(type)
-, mData(0.)
+, mData(createVariant(type))
 , mTimestamp(timestamp)
 {}
 
@@ -120,28 +120,49 @@ Scene3d& Data::asScene3d()
 	return boost::get<Scene3d&>(mData);
 }
 
-std::string Data::toString() const
-{
-	std::stringstream ss;
-	switch (mType)
+namespace hm {
+	std::ostream& operator<<(std::ostream& out, Data const& rhs)
 	{
-		case VALUE:
-			ss << asValue();
-			break;
-		case POINT3D:
-			ss << asPoint3d();
-			break;
-		case SKELETON3D:
-			ss << asSkeleton3d();
-			break;
-		case SCENE3D:
-			ss << asScene3d();
-			break;
-		default:
-			ss << "Unable to convert datatype into string";
-			assert(false);
-			break;
+		switch (rhs.mType)
+		{
+			case VALUE:
+				return out << rhs.asValue();
+				break;
+			case POINT3D:
+				return out << rhs.asPoint3d();
+				break;
+			case SKELETON3D:
+				return out << rhs.asSkeleton3d();
+				break;
+			case SCENE3D:
+				return out << rhs.asScene3d();
+				break;
+			default:
+				assert(false);
+				return out << "(unrecognised type)";
+		}
 	}
-	return ss.str();
 }
 
+std::string Data::toString() const
+{
+	return (std::stringstream() << *this).str();
+}
+
+Data::Variant Data::createVariant(Type type)
+{
+	switch (type)
+	{
+		case VALUE:
+			return Variant(Value());
+		case POINT3D:
+			return Point3d();
+		case SKELETON3D:
+			return Skeleton3d();
+		case SCENE3D:
+			return Scene3d();
+		default:
+			assert(false);
+			return Value();
+	}
+}

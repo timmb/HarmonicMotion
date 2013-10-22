@@ -17,15 +17,15 @@ using namespace std;
 ////using boost::chrono::duration::milli;
 //using boost::timed_mutex;
 
-Inlet::Inlet(Type type,
+Inlet::Inlet(Types types,
 			 string const& name,
 			 string const& helpText)
-: mType(type)
+: mTypes(types)
 , mName(name)
 , mHelpText(helpText)
 , mDestructorHasBeenCalled(false)
 {
-	assert(type!=UNDEFINED);
+	assert(types!=UNDEFINED);
 }
 
 Inlet::~Inlet()

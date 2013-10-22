@@ -15,10 +15,13 @@ namespace hm
 	public:
 		struct Params
 		{
+			/// Will force enableDepth
 			bool enableScene;
+			bool enableDepth;
 			
 			Params()
 			: enableScene(true)
+			, enableDepth(true)
 			{}
 		};
 		

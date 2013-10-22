@@ -14,7 +14,7 @@ using namespace hm;
 OutputConsolePrinter::OutputConsolePrinter(std::string const& printerName, std::string const& className)
 : Node(className)
 , mName(printerName)
-, mInlet(new Inlet(VALUE, "Input printed to console", ""))
+, mInlet(new Inlet(ALL_TYPES, "Input printed to console", ""))
 , mLastTimestamp(-42.)
 {
 	addInlet(mInlet);

@@ -52,15 +52,13 @@ namespace hm
 		
 	private:
 		typedef boost::variant<Value, Point3d, Skeleton3d, Scene3d> Variant;
+		static Variant createVariant(Type type);
 		Type mType;
 		Variant mData;
 		double mTimestamp;
 		
-		friend std::ostream& operator<<(std::ostream&, Data&);
+		friend std::ostream& operator<<(std::ostream&, Data const&);
 	};
 	
-	inline std::ostream& operator<<(std::ostream& out, Data& rhs)
-	{
-		return out << rhs.toString();
-	}
+	std::ostream& operator<<(std::ostream& out, Data const& rhs);
 }

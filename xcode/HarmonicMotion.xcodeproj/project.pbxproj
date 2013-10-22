@@ -193,6 +193,8 @@
 		2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375618168E67008CAA09 /* Scene3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229375518168E67008CAA09 /* Scene3d.h */; };
+		22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F461816BCCE004E1219 /* libltdl.7.dylib */; };
+		22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
 		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
 		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
@@ -347,6 +349,8 @@
 		2229375218168E5F008CAA09 /* Scene3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene3d.cpp; sourceTree = "<group>"; };
 		2229375518168E67008CAA09 /* Scene3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene3d.h; path = ../include/Scene3d.h; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
+		22E50F461816BCCE004E1219 /* libltdl.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libltdl.7.dylib; path = ../lib/macosx/libltdl.7.dylib; sourceTree = "<group>"; };
+		22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libusb-1.0.0.dylib"; path = "../lib/macosx/libusb-1.0.0.dylib"; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -410,6 +414,8 @@
 				22293747181679AA008CAA09 /* libnimMockNodes.dylib in Frameworks */,
 				22293749181679AA008CAA09 /* libnimRecorder.dylib in Frameworks */,
 				2229374B181679AA008CAA09 /* libOpenNI.dylib in Frameworks */,
+				22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */,
+				22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +435,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				2229375518168E67008CAA09 /* Scene3d.h */,
 				2229375218168E5F008CAA09 /* Scene3d.cpp */,
 				2229374F18167E6F008CAA09 /* NodeKinect.cpp */,
@@ -438,7 +445,6 @@
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				22197ECC17F44B1B003B1883 /* GeneratorSineWave.cpp */,
 				22197EFE17F44B76003B1883 /* GeneratorSineWave.h */,
-				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
 				22197EFF17F44B76003B1883 /* Inlet.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
@@ -525,6 +531,8 @@
 		22293677181677A5008CAA09 /* BlockOpenNI */ = {
 			isa = PBXGroup;
 			children = (
+				22E50F461816BCCE004E1219 /* libltdl.7.dylib */,
+				22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */,
 				22293741181679AA008CAA09 /* libnimCodecs.dylib */,
 				22293742181679AA008CAA09 /* libnimMockNodes.dylib */,
 				22293743181679AA008CAA09 /* libnimRecorder.dylib */,
@@ -1138,6 +1146,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../lib/CinderBlocks/BlockOpenNI/lib/macosx\"",
+					"\"$(SRCROOT)/../lib/macosx\"",
 				);
 				MACH_O_TYPE = mh_execute;
 				OTHER_LDFLAGS = (
@@ -1186,6 +1195,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../lib/CinderBlocks/BlockOpenNI/lib/macosx\"",
+					"\"$(SRCROOT)/../lib/macosx\"",
 				);
 				MACH_O_TYPE = mh_execute;
 				OTHER_LDFLAGS = (

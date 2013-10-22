@@ -19,10 +19,11 @@ namespace hm
 	public:
 		/// \param sharedWaitCondition is notified whenever new data
 		/// arrives at this inlet
-		Inlet(Type type, std::string const& name, std::string const& helpText);
+		/// Type may be a combination of Type flags.
+		Inlet(Types types, std::string const& name, std::string const& helpText);
 		virtual ~Inlet();
 		
-		Type type() const { return mType; }
+		Types types() const { return mTypes; }
 		virtual std::string name() const { return mName; }
 		virtual std::string helpText() const { return mHelpText; }
 		
@@ -45,7 +46,7 @@ namespace hm
 		void decrementNumConnections();
 		// --------------------------
 		
-		Type mType;
+		Types mTypes;
 		std::string mName;
 		std::string mHelpText;
 		/// Guarded by mMutex

@@ -23,7 +23,7 @@ Outlet::Outlet(Type type, string const& name, string const& helpText)
 
 bool Outlet::connect(InletPtr inlet)
 {
-	if (inlet->type() != type())
+	if ((inlet->types() & type()) == 0)
 	{
 		return false;
 	}

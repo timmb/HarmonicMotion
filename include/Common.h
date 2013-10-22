@@ -31,11 +31,12 @@ namespace hm
 	double elapsedTime();
 
 #if defined(DEBUG) || defined(_DEBUG)
-#define HM_LOG_DEBUG
+//#define HM_LOG_DEBUG
 #endif
 	
 #ifdef HM_LOG_DEBUG
-	#define hm_debug(message) std::cerr << __FILE__ << ' ' <<__LINE__<<' '<<message<<std::endl;
+#define __FILE_NO_DIR__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+	#define hm_debug(message) std::cerr << __FILE_NO_DIR__ << ' ' <<__LINE__<<' '<<message<<std::endl;
 #else
 #define hm_debug(message) ;
 #endif
@@ -43,13 +44,17 @@ namespace hm
 	// Data types used in the pipeline
 	enum Type
 	{
-		UNDEFINED,
-		VALUE, // float
-		POINT3D, // Vector of three VALUEs
-		SKELETON3D, // Set of POINT3Ds
-		SCENE3D, // Set of SKELETON3Ds
-		IMAGE3D
+		UNDEFINED = 0,
+		VALUE = (1<<0), // float
+		POINT3D = (1<<1), // Vector of three VALUEs
+		SKELETON3D = (1<<2), // Set of POINT3Ds
+		SCENE3D = (1<<3), // Set of SKELETON3Ds
+		IMAGE3D = (1<<4),
+		ALL_TYPES = (1<<5) - 1
 	};
+	static_assert(VALUE | POINT3D | SKELETON3D | SCENE3D | IMAGE3D == ALL_TYPES, "Types have not been properly defined");
+	/// Can be an OR combination of types.
+	typedef int Types;
 	
 	std::string asString(Type type);
 }

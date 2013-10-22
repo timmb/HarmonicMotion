@@ -59,7 +59,14 @@ NodeKinect::NodeKinect(Params const& params, std::string const& className)
 
 void NodeKinect::openKinect()
 {
-	mOpenNi->createDevices(1, NODE_TYPE_USER);
+	int flags = NODE_TYPE_NONE;
+	if (mParams.enableDepth)
+		flags |= NODE_TYPE_DEPTH;
+	if (mParams.enableScene)
+		flags |= NODE_TYPE_DEPTH | NODE_TYPE_USER;
+	
+	mOpenNi->createDevices(1, NODE_TYPE_DEPTH | NODE_TYPE_USER);
+//	mOpenNi->SetPrimaryBuffer(0, NODE_TYPE_USER);
 	mDevice = mOpenNi->getDevice(0);
 	if (mDevice)
 	{
@@ -78,6 +85,7 @@ void NodeKinect::run()
 	while (!isRequestedToStop())
 	{
 		mOpenNi->update();
+		assert(mDevice->_isUserOn);
 		if (mParams.enableScene && mDevice->isUserDataNew())
 		{
 			OpenNIUserList users = mOpenNi->getUserList();

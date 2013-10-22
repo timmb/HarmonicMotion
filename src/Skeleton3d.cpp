@@ -97,6 +97,8 @@ const char* hm::jointNameAbbr(Joint joint)
 
 Skeleton3d::Skeleton3d()
 : mJoints(NUM_JOINTS)
+, mJointProjectives(NUM_JOINTS)
+, mJointConfidences(NUM_JOINTS)
 {}
 
 
