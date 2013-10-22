@@ -46,6 +46,8 @@ ${QTKIT_FRAMEWORK}
 libboost_date_time.${STATIC_LIBRARY_EXTENSION}
 libboost_filesystem.${STATIC_LIBRARY_EXTENSION}
 libboost_system.${STATIC_LIBRARY_EXTENSION}
+libboost_chrono.${STATIC_LIBRARY_EXTENSION}
+libboost_thread.${STATIC_LIBRARY_EXTENSION}
 libz.${STATIC_LIBRARY_EXTENSION}
 )
 
@@ -105,6 +107,8 @@ QT4_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
 # Include directories - one per line
 INCLUDE_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../include
+	${PROJECT_SOURCE_DIR}/../../../Cinder/include
+	${PROJECT_SOURCE_DIR}/../../../Cinder/boost
 )
 
 # Link directories - one per line
