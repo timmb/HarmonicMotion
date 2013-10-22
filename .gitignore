@@ -200,3 +200,7 @@ Icon
 *.lai
 *.la
 *.a
+
+# CMake
+xcode/CMakeCache.txt
+xcode/CMakeFiles/
