@@ -10,7 +10,6 @@
 #include "Node.h"
 #include <algorithm>
 
-//#include <XnOpenNI.h>
 
 using namespace hm;
 
