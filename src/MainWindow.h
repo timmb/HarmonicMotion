@@ -8,7 +8,8 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QTextEdit>
+
+class QPlainTextEdit;
 
 namespace hm
 {
@@ -18,7 +19,10 @@ namespace hm
 	public:
 		MainWindow();
 		
+	public Q_SLOTS:
+		void newConsoleMessage(QString);
+		
 	private:
-		QTextEdit* mConsole;
+		QPlainTextEdit* mConsole;
 	};
 }

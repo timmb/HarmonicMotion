@@ -7,8 +7,7 @@
 //
 
 #pragma once
-
-#include <QApplication>
+#include <QtGui>
 #include "HarmonicMotion.h"
 
 namespace hm
@@ -20,10 +19,15 @@ namespace hm
 	public:
 		Application(int argc, char** argv);
 		
+	public Q_SLOTS:
+		void checkPipeline();
+		
 	Q_SIGNALS:
 		void newConsoleMessage(QString);
-		
+	
 	private:
 		Pipeline mPipeline;
+		std::shared_ptr<NodeAccumulator> mAccum;
+		QList<NodePtr> mNodes;
 	};
 }

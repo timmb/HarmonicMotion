@@ -3,6 +3,7 @@ PROJECT (HarmonicMotionGui CXX C)
 
 # Currently only setup for OSX
 SET(STATIC_LIBRARY_EXTENSION a)
+SET(DYNAMIC_LIBRARY_EXTENSION dylib)
 
 
 # Setup only debug and release
@@ -111,6 +112,7 @@ INCLUDE_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../include
 	${PROJECT_SOURCE_DIR}/../../../Cinder/include
 	${PROJECT_SOURCE_DIR}/../../../Cinder/boost
+	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/BlockOpenNI/include/Include
 )
 
 # Link directories - one per line
@@ -118,6 +120,7 @@ LINK_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../bin
 	${PROJECT_SOURCE_DIR}/../../lib
 	${PROJECT_SOURCE_DIR}/../../lib/macosx
+	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/BlockOpenNI/lib/macosx
 )
 
 ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
@@ -148,4 +151,11 @@ debug libHarmonicMotiond.${STATIC_LIBRARY_EXTENSION}
 optimized libcinder.${STATIC_LIBRARY_EXTENSION}
 debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
 ${CINDER_DEPENDENCIES}
+# OpenNI
+libltdl.7.${DYNAMIC_LIBRARY_EXTENSION}
+libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}
+libnimCodecs.${DYNAMIC_LIBRARY_EXTENSION}
+libnimMockNodes.${DYNAMIC_LIBRARY_EXTENSION}
+libnimRecorder.${DYNAMIC_LIBRARY_EXTENSION}
+libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
 )
