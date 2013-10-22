@@ -187,6 +187,12 @@
 		2229374A181679AA008CAA09 /* libnimRecorder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293743181679AA008CAA09 /* libnimRecorder.dylib */; };
 		2229374B181679AA008CAA09 /* libOpenNI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293744181679AA008CAA09 /* libOpenNI.dylib */; };
 		2229374C181679AA008CAA09 /* libOpenNI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293744181679AA008CAA09 /* libOpenNI.dylib */; };
+		2229374E18167E63008CAA09 /* NodeKinect.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229374D18167E63008CAA09 /* NodeKinect.h */; };
+		2229375018167E70008CAA09 /* NodeKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229374F18167E6F008CAA09 /* NodeKinect.cpp */; };
+		2229375118167E70008CAA09 /* NodeKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229374F18167E6F008CAA09 /* NodeKinect.cpp */; };
+		2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
+		2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
+		2229375618168E67008CAA09 /* Scene3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229375518168E67008CAA09 /* Scene3d.h */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
 		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
 		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
@@ -235,7 +241,7 @@
 		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../include/Data.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
 		22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrinter.cpp; sourceTree = "<group>"; };
-		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputConsolePrinter.h; sourceTree = "<group>"; };
+		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputConsolePrinter.h; path = ../include/OutputConsolePrinter.h; sourceTree = "<group>"; };
 		2229366F181586F2008CAA09 /* HarmonicMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HarmonicMotion.h; path = ../include/HarmonicMotion.h; sourceTree = "<group>"; };
 		22293671181591A2008CAA09 /* Skeleton3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Skeleton3d.h; path = ../include/Skeleton3d.h; sourceTree = "<group>"; };
 		22293673181591AD008CAA09 /* Skeleton3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton3d.cpp; sourceTree = "<group>"; };
@@ -336,6 +342,10 @@
 		22293742181679AA008CAA09 /* libnimMockNodes.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnimMockNodes.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libnimMockNodes.dylib; sourceTree = "<group>"; };
 		22293743181679AA008CAA09 /* libnimRecorder.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnimRecorder.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libnimRecorder.dylib; sourceTree = "<group>"; };
 		22293744181679AA008CAA09 /* libOpenNI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libOpenNI.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libOpenNI.dylib; sourceTree = "<group>"; };
+		2229374D18167E63008CAA09 /* NodeKinect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeKinect.h; path = ../include/NodeKinect.h; sourceTree = "<group>"; };
+		2229374F18167E6F008CAA09 /* NodeKinect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeKinect.cpp; sourceTree = "<group>"; };
+		2229375218168E5F008CAA09 /* Scene3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene3d.cpp; sourceTree = "<group>"; };
+		2229375518168E67008CAA09 /* Scene3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene3d.h; path = ../include/Scene3d.h; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -419,6 +429,10 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2229375518168E67008CAA09 /* Scene3d.h */,
+				2229375218168E5F008CAA09 /* Scene3d.cpp */,
+				2229374F18167E6F008CAA09 /* NodeKinect.cpp */,
+				2229374D18167E63008CAA09 /* NodeKinect.h */,
 				22293671181591A2008CAA09 /* Skeleton3d.h */,
 				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
@@ -898,6 +912,8 @@
 				2229373C181677C8008CAA09 /* VOpenNIRecorder.h in Headers */,
 				2229373D181677C8008CAA09 /* VOpenNISurface.h in Headers */,
 				22293740181677C8008CAA09 /* VOpenNIUser.h in Headers */,
+				2229374E18167E63008CAA09 /* NodeKinect.h in Headers */,
+				2229375618168E67008CAA09 /* Scene3d.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1007,6 +1023,8 @@
 				22293738181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */,
 				2229373B181677C8008CAA09 /* VOpenNIRecorder.cpp in Sources */,
 				2229373F181677C8008CAA09 /* VOpenNIUser.cpp in Sources */,
+				2229375118167E70008CAA09 /* NodeKinect.cpp in Sources */,
+				2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1043,6 +1061,8 @@
 				22293737181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */,
 				2229373A181677C8008CAA09 /* VOpenNIRecorder.cpp in Sources */,
 				2229373E181677C8008CAA09 /* VOpenNIUser.cpp in Sources */,
+				2229375018167E70008CAA09 /* NodeKinect.cpp in Sources */,
+				2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1065,10 +1085,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -1116,10 +1132,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = HarmonicMotion_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
@@ -1212,6 +1224,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1234,6 +1247,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)";
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (

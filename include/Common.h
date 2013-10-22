@@ -20,6 +20,7 @@ namespace hm
 	typedef float Value;
 	typedef ci::Vec3f Point3d;
 	class Skeleton3d;
+	class Scene3d;
 	
 	// typedefs
 	typedef std::shared_ptr<Inlet> InletPtr;
