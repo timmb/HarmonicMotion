@@ -68,13 +68,13 @@ INCLUDE(${QT_USE_FILE})
 #Include folders 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 FILE(GLOB FoundHeaders *.h)
-FILE(GLOB myprj_src *.cpp)
+FILE(GLOB FoundSources *.cpp)
 
 
 #Here we add our source files
-SET (myprj_src
-	main.cpp
-     )
+#SET (myprj_src
+#	main.cpp
+#     )
 
 #Define QT resource file.this file may define icons,images.
 SET(myprj_rccs
@@ -83,8 +83,10 @@ SET(myprj_rccs
 
 
 #QT headers needed to be processed with QT MOH compiler
-SET(myprj_moh_hdrs
-#	Add header files here
+SET(MocHeaders
+	#	Add header files here
+	MainWindow.h
+	Application.h
     )
 
 #QT UI files needed to be processed
@@ -96,7 +98,7 @@ SET(myprj_uis
 
 
 #Generate CPP files from moh headers
-QT4_WRAP_CPP(myprj_moh_srcs ${myprj_moh_hdrs})
+QT4_WRAP_CPP(GeneratedMocSources ${MocHeaders})
 
 #Generate resource header files 
 QT4_ADD_RESOURCES(myprj_rccs_srcs ${myprj_rccs})
@@ -118,7 +120,7 @@ LINK_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../lib/macosx
 )
 
-ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE ${myprj_src} ${myprj_ui_hdrs} ${myprj_moh_srcs} ${myprj_rccs_srcs} )
+ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
 
 # Preprocessor definitions
 set_property(

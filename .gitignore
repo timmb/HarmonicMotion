@@ -204,3 +204,7 @@ Icon
 # CMake
 xcode/CMakeCache.txt
 xcode/CMakeFiles/
+xcode/CMakeScripts/HarmonicMotionGui_cmakeRulesBuildPhase.*
+
+# Qt
+moc_*.cxx

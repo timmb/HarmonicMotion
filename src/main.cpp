@@ -3,12 +3,17 @@
 #include "Pipeline.h"
 #include <QDebug>
 
+#include "Application.h"
+#include "MainWindow.h"
+
+using namespace hm;
+
 int main(int argc, char** argv)
 {
-	QApplication app(argc, argv);
-	QMainWindow* w = new QMainWindow;
+	Application* app = new Application(argc, argv);
+	MainWindow* w = new MainWindow;
 	w->show();
-	hm::Pipeline pipeline;
+//	hm::Pipeline pipeline;
 //	qDebug() << pipeline.test();
-	return app.exec();
+	return app->exec();
 }
