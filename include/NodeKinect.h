@@ -22,7 +22,7 @@ namespace hm
 			{}
 		};
 		
-		NodeKinect(Params const& params, std::string const& className="NodeKinect");
+		NodeKinect(Params const& params = Params(), std::string const& className="NodeKinect");
 		
 	protected:
 		virtual void run() override;

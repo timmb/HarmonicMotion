@@ -9,3 +9,4 @@
 #include "GeneratorSineWave.h"
 #include "OutputConsolePrinter.h"
 #include "OutputOsc.h"
+#include "NodeKinect.h"

@@ -22,10 +22,10 @@ private:
 void HarmonicMotionApp::setup()
 {
 	std::cout << "Hello world" << std::endl;
-	auto sineWave = NodePtr(new GeneratorSineWave);
+	auto gen = NodePtr(new NodeKinect);
 	auto printer = NodePtr(new OutputConsolePrinter);
-	sineWave->outlet(0)->connect(printer->inlet(0));
-	mPipeline.addNode(sineWave);
+	gen->outlet(0)->connect(printer->inlet(0));
+	mPipeline.addNode(gen);
 	mPipeline.addNode(printer);
 	mPipeline.start();
 }

@@ -19,11 +19,18 @@ Data::Data()
 , mTimestamp(-42.)
 {}
 
+Data::Data(Type type, double timestamp)
+: mType(type)
+, mData(0.)
+, mTimestamp(timestamp)
+{}
+
 Data::Data(Value& value, double timestamp)
 : mType(VALUE)
 , mData(value)
 , mTimestamp(timestamp)
 {}
+
 
 Data::Data(Point3d& x, double timestamp)
 : mType(POINT3D)

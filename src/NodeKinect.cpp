@@ -54,6 +54,7 @@ NodeKinect::NodeKinect(Params const& params, std::string const& className)
 	mOpenNi = OpenNIDeviceManager::InstancePtr();
 	mSceneOutlet = OutletPtr(new Outlet(SCENE3D, "3D Scene", "All user skeletons in 3D space"));
 	addOutlet(mSceneOutlet);
+	openKinect();
 }
 
 void NodeKinect::openKinect()
@@ -61,11 +62,19 @@ void NodeKinect::openKinect()
 	mOpenNi->createDevices(1, NODE_TYPE_USER);
 	mDevice = mOpenNi->getDevice(0);
 	if (mDevice)
+	{
+		hm_debug("Opened Kinect.");
 		mDevice->setDepthShiftMul(3);
+	}
+	else
+	{
+		hm_debug("Failed to open kinect");
+	}
 }
 
 void NodeKinect::run()
 {
+	assert(mDevice != nullptr);
 	while (!isRequestedToStop())
 	{
 		mOpenNi->update();

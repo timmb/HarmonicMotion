@@ -37,7 +37,7 @@ namespace hm
 #ifdef HM_LOG_DEBUG
 	#define hm_debug(message) std::cerr << __FILE__ << ' ' <<__LINE__<<' '<<message<<std::endl;
 #else
-#define hm_debug(message)
+#define hm_debug(message) ;
 #endif
 	
 	// Data types used in the pipeline
