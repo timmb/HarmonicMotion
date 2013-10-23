@@ -7,20 +7,33 @@
 //
 
 #include "MainWindow.h"
+#include "NodeRendererGlWidget.h"
 #include <QtGui>
 using namespace hm;
 
 MainWindow::MainWindow()
 : mConsole(nullptr)
+, mLayout(nullptr)
 {
-//	QLayout* layout = new QVBoxLayout;
-//	setLayout(layout);
-	mConsole = new QPlainTextEdit(this);
-	setCentralWidget(mConsole);
+	mLayout = new QVBoxLayout;
+	QWidget* w = new QWidget(this);
+	setCentralWidget(w);
+	w->setLayout(mLayout);
+	
+	mConsole = new QPlainTextEdit(w);
+	mLayout->addWidget(mConsole);
 	
 	mConsole->setMaximumBlockCount(500);
 	mConsole->setReadOnly(true);
 	
+}
+
+NodeRendererGlWidget* MainWindow::createRendererWidget()
+{
+	auto w = new NodeRendererGlWidget(this);
+	mScenes.push_back(w);
+	mLayout->addWidget(w);
+	return w;
 }
 
 void MainWindow::newConsoleMessage(QString message)

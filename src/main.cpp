@@ -1,21 +1,19 @@
 #include <QMainWindow>
 #include <QApplication>
-#include "Pipeline.h"
 #include <QDebug>
 
-#include "Application.h"
-#include "MainWindow.h"
+#include "Controller.h"
 
 using namespace hm;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+
 int main(int argc, char** argv)
 {
-	Application* app = new Application(argc, argv);
-	MainWindow* w = new MainWindow;
-	bool success = app->connect(app, SIGNAL(newConsoleMessage(QString)), w, SLOT(newConsoleMessage(QString)));
-	assert(success);
-	w->show();
-//	hm::Pipeline pipeline;
-//	qDebug() << pipeline.test();
+	QApplication* app = new QApplication(argc, argv);
+	Controller* c = new Controller(app);
 	return app->exec();
 }
+
+#pragma clang diagnostic pop

@@ -1,21 +1,26 @@
 //
-//  Application.cpp
+//  Controller.cpp
 //  HarmonicMotionGui
 //
 //  Created by Tim Murray-Browne on 22/10/2013.
 //
 //
 
-#include "Application.h"
+#include "Controller.h"
+#include "MainWindow.h"
+#include "NodeRenderer.h"
+#include "NodeRendererGlWidget.h"
 #include <QTimer>
 
 using namespace hm;
 
-Application::Application(int argc, char** argv)
-: QApplication(argc, argv)
+Controller::Controller(QObject* parent)
+: QObject()
+, mMainWindow(new MainWindow)
 , mAccum(nullptr)
+, mRedrawIsRequired(false)
 {
-	NodePtr kinect = NodePtr(new GeneratorSineWave);
+	NodePtr kinect = NodePtr(new NodeKinect);
 	mNodes << kinect;
 	mPipeline.addNode(kinect);
 	
@@ -23,16 +28,27 @@ Application::Application(int argc, char** argv)
 	kinect->outlet(0)->connect(mAccum->inlet(0));
 	mNodes << mAccum;
 	mPipeline.addNode(mAccum);
+
+	NodeRenderer::Ptr renderer(new NodeRenderer);
+	mPipeline.addNode(renderer);
+	kinect->outlet(0)->connect(renderer->inlet(0));
+	
+	bool success = connect(this, SIGNAL(newConsoleMessage(QString)), mMainWindow, SLOT(newConsoleMessage(QString)));
+	assert(success);
+	
+	NodeRendererGlWidget* w = mMainWindow->createRendererWidget();
+	w->setRenderer(renderer);
 	
 	auto timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(checkPipeline()));
 	timer->setInterval(10);
 	timer->start();
 	
+	mMainWindow->show();
 	mPipeline.start();
 }
 
-void Application::checkPipeline()
+void Controller::checkPipeline()
 {
 	while (!mAccum->isEmpty())
 	{

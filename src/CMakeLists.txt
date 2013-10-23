@@ -87,7 +87,7 @@ SET(myprj_rccs
 SET(MocHeaders
 	#	Add header files here
 	MainWindow.h
-	Application.h
+	Controller.h
     )
 
 #QT UI files needed to be processed

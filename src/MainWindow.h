@@ -13,16 +13,22 @@ class QPlainTextEdit;
 
 namespace hm
 {
+	class NodeRendererGlWidget;
+	
 	class MainWindow : public QMainWindow
 	{
 		Q_OBJECT;
 	public:
 		MainWindow();
+		NodeRendererGlWidget* createRendererWidget();
+		
 		
 	public Q_SLOTS:
 		void newConsoleMessage(QString);
 		
 	private:
 		QPlainTextEdit* mConsole;
+		QLayout* mLayout;
+		QVector<NodeRendererGlWidget*> mScenes;
 	};
 }
