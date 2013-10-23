@@ -102,7 +102,6 @@ void NodeKinect::run()
 		{
 			OpenNIUserList users = mOpenNi->getUserList();
 			Scene3d scene = Scene3d(sceneMeta());
-			Data data(scene, elapsedTime());
 			for (OpenNIUserRef user: users)
 			{
 				Skeleton3d skeleton(sceneMeta());
@@ -121,6 +120,7 @@ void NodeKinect::run()
 				}
 				scene.skeletons().push_back(skeleton);
 			}
+			Data data(scene, elapsedTime());
 			mSceneOutlet->outputNewData(data);
 		}
 		else
@@ -128,6 +128,7 @@ void NodeKinect::run()
 			boost::this_thread::sleep_for(boost::chrono::microseconds(250));
 		}
 	}
+	// TODO: Close kinect properly
 }
 
 

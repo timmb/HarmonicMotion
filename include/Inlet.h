@@ -43,6 +43,10 @@ namespace hm
 		/// The timestamp of the new data is provided as argument to the function
 		/// \note This function must be thread safe and should not block
 		void setNotifyCallback(std::function<void(double)> function);
+		/// Set the name of the node that this inlet is attached to. Nodes
+		/// do this automatically when an inlet is added
+		void setNodeName(std::string const& nodeName) { mNodeName = nodeName; }
+		std::string nodeName() const { return mNodeName; }
 		
 	private:
 		// Accessed by Outlet ------------
@@ -54,6 +58,7 @@ namespace hm
 		Types mTypes;
 		std::string mName;
 		std::string mHelpText;
+		std::string mNodeName;
 		/// Guarded by mMutex
 		Data mData;
 		/// Guarded by mMutex

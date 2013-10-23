@@ -8,6 +8,7 @@
 
 #include "Node.h"
 #include "Inlet.h"
+#include "Outlet.h"
 
 using namespace hm;
 using namespace std;
@@ -100,6 +101,8 @@ void Node::addInlet(InletPtr inlet)
 		return;
 	}
 	inlet->setNotifyCallback([=](double) { this->callbackNewInletData(); });
+	// for now just use type name for node name
+	inlet->setNodeName(type());
 	mInlets.push_back(inlet);
 }
 
@@ -111,6 +114,8 @@ void Node::addOutlet(OutletPtr outlet)
 		assert(!mStartHasBeenCalled);
 		return;
 	}
+	// for now just use type name for node name
+	outlet->setNodeName(type());
 	mOutlets.push_back(outlet);
 }
 
