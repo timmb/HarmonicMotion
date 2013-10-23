@@ -18,7 +18,7 @@ namespace hm
 		Value(double value = 0.);
 		Value(float value);
 		
-		virtual std::string toString() const override;
+		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return VALUE; }
 		
 		double& value() { return mValue; }
@@ -27,5 +27,4 @@ namespace hm
 	private:
 		double mValue;
 	};
-	std::ostream& operator<<(std::ostream&, Value const&);
 }

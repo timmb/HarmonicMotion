@@ -99,7 +99,7 @@ void Node::addInlet(InletPtr inlet)
 		assert(!mStartHasBeenCalled);
 		return;
 	}
-	inlet->setNotifyCallback([=]() { this->callbackNewInletData(); });
+	inlet->setNotifyCallback([=](double) { this->callbackNewInletData(); });
 	mInlets.push_back(inlet);
 }
 

@@ -9,15 +9,12 @@
 #include "Value.h"
 #include <sstream>
 
-namespace hm
-{
-	std::ostream& operator<<(std::ostream& out, Value const& rhs)
-	{
-		return out << rhs.value();
-	}
-}
-
 using namespace hm;
+
+std::ostream& Value::printTo(std::ostream& out) const
+{
+	return out << mValue;
+}
 
 Value::Value(double value)
 : mValue(value)
@@ -27,7 +24,3 @@ Value::Value(float value)
 : mValue(value)
 {}
 
-std::string Value::toString() const
-{
-	return (std::stringstream() << *this).str();
-}

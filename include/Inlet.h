@@ -39,8 +39,10 @@ namespace hm
 		/// - dataTimestamp() > lastTimestampReceived (returning true)
 		bool waitForNewData(double lastTimestampReceived) const;
 		/// Set a function to be called when new data arrives.
+		/// \param function A callback function called when new data arrives.
+		/// The timestamp of the new data is provided as argument to the function
 		/// \note This function must be thread safe and should not block
-		void setNotifyCallback(std::function<void(void)> function);
+		void setNotifyCallback(std::function<void(double)> function);
 		
 	private:
 		// Accessed by Outlet ------------
@@ -60,7 +62,7 @@ namespace hm
 		
 		mutable boost::shared_mutex mMutex;
 		mutable boost::condition_variable_any mWaitCondition;
-		std::function<void(void)> mNotifyCallback;
+		std::function<void(double)> mNotifyCallback;
 		bool mDestructorHasBeenCalled;
 		
 		friend class Outlet;

@@ -7,26 +7,25 @@
 //
 
 #include "Point3d.h"
-#include <sstream>
 #include "cinder/gl/gl.h"
 
 namespace hm
 {
 	std::ostream& operator<<(std::ostream& out, Point3d const& rhs)
 	{
-		return out << static_cast<ci::Vec3f const&>(rhs);
+		return out << static_cast<DataType const&>(rhs);
 	}
 }
 
+
 using namespace hm;
+
+	std::ostream& Point3d::printTo(std::ostream& out) const
+	{
+		return out << *static_cast<ci::Vec3f const*>(this);
+	}
 
 void Point3d::draw()
 {
 	ci::gl::drawSphere(*this, 5);
 }
-
-std::string Point3d::toString() const
-{
-	return (std::stringstream() << *this).str();
-}
-

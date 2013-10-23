@@ -84,6 +84,9 @@
 		221E9040181727240028EAFD /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E903D181727220028EAFD /* Value.cpp */; };
 		221E90441817273C0028EAFD /* Point3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E90421817273B0028EAFD /* Point3d.h */; };
 		221E90451817273C0028EAFD /* Value.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E90431817273C0028EAFD /* Value.h */; };
+		2223EC601817EEA400B900CF /* DataNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC5E1817EEA400B900CF /* DataNull.cpp */; };
+		2223EC611817EEA400B900CF /* DataNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC5E1817EEA400B900CF /* DataNull.cpp */; };
+		2223EC641817EEAF00B900CF /* DataNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC631817EEAF00B900CF /* DataNull.h */; };
 		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AAD181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */; };
@@ -208,6 +211,9 @@
 		2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375618168E67008CAA09 /* Scene3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229375518168E67008CAA09 /* Scene3d.h */; };
+		225161E41817DBE7004F0F57 /* NodeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 225161E21817DBE7004F0F57 /* NodeRenderer.cpp */; };
+		225161E51817DBE7004F0F57 /* NodeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 225161E21817DBE7004F0F57 /* NodeRenderer.cpp */; };
+		225161E81817DC0F004F0F57 /* NodeRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 225161E71817DC0F004F0F57 /* NodeRenderer.h */; };
 		22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F461816BCCE004E1219 /* libltdl.7.dylib */; };
 		22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
@@ -265,6 +271,8 @@
 		221E903D181727220028EAFD /* Value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Value.cpp; sourceTree = "<group>"; };
 		221E90421817273B0028EAFD /* Point3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3d.h; path = ../include/Point3d.h; sourceTree = "<group>"; };
 		221E90431817273C0028EAFD /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Value.h; path = ../include/Value.h; sourceTree = "<group>"; };
+		2223EC5E1817EEA400B900CF /* DataNull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataNull.cpp; sourceTree = "<group>"; };
+		2223EC631817EEAF00B900CF /* DataNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataNull.h; path = ../include/DataNull.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
 		22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrinter.cpp; sourceTree = "<group>"; };
 		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputConsolePrinter.h; path = ../include/OutputConsolePrinter.h; sourceTree = "<group>"; };
@@ -372,6 +380,8 @@
 		2229374F18167E6F008CAA09 /* NodeKinect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeKinect.cpp; sourceTree = "<group>"; };
 		2229375218168E5F008CAA09 /* Scene3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene3d.cpp; sourceTree = "<group>"; };
 		2229375518168E67008CAA09 /* Scene3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene3d.h; path = ../include/Scene3d.h; sourceTree = "<group>"; };
+		225161E21817DBE7004F0F57 /* NodeRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeRenderer.cpp; sourceTree = "<group>"; };
+		225161E71817DC0F004F0F57 /* NodeRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeRenderer.h; path = ../include/NodeRenderer.h; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		22E50F461816BCCE004E1219 /* libltdl.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libltdl.7.dylib; path = ../lib/macosx/libltdl.7.dylib; sourceTree = "<group>"; };
 		22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libusb-1.0.0.dylib"; path = "../lib/macosx/libusb-1.0.0.dylib"; sourceTree = "<group>"; };
@@ -495,6 +505,10 @@
 				221E90421817273B0028EAFD /* Point3d.h */,
 				221E903D181727220028EAFD /* Value.cpp */,
 				221E90431817273C0028EAFD /* Value.h */,
+				225161E21817DBE7004F0F57 /* NodeRenderer.cpp */,
+				225161E71817DC0F004F0F57 /* NodeRenderer.h */,
+				2223EC5E1817EEA400B900CF /* DataNull.cpp */,
+				2223EC631817EEAF00B900CF /* DataNull.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -889,6 +903,7 @@
 				222936DC181677BD008CAA09 /* XnCyclicQueueT.h in Headers */,
 				222936DD181677BD008CAA09 /* XnCyclicStackT.h in Headers */,
 				222936DE181677BD008CAA09 /* XnDataTypes.h in Headers */,
+				2223EC641817EEAF00B900CF /* DataNull.h in Headers */,
 				222936DF181677BD008CAA09 /* XnDerivedCast.h in Headers */,
 				222936E0181677BD008CAA09 /* XnDump.h in Headers */,
 				222936E1181677BD008CAA09 /* XnDumpWriters.h in Headers */,
@@ -911,6 +926,7 @@
 				222936F2181677BD008CAA09 /* XnModuleCppInterface.h in Headers */,
 				222936F3181677BD008CAA09 /* XnModuleCppRegistratration.h in Headers */,
 				222936F4181677BD008CAA09 /* XnModuleInterface.h in Headers */,
+				225161E81817DC0F004F0F57 /* NodeRenderer.h in Headers */,
 				222936F5181677BD008CAA09 /* XnNode.h in Headers */,
 				222936F6181677BD008CAA09 /* XnNodeAllocator.h in Headers */,
 				222936F7181677BD008CAA09 /* XnOpenNI.h in Headers */,
@@ -1007,6 +1023,8 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "HarmonicMotion" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -1048,10 +1066,12 @@
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
 				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
 				22197EDB17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
+				225161E51817DBE7004F0F57 /* NodeRenderer.cpp in Sources */,
 				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
 				22197F1117F472F4003B1883 /* OscBundle.cpp in Sources */,
 				22197F1217F472F4003B1883 /* OscListener.cpp in Sources */,
+				2223EC611817EEA400B900CF /* DataNull.cpp in Sources */,
 				22197F1317F472F4003B1883 /* OscMessage.cpp in Sources */,
 				22197F1417F472F4003B1883 /* OscSender.cpp in Sources */,
 				22197F1517F47301003B1883 /* NetworkingUtils.cpp in Sources */,
@@ -1086,6 +1106,7 @@
 			files = (
 				D8747D8A237442168BF330E1 /* HarmonicMotionApp.cpp in Sources */,
 				757F077DABA7415EB988676F /* OscBundle.cpp in Sources */,
+				225161E41817DBE7004F0F57 /* NodeRenderer.cpp in Sources */,
 				2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */,
 				B8E4FA98F66F42B883191911 /* OscMessage.cpp in Sources */,
 				3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */,
@@ -1116,6 +1137,7 @@
 				2229375018167E70008CAA09 /* NodeKinect.cpp in Sources */,
 				2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */,
 				221E90281816E40B0028EAFD /* NodeAccumulator.cpp in Sources */,
+				2223EC601817EEA400B900CF /* DataNull.cpp in Sources */,
 				221E90311817242A0028EAFD /* DataType.cpp in Sources */,
 				221E903A1817270D0028EAFD /* Point3d.cpp in Sources */,
 				221E903F181727240028EAFD /* Value.cpp in Sources */,

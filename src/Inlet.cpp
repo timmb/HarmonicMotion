@@ -62,7 +62,7 @@ double Inlet::dataTimestamp() const
 	return mData.timestamp();
 }
 
-void Inlet::setNotifyCallback(std::function<void ()> function)
+void Inlet::setNotifyCallback(std::function<void (double)> function)
 {
 	mNotifyCallback = function;
 }
@@ -89,7 +89,7 @@ void Inlet::provideNewData(Data const& data)
 	hm_debug("New data at inlet: "+data.toString());
 	mWaitCondition.notify_all();
 	if (mNotifyCallback)
-		mNotifyCallback();
+		mNotifyCallback(mDataTimestamp);
 }
 
 

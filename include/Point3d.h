@@ -19,9 +19,9 @@ namespace hm
 		Point3d(ci::Vec3f const& v) : ci::Vec3f(v) {}
 		
 		virtual void draw();
-		virtual std::string toString() const override;
+		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return POINT3D; }
-		
 	};
-	std::ostream& operator<<(std::ostream&, Point3d const&);
+	// To avoid ambiguity with both base classes
+	std::ostream& operator<<(std::ostream& out, Point3d const& rhs);
 }

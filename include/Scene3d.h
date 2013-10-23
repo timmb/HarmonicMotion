@@ -13,14 +13,11 @@ namespace hm
 		std::vector<Skeleton3d>& skeletons() { return mSkeletons; }
 		std::vector<Skeleton3d> const& skeletons() const { return mSkeletons; }
 		
-		virtual std::string toString() const override;
+		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return SCENE3D; }
+		virtual void draw() override;
 		
 	private:
 		std::vector<Skeleton3d> mSkeletons;
-		
-		friend std::ostream& operator<<(std::ostream&, Scene3d const& rhs);
 	};
-	
-	std::ostream& operator<<(std::ostream&, Scene3d const&);
 }

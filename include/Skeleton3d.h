@@ -5,6 +5,7 @@
 #include "DataType.h"
 #include "Point3d.h"
 
+// OpenNI's values:
 //XN_SKEL_HEAD			= 1,
 //XN_SKEL_NECK			= 2,
 //XN_SKEL_TORSO			= 3,
@@ -42,6 +43,8 @@ namespace hm
 	enum Joint_
 	{
 		HEAD,
+		NECK,
+		TORSO,
 		LEFT_SHOULDER,
 		LEFT_ELBOW,
 		LEFT_HAND,
@@ -66,6 +69,40 @@ namespace hm
 		return 0 <= jointId && jointId < NUM_JOINTS;
 	}
 	
+	/// To assist with drawing we also define limbs: connections between
+	/// joints
+	enum Limb_
+	{
+		UPPER_SPINE, ///< Neck to head
+		SPINE, ///< Torso to neck
+		LEFT_COLLAR, ///< neck to shoulder
+		RIGHT_COLLAR,
+		LEFT_ABDOMEN, /// Torso to hip
+		RIGHT_ABDOMEN,
+		LEFT_FOREARM,
+		LEFT_UPPERARM,
+		RIGHT_FOREARM,
+		RIGHT_UPPERARM,
+		LEFT_THIGH,
+		LEFT_CALF,
+		RIGHT_THIGH,
+		RIGHT_CALF,
+		NUM_LIMBS
+	};
+	typedef int Limb;
+	
+	/// returns pair of joints. First element is parent of second
+	/// from the torso outwards
+	std::pair<Joint, Joint> limbJoints(Limb limb);
+	
+	const char* limbName(Limb limbId);
+	const char* limbNameAbbr(Limb limbId);
+	
+	inline bool isValidLimb(Limb limbId)
+	{
+		return 0 <= limbId && limbId < NUM_LIMBS;
+	}
+	
 	
 	// --------------------------------------------------------------
 	class Skeleton3d : public DataType
@@ -88,19 +125,16 @@ namespace hm
 		int& id() { return mId; }
 		int const& id() const { return mId; }
 		
-		virtual std::string toString() const override;
+		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return SKELETON3D; }
+		virtual void draw() override;
 		
 	private:
 		int mId;
 		std::vector<Point3d> mJoints;
 		std::vector<Point3d> mJointProjectives;
 		std::vector<float> mJointConfidences;
-		
-		friend std::ostream& operator<<(std::ostream&, Skeleton3d const&);
 	};
-	
-	std::ostream& operator<<(std::ostream&, Skeleton3d const&);
 	
 	inline Point3d& Skeleton3d::joint(Joint jointId)
 	{

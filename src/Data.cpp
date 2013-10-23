@@ -15,7 +15,7 @@ using namespace std;
 
 Data::Data()
 : mType(UNDEFINED)
-, mData()
+, mData(createVariant(UNDEFINED))
 , mTimestamp(-42.)
 {}
 
@@ -49,6 +49,62 @@ Data::Data(Scene3d& x, double timestamp)
 , mData(x)
 , mTimestamp(timestamp)
 {}
+
+DataType* Data::asDataType()
+{
+	switch (mType)
+	{
+		case UNDEFINED:
+			return boost::get<DataNull*>(mData);
+		case VALUE:
+			return (DataType*)&boost::get<Value&>(mData);
+		case POINT3D:
+			return (DataType*)&boost::get<Point3d&>(mData);
+		case SKELETON3D:
+			return (DataType*)&boost::get<Skeleton3d&>(mData);
+		case SCENE3D:
+			return (DataType*)&boost::get<Scene3d&>(mData);
+		default:
+			assert(false);
+			return nullptr;
+	}
+}
+
+
+DataType const* Data::asDataType() const
+{
+	switch (mType)
+	{
+		case UNDEFINED:
+			return boost::get<DataNull const*>(mData);;
+		case VALUE:
+			return (DataType const*)&boost::get<Value const&>(mData);
+		case POINT3D:
+			return (DataType const*)&boost::get<Point3d const&>(mData);
+		case SKELETON3D:
+			return (DataType const*)&boost::get<Skeleton3d const&>(mData);
+		case SCENE3D:
+			return (DataType const*)&boost::get<Scene3d const&>(mData);
+		default:
+			assert(false);
+			return nullptr;
+	}
+}
+
+bool Data::isNull() const
+{
+	return mType == UNDEFINED;
+}
+
+DataNull& Data::asNull()
+{
+	return boost::get<DataNull&>(mData);
+}
+
+DataNull const& Data::asNull() const
+{
+	return boost::get<DataNull const&>(mData);
+}
 
 bool Data::isValue() const
 {
@@ -123,24 +179,7 @@ Scene3d& Data::asScene3d()
 namespace hm {
 	std::ostream& operator<<(std::ostream& out, Data const& rhs)
 	{
-		switch (rhs.mType)
-		{
-			case VALUE:
-				return out << rhs.asValue();
-				break;
-			case POINT3D:
-				return out << rhs.asPoint3d();
-				break;
-			case SKELETON3D:
-				return out << rhs.asSkeleton3d();
-				break;
-			case SCENE3D:
-				return out << rhs.asScene3d();
-				break;
-			default:
-				assert(false);
-				return out << "(unrecognised type)";
-		}
+		return out << *rhs.asDataType();
 	}
 }
 
@@ -153,8 +192,10 @@ Data::Variant Data::createVariant(Type type)
 {
 	switch (type)
 	{
+		case UNDEFINED:
+			return DataNull();
 		case VALUE:
-			return Variant(Value());
+			return Value();
 		case POINT3D:
 			return Point3d();
 		case SKELETON3D:

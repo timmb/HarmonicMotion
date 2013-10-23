@@ -12,11 +12,12 @@
 #include "Scene3d.h"
 #include "Point3d.h"
 #include "Value.h"
+#include "DataNull.h"
 #include <boost/variant.hpp>
 
 namespace hm
 {
-	/// Variant container for all data types
+	/// Variant container for all DataTypes
 	class Data
 	{
 	public:
@@ -24,7 +25,7 @@ namespace hm
 		/// -42.
 		Data();
 		/// Creates a Data object with a default initialized Type and
-		/// given timestamp
+		/// given timestamp)
 		Data(Type type, double timestamp);
 		Data(Value& value, double timestamp);
 		Data(Point3d& value, double timestamp);
@@ -36,7 +37,15 @@ namespace hm
 		
 		/// True if this object was constructed using the
 		/// default constructor and has no type or data.
-		bool isNull() const { return mType==UNDEFINED; }
+		bool isNull() const;
+		DataNull& asNull();
+		DataNull const& asNull() const;
+		
+		/// \return A pointer to the contained data or nullptr
+		/// if isNull(). The pointer will be invalid once this object
+		/// is destroyed
+		DataType* asDataType();
+		DataType const* asDataType() const;
 		
 		bool isValue() const;
 		Value const& asValue() const;
@@ -57,13 +66,11 @@ namespace hm
 		std::string toString() const;
 		
 	private:
-		typedef boost::variant<Value, Point3d, Skeleton3d, Scene3d> Variant;
+		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;
 		static Variant createVariant(Type type);
 		Type mType;
 		Variant mData;
 		double mTimestamp;
-		
-		friend std::ostream& operator<<(std::ostream&, Data const&);
 	};
 	
 	std::ostream& operator<<(std::ostream& out, Data const& rhs);
