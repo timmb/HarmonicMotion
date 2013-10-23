@@ -8,7 +8,7 @@
 
 #include "Controller.h"
 #include "MainWindow.h"
-#include "NodeRenderer.h"
+#include "HarmonicMotion.h"
 #include "NodeRendererGlWidget.h"
 #include <QTimer>
 
@@ -38,6 +38,11 @@ Controller::Controller(QObject* parent)
 	
 	NodeRendererGlWidget* w = mMainWindow->createRendererWidget();
 	w->setRenderer(renderer);
+	
+	NodePtr osc(new NodeOscOut);
+	kinect->outlet(0)->connect(osc->inlet(0));
+	mPipeline.addNode(osc);
+	
 	
 	auto timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(checkPipeline()));
