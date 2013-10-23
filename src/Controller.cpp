@@ -25,7 +25,7 @@ Controller::Controller(QObject* parent)
 	mPipeline.addNode(kinect);
 	
 	mAccum = std::shared_ptr<NodeAccumulator>(new NodeAccumulator);
-	kinect->outlet(0)->connect(mAccum->inlet(0));
+//	kinect->outlet(0)->connect(mAccum->inlet(0));
 	mNodes << mAccum;
 	mPipeline.addNode(mAccum);
 

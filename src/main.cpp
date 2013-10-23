@@ -13,7 +13,10 @@ int main(int argc, char** argv)
 {
 	QApplication* app = new QApplication(argc, argv);
 	Controller* c = new Controller(app);
-	return app->exec();
+	int ret = app->exec();
+	delete c;
+	delete app;
+	return ret;
 }
 
 #pragma clang diagnostic pop
