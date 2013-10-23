@@ -55,7 +55,8 @@ namespace hm
 		/// becomes true
 		virtual void run() = 0;
 		/// Return from run() at the earliest opportunity when this
-		/// becomes false
+		/// becomes false. The Node may or may not be started again after
+		/// it stops.
 		bool isRequestedToStop() const { return mThreadIsRequestedToStop; }
 		/// This function must be called in the derived class's destructor
 		/// to ensure the thread ends before the derived class's member variables

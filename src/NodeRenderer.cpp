@@ -33,7 +33,9 @@ bool NodeRenderer::isRedrawRequired() const
 void NodeRenderer::draw(int viewportWidth, int viewportHeight)
 {
 	static ColorA clearColor = ColorA::hex(0xADFFD5);
+	static ColorA drawColor = ColorA::hex(0xffffff);
 	gl::clear(clearColor);
+	gl::color(drawColor);
 	Data data(mInlet->data());
 	DataType* datatype = data.asDataType();
 	if (datatype->hasSceneMeta())

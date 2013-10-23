@@ -17,8 +17,8 @@
 		22197ED717F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
 		22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
 		22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
-		22197EDA17F44B1B003B1883 /* OutputOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED017F44B1B003B1883 /* OutputOsc.cpp */; };
-		22197EDB17F44B1B003B1883 /* OutputOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED017F44B1B003B1883 /* OutputOsc.cpp */; };
+		22197EDA17F44B1B003B1883 /* NodeOscOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED017F44B1B003B1883 /* NodeOscOut.cpp */; };
+		22197EDB17F44B1B003B1883 /* NodeOscOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED017F44B1B003B1883 /* NodeOscOut.cpp */; };
 		22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
 		22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
 		22197EDE17F44B4F003B1883 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */; };
@@ -46,7 +46,7 @@
 		22197F0617F44B76003B1883 /* Inlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFF17F44B76003B1883 /* Inlet.h */; };
 		22197F0717F44B76003B1883 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0017F44B76003B1883 /* Node.h */; };
 		22197F0817F44B76003B1883 /* Outlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0117F44B76003B1883 /* Outlet.h */; };
-		22197F0917F44B76003B1883 /* OutputOsc.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0217F44B76003B1883 /* OutputOsc.h */; };
+		22197F0917F44B76003B1883 /* NodeOscOut.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0217F44B76003B1883 /* NodeOscOut.h */; };
 		22197F0A17F44B76003B1883 /* Pipeline.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0317F44B76003B1883 /* Pipeline.h */; };
 		22197F0B17F44B76003B1883 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0417F44B76003B1883 /* Resources.h */; };
 		22197F1117F472F4003B1883 /* OscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971E0AC2F4364D21B058718F /* OscBundle.cpp */; };
@@ -246,13 +246,13 @@
 		22197ECD17F44B1B003B1883 /* Inlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inlet.cpp; sourceTree = "<group>"; };
 		22197ECE17F44B1B003B1883 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
 		22197ECF17F44B1B003B1883 /* Outlet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Outlet.cpp; sourceTree = "<group>"; };
-		22197ED017F44B1B003B1883 /* OutputOsc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputOsc.cpp; sourceTree = "<group>"; };
+		22197ED017F44B1B003B1883 /* NodeOscOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeOscOut.cpp; sourceTree = "<group>"; };
 		22197ED117F44B1B003B1883 /* Pipeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pipeline.cpp; sourceTree = "<group>"; };
 		22197EFE17F44B76003B1883 /* GeneratorSineWave.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GeneratorSineWave.h; path = ../include/GeneratorSineWave.h; sourceTree = "<group>"; };
 		22197EFF17F44B76003B1883 /* Inlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Inlet.h; path = ../include/Inlet.h; sourceTree = "<group>"; };
 		22197F0017F44B76003B1883 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../include/Node.h; sourceTree = "<group>"; };
 		22197F0117F44B76003B1883 /* Outlet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Outlet.h; path = ../include/Outlet.h; sourceTree = "<group>"; };
-		22197F0217F44B76003B1883 /* OutputOsc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputOsc.h; path = ../include/OutputOsc.h; sourceTree = "<group>"; };
+		22197F0217F44B76003B1883 /* NodeOscOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeOscOut.h; path = ../include/NodeOscOut.h; sourceTree = "<group>"; };
 		22197F0317F44B76003B1883 /* Pipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pipeline.h; path = ../include/Pipeline.h; sourceTree = "<group>"; };
 		22197F0417F44B76003B1883 /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 		22197F0C17F47293003B1883 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = ../../../../../../System/Library/Frameworks/Accelerate.framework; sourceTree = "<group>"; };
@@ -484,8 +484,8 @@
 				22197EFE17F44B76003B1883 /* GeneratorSineWave.h */,
 				22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */,
 				22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */,
-				22197ED017F44B1B003B1883 /* OutputOsc.cpp */,
-				22197F0217F44B76003B1883 /* OutputOsc.h */,
+				22197ED017F44B1B003B1883 /* NodeOscOut.cpp */,
+				22197F0217F44B76003B1883 /* NodeOscOut.h */,
 				225161E21817DBE7004F0F57 /* NodeRenderer.cpp */,
 				225161E71817DC0F004F0F57 /* NodeRenderer.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
@@ -881,7 +881,7 @@
 				22197F0617F44B76003B1883 /* Inlet.h in Headers */,
 				22197F0717F44B76003B1883 /* Node.h in Headers */,
 				22197F0817F44B76003B1883 /* Outlet.h in Headers */,
-				22197F0917F44B76003B1883 /* OutputOsc.h in Headers */,
+				22197F0917F44B76003B1883 /* NodeOscOut.h in Headers */,
 				22197F0A17F44B76003B1883 /* Pipeline.h in Headers */,
 				22197F0B17F44B76003B1883 /* Resources.h in Headers */,
 				22261AAF181577C800DBA3F8 /* OutputConsolePrinter.h in Headers */,
@@ -1073,7 +1073,7 @@
 				22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */,
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
 				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
-				22197EDB17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
+				22197EDB17F44B1B003B1883 /* NodeOscOut.cpp in Sources */,
 				225161E51817DBE7004F0F57 /* NodeRenderer.cpp in Sources */,
 				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
@@ -1130,7 +1130,7 @@
 				22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */,
 				22197ED617F44B1B003B1883 /* Node.cpp in Sources */,
 				22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */,
-				22197EDA17F44B1B003B1883 /* OutputOsc.cpp in Sources */,
+				22197EDA17F44B1B003B1883 /* NodeOscOut.cpp in Sources */,
 				22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197F8817F4A4F3003B1883 /* Data.cpp in Sources */,
 				22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */,

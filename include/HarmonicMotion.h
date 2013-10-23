@@ -8,6 +8,7 @@
 #include "Data.h"
 #include "GeneratorSineWave.h"
 #include "OutputConsolePrinter.h"
-#include "OutputOsc.h"
 #include "NodeKinect.h"
 #include "NodeAccumulator.h"
+#include "NodeRenderer.h"
+#include "NodeOscOut.h"
