@@ -24,6 +24,7 @@ namespace hm
 	protected:
 		virtual QSize sizeHint() const override;
 		virtual void initializeGL() override;
+		virtual void resizeGL(int width, int height) override;
 		virtual void paintGL() override;
 
 	private:

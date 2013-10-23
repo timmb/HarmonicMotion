@@ -54,6 +54,6 @@ void Controller::checkPipeline()
 	{
 		Data data = mAccum->next();
 		Q_EMIT newConsoleMessage(QString::fromStdString(data.toString()));
-		std::cout << "emit new console message "<<data<<std::endl;
+//		std::cout << "emit new console message "<<data<<std::endl;
 	}
 }

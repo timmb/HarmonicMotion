@@ -29,6 +29,12 @@ void NodeRendererGlWidget::setRenderer(std::shared_ptr<NodeRenderer> renderer)
 void NodeRendererGlWidget::initializeGL()
 {
 	mRedrawTimer->start();
+	resizeGL(width(), height());
+}
+
+void NodeRendererGlWidget::resizeGL(int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
 
 void NodeRendererGlWidget::paintGL()
@@ -36,7 +42,7 @@ void NodeRendererGlWidget::paintGL()
 	mRedrawTimer->blockSignals(true);
 	if (true)//(mRenderer->isRedrawRequired())
 	{
-		mRenderer->draw();
+		mRenderer->draw(width(), height());
 	}
 	mRedrawTimer->blockSignals(false);
 }
