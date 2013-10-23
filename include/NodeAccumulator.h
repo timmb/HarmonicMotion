@@ -24,6 +24,7 @@ namespace hm
 		};
 		
 		NodeAccumulator(Params const& params = Params(), std::string const& className="NodeAccumulator");
+		virtual ~NodeAccumulator();
 		
 		bool isEmpty() const;
 		bool isFull() const;

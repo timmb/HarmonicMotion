@@ -34,7 +34,7 @@ namespace hm
 	
 	// For printing verbose debugging info
 #if defined(DEBUG) || defined(_DEBUG)
-#define HM_LOG_DEBUG
+//#define HM_LOG_DEBUG
 #endif
 	
 #ifdef HM_LOG_DEBUG

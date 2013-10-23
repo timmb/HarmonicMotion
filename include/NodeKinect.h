@@ -28,6 +28,7 @@ namespace hm
 		};
 		
 		NodeKinect(Params const& params = Params(), std::string const& className="NodeKinect");
+		virtual ~NodeKinect();
 		
 		SceneMetaPtr sceneMeta() const { return mMetadata; }
 		

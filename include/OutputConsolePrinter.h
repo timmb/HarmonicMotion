@@ -16,6 +16,7 @@ namespace hm
 	{
 	public:
 		OutputConsolePrinter(std::string const& printerName="printer", std::string const& className="OutputConsolePrinter");
+		virtual ~OutputConsolePrinter();
 		
 	protected:
 		virtual void run() override;

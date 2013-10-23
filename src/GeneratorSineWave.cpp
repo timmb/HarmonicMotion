@@ -22,6 +22,11 @@ GeneratorSineWave::GeneratorSineWave(Params const& params, std::string const& cl
 	addOutlet(mOutlet);
 }
 
+GeneratorSineWave::~GeneratorSineWave()
+{
+	stopAndWait();
+}
+
 void GeneratorSineWave::run()
 {
 	const double maxSleepDuration(0.2);

@@ -69,6 +69,13 @@ NodeKinect::NodeKinect(Params const& params, std::string const& className)
 	openKinect();
 }
 
+NodeKinect::~NodeKinect()
+{
+//	std::cout << "~NodeKinect stopping"<<std::endl;;
+	stopAndWait();
+//	std::cout << "~NodeKinect stopped"<<std::endl;;
+}
+
 void NodeKinect::openKinect()
 {
 	int flags = NODE_TYPE_NONE;

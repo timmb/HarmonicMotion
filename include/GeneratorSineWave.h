@@ -38,6 +38,7 @@ namespace hm
 		};
 		
 		GeneratorSineWave(Params const& params = Params(), std::string const& className="GeneratorSineWave");
+		virtual ~GeneratorSineWave();
 		
 	protected:
 		virtual void run() override;

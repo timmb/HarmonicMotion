@@ -12,6 +12,11 @@ NodeAccumulator::NodeAccumulator(Params const& params, std::string const& classN
 	addInlet(mInlet);
 }
 
+NodeAccumulator::~NodeAccumulator()
+{
+	stopAndWait();
+}
+
 bool NodeAccumulator::isEmpty() const
 {
 	return !mBuffer.isNotEmpty();

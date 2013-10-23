@@ -21,6 +21,12 @@ OutputConsolePrinter::OutputConsolePrinter(std::string const& printerName, std::
 }
 
 
+OutputConsolePrinter::~OutputConsolePrinter()
+{
+	stopAndWait();
+}
+
+
 void OutputConsolePrinter::run()
 {
 	while (!isRequestedToStop())

@@ -57,6 +57,11 @@ namespace hm
 		/// Return from run() at the earliest opportunity when this
 		/// becomes false
 		bool isRequestedToStop() const { return mThreadIsRequestedToStop; }
+		/// This function must be called in the derived class's destructor
+		/// to ensure the thread ends before the derived class's member variables
+		/// are destroyed. It will block until thread closes or it times out.
+		/// (currently set at 2 seconds).
+		void stopAndWait();
 
 	private:
 		/// Callback for inlets
