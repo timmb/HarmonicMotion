@@ -26,7 +26,7 @@ namespace hm
 		Data();
 		/// Creates a Data object with a default initialized Type and
 		/// given timestamp)
-		Data(Type type, double timestamp);
+//		Data(Type type, double timestamp);
 		Data(Value& value, double timestamp);
 		Data(Point3d& value, double timestamp);
 		Data(Skeleton3d& value, double timestamp);
@@ -67,7 +67,7 @@ namespace hm
 		
 	private:
 		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;
-		static Variant createVariant(Type type);
+//		static Variant createVariant(Type type);
 		Type mType;
 		Variant mData;
 		double mTimestamp;

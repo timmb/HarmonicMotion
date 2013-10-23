@@ -4,6 +4,7 @@
 #include <vector>
 #include "DataType.h"
 #include "Point3d.h"
+#include "SceneMeta.h"
 
 // OpenNI's values:
 //XN_SKEL_HEAD			= 1,
@@ -108,14 +109,26 @@ namespace hm
 	class Skeleton3d : public DataType
 	{
 	public:
-		Skeleton3d();
+		Skeleton3d(SceneMetaPtr sceneMeta);
 		
-		std::vector<Point3d> const& joints() const { return mJoints; }
-		std::vector<Point3d>& joints() { return mJoints; }
+//		std::vector<Point3d> const& joints() const { return mJoints; }
+//		std::vector<Point3d>& joints() { return mJoints; }
 		
+		/// Joints are expressed in world space using right-handed coordinates.
+		/// We follow the MS Kinect SDK standard:
+		/// Origin is at the camera. From the camera's perspective, z extends
+		/// out of the camera, x is horizontal going to the *left* and the
+		/// y axis extends upwards. Measurements are in *metres*.
 		Point3d& joint(Joint jointId);
 		Point3d const& joint(Joint jointId) const;
 		
+		/// JointProjectives are expressed in the projected space of the
+		/// camera. We follow the MS Kinect SDK standard:
+		/// Origin is upper left pixel of the camera image. From the camera's
+		/// perspective, z extends out of the camera, x is horizontal going
+		/// to the *right* and the y axis extends upwards.
+		/// NB This is a left-handed coordinate system - different from what
+		/// we use for joints.
 		Point3d& jointProjective(Joint jointId);
 		Point3d const& jointProjective(Joint jointId) const;
 		
@@ -128,6 +141,9 @@ namespace hm
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return SKELETON3D; }
 		virtual void draw() override;
+		
+		/// Skeletons must always have scene metadata
+		virtual bool hasSceneMeta() const override;
 		
 	private:
 		int mId;

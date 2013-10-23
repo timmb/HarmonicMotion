@@ -10,6 +10,7 @@
 #include <string>
 #include <ostream>
 #include "Type.h"
+#include "SceneMeta.h"
 
 namespace hm
 {
@@ -17,6 +18,7 @@ namespace hm
 	class DataType
 	{
 	public:
+		DataType(SceneMetaPtr sceneMeta_=nullptr) : sceneMeta(sceneMeta_) {}
 		virtual ~DataType() {}
 		/// Assumes we are already in a GL context
 		virtual void draw() {}
@@ -25,6 +27,12 @@ namespace hm
 		
 		/// Print to the stream and return it
 		virtual std::ostream& printTo(std::ostream&) const = 0;
+		
+		/// Some DataTypes have metadata attached describing the scene
+		/// they belong in.
+		virtual bool hasSceneMeta() const { return false; }
+		/// This shall equal nullptr if and only if hasSceneMeta() is false
+		SceneMetaPtr sceneMeta;
 	};
 	std::ostream& operator<<(std::ostream&, DataType const&);
 }

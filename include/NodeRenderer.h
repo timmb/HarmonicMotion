@@ -21,7 +21,7 @@ namespace hm
 		
 		bool isRedrawRequired() const;
 		/// This will clear the render buffer and set the matrices/camera
-		void draw();
+		void draw(int viewportWidth, int viewportHeight);
 		
 	protected:
 		virtual void run() override {}

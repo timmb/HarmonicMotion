@@ -87,6 +87,9 @@
 		2223EC601817EEA400B900CF /* DataNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC5E1817EEA400B900CF /* DataNull.cpp */; };
 		2223EC611817EEA400B900CF /* DataNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC5E1817EEA400B900CF /* DataNull.cpp */; };
 		2223EC641817EEAF00B900CF /* DataNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC631817EEAF00B900CF /* DataNull.h */; };
+		2223EC671818027300B900CF /* SceneMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC651818027300B900CF /* SceneMeta.cpp */; };
+		2223EC681818027300B900CF /* SceneMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC651818027300B900CF /* SceneMeta.cpp */; };
+		2223EC6C1818056400B900CF /* SceneMeta.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC6B1818056400B900CF /* SceneMeta.h */; };
 		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AAD181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */; };
@@ -273,6 +276,8 @@
 		221E90431817273C0028EAFD /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Value.h; path = ../include/Value.h; sourceTree = "<group>"; };
 		2223EC5E1817EEA400B900CF /* DataNull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataNull.cpp; sourceTree = "<group>"; };
 		2223EC631817EEAF00B900CF /* DataNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataNull.h; path = ../include/DataNull.h; sourceTree = "<group>"; };
+		2223EC651818027300B900CF /* SceneMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneMeta.cpp; sourceTree = "<group>"; };
+		2223EC6B1818056400B900CF /* SceneMeta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneMeta.h; path = ../include/SceneMeta.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
 		22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrinter.cpp; sourceTree = "<group>"; };
 		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputConsolePrinter.h; path = ../include/OutputConsolePrinter.h; sourceTree = "<group>"; };
@@ -481,6 +486,8 @@
 				22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */,
 				22197ED017F44B1B003B1883 /* OutputOsc.cpp */,
 				22197F0217F44B76003B1883 /* OutputOsc.h */,
+				225161E21817DBE7004F0F57 /* NodeRenderer.cpp */,
+				225161E71817DC0F004F0F57 /* NodeRenderer.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
 				22197F0017F44B76003B1883 /* Node.h */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
@@ -505,10 +512,10 @@
 				221E90421817273B0028EAFD /* Point3d.h */,
 				221E903D181727220028EAFD /* Value.cpp */,
 				221E90431817273C0028EAFD /* Value.h */,
-				225161E21817DBE7004F0F57 /* NodeRenderer.cpp */,
-				225161E71817DC0F004F0F57 /* NodeRenderer.h */,
 				2223EC5E1817EEA400B900CF /* DataNull.cpp */,
 				2223EC631817EEAF00B900CF /* DataNull.h */,
+				2223EC651818027300B900CF /* SceneMeta.cpp */,
+				2223EC6B1818056400B900CF /* SceneMeta.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -947,6 +954,7 @@
 				22293706181677BD008CAA09 /* XnStack.h in Headers */,
 				22293707181677BD008CAA09 /* XnStackT.h in Headers */,
 				22293708181677BD008CAA09 /* XnStatus.h in Headers */,
+				2223EC6C1818056400B900CF /* SceneMeta.h in Headers */,
 				22293709181677BD008CAA09 /* XnStatusCodes.h in Headers */,
 				2229370A181677BD008CAA09 /* XnStatusRegister.h in Headers */,
 				2229370B181677BD008CAA09 /* XnStringsHash.h in Headers */,
@@ -1076,6 +1084,7 @@
 				22197F1417F472F4003B1883 /* OscSender.cpp in Sources */,
 				22197F1517F47301003B1883 /* NetworkingUtils.cpp in Sources */,
 				22197F1617F47301003B1883 /* UdpSocket.cpp in Sources */,
+				2223EC681818027300B900CF /* SceneMeta.cpp in Sources */,
 				22197F1717F47306003B1883 /* OscOutboundPacketStream.cpp in Sources */,
 				22197F1817F47306003B1883 /* OscPrintReceivedElements.cpp in Sources */,
 				22197F1917F47306003B1883 /* OscReceivedElements.cpp in Sources */,
@@ -1139,6 +1148,7 @@
 				221E90281816E40B0028EAFD /* NodeAccumulator.cpp in Sources */,
 				2223EC601817EEA400B900CF /* DataNull.cpp in Sources */,
 				221E90311817242A0028EAFD /* DataType.cpp in Sources */,
+				2223EC671818027300B900CF /* SceneMeta.cpp in Sources */,
 				221E903A1817270D0028EAFD /* Point3d.cpp in Sources */,
 				221E903F181727240028EAFD /* Value.cpp in Sources */,
 			);

@@ -3,6 +3,7 @@
 #include "Outlet.h"
 #include "Scene3d.h"
 #include <boost/thread/thread.hpp>
+#include "SceneMeta.h"
 
 using namespace hm;
 using namespace V;
@@ -13,6 +14,10 @@ int jointToVBone(Joint jointId)
 	{
 		case HEAD:
 			return SKEL_HEAD;
+		case NECK:
+			return SKEL_NECK;
+		case TORSO:
+			return SKEL_TORSO;
 		case LEFT_SHOULDER:
 			return SKEL_LEFT_SHOULDER;
 		case LEFT_ELBOW:
@@ -49,11 +54,18 @@ NodeKinect::NodeKinect(Params const& params, std::string const& className)
 , mSceneOutlet(nullptr)
 , mDevice(nullptr)
 , mOpenNi(nullptr)
+, mMetadata(nullptr)
 {
 	OpenNIDeviceManager::USE_THREAD = false;
 	mOpenNi = OpenNIDeviceManager::InstancePtr();
 	mSceneOutlet = OutletPtr(new Outlet(SCENE3D, "3D Scene", "All user skeletons in 3D space"));
 	addOutlet(mSceneOutlet);
+	SceneMeta* metadata = new SceneMeta;
+	metadata->cameraPos = ci::Vec3f(0,0,0);
+	metadata->cameraDir = ci::Vec3f(0,0,1);
+	metadata->cameraFov = 57;
+	mMetadata = SceneMetaPtr(metadata);
+	
 	openKinect();
 }
 
@@ -89,16 +101,21 @@ void NodeKinect::run()
 		if (mParams.enableScene && mDevice->isUserDataNew())
 		{
 			OpenNIUserList users = mOpenNi->getUserList();
-			Data data(SCENE3D, elapsedTime());
-			Scene3d& scene = data.asScene3d();
+			Scene3d scene = Scene3d(sceneMeta());
+			Data data(scene, elapsedTime());
 			for (OpenNIUserRef user: users)
 			{
-				Skeleton3d skeleton;
+				Skeleton3d skeleton(sceneMeta());
 				skeleton.id() = user->getId();
 				for (int i=0; i<NUM_JOINTS; i++)
 				{
 					OpenNIBone const& bone = *user->getBone(jointToVBone(i));
-					skeleton.joint(i) = ci::Vec3f(bone.position);
+					// OpenNI gives coordinates in a left handed system with
+					// x going to the right. We convert these to the MS Kinect
+					// SDK standard and use a right handed system with x going
+					// to the left. Also OpenNI uses millimetres whereas we
+					// use metres (like MS SDK).
+					skeleton.joint(i) = ci::Vec3f(-bone.position[0], bone.position[1], bone.position[2]) / 1000.f;
 					skeleton.jointProjective(i) = ci::Vec3f(bone.positionProjective);
 					skeleton.jointConfidence(i) = bone.positionConfidence;
 				}

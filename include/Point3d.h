@@ -21,6 +21,8 @@ namespace hm
 		virtual void draw();
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return POINT3D; }
+		/// Point3d may optionally have scene metadata
+		virtual bool hasSceneMeta() const override { return sceneMeta != nullptr; }
 	};
 	// To avoid ambiguity with both base classes
 	std::ostream& operator<<(std::ostream& out, Point3d const& rhs);

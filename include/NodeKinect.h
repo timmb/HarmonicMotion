@@ -10,6 +10,8 @@ namespace V
 
 namespace hm
 {
+	class SceneMeta;
+	
 	class NodeKinect : public Node
 	{
 	public:
@@ -27,6 +29,8 @@ namespace hm
 		
 		NodeKinect(Params const& params = Params(), std::string const& className="NodeKinect");
 		
+		SceneMetaPtr sceneMeta() const { return mMetadata; }
+		
 	protected:
 		virtual void run() override;
 		
@@ -39,5 +43,7 @@ namespace hm
 		
 		boost::shared_ptr<V::OpenNIDevice> mDevice;
 		V::OpenNIDeviceManager* mOpenNi;
+		
+		SceneMetaPtr mMetadata;
 	};
 }

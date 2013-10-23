@@ -15,8 +15,13 @@ std::ostream& Scene3d::printTo(std::ostream& out) const
 	}
 
 
-Scene3d::Scene3d()
-{}
+Scene3d::Scene3d(SceneMetaPtr sceneMeta_)
+: DataType(sceneMeta_)
+{
+	assert(sceneMeta != nullptr);
+}
+
+
 
 void Scene3d::draw()
 {
@@ -24,4 +29,10 @@ void Scene3d::draw()
 	{
 		s.draw();
 	}
+}
+
+bool Scene3d::hasSceneMeta() const
+{
+	assert(sceneMeta != nullptr);
+	return true;
 }

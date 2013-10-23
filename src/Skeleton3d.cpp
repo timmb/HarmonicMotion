@@ -27,6 +27,10 @@ const char* hm::jointName(Joint joint)
 	{
 		case HEAD:
 			return "Head";
+		case NECK:
+			return "Neck";
+		case TORSO:
+			return "Torso";
 		case LEFT_SHOULDER:
 			return "Left shoulder";
 		case LEFT_ELBOW:
@@ -52,6 +56,7 @@ const char* hm::jointName(Joint joint)
 		case RIGHT_FOOT:
 			return "Right foot";
 		default:
+			assert(false);
 			return "Unrecognised joint";
 	}
 }
@@ -63,6 +68,10 @@ const char* hm::jointNameAbbr(Joint joint)
 	{
 		case HEAD:
 			return "H";
+		case NECK:
+			return "N";
+		case TORSO:
+			return "T";
 		case LEFT_SHOULDER:
 			return "LS";
 		case LEFT_ELBOW:
@@ -213,11 +222,15 @@ const char* limbNameAbbr(Limb limbId)
 
 
 
-Skeleton3d::Skeleton3d()
-: mJoints(NUM_JOINTS)
+Skeleton3d::Skeleton3d(SceneMetaPtr sceneMeta_)
+: mId(-1)
+, DataType(sceneMeta_)
+, mJoints(NUM_JOINTS)
 , mJointProjectives(NUM_JOINTS)
 , mJointConfidences(NUM_JOINTS)
-{}
+{
+	assert(sceneMeta != nullptr);
+}
 
 
 
@@ -232,3 +245,8 @@ void Skeleton3d::draw()
 	}
 }
 
+bool Skeleton3d::hasSceneMeta() const
+{
+	assert(sceneMeta != nullptr);
+	return true;
+}
