@@ -12,8 +12,8 @@
 using namespace std;
 using namespace hm;
 
-Outlet::Outlet(Type type, string const& name, string const& helpText)
-: mType(type)
+Outlet::Outlet(Types types, string const& name, string const& helpText)
+: mTypes(types)
 , mName(name)
 , mHelpText(helpText)
 , mNodeName("(mNodeName unset)")
@@ -24,7 +24,7 @@ Outlet::Outlet(Type type, string const& name, string const& helpText)
 
 bool Outlet::connect(InletPtr inlet)
 {
-	if ((inlet->types() & type()) == 0)
+	if ((inlet->types() & types()) == 0)
 	{
 		return false;
 	}
@@ -36,9 +36,14 @@ bool Outlet::connect(InletPtr inlet)
 
 void Outlet::outputNewData(Data& data)
 {
+	assert(mTypes & data.type());
 	hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
 	for (InletPtr out: mOutputs)
 	{
-		out->provideNewData(data);
+		// Only send data to inlets that support it
+		if (out->types() & data.type())
+		{
+			out->provideNewData(data);
+		}
 	}
 }

@@ -19,4 +19,17 @@ namespace hm
 		return programTimer.getSeconds();
 	}
 	
+	std::vector<Type> const& listOfTypes()
+	{
+		static const std::vector<Type> types =
+		{
+			VALUE,
+			POINT3D,
+			SKELETON3D,
+			SCENE3D,
+			IMAGE3D
+		};
+		return types;
+	}
+	
 }

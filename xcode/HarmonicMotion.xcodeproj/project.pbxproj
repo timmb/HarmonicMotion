@@ -90,6 +90,11 @@
 		2223EC671818027300B900CF /* SceneMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC651818027300B900CF /* SceneMeta.cpp */; };
 		2223EC681818027300B900CF /* SceneMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC651818027300B900CF /* SceneMeta.cpp */; };
 		2223EC6C1818056400B900CF /* SceneMeta.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC6B1818056400B900CF /* SceneMeta.h */; };
+		2223EC7518194A6F00B900CF /* Predictor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC7218194A6F00B900CF /* Predictor.h */; };
+		2223EC7818196C2500B900CF /* Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC7718196C2500B900CF /* Filter.h */; };
+		2223EC7B18196D0B00B900CF /* NodeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC7918196D0B00B900CF /* NodeFilter.cpp */; };
+		2223EC7C18196D0B00B900CF /* NodeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC7918196D0B00B900CF /* NodeFilter.cpp */; };
+		2223EC7F18196D2100B900CF /* NodeFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC7E18196D2100B900CF /* NodeFilter.h */; };
 		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AAD181577C800DBA3F8 /* OutputConsolePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */; };
@@ -278,6 +283,10 @@
 		2223EC631817EEAF00B900CF /* DataNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataNull.h; path = ../include/DataNull.h; sourceTree = "<group>"; };
 		2223EC651818027300B900CF /* SceneMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneMeta.cpp; sourceTree = "<group>"; };
 		2223EC6B1818056400B900CF /* SceneMeta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneMeta.h; path = ../include/SceneMeta.h; sourceTree = "<group>"; };
+		2223EC7218194A6F00B900CF /* Predictor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Predictor.h; path = ../include/Predictor.h; sourceTree = "<group>"; };
+		2223EC7718196C2500B900CF /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Filter.h; path = ../include/Filter.h; sourceTree = "<group>"; };
+		2223EC7918196D0B00B900CF /* NodeFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeFilter.cpp; sourceTree = "<group>"; };
+		2223EC7E18196D2100B900CF /* NodeFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeFilter.h; path = ../include/NodeFilter.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
 		22261AAB181577C800DBA3F8 /* OutputConsolePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OutputConsolePrinter.cpp; sourceTree = "<group>"; };
 		22261AAC181577C800DBA3F8 /* OutputConsolePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputConsolePrinter.h; path = ../include/OutputConsolePrinter.h; sourceTree = "<group>"; };
@@ -474,8 +483,12 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2223EC7718196C2500B900CF /* Filter.h */,
+				2223EC7218194A6F00B900CF /* Predictor.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
+				2223EC7918196D0B00B900CF /* NodeFilter.cpp */,
+				2223EC7E18196D2100B900CF /* NodeFilter.h */,
 				221E902A1816E4130028EAFD /* NodeAccumulator.h */,
 				221E90271816E40A0028EAFD /* NodeAccumulator.cpp */,
 				2229374F18167E6F008CAA09 /* NodeKinect.cpp */,
@@ -939,6 +952,7 @@
 				222936F7181677BD008CAA09 /* XnOpenNI.h in Headers */,
 				222936F8181677BD008CAA09 /* XnOS.h in Headers */,
 				222936F9181677BD008CAA09 /* XnOSCpp.h in Headers */,
+				2223EC7518194A6F00B900CF /* Predictor.h in Headers */,
 				222936FA181677BD008CAA09 /* XnOSMemory.h in Headers */,
 				222936FB181677BD008CAA09 /* XnOSStrings.h in Headers */,
 				222936FC181677BD008CAA09 /* XnPlatform.h in Headers */,
@@ -955,7 +969,9 @@
 				22293707181677BD008CAA09 /* XnStackT.h in Headers */,
 				22293708181677BD008CAA09 /* XnStatus.h in Headers */,
 				2223EC6C1818056400B900CF /* SceneMeta.h in Headers */,
+				2223EC7818196C2500B900CF /* Filter.h in Headers */,
 				22293709181677BD008CAA09 /* XnStatusCodes.h in Headers */,
+				2223EC7F18196D2100B900CF /* NodeFilter.h in Headers */,
 				2229370A181677BD008CAA09 /* XnStatusRegister.h in Headers */,
 				2229370B181677BD008CAA09 /* XnStringsHash.h in Headers */,
 				2229370C181677BD008CAA09 /* XnStringsHashT.h in Headers */,
@@ -1074,6 +1090,7 @@
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
 				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
 				22197EDB17F44B1B003B1883 /* NodeOscOut.cpp in Sources */,
+				2223EC7C18196D0B00B900CF /* NodeFilter.cpp in Sources */,
 				225161E51817DBE7004F0F57 /* NodeRenderer.cpp in Sources */,
 				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
@@ -1118,6 +1135,7 @@
 				225161E41817DBE7004F0F57 /* NodeRenderer.cpp in Sources */,
 				2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */,
 				B8E4FA98F66F42B883191911 /* OscMessage.cpp in Sources */,
+				2223EC7B18196D0B00B900CF /* NodeFilter.cpp in Sources */,
 				3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */,
 				7E032153AEB04570800DF749 /* IpEndpointName.cpp in Sources */,
 				C2452C7EE2C14005A7CCF7C3 /* OscOutboundPacketStream.cpp in Sources */,

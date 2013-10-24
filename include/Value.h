@@ -24,7 +24,44 @@ namespace hm
 		double& value() { return mValue; }
 		double const& value() const { return mValue; }
 		
+		Value operator+(Value const& rhs) const
+		{
+			return Value(value() + rhs.value());
+		}
+		
+		Value operator-(Value const& rhs) const
+		{
+			return Value(mValue - rhs.mValue);
+		}
+		
+		Value operator*(Value const& rhs) const
+		{
+			return Value(value() * rhs.value());
+		}
+		
+		Value& operator+=(Value const& rhs)
+		{
+			mValue += rhs.value();
+			return *this;
+		}
+		
+		Value& operator*=(Value const& rhs)
+		{
+			mValue *= rhs.value();
+			return *this;
+		}
+		bool operator==(Value const& rhs) const
+		{
+			return mValue==rhs.mValue;
+		}
+		
 	private:
 		double mValue;
 	};
+	
+	template <typename T>
+	Value operator*(T const& lhs, Value const& rhs)
+	{
+		return rhs * lhs;
+	}
 }

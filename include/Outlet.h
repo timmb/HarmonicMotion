@@ -15,9 +15,9 @@ namespace hm
 	class Outlet
 	{
 	public:
-		Outlet(Type type, std::string const& name, std::string const& helpText);
+		Outlet(Types type, std::string const& name, std::string const& helpText);
 		
-		Type type() const { return mType; }
+		Types types() const { return mTypes; }
 		std::string name() const { return mName; }
 		std::string helpText() const { return mHelpText; }
 		
@@ -35,7 +35,7 @@ namespace hm
 
 	private:
 		
-		Type mType;
+		Types mTypes;
 		std::string mName;
 		std::string mHelpText;
 		std::string mNodeName;

@@ -23,4 +23,3 @@ Value::Value(double value)
 Value::Value(float value)
 : mValue(value)
 {}
-

@@ -8,6 +8,7 @@
 
 #pragma once
 #include <memory>
+#include <vector>
 #include "Type.h"
 
 namespace hm
@@ -30,6 +31,8 @@ namespace hm
 	
 	/// \return number of seconds since the program began
 	double elapsedTime();
+	
+	std::vector<Type> const& listOfTypes();
 
 	
 	// For printing verbose debugging info
