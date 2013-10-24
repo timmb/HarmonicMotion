@@ -34,6 +34,12 @@ namespace hm
 		OutletPtr outlet(int index);
 		
 		std::string toString() const;
+		/// Disconnects any callbacks this node has registered with its
+		/// inlets.
+		/// This is used by the destructor and also by Pipeline to allow
+		/// Nodes to be destroyed in an arbitrary order without any
+		/// callbacks attempting to contact destroyed nodes
+		void disconnectAllCallbacks();
 		
 	protected:
 		Node(std::string const& className);

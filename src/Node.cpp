@@ -27,6 +27,7 @@ Node::Node(string const& className)
 Node::~Node()
 {
 //	std::cerr << "Node::~Node() stopping" << std::endl;
+	disconnectAllCallbacks();
 	stopAndWait();
 //	std::cerr << "Node::~Node() stopped" << std::endl;
 }
@@ -54,6 +55,14 @@ void Node::stopAndWait()
 			hm_debug(toString()+": thread did not finish in time.");
 		}
 		assert(ended);
+	}
+}
+
+void Node::disconnectAllCallbacks()
+{
+	for (InletPtr inlet: mInlets)
+	{
+		inlet->setNotifyCallback(nullptr);
 	}
 }
 
@@ -133,7 +142,10 @@ void Node::callbackNewInletData()
 		boost::unique_lock<boost::mutex>(mHasNewInletDataMutex);
 		mWasNotified = true;
 	}
-	mWasNotifiedWaitCondition.notify_all();
+	if (!mThreadIsRequestedToStop)
+	{
+		mWasNotifiedWaitCondition.notify_all();
+	}
 }
 
 

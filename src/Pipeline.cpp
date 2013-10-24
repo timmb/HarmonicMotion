@@ -19,6 +19,15 @@ Pipeline::Pipeline()
 	hm_debug("Pipeline constructed");
 }
 
+Pipeline::~Pipeline()
+{
+	for (NodePtr node: mNodes)
+	{
+		// See explanation at docnote for Node::disconnectAllCallbacks
+		node->disconnectAllCallbacks();
+	}
+}
+
 std::vector<NodePtr> const& Pipeline::nodes() const
 {
 	return mNodes;

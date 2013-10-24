@@ -16,6 +16,7 @@ namespace hm
 	{
 	public:
 		Pipeline();
+		virtual ~Pipeline();
 		
 		std::vector<NodePtr> const& nodes() const;
 		

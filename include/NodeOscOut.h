@@ -8,6 +8,8 @@
 
 #pragma once
 #include "Node.h"
+#include "OscSender.h"
+#include <boost/thread/shared_mutex.hpp>
 
 namespace cinder
 {
@@ -22,6 +24,7 @@ namespace hm
 	class NodeOscOut : public Node
 	{
 	public:
+		typedef std::shared_ptr<NodeOscOut> Ptr;
 		struct Params
 		{
 			std::string destinationHost;
@@ -32,22 +35,30 @@ namespace hm
 			Params()
 			: destinationHost("localhost")
 			, destinationPort(20000)
-			, prefix("skel")
+			, prefix("hm")
 			{}
 		};
 		
 		NodeOscOut(Params const& params = Params(), std::string const& className="NodeOscOut");
 		virtual ~NodeOscOut();
 		
+		/// Thread-safe
+		void setParams(Params const& params);
+		/// Thread-safe
+		Params params() const;
+
 	protected:
 		virtual void run() override;
 
 	private:
+		void send(Value const& value);
 		void send(Skeleton3d const& skeleton);
 		void send(Scene3d const& scene);
 		
+		mutable boost::shared_mutex mMutex;
 		Params mParams;
-		std::unique_ptr<ci::osc::Sender> mOsc;
+		std::string mPrefixWithSlash;
+		ci::osc::Sender mOsc;
 		InletPtr mInlet;
 		double mLastSentTimestamp;
 	};

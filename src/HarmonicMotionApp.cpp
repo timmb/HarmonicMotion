@@ -1,7 +1,9 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/System.h"
 
 #include "HarmonicMotion.h"
+
 
 using namespace ci;
 using namespace ci::app;
@@ -23,10 +25,13 @@ void HarmonicMotionApp::setup()
 {
 	std::cout << "Hello world" << std::endl;
 	auto gen = NodePtr(new NodeKinect);
-	auto printer = NodePtr(new NodeAccumulator);
+	auto printer = NodePtr(new OutputConsolePrinter);
+	auto osc = std::shared_ptr<NodeOscOut>(new NodeOscOut);
 	gen->outlet(0)->connect(printer->inlet(0));
+	gen->outlet(0)->connect(osc->inlet(0));
 	mPipeline.addNode(gen);
 	mPipeline.addNode(printer);
+	mPipeline.addNode(osc);
 	mPipeline.start();
 }
 
@@ -36,6 +41,7 @@ void HarmonicMotionApp::mouseDown( MouseEvent event )
 
 void HarmonicMotionApp::update()
 {
+
 }
 
 void HarmonicMotionApp::draw()
