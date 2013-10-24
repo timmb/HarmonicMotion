@@ -20,6 +20,8 @@ MainWindow::MainWindow()
 	setCentralWidget(w);
 	w->setLayout(mLayout);
 	
+	
+	
 	mConsole = new QPlainTextEdit(w);
 	mLayout->addWidget(mConsole);
 	
@@ -35,6 +37,7 @@ NodeRendererGlWidget* MainWindow::createRendererWidget()
 	mLayout->addWidget(w);
 	return w;
 }
+
 
 void MainWindow::newConsoleMessage(QString message)
 {

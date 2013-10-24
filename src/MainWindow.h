@@ -8,6 +8,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QLayout>
 
 class QPlainTextEdit;
 
@@ -22,6 +23,9 @@ namespace hm
 		MainWindow();
 		NodeRendererGlWidget* createRendererWidget();
 		
+		template <typename WidgetType>
+		void addWidget(WidgetType* widget);
+		
 		
 	public Q_SLOTS:
 		void newConsoleMessage(QString);
@@ -31,4 +35,11 @@ namespace hm
 		QLayout* mLayout;
 		QVector<NodeRendererGlWidget*> mScenes;
 	};
+	
+	
+	template <typename WidgetType>
+	void MainWindow::addWidget(WidgetType* widget)
+	{
+		mLayout->addWidget(widget);
+	}
 }

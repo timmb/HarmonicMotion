@@ -11,6 +11,7 @@
 #include "HarmonicMotion.h"
 #include "NodeRendererGlWidget.h"
 #include <QTimer>
+#include "NodeOscOutWidget.h"
 
 using namespace hm;
 
@@ -39,9 +40,11 @@ Controller::Controller(QObject* parent)
 	NodeRendererGlWidget* w = mMainWindow->createRendererWidget();
 	w->setRenderer(renderer);
 	
-	NodePtr osc(new NodeOscOut);
+	NodeOscOut::Ptr osc(new NodeOscOut);
 	kinect->outlet(0)->connect(osc->inlet(0));
 	mPipeline.addNode(osc);
+	mMainWindow->addWidget(new NodeOscOutWidget(osc));
+	
 	
 	
 	auto timer = new QTimer(this);

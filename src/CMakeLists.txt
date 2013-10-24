@@ -88,6 +88,7 @@ SET(MocHeaders
 	#	Add header files here
 	MainWindow.h
 	Controller.h
+	NodeOscOutWidget.h
     )
 
 #QT UI files needed to be processed
@@ -113,6 +114,7 @@ INCLUDE_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../../Cinder/include
 	${PROJECT_SOURCE_DIR}/../../../Cinder/boost
 	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/BlockOpenNI/include/Include
+	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/OSC/src
 )
 
 # Link directories - one per line
