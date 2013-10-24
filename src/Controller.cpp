@@ -30,21 +30,36 @@ Controller::Controller(QObject* parent)
 	mNodes << mAccum;
 	mPipeline.addNode(mAccum);
 
-	NodeRenderer::Ptr renderer(new NodeRenderer);
-	mPipeline.addNode(renderer);
-	kinect->outlet(0)->connect(renderer->inlet(0));
-	
 	bool success = connect(this, SIGNAL(newConsoleMessage(QString)), mMainWindow, SLOT(newConsoleMessage(QString)));
 	assert(success);
-	
-	NodeRendererGlWidget* w = mMainWindow->createRendererWidget();
-	w->setRenderer(renderer);
 	
 	NodeOscOut::Ptr osc(new NodeOscOut);
 	kinect->outlet(0)->connect(osc->inlet(0));
 	mPipeline.addNode(osc);
 	mMainWindow->addWidget(new NodeOscOutWidget(osc));
 	
+	auto filter = NodePtr(new NodeFilter);
+	kinect->outlet(0)->connect(filter->inlet(0));
+	mPipeline.addNode(filter);
+	
+//	auto filterOut = NodePtr(new OutputConsolePrinter);
+//	filter->outlet(0)->connect(filterOut->inlet(0));
+//	kinect->outlet(0)->connect(filterOut->inlet(0));
+//	mPipeline.addNode(filterOut);
+	
+	auto renderer0 = NodeRenderer::Ptr(new NodeRenderer);
+	mPipeline.addNode(renderer0);
+	
+	auto renderer1 = NodeRenderer::Ptr(new NodeRenderer);
+	mPipeline.addNode(renderer1);
+	
+	filter->outlet(0)->connect(renderer0->inlet(0));
+	kinect->outlet(0)->connect(renderer1->inlet(0));
+	
+	NodeRendererGlWidget* w = mMainWindow->createRendererWidget();
+	w->setRenderer(renderer0);
+	auto w2 = mMainWindow->createRendererWidget();
+	w2->setRenderer(renderer1);
 	
 	
 	auto timer = new QTimer(this);
