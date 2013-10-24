@@ -44,6 +44,8 @@ namespace hm
 		/// Keep a separete filter for each type
 		std::unique_ptr<FilterSavitzky<Value>> mFilterValue;
 		std::unique_ptr<FilterSavitzky<Point3d>> mFilterPoint3d;
+		std::unique_ptr<FilterSavitzky<Skeleton3d>> mFilterSkeleton3d;
+		std::unique_ptr<FilterSavitzky<Scene3d>> mFilterScene3d;
 		// Guards params
 		mutable boost::shared_mutex mMutex;
 		double mDataTimestamp;

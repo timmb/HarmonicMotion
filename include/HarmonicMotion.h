@@ -12,3 +12,4 @@
 #include "NodeAccumulator.h"
 #include "NodeRenderer.h"
 #include "NodeOscOut.h"
+#include "NodeFilter.h"

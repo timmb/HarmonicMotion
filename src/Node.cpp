@@ -131,7 +131,7 @@ void Node::addOutlet(OutletPtr outlet)
 		return;
 	}
 	// for now just use type name for node name
-	outlet->setNodeName(type());
+	outlet->setNode(this);
 	mOutlets.push_back(outlet);
 }
 

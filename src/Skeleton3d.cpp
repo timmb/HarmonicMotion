@@ -250,3 +250,77 @@ bool Skeleton3d::hasSceneMeta() const
 	assert(sceneMeta != nullptr);
 	return true;
 }
+
+
+Skeleton3d Skeleton3d::operator+(Skeleton3d rhs) const
+{
+	assert(sceneMeta == rhs.sceneMeta);
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		rhs.joint(i) += joint(i);
+		rhs.jointProjective(i) += jointProjective(i);
+		rhs.jointConfidence(i) += jointConfidence(i);
+	}
+	return rhs;
+}
+
+Skeleton3d Skeleton3d::operator-(Skeleton3d rhs) const
+{
+	assert(sceneMeta == rhs.sceneMeta);
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		rhs.joint(i) -= joint(i);
+		rhs.jointProjective(i) -= jointProjective(i);
+		rhs.jointConfidence(i) -= jointConfidence(i);
+	}
+	return rhs;
+}
+
+Skeleton3d& Skeleton3d::operator+=(Skeleton3d const& rhs)
+{
+	assert(sceneMeta == rhs.sceneMeta);
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		joint(i) += rhs.joint(i);
+		jointProjective(i) += rhs.jointProjective(i);
+		jointConfidence(i) += rhs.jointConfidence(i);
+	}
+	return *this;
+}
+
+Skeleton3d& Skeleton3d::operator-=(Skeleton3d const& rhs)
+{
+	assert(sceneMeta == rhs.sceneMeta);
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		joint(i) -= rhs.joint(i);
+		jointProjective(i) -= rhs.jointProjective(i);
+		jointConfidence(i) -= rhs.jointConfidence(i);
+	}
+	return *this;
+}
+
+
+
+bool Skeleton3d::operator==(Skeleton3d const& rhs) const
+{
+	if (sceneMeta != rhs.sceneMeta)
+		return false;
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		if (joint(i) != rhs.joint(i))
+			return false;
+		if (jointProjective(i) != rhs.jointProjective(i))
+			return false;
+		if (jointConfidence(i) != rhs.jointConfidence(i))
+			return false;
+	}
+	return true;
+}
+
+
+
+
+
+
+

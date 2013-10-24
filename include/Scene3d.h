@@ -9,7 +9,7 @@ namespace hm
 	class Scene3d : public DataType
 	{
 	public:
-		Scene3d(SceneMetaPtr sceneMeta);
+		Scene3d(SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 		std::vector<Skeleton3d>& skeletons() { return mSkeletons; }
 		std::vector<Skeleton3d> const& skeletons() const { return mSkeletons; }
@@ -21,7 +21,50 @@ namespace hm
 		/// Scenes must always have scene metadata
 		virtual bool hasSceneMeta() const override;
 		
+		Scene3d operator+(Scene3d rhs) const;
+		Scene3d operator-(Scene3d rhs) const;
+		Scene3d& operator+=(Scene3d const& rhs);
+		
+		template <typename Scalar>
+		Scene3d operator*(Scalar const& rhs) const;
+		
+		template <typename Scalar>
+		Scene3d& operator*=(Scalar const& rhs);
+		
+		bool operator==(Scene3d const& rhs) const;
+		bool operator!=(Scene3d const& rhs) const { return !(*this==rhs); }
+
+		
 	private:
 		std::vector<Skeleton3d> mSkeletons;
 	};
+	
+	
+	template <typename T>
+	Scene3d operator*(T const& lhs, Scene3d const& rhs)
+	{
+		return rhs * lhs;
+	}
+	
+	template <typename Scalar>
+	Scene3d Scene3d::operator*(Scalar const& rhs) const
+	{
+		Scene3d scene = *this;
+		scene *= rhs;
+		return scene;
+	}
+	
+	
+	template <typename Scalar>
+	Scene3d& Scene3d::operator*=(Scalar const& rhs)
+	{
+		for (auto& skel: mSkeletons)
+		{
+			skel *= rhs;
+		}
+		return *this;
+	}
+	
+
+
 }

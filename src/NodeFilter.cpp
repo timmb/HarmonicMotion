@@ -17,12 +17,16 @@ using namespace hm;
 
 NodeFilter::NodeFilter(Params const& params, std::string const& className)
 : Node(className)
-, mInlet(new Inlet(VALUE | POINT3D, "Values to filter", "Values received are filtered and sent out"))
-, mOutlet(new Outlet(VALUE | POINT3D, "Filtered values", ""))
+, mInlet(new Inlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Values to filter", "Values received are filtered and sent out"))
+, mOutlet(new Outlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Filtered values", ""))
 , mFilterValue(new FilterSavitzky<Value>)
 , mFilterPoint3d(new FilterSavitzky<Point3d>)
+, mFilterSkeleton3d(new FilterSavitzky<Skeleton3d>)
+, mFilterScene3d(new FilterSavitzky<Scene3d>)
 , mDataTimestamp(-42)
 {
+	addInlet(mInlet);
+	addOutlet(mOutlet);
 }
 
 
@@ -58,6 +62,18 @@ void NodeFilter::run()
 				{
 					Point3d& x = data.asPoint3d();
 					x = mFilterPoint3d->update(x);
+					break;
+				}
+				case SKELETON3D:
+				{
+					Skeleton3d& x = data.asSkeleton3d();
+					x = mFilterSkeleton3d->update(x);
+					break;
+				}
+				case SCENE3D:
+				{
+					Scene3d& x = data.asScene3d();
+					x = mFilterScene3d->update(x);
 					break;
 				}
 				default:

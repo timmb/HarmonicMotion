@@ -12,6 +12,10 @@
 
 namespace hm
 {
+	class SceneMeta;
+	/// This is a const pointer to allow thread-safe access
+	typedef std::shared_ptr<const SceneMeta> SceneMetaPtr;
+	
 	/// Metadata describing a 3D scene indicating camera position, etc.
 	class SceneMeta
 	{
@@ -33,7 +37,7 @@ namespace hm
 		/// metadata
 		void setupCamera(int pixelWidth, int pixelHeight) const;
 		
+		static const SceneMetaPtr sDefaultSceneMeta;
+		
 	};
-	/// This is a const pointer to allow thread-safe access
-	typedef std::shared_ptr<const SceneMeta> SceneMetaPtr;
 }

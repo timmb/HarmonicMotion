@@ -35,7 +35,7 @@ void OutputConsolePrinter::run()
 		{
 			Data data = mInlet->data();
 			std::cout << "-- "<<mName<<" -- "<<mInlet->dataTimestamp()
-			<<"\n   "<<data<<std::endl;
+			<<" "<<data.lastNode->type()<<"\n   "<<data<<std::endl;
 		}
 		waitForNewData();
 	}

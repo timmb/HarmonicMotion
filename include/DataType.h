@@ -11,6 +11,7 @@
 #include <ostream>
 #include "Type.h"
 #include "SceneMeta.h"
+#include "Common.h"
 
 namespace hm
 {

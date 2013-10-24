@@ -109,7 +109,7 @@ namespace hm
 	class Skeleton3d : public DataType
 	{
 	public:
-		Skeleton3d(SceneMetaPtr sceneMeta);
+		Skeleton3d(SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 //		std::vector<Point3d> const& joints() const { return mJoints; }
 //		std::vector<Point3d>& joints() { return mJoints; }
@@ -145,12 +145,56 @@ namespace hm
 		/// Skeletons must always have scene metadata
 		virtual bool hasSceneMeta() const override;
 		
+		Skeleton3d operator+(Skeleton3d rhs) const;
+		Skeleton3d operator-(Skeleton3d rhs) const;
+		Skeleton3d& operator+=(Skeleton3d const& rhs);
+		Skeleton3d& operator-=(Skeleton3d const& rhs);
+		
+		template <typename Scalar>
+		Skeleton3d operator*(Scalar const& rhs) const;
+		
+		template <typename Scalar>
+		Skeleton3d& operator*=(Scalar const& rhs);
+
+		bool operator==(Skeleton3d const& rhs) const;
+		bool operator!=(Skeleton3d const& rhs) const { return !(*this==rhs); }
+		
 	private:
 		int mId;
 		std::vector<Point3d> mJoints;
 		std::vector<Point3d> mJointProjectives;
 		std::vector<float> mJointConfidences;
 	};
+	
+	
+	template <typename T>
+	Skeleton3d operator*(T const& lhs, Skeleton3d const& rhs)
+	{
+		return rhs * lhs;
+	}
+	
+	
+	template <typename Scalar>
+	Skeleton3d Skeleton3d::operator*(Scalar const& rhs) const
+	{
+		Skeleton3d skel = *this;
+		skel *= rhs;
+		return skel;
+	}
+	
+	
+	template <typename Scalar>
+	Skeleton3d& Skeleton3d::operator*=(Scalar const& rhs)
+	{
+		for (int i=0; i<NUM_JOINTS; i++)
+		{
+			joint(i) *= rhs;
+			jointProjective(i) *= rhs;
+			jointConfidence(i) *= rhs;
+		}
+		return *this;
+	}
+
 	
 	inline Point3d& Skeleton3d::joint(Joint jointId)
 	{

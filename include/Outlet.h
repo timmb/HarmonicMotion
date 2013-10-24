@@ -28,17 +28,18 @@ namespace hm
 		/// \return true if this outlet is connected to any inlets
 		int numInlets() const { return mOutputs.size(); }
 		
-		/// Set the name of the node that this outlet is attached to. Nodes
+		/// Set the node that this outlet is attached to. Nodes
 		/// do this automatically when an outlet is added
-		void setNodeName(std::string const& nodeName) { mNodeName = nodeName; }
-		std::string nodeName() const { return mNodeName; }
-
-	private:
+		void setNode(Node* node);
+//		void setNodeName(std::string const& nodeName) { mNodeName = nodeName; }
+		std::string nodeName() const;
 		
+	private:
+		Node* mNode;
 		Types mTypes;
 		std::string mName;
 		std::string mHelpText;
-		std::string mNodeName;
+//		std::string mNodeName;
 		std::vector<InletPtr> mOutputs;
 	};
 	

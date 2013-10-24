@@ -13,6 +13,8 @@
 using namespace hm;
 using namespace ci;
 
+const SceneMetaPtr SceneMeta::sDefaultSceneMeta(new SceneMeta);
+
 void SceneMeta::setupCamera(int pixelWidth, int pixelHeight) const
 {
 	// our coordinates are in metres so this should suffice

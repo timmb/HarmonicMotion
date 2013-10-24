@@ -88,6 +88,7 @@ namespace hm
 		pushBack(x);
 		if (mValues.size() < LENGTH)
 		{
+			mFilteredValue = x;
 			return x;
 		}
 		applyFilter();
@@ -161,7 +162,9 @@ namespace hm
 		assert(mValues.size() == LENGTH);
 		assert(mCoefficients.size() == LENGTH);
 		
-		mFilteredValue = T();
+		// Multiply by zero rather than use T() to prevent loss of any
+		// metadata
+		mFilteredValue *= 0.;
 		auto vit = mValues.cbegin();
 		auto cit = mCoefficients.cbegin();
 		for (; cit!=mCoefficients.end(); ++vit, ++cit)

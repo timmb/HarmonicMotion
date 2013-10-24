@@ -43,7 +43,7 @@ public:
 private:
 	std::vector<T> mPrediction; // estimate of next m steps including the current estimate: forecast[i] is estimate of time t+i where t is current time
 						// So forecast[0] is estimate of the current value (S_t)
-	T s; // copy of forecast[0] to ensure it is not changed
+//	T s; // copy of forecast[0] to ensure it is not changed
 	
 	T b; // estimate of the current trend
 	
@@ -63,7 +63,7 @@ Predictor<T, Scalar>::Predictor(int predictionSize_, Scalar alpha_, Scalar beta_
 , s_initialized(false)
 , b_initialized(false)
 , b(T())
-, s(T())
+//, s(T())
 , mPrediction(predictionSize_)
 {
 }
@@ -120,7 +120,7 @@ T const& Predictor<T,Scalar>::update(T newInput)
 		mPrediction[i] = mPrediction[i-1] + b;
 	}
 	
-	s = mPrediction[0]; // keep a copy of forecast[0] in case it is edited
+//	s = mPrediction[0]; // keep a copy of forecast[0] in case it is edited
 	
 	return mPrediction[predictionSize-1];
 }

@@ -8,6 +8,7 @@
 
 #include "Outlet.h"
 #include "Inlet.h"
+#include "Node.h"
 
 using namespace std;
 using namespace hm;
@@ -15,12 +16,16 @@ using namespace hm;
 Outlet::Outlet(Types types, string const& name, string const& helpText)
 : mTypes(types)
 , mName(name)
+, mNode(nullptr)
 , mHelpText(helpText)
-, mNodeName("(mNodeName unset)")
 {
 	
 }
 
+std::string Outlet::nodeName() const
+{
+	return mNode? mNode->type() : "(No node set)";
+}
 
 bool Outlet::connect(InletPtr inlet)
 {
@@ -37,6 +42,8 @@ bool Outlet::connect(InletPtr inlet)
 void Outlet::outputNewData(Data& data)
 {
 	assert(mTypes & data.type());
+	assert(mNode != nullptr);
+	data.lastNode = mNode;
 	hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
 	for (InletPtr out: mOutputs)
 	{
@@ -46,4 +53,9 @@ void Outlet::outputNewData(Data& data)
 			out->provideNewData(data);
 		}
 	}
+}
+
+void Outlet::setNode(Node* node)
+{
+	mNode = node;
 }
