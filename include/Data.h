@@ -65,8 +65,6 @@ namespace hm
 		
 		std::string toString() const;
 
-		/// This is set by a node when it outputs this data
-		Node* lastNode;
 		
 	private:
 		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;

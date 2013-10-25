@@ -25,15 +25,16 @@ namespace hm
 	{
 	public:
 		typedef std::shared_ptr<NodeOscOut> Ptr;
-		struct Params
+		struct Params : public Node::Params
 		{
 			std::string destinationHost;
 			int destinationPort;
 			/// Messages are formatted as /prefix/jointName
 			std::string prefix;
 			
-			Params()
-			: destinationHost("localhost")
+			Params(std::string const& destinationHost_="localhost", int port_=20000, std::string const& prefix_="hm", std::string const& name_="")
+			: Node::Params(name_)
+			, destinationHost("localhost")
 			, destinationPort(20000)
 			, prefix("hm")
 			{}
@@ -54,8 +55,9 @@ namespace hm
 		void send(Value const& value);
 		void send(Skeleton3d const& skeleton);
 		void send(Scene3d const& scene);
-		
-		mutable boost::shared_mutex mMutex;
+
+		/// Guards mParams and mPrefixWithSlash
+		mutable boost::shared_mutex mParamsMutex;
 		Params mParams;
 		std::string mPrefixWithSlash;
 		ci::osc::Sender mOsc;

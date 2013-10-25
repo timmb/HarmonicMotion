@@ -15,14 +15,21 @@ namespace hm
 	class OutputConsolePrinter : public Node
 	{
 	public:
-		OutputConsolePrinter(std::string const& printerName="printer", std::string const& className="OutputConsolePrinter");
+		struct Params : public Node::Params
+		{
+			Params(std::string const& name_="")
+			: Node::Params(name_)
+			{}
+		};
+		
+		OutputConsolePrinter(Params const& params=Params(), std::string const& className="OutputConsolePrinter");
 		virtual ~OutputConsolePrinter();
 		
 	protected:
 		virtual void run() override;
 		
 	private:
-		std::string mName;
+		Params mParams;
 		InletPtr mInlet;
 		double mLastTimestamp;
 	};

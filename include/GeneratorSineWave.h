@@ -17,7 +17,7 @@ namespace hm
 	class GeneratorSineWave : public Node
 	{
 	public:
-		struct Params
+		struct Params : public Node::Params
 		{
 			/// Cycles per second
 			double frequency;
@@ -29,8 +29,9 @@ namespace hm
 			/// this
 			double outputDelta;
 			
-			Params(double frequency_=0.2, double phase_=0., double amplitude_=1.)
-			: frequency(frequency_)
+			Params(double frequency_=0.2, double phase_=0., double amplitude_=1., std::string const& name_="")
+			: Node::Params(name_)
+			, frequency(frequency_)
 			, phase(phase_)
 			, amplitude(amplitude_)
 			, outputDelta(0.05)

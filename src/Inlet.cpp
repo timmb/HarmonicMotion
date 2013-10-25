@@ -18,15 +18,22 @@ using namespace std;
 //using boost::timed_mutex;
 
 Inlet::Inlet(Types types,
+			 Node& node,
 			 string const& name,
 			 string const& helpText)
-: mTypes(types)
+: mNode(&node)
+, mTypes(types)
 , mName(name)
 , mHelpText(helpText)
 , mDestructorHasBeenCalled(false)
 , mNodeName("(mNodeName unset)")
 {
 	assert(types!=UNDEFINED);
+}
+
+void Inlet::detachOwnerNode()
+{
+	mNode = nullptr;
 }
 
 Inlet::~Inlet()

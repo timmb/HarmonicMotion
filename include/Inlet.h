@@ -17,10 +17,6 @@ namespace hm
 	class Inlet
 	{
 	public:
-		/// \param sharedWaitCondition is notified whenever new data
-		/// arrives at this inlet
-		/// Type may be a combination of Type flags.
-		Inlet(Types types, std::string const& name, std::string const& helpText);
 		virtual ~Inlet();
 		
 		Types types() const { return mTypes; }
@@ -43,18 +39,25 @@ namespace hm
 		/// The timestamp of the new data is provided as argument to the function
 		/// \note This function must be thread safe and should not block
 		void setNotifyCallback(std::function<void(double)> function);
-		/// Set the name of the node that this inlet is attached to. Nodes
-		/// do this automatically when an inlet is added
-		void setNodeName(std::string const& nodeName) { mNodeName = nodeName; }
-		std::string nodeName() const { return mNodeName; }
+//		/// Set the name of the node that this inlet is attached to. Nodes
+//		/// do this automatically when an inlet is added
+//		void setNodeName(std::string const& nodeName) { mNodeName = nodeName; }
+//		std::string nodeName() const { return mNodeName; }
 		
 	private:
+		/// Type may be a combination of Type flags.
+		Inlet(Types types, Node& node, std::string const& name, std::string const& helpText);
+		/// This is used by the node when it is destroyed just in case the
+		/// outlet outlives its node. There is no need to call it normally
+		void detachOwnerNode();
+
 		// Accessed by Outlet ------------
 		void provideNewData(Data const& data);
 		void incrementNumConnections();
 		void decrementNumConnections();
 		// --------------------------
 		
+		Node* mNode;
 		Types mTypes;
 		std::string mName;
 		std::string mHelpText;
@@ -70,6 +73,7 @@ namespace hm
 		std::function<void(double)> mNotifyCallback;
 		bool mDestructorHasBeenCalled;
 		
+		friend class Node;
 		friend class Outlet;
 	};
 }

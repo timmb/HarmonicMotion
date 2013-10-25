@@ -17,7 +17,6 @@ Data::Data()
 : mType(UNDEFINED)
 , mData(DataNull())
 , mTimestamp(-42.)
-, lastNode(nullptr)
 {}
 
 //Data::Data(Type type, double timestamp)
@@ -30,7 +29,6 @@ Data::Data(Value& value, double timestamp)
 : mType(VALUE)
 , mData(value)
 , mTimestamp(timestamp)
-, lastNode(nullptr)
 {}
 
 
@@ -38,21 +36,18 @@ Data::Data(Point3d& x, double timestamp)
 : mType(POINT3D)
 , mData(x)
 , mTimestamp(timestamp)
-, lastNode(nullptr)
 {}
 
 Data::Data(Skeleton3d& x, double timestamp)
 : mType(SKELETON3D)
 , mData(x)
 , mTimestamp(timestamp)
-, lastNode(nullptr)
 {}
 
 Data::Data(Scene3d& x, double timestamp)
 : mType(SCENE3D)
 , mData(x)
 , mTimestamp(timestamp)
-, lastNode(nullptr)
 {}
 
 DataType* Data::asDataType()

@@ -9,12 +9,17 @@
 #include "Node.h"
 #include "Inlet.h"
 #include "Outlet.h"
+#include "cinder/Utilities.h"
 
 using namespace hm;
 using namespace std;
+using namespace boost;
 
-Node::Node(string const& className)
+std::set<std::string> Node::sNamesInUse;
+
+Node::Node(Params const& params, string const& className)
 : mClassName(className)
+, mParams_(params)
 , mThreadIsRequestedToStop(false)
 , mStartHasBeenCalled(false)
 , mThreadIsRunning(false)
@@ -22,6 +27,18 @@ Node::Node(string const& className)
 {
 	assert(mClassName != "");
 	hm_debug("Node constructed: "+className);
+	if (mParams_.name=="")
+		mParams_.name = mClassName;
+	if (sNamesInUse.count(mParams_.name)>0)
+	{
+		int count=0;
+		while (sNamesInUse.count(mParams_.name+ci::toString(count))>0)
+		{
+			count++;
+		}
+		mParams_.name = mParams_.name+ci::toString(count);
+	}
+	sNamesInUse.insert(mParams_.name);
 }
 
 Node::~Node()
@@ -108,31 +125,45 @@ std::string Node::toString() const
 	return ss.str();
 }
 
-void Node::addInlet(InletPtr inlet)
+
+Node::Params Node::nodeParams() const
 {
-	if (mStartHasBeenCalled)
-	{
-		// TODO: error message
-		assert(!mStartHasBeenCalled);
-		return;
-	}
-	inlet->setNotifyCallback([=](double) { this->callbackNewInletData(); });
-	// for now just use type name for node name
-	inlet->setNodeName(type());
-	mInlets.push_back(inlet);
+	shared_lock<shared_mutex> lock(mParamsMutex_);
+	return mParams_;
 }
 
-void Node::addOutlet(OutletPtr outlet)
+void Node::setNodeParams(Params const& params)
 {
+	boost::unique_lock<shared_mutex> lock(mParamsMutex_);
+	mParams_ = params;
+}
+
+
+InletPtr Node::createInlet(Types types, std::string name, std::string helpText)
+{
+	InletPtr inlet(new Inlet(types, *this, name, helpText));
 	if (mStartHasBeenCalled)
 	{
 		// TODO: error message
 		assert(!mStartHasBeenCalled);
-		return;
+		return nullptr;
 	}
-	// for now just use type name for node name
-	outlet->setNode(this);
+	inlet->setNotifyCallback([=](double) { this->callbackNewInletData(); });
+	mInlets.push_back(inlet);
+	return inlet;
+}
+
+OutletPtr Node::createOutlet(Types types, std::string name, std::string helpText)
+{
+	OutletPtr outlet(new Outlet(types, *this, name, helpText));
+	if (mStartHasBeenCalled)
+	{
+		// TODO: error message
+		assert(!mStartHasBeenCalled);
+		return nullptr;
+	}
 	mOutlets.push_back(outlet);
+	return outlet;
 }
 
 

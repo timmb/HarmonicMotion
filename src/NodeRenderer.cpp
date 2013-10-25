@@ -14,15 +14,15 @@
 using namespace hm;
 using namespace ci;
 
-NodeRenderer::NodeRenderer(std::string const& className)
-: Node(className)
-, mInlet(new Inlet(ALL_TYPES, "Data to render", "Received data is stored until"
-		 " a request is received to render"))
+NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
+: Node(params, className)
+, mInlet(nullptr)
 , mTimestampOfData(-42.)
 , mTimestampOfLastDraw(-42.)
 {
+	mInlet = createInlet(ALL_TYPES, "Data to render", "Received data is stored until"
+						 " a request is received to render");
 	mInlet->setNotifyCallback([this](double d){ mTimestampOfData = d; });
-	addInlet(mInlet);
 }
 
 bool NodeRenderer::isRedrawRequired() const

@@ -13,19 +13,23 @@
 using namespace std;
 using namespace hm;
 
-Outlet::Outlet(Types types, string const& name, string const& helpText)
+Outlet::Outlet(Types types, Node& node, string const& name, string const& helpText)
 : mTypes(types)
 , mName(name)
-, mNode(nullptr)
+, mNode(&node)
 , mHelpText(helpText)
 {
-	
 }
 
-std::string Outlet::nodeName() const
+void Outlet::detachOwnerNode()
 {
-	return mNode? mNode->type() : "(No node set)";
+	mNode = nullptr;
 }
+
+//std::string Outlet::nodeName() const
+//{
+//	return node != nullptr? node->type() : "(No node set)";
+//}
 
 bool Outlet::connect(InletPtr inlet)
 {
@@ -42,20 +46,36 @@ bool Outlet::connect(InletPtr inlet)
 void Outlet::outputNewData(Data& data)
 {
 	assert(mTypes & data.type());
-	assert(mNode != nullptr);
-	data.lastNode = mNode;
-	hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
-	for (InletPtr out: mOutputs)
+	// Add this node to the data's history list
 	{
-		// Only send data to inlets that support it
-		if (out->types() & data.type())
+		deque<std::string>& history = data.asDataType()->nodeHistory;
+		if (mNode != nullptr)
 		{
-			out->provideNewData(data);
+			history.push_front(mNode->name());
+		}
+		else
+		{
+			history.push_front("(unknown)");
+		}
+	}
+	hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
+	for (auto outRefIt=mOutputs.begin(); outRefIt!=mOutputs.end(); )
+	{
+		InletPtr out = outRefIt->lock();
+		// check the inlet still exists. if it doesn't then remove the connection
+		if (out == nullptr)
+		{
+			outRefIt = mOutputs.erase(outRefIt);
+		}
+		else
+		{
+			// Only send data to inlets that support it
+			if (out->types() & data.type())
+			{
+				out->provideNewData(data);
+			}
+			++outRefIt;
 		}
 	}
 }
 
-void Outlet::setNode(Node* node)
-{
-	mNode = node;
-}

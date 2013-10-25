@@ -34,16 +34,15 @@ public:
 };
 
 NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
-: Node(className)
+: Node(params, className)
 //, mOsc(new Sender)
-, mInlet(new Inlet(VALUE | SKELETON3D | SCENE3D,
-				   "Data to be sent",
-				   "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates."))
+, mInlet(nullptr)
 , mLastSentTimestamp(-42.)
 {
 	setParams(params);
-	addInlet(mInlet);
-	// Ensure prefix starts but does not end with slash
+	mInlet = createInlet(VALUE | SKELETON3D | SCENE3D,
+						 "Data to be sent",
+						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
 }
 
 NodeOscOut::~NodeOscOut()
@@ -53,7 +52,7 @@ NodeOscOut::~NodeOscOut()
 
 void NodeOscOut::setParams(Params const& params)
 {
-	unique_lock<shared_mutex> lock(mMutex);
+	unique_lock<shared_mutex> lock(mParamsMutex);
 	mParams = params;
 	if (!mParams.prefix.empty() && mParams.prefix[0] != '/')
 	{
@@ -63,19 +62,21 @@ void NodeOscOut::setParams(Params const& params)
 	{
 		mPrefixWithSlash = mPrefixWithSlash.substr(0, mPrefixWithSlash.size()-1);
 	}
+	setNodeParams(params);
 }
 
 NodeOscOut::Params NodeOscOut::params() const
 {
-	shared_lock<shared_mutex> lock(mMutex);
+	shared_lock<shared_mutex> lock(mParamsMutex);
 	return mParams;
 }
+
 
 void NodeOscOut::send(Value const& value)
 {
 	Message m;
 	{
-		shared_lock<shared_mutex> lock(mMutex);
+		shared_lock<shared_mutex> lock(mParamsMutex);
 		m.setAddress(mPrefixWithSlash);
 	}
 	m.addFloatArg(value.value());
@@ -87,7 +88,7 @@ void NodeOscOut::send(Skeleton3d const& skel)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		shared_lock<shared_mutex> lock(mMutex);
+		shared_lock<shared_mutex> lock(mParamsMutex);
 		Message m = JointMessage(mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i));
 		mOsc.sendMessage(m);
 	}
@@ -97,7 +98,7 @@ void NodeOscOut::send(Scene3d const& scene)
 {
 	Message m;
 	{
-		shared_lock<shared_mutex> lock(mMutex);
+		shared_lock<shared_mutex> lock(mParamsMutex);
 		m.setAddress(mPrefixWithSlash+"num_users");
 	}
 	m.addIntArg(scene.skeletons().size());
@@ -111,7 +112,7 @@ void NodeOscOut::send(Scene3d const& scene)
 void NodeOscOut::run()
 {
 	{
-		shared_lock<shared_mutex> lock(mMutex);
+		shared_lock<shared_mutex> lock(mParamsMutex);
 		try
 		{
 			mOsc.setup(mParams.destinationHost, mParams.destinationPort);

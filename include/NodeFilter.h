@@ -17,14 +17,15 @@ namespace hm
 	class NodeFilter : public Node
 	{
 	public:
-		struct Params
+		struct Params : public Node::Params
 		{
 			/// First order smoothing on the Predictor
 			float alpha;
 			/// Second order smoothing on the Predictor
 			float beta;
-			Params(float alpha_=0.5f, float beta_=0.5f)
-			: alpha(alpha_)
+			Params(float alpha_=0.5f, float beta_=0.5f, std::string const& name="")
+			: Node::Params(name)
+			, alpha(alpha_)
 			, beta(beta_)
 			{}
 		};

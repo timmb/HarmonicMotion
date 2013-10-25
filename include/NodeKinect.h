@@ -15,14 +15,15 @@ namespace hm
 	class NodeKinect : public Node
 	{
 	public:
-		struct Params
+		struct Params : public Node::Params
 		{
 			/// Will force enableDepth
 			bool enableScene;
 			bool enableDepth;
 			
-			Params()
-			: enableScene(true)
+			Params(bool enableScene_=true, bool enableDepth_=true, std::string const& name_="")
+			: Node::Params(name_)
+			, enableScene(true)
 			, enableDepth(true)
 			{}
 		};

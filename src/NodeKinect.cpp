@@ -49,7 +49,7 @@ int jointToVBone(Joint jointId)
 }
 
 NodeKinect::NodeKinect(Params const& params, std::string const& className)
-: Node(className)
+: Node(params, className)
 , mParams(params)
 , mSceneOutlet(nullptr)
 , mDevice(nullptr)
@@ -58,8 +58,7 @@ NodeKinect::NodeKinect(Params const& params, std::string const& className)
 {
 	OpenNIDeviceManager::USE_THREAD = false;
 	mOpenNi = OpenNIDeviceManager::InstancePtr();
-	mSceneOutlet = OutletPtr(new Outlet(SCENE3D, "3D Scene", "All user skeletons in 3D space"));
-	addOutlet(mSceneOutlet);
+	mSceneOutlet = createOutlet(SCENE3D, "3D Scene", "All user skeletons in 3D space");
 	SceneMeta* metadata = new SceneMeta;
 	metadata->cameraPos = ci::Vec3f(0,0,0);
 	metadata->cameraDir = ci::Vec3f(0,0,1);

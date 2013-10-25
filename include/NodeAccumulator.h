@@ -10,7 +10,7 @@ namespace hm
 	class NodeAccumulator : public Node
 	{
 	public:
-		struct Params
+		struct Params : public Node::Params
 		{
 			/// Number of messages stored. Bear in mind the
 			/// memory used by the buffer may be vastly more
@@ -18,8 +18,9 @@ namespace hm
 			/// of stuff on the heap as well.
 			int bufferSize;
 			
-			Params(int bufferSize_=50)
-			: bufferSize(bufferSize_)
+			Params(int bufferSize_=50, std::string const& name_="")
+			: Node::Params(name_)
+			, bufferSize(bufferSize_)
 			{}
 		};
 		

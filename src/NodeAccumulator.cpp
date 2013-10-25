@@ -4,12 +4,12 @@
 using namespace hm;
 
 NodeAccumulator::NodeAccumulator(Params const& params, std::string const& className)
-: Node(className)
-, mInlet(new Inlet(ALL_TYPES, "Data to accumulate", "Data received here is accumulated until it is removed with next() (unless the buffer is full in which case it is ignored"))
+: Node(params, className)
+, mInlet(nullptr)
 , mParams(params)
 , mBuffer(params.bufferSize)
 {
-	addInlet(mInlet);
+	mInlet = createInlet(ALL_TYPES, "Data to accumulate", "Data received here is accumulated until it is removed with next() (unless the buffer is full in which case it is ignored");
 }
 
 NodeAccumulator::~NodeAccumulator()

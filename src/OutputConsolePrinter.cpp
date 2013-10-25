@@ -11,13 +11,13 @@
 
 using namespace hm;
 
-OutputConsolePrinter::OutputConsolePrinter(std::string const& printerName, std::string const& className)
-: Node(className)
-, mName(printerName)
-, mInlet(new Inlet(ALL_TYPES, "Input printed to console", ""))
+OutputConsolePrinter::OutputConsolePrinter(Params const& params, std::string const& className)
+: Node(params, className)
+, mParams(params)
+, mInlet(nullptr)
 , mLastTimestamp(-42.)
 {
-	addInlet(mInlet);
+	mInlet = createInlet(ALL_TYPES, "Input printed to console", "");
 }
 
 
@@ -34,8 +34,9 @@ void OutputConsolePrinter::run()
 		if (mInlet->dataTimestamp() > mLastTimestamp)
 		{
 			Data data = mInlet->data();
-			std::cout << "-- "<<mName<<" -- "<<mInlet->dataTimestamp()
-			<<" "<<data.lastNode->type()<<"\n   "<<data<<std::endl;
+			auto history = data.asDataType()->nodeHistory;
+			std::cout << "-- "<<mParams.name<<" -- "<<mInlet->dataTimestamp()
+			<<" "<<(!history.empty()? history[0] :"")<<"\n   "<<data<<std::endl;
 		}
 		waitForNewData();
 	}

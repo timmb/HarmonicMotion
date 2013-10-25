@@ -13,13 +13,13 @@
 using namespace hm;
 
 GeneratorSineWave::GeneratorSineWave(Params const& params, std::string const& className)
-: Node(className)
+: Node(params, className)
 , mParams(params)
-, mOutlet(new Outlet(VALUE, "Value", "Outputs a value from the sin wave `outputRate` number of times a second"))
+, mOutlet(nullptr)
 , mStartTime(-42)
 , mTimeOfLastOutput(-42)
 {
-	addOutlet(mOutlet);
+	mOutlet = createOutlet(VALUE, "Value", "Outputs a value from the sin wave `outputRate` number of times a second");
 }
 
 GeneratorSineWave::~GeneratorSineWave()

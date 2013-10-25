@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Node.h"
+#include "cinder/Color.h"
 
 namespace hm
 {
@@ -16,8 +17,20 @@ namespace hm
 	{
 	public:
 		typedef std::shared_ptr<NodeRenderer> Ptr;
+		struct Params : public Node::Params
+		{
+			Params(std::string const& name_="")
+			: Node::Params(name_)
+			{}
+		};
 		
-		NodeRenderer(std::string const& className="NodeRenderer");
+		/// Settings applied to drawing of data to a specific outlet
+		struct DrawSettings
+		{
+			ci::ColorA color;
+		};
+		
+		NodeRenderer(Params const& params=Params(), std::string const& className="NodeRenderer");
 		
 		bool isRedrawRequired() const;
 		/// This will clear the render buffer and set the matrices/camera

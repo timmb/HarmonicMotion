@@ -16,17 +16,18 @@ using namespace boost;
 using namespace hm;
 
 NodeFilter::NodeFilter(Params const& params, std::string const& className)
-: Node(className)
-, mInlet(new Inlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Values to filter", "Values received are filtered and sent out"))
-, mOutlet(new Outlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Filtered values", ""))
+: Node(params, className)
+, mParams(params)
+, mInlet(nullptr)
+, mOutlet(nullptr)
 , mFilterValue(new FilterSavitzky<Value>)
 , mFilterPoint3d(new FilterSavitzky<Point3d>)
 , mFilterSkeleton3d(new FilterSavitzky<Skeleton3d>)
 , mFilterScene3d(new FilterSavitzky<Scene3d>)
 , mDataTimestamp(-42)
 {
-	addInlet(mInlet);
-	addOutlet(mOutlet);
+	mInlet = createInlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Values to filter", "Values received are filtered and sent out");
+	mOutlet = createOutlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Filtered values", "");
 }
 
 
@@ -40,6 +41,7 @@ void NodeFilter::setParams(Params const& params)
 {
 	shared_lock<shared_mutex> lock(mMutex);
 	mParams = params;
+	setNodeParams(params);
 }
 
 void NodeFilter::run()
