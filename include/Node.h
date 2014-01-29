@@ -70,7 +70,7 @@ namespace hm
 		/// \return true if new data arrived. Otherwise, derived
 		/// class should check to see whether it should close
 		/// and then recall this function if good to continue.
-		/// New data is defined as one more more inlets having
+		/// New data is defined as one or more inlets having
 		/// new data.
 		/// \param inlet Which inlet to wait for, or -1 for any inlet
 		bool waitForNewData(int inlet=-1) const;
