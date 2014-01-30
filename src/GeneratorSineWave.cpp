@@ -13,7 +13,7 @@
 using namespace hm;
 
 GeneratorSineWave::GeneratorSineWave(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 , mParams(params)
 , mOutlet(nullptr)
 , mStartTime(-42)

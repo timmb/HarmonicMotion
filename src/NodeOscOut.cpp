@@ -34,7 +34,7 @@ public:
 };
 
 NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 //, mOsc(new Sender)
 , mInlet(nullptr)
 , mLastSentTimestamp(-42.)
@@ -50,7 +50,7 @@ NodeOscOut::~NodeOscOut()
 	stopAndWait();
 }
 
-void NodeOscOut::setParams(Params const& params)
+void NodeOscOut::setParams(Params params)
 {
 	unique_lock<shared_mutex> lock(mParamsMutex);
 	mParams = params;

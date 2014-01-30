@@ -1,57 +1,50 @@
 //
-//  Node.cpp
+//  NodeThreaded.cpp
 //  HarmonicMotion
 //
 //  Created by Tim Murray-Browne on 25/09/2013.
 //  Copyright (c) 2013 Tim Murray-Browne. All rights reserved.
 //
 
-#include "Node.h"
-#include "Inlet.h"
-#include "Outlet.h"
+#include "NodeThreaded.h"
 #include "cinder/Utilities.h"
+#include "Common.h"
+#include <boost/thread.hpp>
+#include "Inlet.h"
 
 using namespace hm;
 using namespace std;
 using namespace boost;
 
-std::set<std::string> Node::sNamesInUse;
-
-Node::Node(Params const& params, string const& className)
-: mClassName(className)
-, mParams_(params)
+NodeThreaded::NodeThreaded(Node::Params const& params, string const& className)
+: Node(params, className)
 , mThreadIsRequestedToStop(false)
 , mStartHasBeenCalled(false)
+, mStopAndWaitHasBeenCalled(false)
 , mThreadIsRunning(false)
 , mThread(nullptr)
 {
-	assert(mClassName != "");
-	hm_debug("Node constructed: "+className);
-	if (mParams_.name=="")
-		mParams_.name = mClassName;
-	if (sNamesInUse.count(mParams_.name)>0)
+	hm_debug("NodeThreaded constructed: "+className);
+}
+
+NodeThreaded::~NodeThreaded()
+{
+	if (!mStopAndWaitHasBeenCalled)
 	{
-		int count=0;
-		while (sNamesInUse.count(mParams_.name+ci::toString(count))>0)
-		{
-			count++;
-		}
-		mParams_.name = mParams_.name+ci::toString(count);
+		hm_error("stopAndWait() was not called before destruction. Please "
+				 "call stopAnWait() in the destructor of any class inheriting "
+				 "NodeThreaded.");
+		stopAndWait();
 	}
-	sNamesInUse.insert(mParams_.name);
-}
-
-Node::~Node()
-{
-//	std::cerr << "Node::~Node() stopping" << std::endl;
+//	std::cerr << "NodeThreaded::~NodeThreaded() stopping" << std::endl;
 	disconnectAllCallbacks();
-	stopAndWait();
-//	std::cerr << "Node::~Node() stopped" << std::endl;
+//	std::cerr << "NodeThreaded::~NodeThreaded() stopped" << std::endl;
 }
 
-void Node::stopAndWait()
+void NodeThreaded::stopAndWait()
 {
-	hm_debug("Destructor called on "+toString());
+	mStopAndWaitHasBeenCalled = true;
+	hm_debug("stopAndWait called on "+toString());
 	{
 		boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
 		mThreadIsRequestedToStop = true;
@@ -75,21 +68,22 @@ void Node::stopAndWait()
 	}
 }
 
-void Node::disconnectAllCallbacks()
+void NodeThreaded::disconnectAllCallbacks()
 {
-	for (InletPtr inlet: mInlets)
+	for (int i=0; i<numInlets(); i++)
 	{
-		inlet->setNotifyCallback(nullptr);
+		inlet(i)->setNotifyCallback(nullptr);
 	}
 }
 
-void Node::start()
+void NodeThreaded::start()
 {
 	mStartHasBeenCalled = true;
+	mStopAndWaitHasBeenCalled = false;
 	mThread = std::unique_ptr<boost::thread>(new boost::thread([this](){ threadFunction(); }));
 }
 
-void Node::threadFunction()
+void NodeThreaded::threadFunction()
 {
 	mThreadIsRunning = true;
 //	try
@@ -105,69 +99,23 @@ void Node::threadFunction()
 	mThreadIsRunning = false;
 }
 
-InletPtr Node::inlet(int index)
-{
-	assert(0 <= index && index < mInlets.size());
-	return mInlets[index];
-}
 
-OutletPtr Node::outlet(int index)
+std::ostream& operator<<(std::ostream& out, NodeThreaded const& node)
 {
-	assert(0 <= index && index < mOutlets.size());
-	return mOutlets[index];
-}
-
-std::string Node::toString() const
-{
-	stringstream ss;
-	ss << "Node "<<mClassName<<" inlets:"<<mInlets.size()<<" outlets:"
-	<<mOutlets.size()<<" isRunning:"<<isRunning();
-	return ss.str();
+	return out << "Threaded " << *(Node*)&node;
 }
 
 
-Node::Params Node::nodeParams() const
+InletPtr NodeThreaded::createInlet(Types types, std::string const& name, std::string const& helpText)
 {
-	shared_lock<shared_mutex> lock(mParamsMutex_);
-	return mParams_;
-}
-
-void Node::setNodeParams(Params const& params)
-{
-	boost::unique_lock<shared_mutex> lock(mParamsMutex_);
-	mParams_ = params;
-}
-
-
-InletPtr Node::createInlet(Types types, std::string name, std::string helpText)
-{
-	InletPtr inlet(new Inlet(types, *this, name, helpText));
-	if (mStartHasBeenCalled)
-	{
-		// TODO: error message
-		assert(!mStartHasBeenCalled);
-		return nullptr;
-	}
+	
+	InletPtr inlet = Node::createInlet(types, name, helpText);
 	inlet->setNotifyCallback([=](double) { this->callbackNewInletData(); });
-	mInlets.push_back(inlet);
 	return inlet;
 }
 
-OutletPtr Node::createOutlet(Types types, std::string name, std::string helpText)
-{
-	OutletPtr outlet(new Outlet(types, *this, name, helpText));
-	if (mStartHasBeenCalled)
-	{
-		// TODO: error message
-		assert(!mStartHasBeenCalled);
-		return nullptr;
-	}
-	mOutlets.push_back(outlet);
-	return outlet;
-}
 
-
-void Node::callbackNewInletData()
+void NodeThreaded::callbackNewInletData()
 {
 	{
 		boost::unique_lock<boost::mutex>(mHasNewInletDataMutex);
@@ -180,9 +128,10 @@ void Node::callbackNewInletData()
 }
 
 
-bool Node::waitForNewData(int inlet) const
+bool NodeThreaded::waitForNewData(int inletNumber) const
 {
-	if (inlet==-1)
+	assert(-1 <= inletNumber && inletNumber < numInlets());
+	if (inletNumber < 0)
 	{
 		boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
 		mWasNotified = false;
@@ -195,11 +144,10 @@ bool Node::waitForNewData(int inlet) const
 			mWasNotifiedWaitCondition.wait(lock);
 		}
 	}
-	else if (inlet < mInlets.size())
+	else
 	{
-		InletPtr in = mInlets[inlet];
+		InletPtr in = inlet(inletNumber);
 		return in->waitForNewData(in->dataTimestamp());
 	}
-	assert(inlet < mInlets.size());
 	return false;
 }

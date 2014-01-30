@@ -49,7 +49,7 @@ int jointToVBone(Joint jointId)
 }
 
 NodeKinect::NodeKinect(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 , mParams(params)
 , mSceneOutlet(nullptr)
 , mDevice(nullptr)

@@ -48,7 +48,8 @@ namespace hm
 		/// Type may be a combination of Type flags.
 		Inlet(Types types, Node& node, std::string const& name, std::string const& helpText);
 		/// This is used by the node when it is destroyed just in case the
-		/// outlet outlives its node. There is no need to call it normally
+		/// outlet outlives its node. There is no need to call it normally.
+		/// TODO: Ensure that this blocks until any callback is complete
 		void detachOwnerNode();
 
 		// Accessed by Outlet ------------

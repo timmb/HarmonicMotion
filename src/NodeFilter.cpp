@@ -16,7 +16,7 @@ using namespace boost;
 using namespace hm;
 
 NodeFilter::NodeFilter(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 , mParams(params)
 , mInlet(nullptr)
 , mOutlet(nullptr)
@@ -37,7 +37,7 @@ NodeFilter::Params NodeFilter::params() const
 	return mParams;
 }
 
-void NodeFilter::setParams(Params const& params)
+void NodeFilter::setParams(Params params)
 {
 	shared_lock<shared_mutex> lock(mMutex);
 	mParams = params;

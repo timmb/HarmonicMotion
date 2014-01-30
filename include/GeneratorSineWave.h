@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "Node.h"
+#include "NodeThreaded.h"
 //#include <boost/chrono.hpp>
 
 namespace hm
 {
 	/// Testing node to create a sine wave
-	class GeneratorSineWave : public Node
+	class GeneratorSineWave : public NodeThreaded
 	{
 	public:
 		struct Params : public Node::Params

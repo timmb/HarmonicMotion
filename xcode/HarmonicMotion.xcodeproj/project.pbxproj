@@ -222,6 +222,11 @@
 		225161E41817DBE7004F0F57 /* NodeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 225161E21817DBE7004F0F57 /* NodeRenderer.cpp */; };
 		225161E51817DBE7004F0F57 /* NodeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 225161E21817DBE7004F0F57 /* NodeRenderer.cpp */; };
 		225161E81817DC0F004F0F57 /* NodeRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 225161E71817DC0F004F0F57 /* NodeRenderer.h */; };
+		2262C5B018997035006CCA1A /* Parameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2262C5AF18997035006CCA1A /* Parameter.h */; };
+		2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2262C5B11899703F006CCA1A /* Parameter.cpp */; };
+		2294120A189AA33D009550EF /* NodeThreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22941209189AA33D009550EF /* NodeThreaded.cpp */; };
+		2294120B189AA349009550EF /* NodeThreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22941209189AA33D009550EF /* NodeThreaded.cpp */; };
+		2294120D189AA35D009550EF /* NodeThreaded.h in Headers */ = {isa = PBXBuildFile; fileRef = 2294120C189AA35D009550EF /* NodeThreaded.h */; };
 		22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F461816BCCE004E1219 /* libltdl.7.dylib */; };
 		22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
@@ -396,7 +401,11 @@
 		2229375518168E67008CAA09 /* Scene3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene3d.h; path = ../include/Scene3d.h; sourceTree = "<group>"; };
 		225161E21817DBE7004F0F57 /* NodeRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeRenderer.cpp; sourceTree = "<group>"; };
 		225161E71817DC0F004F0F57 /* NodeRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeRenderer.h; path = ../include/NodeRenderer.h; sourceTree = "<group>"; };
+		2262C5AF18997035006CCA1A /* Parameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parameter.h; path = ../include/Parameter.h; sourceTree = "<group>"; };
+		2262C5B11899703F006CCA1A /* Parameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parameter.cpp; sourceTree = "<group>"; };
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
+		22941209189AA33D009550EF /* NodeThreaded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeThreaded.cpp; sourceTree = "<group>"; };
+		2294120C189AA35D009550EF /* NodeThreaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeThreaded.h; path = ../include/NodeThreaded.h; sourceTree = "<group>"; };
 		22E50F461816BCCE004E1219 /* libltdl.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libltdl.7.dylib; path = ../lib/macosx/libltdl.7.dylib; sourceTree = "<group>"; };
 		22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libusb-1.0.0.dylib"; path = "../lib/macosx/libusb-1.0.0.dylib"; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
@@ -483,6 +492,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2262C5AF18997035006CCA1A /* Parameter.h */,
+				2262C5B11899703F006CCA1A /* Parameter.cpp */,
 				2223EC7718196C2500B900CF /* Filter.h */,
 				2223EC7218194A6F00B900CF /* Predictor.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
@@ -503,6 +514,8 @@
 				225161E71817DC0F004F0F57 /* NodeRenderer.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
 				22197F0017F44B76003B1883 /* Node.h */,
+				22941209189AA33D009550EF /* NodeThreaded.cpp */,
+				2294120C189AA35D009550EF /* NodeThreaded.h */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
 				22197EFF17F44B76003B1883 /* Inlet.h */,
 				22197ECF17F44B1B003B1883 /* Outlet.cpp */,
@@ -908,6 +921,7 @@
 				222936CD181677BD008CAA09 /* XnPlatformLinux-Arm.h in Headers */,
 				222936CE181677BD008CAA09 /* XnOSLinux-x86.h in Headers */,
 				222936CF181677BD008CAA09 /* XnPlatformLinux-x86.h in Headers */,
+				2294120D189AA35D009550EF /* NodeThreaded.h in Headers */,
 				222936D0181677BD008CAA09 /* XnPlatformMacOSX.h in Headers */,
 				222936D1181677BD008CAA09 /* usb100.h in Headers */,
 				222936D2181677BD008CAA09 /* XnOSWin32.h in Headers */,
@@ -960,6 +974,7 @@
 				222936FE181677BD008CAA09 /* XnPrdNodeInfo.h in Headers */,
 				222936FF181677BD008CAA09 /* XnPrdNodeInfoList.h in Headers */,
 				22293700181677BD008CAA09 /* XnProfiling.h in Headers */,
+				2262C5B018997035006CCA1A /* Parameter.h in Headers */,
 				22293701181677BD008CAA09 /* XnPropNames.h in Headers */,
 				22293702181677BD008CAA09 /* XnQueries.h in Headers */,
 				22293703181677BD008CAA09 /* XnQueue.h in Headers */,
@@ -1085,6 +1100,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2294120B189AA349009550EF /* NodeThreaded.cpp in Sources */,
 				22197ED317F44B1B003B1883 /* GeneratorSineWave.cpp in Sources */,
 				22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */,
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
@@ -1095,6 +1111,7 @@
 				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
 				22197F1117F472F4003B1883 /* OscBundle.cpp in Sources */,
+				2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */,
 				22197F1217F472F4003B1883 /* OscListener.cpp in Sources */,
 				2223EC611817EEA400B900CF /* DataNull.cpp in Sources */,
 				22197F1317F472F4003B1883 /* OscMessage.cpp in Sources */,
@@ -1130,6 +1147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2294120A189AA33D009550EF /* NodeThreaded.cpp in Sources */,
 				D8747D8A237442168BF330E1 /* HarmonicMotionApp.cpp in Sources */,
 				757F077DABA7415EB988676F /* OscBundle.cpp in Sources */,
 				225161E41817DBE7004F0F57 /* NodeRenderer.cpp in Sources */,

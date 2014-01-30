@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Node.h"
+#include "NodeThreaded.h"
 
 namespace V
 {
@@ -12,7 +12,7 @@ namespace hm
 {
 	class SceneMeta;
 	
-	class NodeKinect : public Node
+	class NodeKinect : public NodeThreaded
 	{
 	public:
 		struct Params : public Node::Params

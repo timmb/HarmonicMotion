@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "Node.h"
+#include "NodeThreaded.h"
 
 namespace hm
 {
-	class OutputConsolePrinter : public Node
+	class OutputConsolePrinter : public NodeThreaded
 	{
 	public:
 		struct Params : public Node::Params

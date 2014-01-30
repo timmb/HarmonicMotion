@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "Node.h"
+#include "NodeThreaded.h"
 #include "OscSender.h"
 #include <boost/thread/shared_mutex.hpp>
 
@@ -21,7 +21,7 @@ namespace cinder
 
 namespace hm
 {
-	class NodeOscOut : public Node
+	class NodeOscOut : public NodeThreaded
 	{
 	public:
 		typedef std::shared_ptr<NodeOscOut> Ptr;
@@ -44,7 +44,7 @@ namespace hm
 		virtual ~NodeOscOut();
 		
 		/// Thread-safe
-		void setParams(Params const& params);
+		void setParams(Params params);
 		/// Thread-safe
 		Params params() const;
 

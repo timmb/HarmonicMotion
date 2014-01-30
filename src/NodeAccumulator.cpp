@@ -4,7 +4,7 @@
 using namespace hm;
 
 NodeAccumulator::NodeAccumulator(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 , mInlet(nullptr)
 , mParams(params)
 , mBuffer(params.bufferSize)

@@ -12,7 +12,7 @@
 using namespace hm;
 
 OutputConsolePrinter::OutputConsolePrinter(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 , mParams(params)
 , mInlet(nullptr)
 , mLastTimestamp(-42.)

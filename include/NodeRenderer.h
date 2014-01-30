@@ -7,13 +7,13 @@
 //
 
 #pragma once
-#include "Node.h"
+#include "NodeThreaded.h"
 #include "cinder/Color.h"
 
 namespace hm
 {
 	/// Node that collects received data and renders it on request.
-	class NodeRenderer : public Node
+	class NodeRenderer : public NodeThreaded
 	{
 	public:
 		typedef std::shared_ptr<NodeRenderer> Ptr;

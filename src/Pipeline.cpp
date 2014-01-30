@@ -21,11 +21,6 @@ Pipeline::Pipeline()
 
 Pipeline::~Pipeline()
 {
-	for (NodePtr node: mNodes)
-	{
-		// See explanation at docnote for Node::disconnectAllCallbacks
-		node->disconnectAllCallbacks();
-	}
 }
 
 std::vector<NodePtr> const& Pipeline::nodes() const
@@ -51,8 +46,8 @@ void Pipeline::removeNode(NodePtr node)
 void Pipeline::start()
 {
 	mIsRunning = true;
-	for (auto p: mNodes)
-	{
-		p->start();
-	}
+//	for (auto p: mNodes)
+//	{
+//		p->start();
+//	}
 }

@@ -15,7 +15,7 @@ using namespace hm;
 using namespace ci;
 
 NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
-: Node(params, className)
+: NodeThreaded(params, className)
 , mInlet(nullptr)
 , mTimestampOfData(-42.)
 , mTimestampOfLastDraw(-42.)

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Node.h"
+#include "NodeThreaded.h"
 #include "cinder/ConcurrentCircularBuffer.h"
 
 namespace hm
 {
 	/// Node that accumulates values received that may
 	/// be read off using a function
-	class NodeAccumulator : public Node
+	class NodeAccumulator : public NodeThreaded
 	{
 	public:
 		struct Params : public Node::Params
