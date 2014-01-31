@@ -55,7 +55,7 @@ namespace hm
 		/// a node should ignore all input and does not produce new output.
 		/// step() will not be called
 		virtual void setEnabled(bool isEnabled);
-		bool isEnabled() const;
+		bool isEnabled() const { return mIsEnabled; }
 		
 		// Functions called by the owning pipeline
 		/// Requests the node prepares to start processing. Delegates to start().
@@ -74,9 +74,11 @@ namespace hm
 		/// subclassed.
 		Node(Params params, std::string const& className);
 		
-		/// This function may only be used at construction
+		/// This function may only be used at construction otherwise a runtime error
+		/// will be thrown.
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
-		/// This function may only be used at construction
+		/// This function may only be used at construction otherwise a runtime error
+		/// will be thrown.
 		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& helpText="");
 		
 		// MARK: Abstract functions to implement
@@ -107,8 +109,9 @@ namespace hm
 		Params mNodeParams;
 		mutable boost::shared_mutex mNodeParamsMutex;
 		const std::string mClassName;
-		bool mIsEnabled;
-		bool mIsProcessing;
+		std::atomic<bool> mIsEnabled;
+		std::atomic<bool> mIsProcessing;
+		std::atomic<bool> mHasStartEverBeenCalled;
 
 		static std::set<std::string> sNamesInUse;
 		static boost::mutex sNamesInUseMutex;

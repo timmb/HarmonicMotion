@@ -32,6 +32,7 @@ Node::Node(Params params, string const& className)
 : mClassName(className)
 , mIsEnabled(false)
 , mIsProcessing(false)
+, mHasStartEverBeenCalled(false)
 {
 	assert(mClassName != "");
 	setNodeParams(params);
@@ -46,10 +47,16 @@ Node::~Node()
 	}
 }
 
+void Node::setEnabled(bool isEnabled)
+{
+	mIsEnabled = isEnabled;
+}
+
 void Node::startProcessing()
 {
 	assert(!mIsProcessing);
 	mIsProcessing = true;
+	mHasStartEverBeenCalled = true;
 	hm_debug("Processing started on Node "+name());
 	start();
 }
@@ -96,6 +103,16 @@ const OutletPtr Node::outlet(int index) const
 	return mOutlets[index];
 }
 
+int Node::numInlets() const
+{
+	return mInlets.size();
+}
+
+int Node::numOutlets() const
+{
+	return mOutlets.size();
+}
+
 std::string Node::toString() const
 {
 	return (stringstream() << *this).str();
@@ -136,6 +153,14 @@ void Node::setNodeParams(Params& params)
 
 InletPtr Node::createInlet(Types types, std::string const& name, std::string const& helpText)
 {
+	// For thread-safety, inlets may only be created before start() is called
+	if (mHasStartEverBeenCalled)
+	{
+		hm_error("Inlets cannot be created after start() has been called.");
+		assert(!mHasStartEverBeenCalled);
+		// TODO: Replace with custom exception
+		throw std::runtime_error("Inlets cannot be created after start() has been called.");
+	}
 	InletPtr inlet(new Inlet(types, *this, name, helpText));
 	mInlets.push_back(inlet);
 	return inlet;
@@ -143,6 +168,14 @@ InletPtr Node::createInlet(Types types, std::string const& name, std::string con
 
 OutletPtr Node::createOutlet(Types types, std::string const& name, std::string const& helpText)
 {
+	// For thread-safety, outlets may only be created before start() is called
+	if (mHasStartEverBeenCalled)
+	{
+		hm_error("Outlets cannot be created after start() has been called.");
+		assert(!mHasStartEverBeenCalled);
+		// TODO: Replace with custom exception
+		throw std::runtime_error("Outlets cannot be created after start() has been called.");
+	}
 	OutletPtr outlet(new Outlet(types, *this, name, helpText));
 	mOutlets.push_back(outlet);
 	return outlet;
