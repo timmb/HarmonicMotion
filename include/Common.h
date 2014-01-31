@@ -17,6 +17,7 @@ namespace hm
 	class Inlet;
 	class Outlet;
 	class Node;
+	class BaseParameter;
 	
 	// forward declare data types
 	class Value;
@@ -28,6 +29,7 @@ namespace hm
 	typedef std::shared_ptr<Inlet> InletPtr;
 	typedef std::shared_ptr<Outlet> OutletPtr;
 	typedef std::shared_ptr<Node> NodePtr;
+	typedef std::shared_ptr<BaseParameter> ParameterPtr;
 	
 	/// \return number of seconds since the program began
 	double elapsedTime();

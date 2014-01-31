@@ -12,6 +12,7 @@
 #include <string>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
+#include "Common.h"
 
 namespace hm {
 
@@ -36,8 +37,10 @@ namespace hm {
 		/// If an external value has been received, then this writes it to
 		/// this parameter's corresponding value pointer, and then calls
 		/// any registered callbacks.
-		/// The value of the pointer registered with this Parameter must not be
+		/// The value of the pointer registered with this Parameter must be valid
+		/// and not be
 		/// modified by another thread during this update() call.
+		/// \note This function should only be called by Node::updateParameters().
 		void update();
 		
 	protected:
@@ -64,7 +67,6 @@ namespace hm {
 		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
 		boost::mutex mNewExternalValueCallbacksMutex;
 	};
-	typedef std::shared_ptr<BaseParameter> ParameterPtr;
 	
 	template <typename T>
 	T& BaseParameter::getChild(T& root, std::string const& path)

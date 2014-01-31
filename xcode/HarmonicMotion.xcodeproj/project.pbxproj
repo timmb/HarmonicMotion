@@ -492,25 +492,25 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				226A967A189BEF930056DCD1 /* Data */,
 				226A9656189BECF60056DCD1 /* nodes */,
-				2262C5AF18997035006CCA1A /* Parameter.h */,
-				2262C5B11899703F006CCA1A /* Parameter.cpp */,
-				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
+				226A967A189BEF930056DCD1 /* Data */,
+				22261AA6181574AC00DBA3F8 /* Common.cpp */,
+				22197F8517F4996F003B1883 /* Common.h */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
+				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
+				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
+				22197EFF17F44B76003B1883 /* Inlet.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
 				22197F0017F44B76003B1883 /* Node.h */,
 				22941209189AA33D009550EF /* NodeThreaded.cpp */,
 				2294120C189AA35D009550EF /* NodeThreaded.h */,
-				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
-				22197EFF17F44B76003B1883 /* Inlet.h */,
 				22197ECF17F44B1B003B1883 /* Outlet.cpp */,
 				22197F0117F44B76003B1883 /* Outlet.h */,
+				2262C5B11899703F006CCA1A /* Parameter.cpp */,
+				2262C5AF18997035006CCA1A /* Parameter.h */,
 				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
 				22197F0317F44B76003B1883 /* Pipeline.h */,
 				22197F0417F44B76003B1883 /* Resources.h */,
-				22261AA6181574AC00DBA3F8 /* Common.cpp */,
-				22197F8517F4996F003B1883 /* Common.h */,
 			);
 			name = Source;
 			path = ../src;

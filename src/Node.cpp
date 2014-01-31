@@ -10,6 +10,7 @@
 #include "Inlet.h"
 #include "Outlet.h"
 #include "cinder/Utilities.h"
+#include "Parameter.h"
 
 namespace hm
 {
@@ -64,6 +65,7 @@ void Node::startProcessing()
 void Node::stepProcessing()
 {
 	assert(mIsProcessing);
+	updateParameters();
 	if (isEnabled())
 	{
 		step();
@@ -77,6 +79,26 @@ void Node::stopProcessing()
 	stopProcessing();
 }
 
+void Node::addParameter(BaseParameter* parameter)
+{
+	boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
+	mParameters.push_back(std::shared_ptr<BaseParameter>(parameter));
+}
+
+void Node::updateParameters()
+{
+	boost::shared_lock<boost::shared_mutex> lock(mParametersMutex);
+	for (ParameterPtr p: mParameters)
+	{
+		p->update();
+	}
+}
+
+std::vector<ParameterPtr> Node::parameters()
+{
+	boost::shared_lock<boost::shared_mutex> lock(mParametersMutex);
+	return mParameters;
+}
 
 
 InletPtr Node::inlet(int index)
