@@ -23,13 +23,9 @@ namespace hm
 	public:
 		virtual ~NodeThreaded();
 		
-		/// Starts the thread
-		void start();
 		/// Thread is running
 		bool isRunning() const { return mThreadIsRunning; }
 
-		void disconnectAllCallbacks();
-		
 	protected:
 		/// NodeThreadeds cannot be directly constructed as they are always
 		/// subclassed.
@@ -56,7 +52,16 @@ namespace hm
 		/// (currently set at 2 seconds).
 		void stopAndWait();
 		
+		// MARK: Reimplemented virtual functions
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="") override;
+		/// Starts the thread
+		virtual void start() override final;
+		/// Calls to step are ignored
+		virtual void step() override final {}
+		/// Requests that the thread end. NB there may be a delay until
+		/// isRunning returns false (this function does not block).
+		virtual void stop() override final;
+		
 
 		
 	private:
@@ -66,9 +71,12 @@ namespace hm
 		void callbackThreadEnded();
 		/// Function run by the thread. Delegates to run()
 		void threadFunction();
+		/// Remove callback function from all inlets
+		void disconnectAllCallbacks();
+		
 		
 		// Set to true when new inlet data arrives
-		mutable bool mWasNotified;
+		mutable std::atomic<bool> mWasNotified;
 		mutable boost::mutex mWasNotifiedMutex;
 		mutable boost::condition_variable mWasNotifiedWaitCondition;
 		std::atomic<bool> mThreadIsRequestedToStop;

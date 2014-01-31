@@ -51,8 +51,23 @@ namespace hm
 		
 		std::string toString() const;
 
+		/// Enabled is a node-specific, user adjustable setting. When disabled,
+		/// a node should ignore all input and does not produce new output.
+		/// step() will not be called
 		virtual void setEnabled(bool isEnabled);
 		bool isEnabled() const;
+		
+		// Functions called by the owning pipeline
+		/// Requests the node prepares to start processing. Delegates to start().
+		void startProcessing();
+		/// Requests that the node processes one frame of data from its inlets.
+		/// Delegates to step() if isEnabled is true.
+		void stepProcessing();
+		/// Requests that the node stops processing data. Delegates to stop().
+		void stopProcessing();
+		/// \return true if we are between startProcessing and stopProcessing calls
+		/// (even if isEnabled is false)
+		bool isProcessing() const;
 		
 	protected:
 		/// Nodes cannot be directly constructed as they are always
@@ -63,6 +78,22 @@ namespace hm
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
 		/// This function may only be used at construction
 		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& helpText="");
+		
+		// MARK: Abstract functions to implement
+		/// This function will be called by the owning pipeline when processing
+		/// of data begins. It is guaranteed to be called before the first step()
+		/// call and before the first step() call after a stop() call.
+		virtual void start() = 0;
+		/// This function will be called by the main pipeline continually while
+		/// processing is active and this node is enabled. This will be called
+		/// from an arbitrary thread but not from separate threads concurrently.
+		virtual void step() = 0;
+		/// This function is called when processing ends and guarantees that step()
+		/// will not be called again until after another call to start()
+		virtual void stop() = 0;
+		
+		
+
 		
 		// MARK: Accessors
 		Params nodeParams() const;
@@ -77,6 +108,7 @@ namespace hm
 		mutable boost::shared_mutex mNodeParamsMutex;
 		const std::string mClassName;
 		bool mIsEnabled;
+		bool mIsProcessing;
 
 		static std::set<std::string> sNamesInUse;
 		static boost::mutex sNamesInUseMutex;

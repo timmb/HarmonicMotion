@@ -9,7 +9,7 @@
 #include "Pipeline.h"
 #include "Node.h"
 #include <algorithm>
-
+#include <boost/thread.hpp>
 
 using namespace hm;
 
@@ -46,8 +46,39 @@ void Pipeline::removeNode(NodePtr node)
 void Pipeline::start()
 {
 	mIsRunning = true;
-//	for (auto p: mNodes)
-//	{
-//		p->start();
-//	}
+	// TODO: Make this parallel
+	// TODO: Create a wake condition and add a callback to inlets to discover
+	// when nodes need waking up.
+	for (auto p: mNodes)
+	{
+		p->startProcessing();
+	}
+	mIsRunning = true;
+	boost::thread thread([this]()
+		{
+			double timeOfLastUpdate = elapsedTime();
+			while (mIsRunning)
+			{
+				for (NodePtr node: mNodes)
+				{
+					node->stepProcessing();
+				}
+				double delta = elapsedTime() - timeOfLastUpdate;
+				timeOfLastUpdate += delta;
+				// limit framerate to 100fps
+				if (delta < 0.01)
+				{
+					int us = int((0.01 - delta) * 1000000);
+					boost::this_thread::sleep_for(boost::chrono::microseconds(us));
+				}
+			}
+		});
 }
+
+void Pipeline::stop()
+{
+	mIsRunning = false;
+}
+
+
+

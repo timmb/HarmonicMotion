@@ -9,6 +9,7 @@
 #pragma once
 #include "Common.h"
 #include <vector>
+#include <atomic>
 
 namespace hm
 {
@@ -23,12 +24,13 @@ namespace hm
 		void addNode(NodePtr node);
 		void removeNode(NodePtr node);
 		
-		/// Starts all nodes
+		/// Starts processing nodes
 		void start();
+		void stop();
 		
 	private:
 		std::vector<NodePtr> mNodes;
-		bool mIsRunning;
+		std::atomic<bool> mIsRunning;
 	};
 	
 }

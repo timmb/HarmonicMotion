@@ -37,15 +37,16 @@ NodeThreaded::~NodeThreaded()
 		stopAndWait();
 	}
 //	std::cerr << "NodeThreaded::~NodeThreaded() stopping" << std::endl;
-	disconnectAllCallbacks();
 //	std::cerr << "NodeThreaded::~NodeThreaded() stopped" << std::endl;
 }
 
 void NodeThreaded::stopAndWait()
 {
 	mStopAndWaitHasBeenCalled = true;
+	disconnectAllCallbacks();
 	hm_debug("stopAndWait called on "+toString());
 	{
+		// We use the mWasNotifiedMutex to wake up mWasNotifiedWaitCondition
 		boost::unique_lock<boost::mutex> lock(mWasNotifiedMutex);
 		mThreadIsRequestedToStop = true;
 	}
@@ -79,23 +80,26 @@ void NodeThreaded::disconnectAllCallbacks()
 void NodeThreaded::start()
 {
 	mStartHasBeenCalled = true;
+	mThreadIsRequestedToStop = false;
 	mStopAndWaitHasBeenCalled = false;
 	mThread = std::unique_ptr<boost::thread>(new boost::thread([this](){ threadFunction(); }));
+}
+
+void NodeThreaded::stop()
+{
+	{
+		boost::lock_guard<boost::mutex> lock(mWasNotifiedMutex);
+		mThreadIsRequestedToStop = true;
+	}
+	mWasNotifiedWaitCondition.notify_all();
 }
 
 void NodeThreaded::threadFunction()
 {
 	mThreadIsRunning = true;
-//	try
 	{
 		run();
 	}
-//	catch (exception& e)
-//	{
-//		cerr << "Exception from thread for "<<toString()<<':'<<endl
-//		<< e.what() << endl;
-//		throw e;
-//	}
 	mThreadIsRunning = false;
 }
 

@@ -11,6 +11,17 @@
 #include "Outlet.h"
 #include "cinder/Utilities.h"
 
+namespace hm
+{
+	std::ostream& operator<<(std::ostream& out, Node const& node)
+	{
+		return out
+		<< "Node "<<node.name()<<" ("<<node.type()<<")"
+		<<" inlets:"<<node.numInlets()
+		<<" outlets:"<<node.numOutlets();
+	}
+}
+
 using namespace hm;
 using namespace std;
 
@@ -20,6 +31,7 @@ boost::mutex Node::sNamesInUseMutex;
 Node::Node(Params params, string const& className)
 : mClassName(className)
 , mIsEnabled(false)
+, mIsProcessing(false)
 {
 	assert(mClassName != "");
 	setNodeParams(params);
@@ -32,6 +44,30 @@ Node::~Node()
 	{
 		inlet->detachOwnerNode();
 	}
+}
+
+void Node::startProcessing()
+{
+	assert(!mIsProcessing);
+	mIsProcessing = true;
+	hm_debug("Processing started on Node "+name());
+	start();
+}
+
+void Node::stepProcessing()
+{
+	assert(mIsProcessing);
+	if (isEnabled())
+	{
+		step();
+	}
+}
+
+void Node::stopProcessing()
+{
+	assert(mIsProcessing);
+	hm_debug("Processing stopped on Node "+name());
+	stopProcessing();
 }
 
 
@@ -63,14 +99,6 @@ const OutletPtr Node::outlet(int index) const
 std::string Node::toString() const
 {
 	return (stringstream() << *this).str();
-}
-
-std::ostream& operator<<(std::ostream& out, Node const& node)
-{
-	return out
-	<< "Node "<<node.name()<<" ("<<node.type()<<")"
-	<<" inlets:"<<node.numInlets()
-	<<" outlets:"<<node.numOutlets();
 }
 
 
