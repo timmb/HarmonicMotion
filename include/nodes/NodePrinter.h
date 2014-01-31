@@ -12,7 +12,7 @@
 
 namespace hm
 {
-	class OutputConsolePrinter : public NodeThreaded
+	class NodePrinter : public NodeThreaded
 	{
 	public:
 		struct Params : public Node::Params
@@ -22,8 +22,8 @@ namespace hm
 			{}
 		};
 		
-		OutputConsolePrinter(Params const& params=Params(), std::string const& className="OutputConsolePrinter");
-		virtual ~OutputConsolePrinter();
+		NodePrinter(Params const& params=Params(), std::string const& className="NodePrinter");
+		virtual ~NodePrinter();
 		
 	protected:
 		virtual void run() override;

@@ -1,18 +1,18 @@
 //
-//  GeneratorConstantValue.cpp
+//  NodeSineWave.cpp
 //  HarmonicMotion
 //
 //  Created by Tim Murray-Browne on 25/09/2013.
 //  Copyright (c) 2013 Tim Murray-Browne. All rights reserved.
 //
 
-#include "GeneratorSineWave.h"
+#include "NodeSineWave.h"
 #include "Outlet.h"
 //#include <boost/chrono/duration.hpp>
 
 using namespace hm;
 
-GeneratorSineWave::GeneratorSineWave(Params const& params, std::string const& className)
+NodeSineWave::NodeSineWave(Params const& params, std::string const& className)
 : NodeThreaded(params, className)
 , mParams(params)
 , mOutlet(nullptr)
@@ -22,12 +22,12 @@ GeneratorSineWave::GeneratorSineWave(Params const& params, std::string const& cl
 	mOutlet = createOutlet(VALUE, "Value", "Outputs a value from the sin wave `outputRate` number of times a second");
 }
 
-GeneratorSineWave::~GeneratorSineWave()
+NodeSineWave::~NodeSineWave()
 {
 	stopAndWait();
 }
 
-void GeneratorSineWave::run()
+void NodeSineWave::run()
 {
 	const double maxSleepDuration(0.2);
 	
@@ -47,7 +47,7 @@ void GeneratorSineWave::run()
 	}
 }
 
-void GeneratorSineWave::emitValue(double now)
+void NodeSineWave::emitValue(double now)
 {
 	double t = now - mStartTime;
 	Value value = sinf(float((t * mParams.frequency + mParams.phase) * 2. * M_PI )) * float(mParams.amplitude);

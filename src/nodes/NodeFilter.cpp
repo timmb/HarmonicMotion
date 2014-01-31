@@ -31,6 +31,12 @@ NodeFilter::NodeFilter(Params const& params, std::string const& className)
 }
 
 
+NodeFilter::~NodeFilter()
+{
+	stopAndWait();
+}
+
+
 NodeFilter::Params NodeFilter::params() const
 {
 	shared_lock<shared_mutex> lock(mMutex);

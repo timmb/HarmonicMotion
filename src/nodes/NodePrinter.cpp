@@ -6,12 +6,12 @@
 //
 //
 
-#include "OutputConsolePrinter.h"
+#include "NodePrinter.h"
 #include "Inlet.h"
 
 using namespace hm;
 
-OutputConsolePrinter::OutputConsolePrinter(Params const& params, std::string const& className)
+NodePrinter::NodePrinter(Params const& params, std::string const& className)
 : NodeThreaded(params, className)
 , mParams(params)
 , mInlet(nullptr)
@@ -21,13 +21,13 @@ OutputConsolePrinter::OutputConsolePrinter(Params const& params, std::string con
 }
 
 
-OutputConsolePrinter::~OutputConsolePrinter()
+NodePrinter::~NodePrinter()
 {
 	stopAndWait();
 }
 
 
-void OutputConsolePrinter::run()
+void NodePrinter::run()
 {
 	while (!isRequestedToStop())
 	{

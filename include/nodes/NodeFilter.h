@@ -31,6 +31,7 @@ namespace hm
 		};
 		
 		NodeFilter(Params const& params=Params(), std::string const& className="NodeFilter");
+		virtual ~NodeFilter();
 		
 		Params params() const;
 		void setParams(Params params);

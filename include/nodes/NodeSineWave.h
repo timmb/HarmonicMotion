@@ -1,5 +1,5 @@
 //
-//  GeneratorConstantValue.h
+//  NodeSineWave.h
 //  HarmonicMotion
 //
 //  Created by Tim Murray-Browne on 25/09/2013.
@@ -14,7 +14,7 @@
 namespace hm
 {
 	/// Testing node to create a sine wave
-	class GeneratorSineWave : public NodeThreaded
+	class NodeSineWave : public NodeThreaded
 	{
 	public:
 		struct Params : public Node::Params
@@ -38,8 +38,8 @@ namespace hm
 			{}
 		};
 		
-		GeneratorSineWave(Params const& params = Params(), std::string const& className="GeneratorSineWave");
-		virtual ~GeneratorSineWave();
+		NodeSineWave(Params const& params = Params(), std::string const& className="NodeSineWave");
+		virtual ~NodeSineWave();
 		
 	protected:
 		virtual void run() override;
