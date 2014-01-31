@@ -269,25 +269,25 @@
 		22197F8117F4900D003B1883 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = ../../../../../../System/Library/Frameworks/QTKit.framework; sourceTree = "<group>"; };
 		22197F8317F49044003B1883 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = ../../../../../../System/Library/Frameworks/CoreVideo.framework; sourceTree = "<group>"; };
 		22197F8517F4996F003B1883 /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../include/Common.h; sourceTree = "<group>"; };
-		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Data.cpp; sourceTree = "<group>"; };
+		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Data.cpp; path = ../src/Data.cpp; sourceTree = "<group>"; };
 		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../include/Data.h; sourceTree = "<group>"; };
-		221E902F181724290028EAFD /* DataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataType.cpp; sourceTree = "<group>"; };
+		221E902F181724290028EAFD /* DataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataType.cpp; path = ../src/DataType.cpp; sourceTree = "<group>"; };
 		221E9034181724450028EAFD /* DataType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataType.h; path = ../include/DataType.h; sourceTree = "<group>"; };
 		221E9036181725A10028EAFD /* Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Type.h; path = ../include/Type.h; sourceTree = "<group>"; };
-		221E90381817270C0028EAFD /* Point3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Point3d.cpp; sourceTree = "<group>"; };
-		221E903D181727220028EAFD /* Value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Value.cpp; sourceTree = "<group>"; };
+		221E90381817270C0028EAFD /* Point3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Point3d.cpp; path = ../src/Point3d.cpp; sourceTree = "<group>"; };
+		221E903D181727220028EAFD /* Value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Value.cpp; path = ../src/Value.cpp; sourceTree = "<group>"; };
 		221E90421817273B0028EAFD /* Point3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point3d.h; path = ../include/Point3d.h; sourceTree = "<group>"; };
 		221E90431817273C0028EAFD /* Value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Value.h; path = ../include/Value.h; sourceTree = "<group>"; };
-		2223EC5E1817EEA400B900CF /* DataNull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataNull.cpp; sourceTree = "<group>"; };
+		2223EC5E1817EEA400B900CF /* DataNull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataNull.cpp; path = ../src/DataNull.cpp; sourceTree = "<group>"; };
 		2223EC631817EEAF00B900CF /* DataNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataNull.h; path = ../include/DataNull.h; sourceTree = "<group>"; };
-		2223EC651818027300B900CF /* SceneMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneMeta.cpp; sourceTree = "<group>"; };
+		2223EC651818027300B900CF /* SceneMeta.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SceneMeta.cpp; path = ../src/SceneMeta.cpp; sourceTree = "<group>"; };
 		2223EC6B1818056400B900CF /* SceneMeta.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneMeta.h; path = ../include/SceneMeta.h; sourceTree = "<group>"; };
-		2223EC7218194A6F00B900CF /* Predictor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Predictor.h; path = ../include/Predictor.h; sourceTree = "<group>"; };
-		2223EC7718196C2500B900CF /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Filter.h; path = ../include/Filter.h; sourceTree = "<group>"; };
+		2223EC7218194A6F00B900CF /* Predictor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Predictor.h; sourceTree = "<group>"; };
+		2223EC7718196C2500B900CF /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Filter.h; sourceTree = "<group>"; };
 		22261AA6181574AC00DBA3F8 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
 		2229366F181586F2008CAA09 /* HarmonicMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HarmonicMotion.h; path = ../include/HarmonicMotion.h; sourceTree = "<group>"; };
 		22293671181591A2008CAA09 /* Skeleton3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Skeleton3d.h; path = ../include/Skeleton3d.h; sourceTree = "<group>"; };
-		22293673181591AD008CAA09 /* Skeleton3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton3d.cpp; sourceTree = "<group>"; };
+		22293673181591AD008CAA09 /* Skeleton3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Skeleton3d.cpp; path = ../src/Skeleton3d.cpp; sourceTree = "<group>"; };
 		2229367A181677BC008CAA09 /* XnPlatformAndroid-Arm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XnPlatformAndroid-Arm.h"; sourceTree = "<group>"; };
 		2229367C181677BC008CAA09 /* XnOSARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XnOSARC.h; sourceTree = "<group>"; };
 		2229367D181677BC008CAA09 /* XnPlatformARC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XnPlatformARC.h; sourceTree = "<group>"; };
@@ -385,7 +385,7 @@
 		22293742181679AA008CAA09 /* libnimMockNodes.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnimMockNodes.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libnimMockNodes.dylib; sourceTree = "<group>"; };
 		22293743181679AA008CAA09 /* libnimRecorder.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnimRecorder.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libnimRecorder.dylib; sourceTree = "<group>"; };
 		22293744181679AA008CAA09 /* libOpenNI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libOpenNI.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libOpenNI.dylib; sourceTree = "<group>"; };
-		2229375218168E5F008CAA09 /* Scene3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene3d.cpp; sourceTree = "<group>"; };
+		2229375218168E5F008CAA09 /* Scene3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene3d.cpp; path = ../src/Scene3d.cpp; sourceTree = "<group>"; };
 		2229375518168E67008CAA09 /* Scene3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene3d.h; path = ../include/Scene3d.h; sourceTree = "<group>"; };
 		2262C5AF18997035006CCA1A /* Parameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parameter.h; path = ../include/Parameter.h; sourceTree = "<group>"; };
 		2262C5B11899703F006CCA1A /* Parameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parameter.cpp; sourceTree = "<group>"; };
@@ -492,11 +492,10 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				226A967A189BEF930056DCD1 /* Data */,
 				226A9656189BECF60056DCD1 /* nodes */,
 				2262C5AF18997035006CCA1A /* Parameter.h */,
 				2262C5B11899703F006CCA1A /* Parameter.cpp */,
-				2223EC7718196C2500B900CF /* Filter.h */,
-				2223EC7218194A6F00B900CF /* Predictor.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
@@ -512,23 +511,6 @@
 				22197F0417F44B76003B1883 /* Resources.h */,
 				22261AA6181574AC00DBA3F8 /* Common.cpp */,
 				22197F8517F4996F003B1883 /* Common.h */,
-				22197F8617F4A4F3003B1883 /* Data.cpp */,
-				22197F8717F4A4F3003B1883 /* Data.h */,
-				221E902F181724290028EAFD /* DataType.cpp */,
-				221E9034181724450028EAFD /* DataType.h */,
-				221E9036181725A10028EAFD /* Type.h */,
-				2229375518168E67008CAA09 /* Scene3d.h */,
-				2229375218168E5F008CAA09 /* Scene3d.cpp */,
-				22293671181591A2008CAA09 /* Skeleton3d.h */,
-				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
-				221E90381817270C0028EAFD /* Point3d.cpp */,
-				221E90421817273B0028EAFD /* Point3d.h */,
-				221E903D181727220028EAFD /* Value.cpp */,
-				221E90431817273C0028EAFD /* Value.h */,
-				2223EC5E1817EEA400B900CF /* DataNull.cpp */,
-				2223EC631817EEAF00B900CF /* DataNull.h */,
-				2223EC651818027300B900CF /* SceneMeta.cpp */,
-				2223EC6B1818056400B900CF /* SceneMeta.h */,
 			);
 			name = Source;
 			path = ../src;
@@ -770,23 +752,50 @@
 		226A9656189BECF60056DCD1 /* nodes */ = {
 			isa = PBXGroup;
 			children = (
+				2223EC7718196C2500B900CF /* Filter.h */,
 				226A9665189BED140056DCD1 /* NodeAccumulator.cpp */,
-				226A9666189BED140056DCD1 /* NodeFilter.cpp */,
-				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
-				226A9668189BED140056DCD1 /* NodeOscOut.cpp */,
-				226A9669189BED140056DCD1 /* NodePrinter.cpp */,
-				226A966A189BED140056DCD1 /* NodeRenderer.cpp */,
-				226A966B189BED140056DCD1 /* NodeSineWave.cpp */,
 				226A9657189BECF60056DCD1 /* NodeAccumulator.h */,
+				226A9666189BED140056DCD1 /* NodeFilter.cpp */,
 				226A9658189BECF60056DCD1 /* NodeFilter.h */,
+				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
 				226A9659189BECF60056DCD1 /* NodeKinect.h */,
+				226A9668189BED140056DCD1 /* NodeOscOut.cpp */,
 				226A965A189BECF60056DCD1 /* NodeOscOut.h */,
+				226A9669189BED140056DCD1 /* NodePrinter.cpp */,
 				226A965B189BECF60056DCD1 /* NodePrinter.h */,
+				226A966A189BED140056DCD1 /* NodeRenderer.cpp */,
 				226A965C189BECF60056DCD1 /* NodeRenderer.h */,
+				226A966B189BED140056DCD1 /* NodeSineWave.cpp */,
 				226A965D189BECF60056DCD1 /* NodeSineWave.h */,
+				2223EC7218194A6F00B900CF /* Predictor.h */,
 			);
 			name = nodes;
 			path = ../include/nodes;
+			sourceTree = "<group>";
+		};
+		226A967A189BEF930056DCD1 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				22197F8617F4A4F3003B1883 /* Data.cpp */,
+				22197F8717F4A4F3003B1883 /* Data.h */,
+				2223EC5E1817EEA400B900CF /* DataNull.cpp */,
+				2223EC631817EEAF00B900CF /* DataNull.h */,
+				221E902F181724290028EAFD /* DataType.cpp */,
+				221E9034181724450028EAFD /* DataType.h */,
+				221E90381817270C0028EAFD /* Point3d.cpp */,
+				221E90421817273B0028EAFD /* Point3d.h */,
+				2229375218168E5F008CAA09 /* Scene3d.cpp */,
+				2229375518168E67008CAA09 /* Scene3d.h */,
+				2223EC651818027300B900CF /* SceneMeta.cpp */,
+				2223EC6B1818056400B900CF /* SceneMeta.h */,
+				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
+				22293671181591A2008CAA09 /* Skeleton3d.h */,
+				221E9036181725A10028EAFD /* Type.h */,
+				221E903D181727220028EAFD /* Value.cpp */,
+				221E90431817273C0028EAFD /* Value.h */,
+			);
+			name = Data;
+			path = ../xcode;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* HarmonicMotion */ = {

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "NodeThreaded.h"
-#include "Filter.h"
+#include "nodes/Filter.h"
 #include <boost/thread/shared_mutex.hpp>
 
 namespace hm

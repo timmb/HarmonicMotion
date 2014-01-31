@@ -14,7 +14,7 @@
 
 #include <deque>
 #include <vector>
-#include "Predictor.h"
+#include "nodes/Predictor.h"
 
 namespace hm
 {
