@@ -16,7 +16,7 @@ using namespace std;
 namespace hm {
 	
 	// MARK: BaseParameter
-	
+		
 	BaseParameter::BaseParameter(std::string const& path)
 	: mPath(path)
 	{
@@ -36,6 +36,24 @@ namespace hm {
 	{
 		Json::Value const& child = getChild(root, mPath);
 		return fromJson(child);
+	}
+	
+	void BaseParameter::addNewExternalValueCallback(std::function<void(void)> callbackFunction)
+	{
+		boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
+		mNewExternalValueCallbacks.push_back(callbackFunction);
+	}
+	
+	void BaseParameter::update()
+	{
+		if (checkExternalValue())
+		{
+			boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
+			for (auto callback: mNewExternalValueCallbacks)
+			{
+				callback();
+			}
+		}
 	}
 }
 

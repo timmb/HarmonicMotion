@@ -10,6 +10,8 @@
 #include "json/json.h"
 #include "cinder/Vector.h"
 #include <string>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 namespace hm {
 
@@ -26,7 +28,17 @@ namespace hm {
 		virtual bool readJson(Json::Value const& root);
 		
 		std::string mPath;
-		
+		/// Register a callback to be alerted when the internal value (corresponding
+		/// to the pointer this parameter was constructed with) is altered
+		/// externally (e.g. by a GUI). Callbacks are not called until update()
+		/// is called, and run in the same thread as that function.
+		void addNewExternalValueCallback(std::function<void(void)> callbackFunction);
+		/// If an external value has been received, then this writes it to
+		/// this parameter's corresponding value pointer, and then calls
+		/// any registered callbacks.
+		/// The value of the pointer registered with this Parameter must not be
+		/// modified by another thread during this update() call.
+		void update();
 		
 	protected:
 		/// \param path Slash separated with the final element being the
@@ -37,11 +49,20 @@ namespace hm {
 
 		virtual void toJson(Json::Value& node) const = 0;
 		virtual bool fromJson(Json::Value const& node) = 0;
+		/// If an external value is pending, derived class should write the
+		/// most recent external value to the pointer registered with this
+		/// parameter and return true.
+		/// Otherwise, derived class should, if applicable, update its external
+		/// value and return false.
+		virtual bool checkExternalValue() = 0;
 
 	private:
 		/// \return the JSON element corresponding to the given path
 		template <typename JsonOrConstJson>
 		static JsonOrConstJson& getChild(JsonOrConstJson& root, std::string const& path);
+		
+		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
+		boost::mutex mNewExternalValueCallbacksMutex;
 	};
 	typedef std::shared_ptr<BaseParameter> ParameterPtr;
 	
@@ -64,16 +85,46 @@ namespace hm {
 	}
 
 	
-	// Main class to represent parameters
+	
+	
+	// Main class to represent parameters of type T
 	template <typename T>
 	class Parameter : public BaseParameter
 	{
 	public:
+		/// Create a parameter to wathc and control \p value.
+		/// Callbacks and external updates will only take effect when
+		/// BaseParameter::update() is called.
+		/// NB value must not be changed during a call to
+		/// BaseParameter::update()
 		Parameter(std::string const& path, T* value)
 		: BaseParameter(path)
 		, mValue(value)
+		, mHasNewExternalValue(false)
+		, mNewInternalValueCallbacksIsNotEmpty(false)
 		{
 			assert(mValue != nullptr);
+		}
+		
+		/// Externally set this parameter from, e.g., a GUI. The actual value
+		/// won't be updated until BaseParameter::update is called.
+		/// Thread-safe
+		void set(T newValue)
+		{
+			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+			mExternalValue = newValue;
+			mHasNewExternalValue = true;
+		}
+		// We don't provide a get function as the only guarantee we have over when
+		// mValue changes is when we are within checkExternalValue()
+		/// Register a callback that is called when the internal value corresponding
+		/// to the pointer changes but no new external value has arrived. The
+		/// new value is provided as argument to the callback.
+		void addNewInternalValueCallback(std::function<void(T)> callbackFunction)
+		{
+			boost::lock_guard<boost::mutex> lock(mNewInternalValueCallbacksMutex);
+			mNewInternalValueCallbacks.push_back(callbackFunction);
+			mNewInternalValueCallbacksIsNotEmpty = true;
 		}
 		
 	protected:
@@ -94,8 +145,44 @@ namespace hm {
 				return false;
 		}
 		
+		virtual bool checkExternalValue()
+		{
+			// If we have a new external value, write it to mValue
+			if (mHasNewExternalValue)
+			{
+				boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+				*mValue = mExternalValue;
+				return true;
+			}
+			// Otherwise, if callbacks for internal value changes are registered
+			// then we need to check if the internal value has changed
+			else if (mNewInternalValueCallbacksIsNotEmpty)
+			{
+				// Do not allow new external values to be provided while we are
+				// in the middle of this
+				boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+				if (*mValue != mExternalValue)
+				{
+					mExternalValue = *mValue;
+					// Do not allow new callbacks to be registered while we are
+					// iterating through them.
+					boost::lock_guard<boost::mutex> lock2(mNewInternalValueCallbacksMutex);
+					for (auto callback: mNewInternalValueCallbacks)
+					{
+						callback(*mValue);
+					}
+				}
+			}
+		}
+		
 	private:
 		T* mValue;
+		T mExternalValue;
+		boost::mutex mExternalValueMutex;
+		std::atomic<bool> mHasNewExternalValue;
+		std::vector<std::function<void(T)>> mNewInternalValueCallbacks;
+		boost::mutex mNewInternalValueCallbacksMutex;
+		std::atomic<bool> mNewInternalValueCallbacksIsNotEmpty;
 	};
 	
 	
