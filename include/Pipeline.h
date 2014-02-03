@@ -10,6 +10,8 @@
 #include "Common.h"
 #include <vector>
 #include <atomic>
+#include <boost/thread.hpp>
+
 
 namespace hm
 {
@@ -32,6 +34,7 @@ namespace hm
 		// Json should be encoded UTF 8
 		
 	private:
+		std::unique_ptr<boost::thread> mThread;
 		std::vector<NodePtr> mNodes;
 		std::atomic<bool> mIsRunning;
 	};

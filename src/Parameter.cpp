@@ -10,6 +10,7 @@
 #include "Parameter.h"
 #include <iostream>
 #include <ctime>
+#include "Node.h"
 
 using namespace std;
 
@@ -17,30 +18,36 @@ namespace hm {
 	
 	// MARK: BaseParameter
 		
-	BaseParameter::BaseParameter(std::string const& path)
-	: mPath(path)
-	, mName(mPath.substr(mPath.find_last_of('/')+1))
+	BaseParameter::BaseParameter(Node& parent, std::string name)
+	: mName(name)
+	, mParent(parent)
 	, hardMin(- numeric_limits<double>::max())
 	, hardMax(  numeric_limits<double>::max())
 	, softMin(0)
 	, softMax(100)
+//	, mType(type)
 	{
 		// TODO: Verify path is well formed
 		// TODO: Check path is unique
-		assert(mPath.find('/') != string::npos);
+	}
+	
+	
+	std::string BaseParameter::path() const
+	{
+		return mParent.path() + '/' + name();
 	}
 
 	
 	void BaseParameter::writeJson(Json::Value& root) const
 	{
-		Json::Value& child = getChild(root, mPath);
+		Json::Value& child = getChild(root, path());
 		toJson(child);
 	}
 	
 	
 	bool BaseParameter::readJson(Json::Value const& root)
 	{
-		Json::Value const& child = getChild(root, mPath);
+		Json::Value const& child = getChild(root, path());
 		return fromJson(child);
 	}
 	
@@ -61,6 +68,20 @@ namespace hm {
 			}
 		}
 	}
+	
+	template<>
+	BaseParameter::Type Parameter<int>::type() const
+	{
+		return INT;
+	}
+	
+	template<>
+	BaseParameter::Type Parameter<std::string>::type() const
+	{
+		return STRING;
+	}
+	
+	
 }
 
 

@@ -54,7 +54,7 @@ void Pipeline::start()
 		p->startProcessing();
 	}
 	mIsRunning = true;
-	boost::thread thread([this]()
+	mThread = std::unique_ptr<boost::thread>(new boost::thread([this]()
 		{
 			double timeOfLastUpdate = elapsedTime();
 			while (mIsRunning)
@@ -72,7 +72,7 @@ void Pipeline::start()
 					boost::this_thread::sleep_for(boost::chrono::microseconds(us));
 				}
 			}
-		});
+		}));
 }
 
 void Pipeline::stop()

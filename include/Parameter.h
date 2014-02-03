@@ -20,6 +20,12 @@ namespace hm {
 	class BaseParameter
 	{
 	public:
+		enum Type
+		{
+			INT,
+			STRING
+		};
+		
 		virtual ~BaseParameter() {}
 		
 		/// Given the root of a JSON tree, this will read/write
@@ -29,9 +35,10 @@ namespace hm {
 		virtual bool readJson(Json::Value const& root);
 		
 		/// e.g. "/My Node/My Parameter"
-		std::string path() const { return mPath; }
+		std::string path() const;
 		/// e.g. "My Parameter"
 		std::string name() const { return mName; }
+		virtual Type type() const = 0;
 		
 		/// Register a callback to be alerted when the internal value (corresponding
 		/// to the pointer this parameter was constructed with) is altered
@@ -58,12 +65,14 @@ namespace hm {
 		/// The maximum value suggested by the user interface (not enforced)
 		double softMax;
 		
+		// TODO: Add function for Node to detach itself when it is destroyed
+		
 	protected:
 		/// \param path Slash separated with the final element being the
 		/// user-visible name of this parameter.
 		/// e.g. "/Accumulator1/smoothing value"
 		/// or "/value"
-		BaseParameter(std::string const& path="");
+		BaseParameter(Node& parent, std::string name);
 
 		virtual void toJson(Json::Value& node) const = 0;
 		virtual bool fromJson(Json::Value const& node) = 0;
@@ -81,8 +90,9 @@ namespace hm {
 		
 		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
 		boost::mutex mNewExternalValueCallbacksMutex;
-		const std::string mPath;
+		Node& mParent;
 		const std::string mName;
+//		const Type mType;
 	};
 	
 	template <typename T>
@@ -116,14 +126,19 @@ namespace hm {
 		/// BaseParameter::update() is called.
 		/// NB value must not be changed during a call to
 		/// BaseParameter::update()
-		Parameter(std::string const& path, T* value)
-		: BaseParameter(path)
+		/// \param parent The node to which this parameter belongs
+		/// \param name The name of the parameter
+		/// \param value A pointer to the value to be controlled by the parameter
+		Parameter(Node& parent, std::string name, T* value)
+		: BaseParameter(parent, name)
 		, mValue(value)
 		, mHasNewExternalValue(false)
 		, mNewInternalValueCallbacksIsNotEmpty(false)
 		{
 			assert(mValue != nullptr);
 		}
+		
+		virtual Type type() const override;
 		
 		/// Externally set this parameter from, e.g., a GUI. The actual value
 		/// won't be updated until BaseParameter::update is called.
@@ -171,6 +186,7 @@ namespace hm {
 			{
 				boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
 				*mValue = mExternalValue;
+				mHasNewExternalValue = false;
 				return true;
 			}
 			// Otherwise, if callbacks for internal value changes are registered
@@ -204,6 +220,12 @@ namespace hm {
 		boost::mutex mNewInternalValueCallbacksMutex;
 		std::atomic<bool> mNewInternalValueCallbacksIsNotEmpty;
 	};
+	
+	template<>
+	BaseParameter::Type Parameter<int>::type() const;
+	
+	template<>
+	BaseParameter::Type Parameter<std::string>::type() const;
 	
 	
 	

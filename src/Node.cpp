@@ -31,7 +31,7 @@ boost::mutex Node::sNamesInUseMutex;
 
 Node::Node(Params params, string const& className)
 : mClassName(className)
-, mIsEnabled(false)
+, mIsEnabled(true)
 , mIsProcessing(false)
 , mHasStartEverBeenCalled(false)
 {

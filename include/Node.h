@@ -148,7 +148,7 @@ namespace hm
 	template <typename T>
 	Parameter<T>* Node::addParameter(std::string name, T* value)
 	{
-		std::shared_ptr<Parameter<T>> parameter(new Parameter<T>(path()+'/'+name, value));
+		std::shared_ptr<Parameter<T>> parameter(new Parameter<T>(*this, name, value));
 		boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
 		mParameters.push_back(parameter);
 		return parameter.get();

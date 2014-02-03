@@ -48,6 +48,7 @@ NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
 						 "Data to be sent",
 						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
 	addParameter("Destination hostname", &mDestinationHost);
+	addParameter("Destination hostname 2", &mDestinationHost);
 	auto p = addParameter("Destination port", &mDestinationPort);
 	p->hardMin = p->softMin = 0;
 	p->hardMax = p->softMax = 65535;
