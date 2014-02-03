@@ -185,6 +185,7 @@ namespace hm {
 			if (mHasNewExternalValue)
 			{
 				boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+				validateExternalValue(mExternalValue);
 				*mValue = mExternalValue;
 				mHasNewExternalValue = false;
 				return true;
@@ -212,6 +213,10 @@ namespace hm {
 		}
 		
 	private:
+		/// If applicable, check \p value is in range and valid. (Done in
+		/// specialisations of this function.)
+		void validateExternalValue(T& value) const {}
+		
 		T* mValue;
 		T mExternalValue;
 		boost::mutex mExternalValueMutex;
@@ -227,6 +232,8 @@ namespace hm {
 	template<>
 	BaseParameter::Type Parameter<std::string>::type() const;
 	
+	template<>
+	void Parameter<int>::validateExternalValue(int& value) const;
 	
 	
 } // namespace tmb

@@ -81,6 +81,11 @@ namespace hm {
 		return STRING;
 	}
 	
+	template<>
+	void Parameter<int>::validateExternalValue(int& value) const
+	{
+		value = max<int>(hardMin, min<int>(hardMax, value));
+	}
 	
 }
 
