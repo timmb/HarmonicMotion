@@ -34,7 +34,7 @@ public:
 };
 
 NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
-: NodeThreaded(params, className)
+: NodeUnthreaded(params, className)
 //, mOsc(new Sender)
 , mInlet(nullptr)
 , mLastSentTimestamp(-42.)
@@ -43,11 +43,6 @@ NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
 	mInlet = createInlet(VALUE | SKELETON3D | SCENE3D,
 						 "Data to be sent",
 						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
-}
-
-NodeOscOut::~NodeOscOut()
-{
-	stopAndWait();
 }
 
 void NodeOscOut::setParams(Params params)
@@ -109,8 +104,9 @@ void NodeOscOut::send(Scene3d const& scene)
 	}
 }
 
-void NodeOscOut::run()
+void NodeOscOut::step()
 {
+	// TODO: Change to use callback and Parameter
 	{
 		shared_lock<shared_mutex> lock(mParamsMutex);
 		try
@@ -123,23 +119,20 @@ void NodeOscOut::run()
 			return;
 		}
 	}
-	while (!isRequestedToStop())
+	Data data = mInlet->dataIfNewerThan(mLastSentTimestamp);
+	if (!data.isNull())
 	{
-		Data data = mInlet->dataIfNewerThan(mLastSentTimestamp);
-		if (!data.isNull())
+		if (data.isSkeleton3d())
 		{
-			if (data.isSkeleton3d())
-			{
-				send(data.asSkeleton3d());
-			}
-			else if (data.isScene3d())
-			{
-				send(data.asScene3d());
-			}
-			else if (data.isValue())
-			{
-				send(data.asValue());
-			}
+			send(data.asSkeleton3d());
+		}
+		else if (data.isScene3d())
+		{
+			send(data.asScene3d());
+		}
+		else if (data.isValue())
+		{
+			send(data.asValue());
 		}
 	}
 }

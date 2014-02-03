@@ -59,24 +59,13 @@ void Node::startProcessing()
 	mIsProcessing = true;
 	mHasStartEverBeenCalled = true;
 	hm_debug("Processing started on Node "+name());
-	start();
 }
 
-void Node::stepProcessing()
-{
-	assert(mIsProcessing);
-	updateParameters();
-	if (isEnabled())
-	{
-		step();
-	}
-}
 
 void Node::stopProcessing()
 {
 	assert(mIsProcessing);
 	hm_debug("Processing stopped on Node "+name());
-	stopProcessing();
 }
 
 void Node::addParameter(BaseParameter* parameter)

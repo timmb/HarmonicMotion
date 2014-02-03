@@ -16,7 +16,7 @@ using namespace boost;
 using namespace hm;
 
 NodeFilter::NodeFilter(Params const& params, std::string const& className)
-: NodeThreaded(params, className)
+: NodeUnthreaded(params, className)
 , mParams(params)
 , mInlet(nullptr)
 , mOutlet(nullptr)
@@ -30,11 +30,6 @@ NodeFilter::NodeFilter(Params const& params, std::string const& className)
 	mOutlet = createOutlet(VALUE | POINT3D | SKELETON3D | SCENE3D, "Filtered values", "");
 }
 
-
-NodeFilter::~NodeFilter()
-{
-	stopAndWait();
-}
 
 
 NodeFilter::Params NodeFilter::params() const
@@ -50,49 +45,44 @@ void NodeFilter::setParams(Params params)
 	setNodeParams(params);
 }
 
-void NodeFilter::run()
+void NodeFilter::step()
 {
-	while (!isRequestedToStop())
+	if (mInlet->dataTimestamp() > mDataTimestamp)
 	{
-		if (mInlet->dataTimestamp() > mDataTimestamp)
+		Data data = mInlet->data();
+		mDataTimestamp = data.timestamp();
+		switch (data.type())
 		{
-			Data data = mInlet->data();
-			mDataTimestamp = data.timestamp();
-			switch (data.type())
+			case VALUE:
 			{
-				case VALUE:
-				{
-					Value& x = data.asValue();
-					x = mFilterValue->update(x);
-					break;
-				}
-				case POINT3D:
-				{
-					Point3d& x = data.asPoint3d();
-					x = mFilterPoint3d->update(x);
-					break;
-				}
-				case SKELETON3D:
-				{
-					Skeleton3d& x = data.asSkeleton3d();
-					x = mFilterSkeleton3d->update(x);
-					break;
-				}
-				case SCENE3D:
-				{
-					Scene3d& x = data.asScene3d();
-					x = mFilterScene3d->update(x);
-					break;
-				}
-				default:
-					// unsupported types
-					std::cerr << "Unsupported data type"<<std::endl;
-					assert(false);
-					continue;
-					
+				Value& x = data.asValue();
+				x = mFilterValue->update(x);
+				break;
 			}
-			mOutlet->outputNewData(data);
+			case POINT3D:
+			{
+				Point3d& x = data.asPoint3d();
+				x = mFilterPoint3d->update(x);
+				break;
+			}
+			case SKELETON3D:
+			{
+				Skeleton3d& x = data.asSkeleton3d();
+				x = mFilterSkeleton3d->update(x);
+				break;
+			}
+			case SCENE3D:
+			{
+				Scene3d& x = data.asScene3d();
+				x = mFilterScene3d->update(x);
+				break;
+			}
+			default:
+				// unsupported types
+				hm_error("Unsupported data type");
+				assert(false);
+				
 		}
-		waitForNewData();
+		mOutlet->outputNewData(data);
 	}
 }

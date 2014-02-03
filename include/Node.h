@@ -37,6 +37,7 @@ namespace hm
 		virtual ~Node();
 		std::string type() const { return mClassName; }
 		std::string name() const { return nodeParams().name; }
+		std::string toString() const;
 				
 		int numInlets() const;
 		InletPtr inlet(int index);
@@ -49,7 +50,6 @@ namespace hm
 		std::vector<ParameterPtr> parameters();
 		
 		
-		std::string toString() const;
 
 		/// Enabled is a node-specific, user adjustable setting. When disabled,
 		/// a node should ignore all input and does not produce new output.
@@ -58,16 +58,22 @@ namespace hm
 		bool isEnabled() const { return mIsEnabled; }
 		
 		// Functions called by the owning pipeline
-		/// Requests the node prepares to start processing. Delegates to start().
-		void startProcessing();
+		/// Requests the node prepares to start processing. Override this to
+		/// implement code to initialize processing. Call this original function
+		/// first.
+		virtual void startProcessing();
 		/// Requests that the node processes one frame of data from its inlets.
-		/// Delegates to step() if isEnabled is true.
-		void stepProcessing();
-		/// Requests that the node stops processing data. Delegates to stop().
-		void stopProcessing();
+		/// Override this function to implement code that performs a single update.
+		/// This function may be called
+		/// sequentially from different threads (but not concurrently).
+		virtual void stepProcessing() = 0;
+		/// Requests that the node stops processing data. Override this function to
+		/// implement code that concludes processing. Call this original function
+		/// first.
+		virtual void stopProcessing();
 		/// \return true if we are between startProcessing and stopProcessing calls
 		/// (even if isEnabled is false)
-		bool isProcessing() const;
+		bool isProcessing() const { return mIsProcessing; }
 		
 	protected:
 		/// Nodes cannot be directly constructed as they are always
@@ -89,25 +95,13 @@ namespace hm
 		/// NodeThreaded).
 		void addParameter(BaseParameter* parameter);
 		/// Updates all parameters, activating callbacks where applicable. Callbacks
-		/// run in the same thread as this function. You should call this function
-		/// at the beginning of your step() function (or at an equivalent rate if
-		/// using NodeThreaded).
+		/// run in the same thread as this function. This function is called
+		/// before step() within NodeUnthreaded. Within NodeThreaded you
+		/// will need to call it yourself each time within your update loop.
 		/// \note The values associated with the parameters must not be changed
 		/// during a call to this function.
 		void updateParameters();
 		
-		// MARK: Abstract functions to implement
-		/// This function will be called by the owning pipeline when processing
-		/// of data begins. It is guaranteed to be called before the first step()
-		/// call and before the first step() call after a stop() call.
-		virtual void start() = 0;
-		/// This function will be called by the main pipeline continually while
-		/// processing is active and this node is enabled. This will be called
-		/// from an arbitrary thread but not from separate threads concurrently.
-		virtual void step() = 0;
-		/// This function is called when processing ends and guarantees that step()
-		/// will not be called again until after another call to start()
-		virtual void stop() = 0;
 		
 		
 

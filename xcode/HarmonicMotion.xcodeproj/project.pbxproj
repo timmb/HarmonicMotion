@@ -201,6 +201,9 @@
 		2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375618168E67008CAA09 /* Scene3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229375518168E67008CAA09 /* Scene3d.h */; };
+		22483AC0189F9EFE002DE5C4 /* NodeUnthreaded.h in Headers */ = {isa = PBXBuildFile; fileRef = 22483ABF189F9EFE002DE5C4 /* NodeUnthreaded.h */; };
+		22483AC2189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22483AC1189F9F06002DE5C4 /* NodeUnthreaded.cpp */; };
+		22483AC3189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22483AC1189F9F06002DE5C4 /* NodeUnthreaded.cpp */; };
 		2262C5B018997035006CCA1A /* Parameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2262C5AF18997035006CCA1A /* Parameter.h */; };
 		2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2262C5B11899703F006CCA1A /* Parameter.cpp */; };
 		226A965E189BECF60056DCD1 /* NodeAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 226A9657189BECF60056DCD1 /* NodeAccumulator.h */; };
@@ -387,6 +390,8 @@
 		22293744181679AA008CAA09 /* libOpenNI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libOpenNI.dylib; path = ../lib/CinderBlocks/BlockOpenNI/lib/macosx/libOpenNI.dylib; sourceTree = "<group>"; };
 		2229375218168E5F008CAA09 /* Scene3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene3d.cpp; path = ../src/Scene3d.cpp; sourceTree = "<group>"; };
 		2229375518168E67008CAA09 /* Scene3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene3d.h; path = ../include/Scene3d.h; sourceTree = "<group>"; };
+		22483ABF189F9EFE002DE5C4 /* NodeUnthreaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeUnthreaded.h; path = ../include/NodeUnthreaded.h; sourceTree = "<group>"; };
+		22483AC1189F9F06002DE5C4 /* NodeUnthreaded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeUnthreaded.cpp; sourceTree = "<group>"; };
 		2262C5AF18997035006CCA1A /* Parameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Parameter.h; path = ../include/Parameter.h; sourceTree = "<group>"; };
 		2262C5B11899703F006CCA1A /* Parameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parameter.cpp; sourceTree = "<group>"; };
 		226A9657189BECF60056DCD1 /* NodeAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeAccumulator.h; sourceTree = "<group>"; };
@@ -504,6 +509,8 @@
 				22197F0017F44B76003B1883 /* Node.h */,
 				22941209189AA33D009550EF /* NodeThreaded.cpp */,
 				2294120C189AA35D009550EF /* NodeThreaded.h */,
+				22483AC1189F9F06002DE5C4 /* NodeUnthreaded.cpp */,
+				22483ABF189F9EFE002DE5C4 /* NodeUnthreaded.h */,
 				22197ECF17F44B1B003B1883 /* Outlet.cpp */,
 				22197F0117F44B76003B1883 /* Outlet.h */,
 				2262C5B11899703F006CCA1A /* Parameter.cpp */,
@@ -1031,6 +1038,7 @@
 				221E90231816E10C0028EAFD /* Data.h in Headers */,
 				221E9035181724460028EAFD /* DataType.h in Headers */,
 				221E9037181725A10028EAFD /* Type.h in Headers */,
+				22483AC0189F9EFE002DE5C4 /* NodeUnthreaded.h in Headers */,
 				221E90441817273C0028EAFD /* Point3d.h in Headers */,
 				221E90451817273C0028EAFD /* Value.h in Headers */,
 				226A965E189BECF60056DCD1 /* NodeAccumulator.h in Headers */,
@@ -1122,6 +1130,7 @@
 				226A9679189BED140056DCD1 /* NodeSineWave.cpp in Sources */,
 				22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */,
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
+				22483AC3189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */,
 				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
 				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
@@ -1169,6 +1178,7 @@
 				226A9678189BED140056DCD1 /* NodeSineWave.cpp in Sources */,
 				D8747D8A237442168BF330E1 /* HarmonicMotionApp.cpp in Sources */,
 				757F077DABA7415EB988676F /* OscBundle.cpp in Sources */,
+				22483AC2189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */,
 				2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */,
 				B8E4FA98F66F42B883191911 /* OscMessage.cpp in Sources */,
 				3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */,

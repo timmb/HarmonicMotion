@@ -26,22 +26,25 @@ namespace hm
 		/// Thread is running
 		bool isRunning() const { return mThreadIsRunning; }
 
+		/// Starts the thread
+		virtual void startProcessing() override final;
+		/// Calls to step are ignored
+		virtual void stepProcessing() override final {}
+		/// Requests that the thread end. NB there may be a delay until
+		/// isRunning returns false (this function does not block).
+		virtual void stopProcessing() override final;
+
 	protected:
 		/// NodeThreadeds cannot be directly constructed as they are always
 		/// subclassed.
 		NodeThreaded(Node::Params const& params, std::string const& className);
 		
-		/// \return true if new data arrived. Otherwise, derived
-		/// class should check to see whether it should close
-		/// and then recall this function if good to continue.
-		/// New data is defined as one or more inlets having
-		/// new data.
-		/// \param inlet Which inlet to wait for, or -1 for any inlet
-		bool waitForNewData(int inlet=-1) const;
-		
+		// MARK: Functions to implement
 		/// Override this: Process incoming data until isRequestedToStop()
 		/// becomes true
 		virtual void run() = 0;
+		
+		// MARK: Thread related functions
 		/// Return from run() at the earliest opportunity when this
 		/// becomes false. The NodeThreaded may or may not be started again after
 		/// it stops.
@@ -51,18 +54,16 @@ namespace hm
 		/// are destroyed. It will block until thread closes or it times out.
 		/// (currently set at 2 seconds).
 		void stopAndWait();
+		/// \return true if new data arrived. Otherwise, derived
+		/// class should check to see whether it should close
+		/// and then recall this function if good to continue.
+		/// New data is defined as one or more inlets having
+		/// new data.
+		/// \param inlet Which inlet to wait for, or -1 for any inlet
+		bool waitForNewData(int inlet=-1) const;
 		
 		// MARK: Reimplemented virtual functions
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="") override;
-		/// Starts the thread
-		virtual void start() override final;
-		/// Calls to step are ignored
-		virtual void step() override final {}
-		/// Requests that the thread end. NB there may be a delay until
-		/// isRunning returns false (this function does not block).
-		virtual void stop() override final;
-		
-
 		
 	private:
 		/// Callback for inlets
@@ -85,6 +86,10 @@ namespace hm
 		
 		std::atomic<bool> mThreadIsRunning;
 		std::unique_ptr<boost::thread> mThread;
+		/// To prevent destruction while printing to console.
+		mutable boost::shared_mutex mBlockDestruction;
+		
+		friend std::ostream& operator<<(std::ostream&, NodeThreaded const&);
 	};
 	
 	std::ostream& operator<<(std::ostream&, NodeThreaded const&);

@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "NodeThreaded.h"
+#include "NodeUnthreaded.h"
 #include "nodes/Filter.h"
 #include <boost/thread/shared_mutex.hpp>
 
 namespace hm
 {
-	class NodeFilter : public NodeThreaded
+	class NodeFilter : public NodeUnthreaded
 	{
 	public:
 		struct Params : public Node::Params
@@ -31,13 +31,12 @@ namespace hm
 		};
 		
 		NodeFilter(Params const& params=Params(), std::string const& className="NodeFilter");
-		virtual ~NodeFilter();
 		
 		Params params() const;
 		void setParams(Params params);
 		
 	protected:
-		virtual void run();
+		virtual void step() override;
 		
 	private:
 		Params mParams;

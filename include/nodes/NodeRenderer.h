@@ -7,13 +7,13 @@
 //
 
 #pragma once
-#include "NodeThreaded.h"
+#include "NodeUnthreaded.h"
 #include "cinder/Color.h"
 
 namespace hm
 {
 	/// Node that collects received data and renders it on request.
-	class NodeRenderer : public NodeThreaded
+	class NodeRenderer : public NodeUnthreaded
 	{
 	public:
 		typedef std::shared_ptr<NodeRenderer> Ptr;
@@ -37,7 +37,7 @@ namespace hm
 		void draw(int viewportWidth, int viewportHeight);
 		
 	protected:
-		virtual void run() override {}
+		virtual void step() override {}
 		
 	private:
 		InletPtr mInlet;

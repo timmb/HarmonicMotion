@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "NodeThreaded.h"
+#include "NodeUnthreaded.h"
 
 namespace hm
 {
-	class NodePrinter : public NodeThreaded
+	class NodePrinter : public NodeUnthreaded
 	{
 	public:
 		struct Params : public Node::Params
@@ -23,10 +23,9 @@ namespace hm
 		};
 		
 		NodePrinter(Params const& params=Params(), std::string const& className="NodePrinter");
-		virtual ~NodePrinter();
 		
 	protected:
-		virtual void run() override;
+		virtual void step() override;
 		
 	private:
 		Params mParams;

@@ -12,7 +12,7 @@
 using namespace hm;
 
 NodePrinter::NodePrinter(Params const& params, std::string const& className)
-: NodeThreaded(params, className)
+: NodeUnthreaded(params, className)
 , mParams(params)
 , mInlet(nullptr)
 , mLastTimestamp(-42.)
@@ -21,23 +21,13 @@ NodePrinter::NodePrinter(Params const& params, std::string const& className)
 }
 
 
-NodePrinter::~NodePrinter()
+void NodePrinter::step()
 {
-	stopAndWait();
-}
-
-
-void NodePrinter::run()
-{
-	while (!isRequestedToStop())
+	if (mInlet->dataTimestamp() > mLastTimestamp)
 	{
-		if (mInlet->dataTimestamp() > mLastTimestamp)
-		{
-			Data data = mInlet->data();
-			auto history = data.asDataType()->nodeHistory;
-			std::cout << "-- "<<mParams.name<<" -- "<<mInlet->dataTimestamp()
-			<<" "<<(!history.empty()? history[0] :"")<<"\n   "<<data<<std::endl;
-		}
-		waitForNewData();
+		Data data = mInlet->data();
+		auto history = data.asDataType()->nodeHistory;
+		std::cout << "-- "<<mParams.name<<" -- "<<mInlet->dataTimestamp()
+		<<" "<<(!history.empty()? history[0] :"")<<"\n   "<<data<<std::endl;
 	}
 }
