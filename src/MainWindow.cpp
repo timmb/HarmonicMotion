@@ -8,7 +8,7 @@
 
 #include "MainWindow.h"
 #include "NodeRendererGlWidget.h"
-#include <QtGui>
+#include <QtWidgets>
 using namespace hm;
 
 MainWindow::MainWindow()

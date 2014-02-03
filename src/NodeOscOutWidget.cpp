@@ -8,7 +8,7 @@
 
 #include "NodeOscOutWidget.h"
 #include "nodes/NodeOscOut.h"
-#include <QtGui>
+#include <QtWidgets>
 
 using namespace hm;
 

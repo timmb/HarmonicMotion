@@ -1,5 +1,9 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.8.9)
 PROJECT (HarmonicMotionGui CXX C)
+
+set(QT5_PATH $ENV{HOME}/Qt5.2.0/5.2.0/clang_64/ CACHE PATH "Path to Qt5")
+set(QT5_MODULE_PATH ${QT5_PATH}/lib/cmake)
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_MODULE_PATH})
 
 # Currently only setup for OSX
 SET(STATIC_LIBRARY_EXTENSION a)
@@ -15,8 +19,11 @@ if(CMAKE_CONFIGURATION_TYPES)
  endif()
 
 #find required packages for the project
-FIND_PACKAGE(Qt4 REQUIRED) 
-#FIND_PACKAGE(OpenGL REQUIRED)
+#FIND_PACKAGE(Qt4 REQUIRED)
+##FIND_PACKAGE(OpenGL REQUIRED)
+find_package(Qt5Core)
+
+set(CMAKE_AUTOMOC ON)
 
 # Cinder dependencies for OSX
 # http://www.itk.org/Wiki/CMake:HowToUseExistingOSXFrameworks
@@ -60,10 +67,10 @@ set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 #Remove Qt keywords
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
-#set QT libraries
-SET(QT_USE_QTOPENGL TRUE)
-#This will addQT header location
-INCLUDE(${QT_USE_FILE})
+##set QT libraries
+#SET(QT_USE_QTOPENGL TRUE)
+##This will addQT header location
+#INCLUDE(${QT_USE_FILE})
 
 
 #Include folders 
@@ -84,13 +91,13 @@ SET(myprj_rccs
 
 
 #QT headers needed to be processed with QT MOH compiler
-SET(MocHeaders
-	#	Add header files here
-	MainWindow.h
-	Controller.h
-	NodeOscOutWidget.h
-	WidgetNode.h
-    )
+#SET(MocHeaders
+#	#	Add header files here
+#	MainWindow.h
+#	Controller.h
+#	NodeOscOutWidget.h
+#	WidgetNode.h
+#   )
 
 #QT UI files needed to be processed
 SET(myprj_uis
@@ -100,14 +107,16 @@ SET(myprj_uis
 
 
 
-#Generate CPP files from moh headers
-QT4_WRAP_CPP(GeneratedMocSources ${MocHeaders})
+##Generate CPP files from moh headers
+#QT4_WRAP_CPP(GeneratedMocSources ${MocHeaders})
 
 #Generate resource header files 
-QT4_ADD_RESOURCES(myprj_rccs_srcs ${myprj_rccs})
+QT5_ADD_RESOURCES(myprj_rccs_srcs ${myprj_rccs})
 
 #Generate headers using QT UI files
-QT4_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
+if (myprj_uis)
+	QT_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
+endif (myprj_uis)
 
 # Include directories - one per line
 INCLUDE_DIRECTORIES(
@@ -127,6 +136,8 @@ LINK_DIRECTORIES(
 )
 
 ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
+
+qt5_use_modules(HarmonicMotionGui Widgets OpenGL)
 
 # Preprocessor definitions
 set_property(
