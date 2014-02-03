@@ -11,7 +11,8 @@
 #include "HarmonicMotion.h"
 #include "NodeRendererGlWidget.h"
 #include <QTimer>
-#include "NodeOscOutWidget.h"
+#include "WidgetNode.h"
+
 
 using namespace hm;
 
@@ -36,7 +37,8 @@ Controller::Controller(QObject* parent)
 	NodeOscOut::Ptr osc(new NodeOscOut);
 	kinect->outlet(0)->connect(osc->inlet(0));
 	mPipeline.addNode(osc);
-	mMainWindow->addWidget(new NodeOscOutWidget(osc));
+//	mMainWindow->addWidget(new NodeOscOutWidget(osc));
+	mMainWindow->addWidget(new WidgetNode(osc));
 	
 	auto filter = NodePtr(new NodeFilter);
 	kinect->outlet(0)->connect(filter->inlet(0));
