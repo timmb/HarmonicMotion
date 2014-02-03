@@ -19,6 +19,10 @@ namespace hm {
 		
 	BaseParameter::BaseParameter(std::string const& path)
 	: mPath(path)
+	, hardMin(- numeric_limits<double>::max())
+	, hardMax(  numeric_limits<double>::max())
+	, softMin(0)
+	, softMax(100)
 	{
 		// TODO: Verify path is well formed
 		// TODO: Check path is unique

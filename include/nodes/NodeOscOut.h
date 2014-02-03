@@ -25,22 +25,8 @@ namespace hm
 	{
 	public:
 		typedef std::shared_ptr<NodeOscOut> Ptr;
-		struct Params : public Node::Params
-		{
-			std::string destinationHost;
-			int destinationPort;
-			/// Messages are formatted as /prefix/jointName
-			std::string prefix;
-			
-			Params(std::string const& destinationHost_="localhost", int port_=20000, std::string const& prefix_="hm", std::string const& name_="")
-			: Node::Params(name_)
-			, destinationHost("localhost")
-			, destinationPort(20000)
-			, prefix("hm")
-			{}
-		};
 		
-		NodeOscOut(Params const& params = Params(), std::string const& className="NodeOscOut");
+		NodeOscOut(Node::Params const& params=Node::Params(), std::string const& className="NodeOscOut");
 		
 		/// Thread-safe
 		void setParams(Params params);
@@ -62,5 +48,11 @@ namespace hm
 		ci::osc::Sender mOsc;
 		InletPtr mInlet;
 		double mLastSentTimestamp;
+		
+		// MARK: Parameters
+		std::string mDestinationHost;
+		int mDestinationPort;
+		/// Prefix used to form OSC addresses
+		std::string mPrefix;
 	};
 }

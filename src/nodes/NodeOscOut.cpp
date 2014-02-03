@@ -15,6 +15,7 @@ using namespace hm;
 using namespace ci;
 using namespace ci::osc;
 using namespace boost;
+using std::string;
 
 class JointMessage : public Message
 {
@@ -38,20 +39,28 @@ NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
 //, mOsc(new Sender)
 , mInlet(nullptr)
 , mLastSentTimestamp(-42.)
+, mDestinationHost("localhost")
+, mDestinationPort(7110) // OSCeleton default
+, mPrefix("hm")
 {
 	setParams(params);
 	mInlet = createInlet(VALUE | SKELETON3D | SCENE3D,
 						 "Data to be sent",
 						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
+	addParameter("Destination hostname", &mDestinationHost);
+	auto p = addParameter("Destination port", &mDestinationPort);
+	p->hardMin = p->softMin = 0;
+	p->hardMax = p->softMax = 65535;
+	addParameter("OSC address prefix", &mPrefix);
 }
 
 void NodeOscOut::setParams(Params params)
 {
 	unique_lock<shared_mutex> lock(mParamsMutex);
 	mParams = params;
-	if (!mParams.prefix.empty() && mParams.prefix[0] != '/')
+	if (!mPrefix.empty() && mPrefix[0] != '/')
 	{
-		mPrefixWithSlash = '/'+mParams.prefix;
+		mPrefixWithSlash = '/'+mPrefix;
 	}
 	if (mPrefixWithSlash.size()>1 && mPrefixWithSlash[mPrefixWithSlash.size()-1] == '/')
 	{
@@ -111,11 +120,11 @@ void NodeOscOut::step()
 		shared_lock<shared_mutex> lock(mParamsMutex);
 		try
 		{
-			mOsc.setup(mParams.destinationHost, mParams.destinationPort);
+			mOsc.setup(mDestinationHost, mDestinationPort);
 		}
 		catch (std::exception& e)
 		{
-			std::cerr << "Error opening "<<mParams.destinationHost<<":"<<mParams.destinationPort<<" "<<e.what()<<std::endl;
+			hm_error((std::stringstream()<<"Error opening "<<mDestinationHost<<":"<<mDestinationPort<<" "<<e.what()).str());
 			return;
 		}
 	}

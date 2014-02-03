@@ -14,6 +14,7 @@
 #include <set>
 #include <string>
 #include "Common.h"
+#include "Parameter.h"
 
 namespace hm
 {
@@ -37,6 +38,11 @@ namespace hm
 		virtual ~Node();
 		std::string type() const { return mClassName; }
 		std::string name() const { return nodeParams().name; }
+		/// The full path to this node, without a trailing slash.
+		/// The path is a slash separated string of the parents of this node
+		/// followed by the name of this node.
+		/// \note At present nodes do not have parents, so this is just "/<name>"
+		std::string path() const;
 		void setName(std::string name);
 		std::string toString() const;
 				
@@ -87,14 +93,21 @@ namespace hm
 		/// This function may only be used at construction otherwise a runtime error
 		/// will be thrown.
 		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& helpText="");
-		/// Register a parameter. The base class takes ownership of the parameter.
-		/// You need to ensure that the pointer associated with the parameter stays
-		/// valid until the end of this node's lifetime.
+		/// Create a parameter. A pointer to the parameter is returned which may
+		/// be used to customise it.
 		/// Parameter effects (callbacks and updates from external sources) only take
 		/// effect during a call to updateParameters, which you should do at
 		/// the beginning of every step() call (or equivalently frequently if using
 		/// NodeThreaded).
-		void addParameter(BaseParameter* parameter);
+		/// The path of the parameter will be the path of the node followed by \p
+		/// name.
+		/// \param The name of the parameter. This needs to be unique relative to
+		/// this node.
+		/// \param A pointer to the value that the parameter will be controlling.
+		/// \return A pointer to the parameter. This will remain valid for
+		/// the lifetime of this node.
+		template <typename T>
+		Parameter<T>* addParameter(std::string name, T* value);
 		/// Updates all parameters, activating callbacks where applicable. Callbacks
 		/// run in the same thread as this function. This function is called
 		/// before step() within NodeUnthreaded. Within NodeThreaded you

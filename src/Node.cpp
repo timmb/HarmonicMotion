@@ -48,6 +48,11 @@ Node::~Node()
 	}
 }
 
+std::string Node::path() const
+{
+	return '/'+name();
+}
+
 void Node::setEnabled(bool isEnabled)
 {
 	mIsEnabled = isEnabled;
@@ -68,10 +73,13 @@ void Node::stopProcessing()
 	hm_debug("Processing stopped on Node "+name());
 }
 
-void Node::addParameter(BaseParameter* parameter)
+template <typename T>
+Parameter<T>* Node::addParameter(std::string name, T* value)
 {
+	std::shared_ptr<Parameter<T>> parameter(new Parameter<T>(path()+'/'+name, value));
 	boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
-	mParameters.push_back(std::shared_ptr<BaseParameter>(parameter));
+	mParameters.push_back(parameter);
+	return parameter;
 }
 
 void Node::updateParameters()

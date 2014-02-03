@@ -43,6 +43,17 @@ namespace hm {
 		/// \note This function should only be called by Node::updateParameters().
 		void update();
 		
+		// These members may or may not be applicable depending on the type
+		// of parameter
+		/// The minimum value that may be received externally (enforced)
+		double hardMin;
+		/// The maximum value that may be received extenrally (enforced)
+		double hardMax;
+		/// The minimum value suggested by the user interface (not enforced)
+		double softMin;
+		/// The maximum value suggested by the user interface (not enforced)
+		double softMax;
+		
 	protected:
 		/// \param path Slash separated with the final element being the
 		/// user-visible name of this parameter.
