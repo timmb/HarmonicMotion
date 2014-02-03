@@ -89,6 +89,7 @@ SET(MocHeaders
 	MainWindow.h
 	Controller.h
 	NodeOscOutWidget.h
+	WidgetNode.h
     )
 
 #QT UI files needed to be processed

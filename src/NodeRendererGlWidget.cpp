@@ -7,7 +7,7 @@
 //
 
 #include "NodeRendererGlWidget.h"
-#include "NodeRenderer.h"
+#include "nodes/NodeRenderer.h"
 
 using namespace hm;
 
