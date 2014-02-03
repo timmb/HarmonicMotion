@@ -129,6 +129,12 @@ std::string Node::toString() const
 	return (stringstream() << *this).str();
 }
 
+void Node::setName(std::string name)
+{
+	boost::lock_guard<boost::shared_mutex> lock(mNodeParamsMutex);
+	mNodeParams.name = name;
+}
+
 
 Node::Params Node::nodeParams() const
 {

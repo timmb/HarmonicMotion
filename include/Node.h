@@ -37,6 +37,7 @@ namespace hm
 		virtual ~Node();
 		std::string type() const { return mClassName; }
 		std::string name() const { return nodeParams().name; }
+		void setName(std::string name);
 		std::string toString() const;
 				
 		int numInlets() const;

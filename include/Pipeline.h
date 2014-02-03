@@ -28,6 +28,9 @@ namespace hm
 		void start();
 		void stop();
 		
+		// TODO: Save/load from json
+		// Json should be encoded UTF 8
+		
 	private:
 		std::vector<NodePtr> mNodes;
 		std::atomic<bool> mIsRunning;
