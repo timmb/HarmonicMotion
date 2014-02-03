@@ -19,6 +19,7 @@ namespace hm {
 		
 	BaseParameter::BaseParameter(std::string const& path)
 	: mPath(path)
+	, mName(mPath.substr(mPath.find_last_of('/')+1))
 	, hardMin(- numeric_limits<double>::max())
 	, hardMax(  numeric_limits<double>::max())
 	, softMin(0)
@@ -26,6 +27,7 @@ namespace hm {
 	{
 		// TODO: Verify path is well formed
 		// TODO: Check path is unique
+		assert(mPath.find('/') != string::npos);
 	}
 
 	

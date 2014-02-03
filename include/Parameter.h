@@ -28,7 +28,11 @@ namespace hm {
 		/// \copydoc writeJson
 		virtual bool readJson(Json::Value const& root);
 		
-		std::string mPath;
+		/// e.g. "/My Node/My Parameter"
+		std::string path() const { return mPath; }
+		/// e.g. "My Parameter"
+		std::string name() const { return mName; }
+		
 		/// Register a callback to be alerted when the internal value (corresponding
 		/// to the pointer this parameter was constructed with) is altered
 		/// externally (e.g. by a GUI). Callbacks are not called until update()
@@ -77,6 +81,8 @@ namespace hm {
 		
 		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
 		boost::mutex mNewExternalValueCallbacksMutex;
+		const std::string mPath;
+		const std::string mName;
 	};
 	
 	template <typename T>
@@ -186,6 +192,7 @@ namespace hm {
 					}
 				}
 			}
+			return false;
 		}
 		
 	private:

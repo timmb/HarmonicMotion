@@ -73,14 +73,6 @@ void Node::stopProcessing()
 	hm_debug("Processing stopped on Node "+name());
 }
 
-template <typename T>
-Parameter<T>* Node::addParameter(std::string name, T* value)
-{
-	std::shared_ptr<Parameter<T>> parameter(new Parameter<T>(path()+'/'+name, value));
-	boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
-	mParameters.push_back(parameter);
-	return parameter;
-}
 
 void Node::updateParameters()
 {
@@ -139,8 +131,9 @@ std::string Node::toString() const
 
 void Node::setName(std::string name)
 {
-	boost::lock_guard<boost::shared_mutex> lock(mNodeParamsMutex);
-	mNodeParams.name = name;
+	Params params = nodeParams();
+	params.name = name;
+	setNodeParams(params);
 }
 
 
@@ -155,7 +148,7 @@ void Node::setNodeParams(Params& params)
 	boost::unique_lock<boost::shared_mutex> lock(mNodeParamsMutex);
 	{ // validate name
 		if (params.name=="")
-			mNodeParams.name = mClassName;
+			params.name = mClassName;
 		// if we have a new name, ensure it is unique
 		if (params.name != mNodeParams.name)
 		{

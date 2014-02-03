@@ -143,4 +143,14 @@ namespace hm
 	};
 	
 	std::ostream& operator<<(std::ostream&, Node const&);
+	
+	
+	template <typename T>
+	Parameter<T>* Node::addParameter(std::string name, T* value)
+	{
+		std::shared_ptr<Parameter<T>> parameter(new Parameter<T>(path()+'/'+name, value));
+		boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
+		mParameters.push_back(parameter);
+		return parameter.get();
+	}
 }
