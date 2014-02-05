@@ -8,7 +8,7 @@
 
 #include "NodeSineWave.h"
 #include "Outlet.h"
-//#include <boost/chrono/duration.hpp>
+#include "FactoryNode.h"
 
 using namespace hm;
 
@@ -37,7 +37,8 @@ NodeSineWave::~NodeSineWave()
 	stopAndWait();
 }
 
-NodePtr NodeSineWave::create(Node::Params params)
+
+NodePtr NodeSineWave::create(Node::Params params) const
 {
 	return NodePtr(new NodeSineWave(params));
 }

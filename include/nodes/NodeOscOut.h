@@ -26,10 +26,10 @@ namespace hm
 	public:
 		typedef std::shared_ptr<NodeOscOut> Ptr;
 		
-		NodeOscOut(Node::Params const& params=Node::Params(), std::string const& className="NodeOscOut");
+		NodeOscOut(Params params, std::string className="NodeOscOut");
 		
 	protected:
-		virtual NodePtr create(Params params) override;
+		virtual NodePtr create(Params params) const override;
 		virtual void step() override;
 
 	private:
@@ -60,3 +60,6 @@ namespace hm
 		std::string mPrefixWithSlash;
 	};
 }
+
+#include "FactoryNode.h"
+HM_REGISTER_NODE(NodeOscOut);

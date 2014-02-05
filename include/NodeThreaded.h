@@ -37,7 +37,7 @@ namespace hm
 	protected:
 		/// NodeThreadeds cannot be directly constructed as they are always
 		/// subclassed.
-		NodeThreaded(Node::Params const& params, std::string const& className);
+		NodeThreaded(Node::Params params, std::string className);
 		
 		// MARK: Functions to implement
 		/// Override this: Process incoming data until isRequestedToStop()

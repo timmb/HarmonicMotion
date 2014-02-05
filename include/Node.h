@@ -21,7 +21,7 @@ namespace hm
 	class Node
 	{
 	public:
-		/// Universal settings for all nodes. NB Params is not the same
+		/// Universal instance settings for all nodes. NB Params is not the same
 		/// as a Parameter
 		struct Params
 		{
@@ -85,14 +85,15 @@ namespace hm
 	protected:
 		/// Nodes cannot be directly constructed as they are always
 		/// subclassed.
-		Node(Params params, std::string const& className);
+		/// \param className should the the name of the bottom-most derived class
+		Node(Params params, std::string className);
 		
 		/// Factory function to create new instances of a node. Derived types
 		/// must implement this for nodes to be able to be created.
 		/// \return A new instance of the derived Node type constructed with
 		/// the \p params provided.
-		virtual NodePtr create(Params params) = 0;
-		
+		virtual NodePtr create(Params params) const = 0;
+
 		/// This function may only be used at construction otherwise a runtime error
 		/// will be thrown.
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
@@ -139,10 +140,10 @@ namespace hm
 		mutable boost::shared_mutex mParametersMutex;
 		Params mNodeParams;
 		mutable boost::shared_mutex mNodeParamsMutex;
-		const std::string mClassName;
 		std::atomic<bool> mIsEnabled;
 		std::atomic<bool> mIsProcessing;
 		std::atomic<bool> mHasStartEverBeenCalled;
+		const std::string mClassName;
 
 		static std::set<std::string> sNamesInUse;
 		static boost::mutex sNamesInUseMutex;
@@ -150,6 +151,7 @@ namespace hm
 	
 	std::ostream& operator<<(std::ostream&, Node const&);
 	
+
 	
 	template <typename T>
 	Parameter<T>* Node::addParameter(std::string name, T* value)

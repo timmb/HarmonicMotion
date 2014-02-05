@@ -3,7 +3,7 @@
 namespace hm
 {
 	
-	NodeUnthreaded::NodeUnthreaded(Node::Params params, std::string const& className)
+	NodeUnthreaded::NodeUnthreaded(Node::Params params, std::string className)
 	: Node(params, className)
 	{}
 	

@@ -22,6 +22,7 @@ namespace hm {
 	public:
 		enum Type
 		{
+			DOUBLE,
 			INT,
 			STRING
 		};
@@ -230,10 +231,16 @@ namespace hm {
 	BaseParameter::Type Parameter<int>::type() const;
 	
 	template<>
+	BaseParameter::Type Parameter<double>::type() const;
+	
+	template<>
 	BaseParameter::Type Parameter<std::string>::type() const;
 	
 	template<>
 	void Parameter<int>::validateExternalValue(int& value) const;
+	
+	template<>
+	void Parameter<double>::validateExternalValue(double& value) const;
 	
 	
 } // namespace tmb

@@ -21,7 +21,7 @@ namespace hm
 		virtual ~NodeSineWave();
 		
 	protected:
-		virtual NodePtr create(Node::Params params) override;
+		virtual NodePtr create(Node::Params params) const override;
 		virtual void run() override;
 		
 	private:
@@ -45,3 +45,7 @@ namespace hm
 		double mOutputDelta;
 	};
 }
+
+#include "FactoryNode.h"
+HM_REGISTER_NODE(NodeSineWave)
+

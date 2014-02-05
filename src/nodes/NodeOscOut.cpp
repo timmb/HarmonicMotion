@@ -10,6 +10,7 @@
 #include "OscSender.h"
 #include "Inlet.h"
 #include <boost/thread/locks.hpp>
+#include "FactoryNode.h"
 
 using namespace hm;
 using namespace ci;
@@ -34,7 +35,7 @@ public:
 	}
 };
 
-NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
+NodeOscOut::NodeOscOut(Params params, std::string className)
 : NodeUnthreaded(params, className)
 //, mOsc(new Sender)
 , mInlet(nullptr)
@@ -56,10 +57,11 @@ NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
 	addParameter("OSC address prefix", &mPrefix)->addNewExternalValueCallback([=](){ callbackOscAddressChanged(); });
 }
 
-NodePtr NodeOscOut::create(Params params)
+NodePtr NodeOscOut::create(Params params) const
 {
 	return NodePtr(new NodeOscOut(params));
 }
+
 
 void NodeOscOut::callbackOscAddressChanged()
 {

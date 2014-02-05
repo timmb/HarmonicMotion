@@ -76,15 +76,27 @@ namespace hm {
 	}
 	
 	template<>
+	BaseParameter::Type Parameter<double>::type() const
+	{
+		return DOUBLE;
+	}
+	
+	template<>
 	BaseParameter::Type Parameter<std::string>::type() const
 	{
 		return STRING;
 	}
-	
+
 	template<>
 	void Parameter<int>::validateExternalValue(int& value) const
 	{
 		value = max<int>(hardMin, min<int>(hardMax, value));
+	}
+	
+	template<>
+	void Parameter<double>::validateExternalValue(double& value) const
+	{
+		value = max<double>(hardMin, min<double>(hardMax, value));
 	}
 	
 }

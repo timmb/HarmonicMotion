@@ -230,6 +230,9 @@
 		2294120A189AA33D009550EF /* NodeThreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22941209189AA33D009550EF /* NodeThreaded.cpp */; };
 		2294120B189AA349009550EF /* NodeThreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22941209189AA33D009550EF /* NodeThreaded.cpp */; };
 		2294120D189AA35D009550EF /* NodeThreaded.h in Headers */ = {isa = PBXBuildFile; fileRef = 2294120C189AA35D009550EF /* NodeThreaded.h */; };
+		22C5DF6218A25BC200920089 /* FactoryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22C5DF6118A25BC200920089 /* FactoryNode.cpp */; };
+		22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22C5DF6118A25BC200920089 /* FactoryNode.cpp */; };
+		22C5DF6518A25BCA00920089 /* FactoryNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 22C5DF6418A25BCA00920089 /* FactoryNode.h */; };
 		22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F461816BCCE004E1219 /* libltdl.7.dylib */; };
 		22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */; };
 		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
@@ -411,6 +414,8 @@
 		2274DEF4B83E44D38B12614E /* NetworkingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NetworkingUtils.h; path = ../../Cinder/blocks/OSC/src/ip/NetworkingUtils.h; sourceTree = "<group>"; };
 		22941209189AA33D009550EF /* NodeThreaded.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeThreaded.cpp; sourceTree = "<group>"; };
 		2294120C189AA35D009550EF /* NodeThreaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeThreaded.h; path = ../include/NodeThreaded.h; sourceTree = "<group>"; };
+		22C5DF6118A25BC200920089 /* FactoryNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FactoryNode.cpp; sourceTree = "<group>"; };
+		22C5DF6418A25BCA00920089 /* FactoryNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FactoryNode.h; path = ../include/FactoryNode.h; sourceTree = "<group>"; };
 		22E50F461816BCCE004E1219 /* libltdl.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libltdl.7.dylib; path = ../lib/macosx/libltdl.7.dylib; sourceTree = "<group>"; };
 		22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libusb-1.0.0.dylib"; path = "../lib/macosx/libusb-1.0.0.dylib"; sourceTree = "<group>"; };
 		245157AC12684402B9CE4270 /* OscTypes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscTypes.cpp; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.cpp; sourceTree = "<group>"; };
@@ -501,6 +506,8 @@
 				226A967A189BEF930056DCD1 /* Data */,
 				22261AA6181574AC00DBA3F8 /* Common.cpp */,
 				22197F8517F4996F003B1883 /* Common.h */,
+				22C5DF6118A25BC200920089 /* FactoryNode.cpp */,
+				22C5DF6418A25BCA00920089 /* FactoryNode.h */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
@@ -1024,6 +1031,7 @@
 				22293712181677BD008CAA09 /* XnVersion.h in Headers */,
 				22293727181677C8008CAA09 /* SkeletonPoseDetector.h in Headers */,
 				2229372A181677C8008CAA09 /* VFakeKinect.h in Headers */,
+				22C5DF6518A25BCA00920089 /* FactoryNode.h in Headers */,
 				2229372D181677C8008CAA09 /* VKinect.h in Headers */,
 				2229372E181677C8008CAA09 /* VOpenNIBone.h in Headers */,
 				2229372F181677C8008CAA09 /* VOpenNICommon.h in Headers */,
@@ -1136,6 +1144,7 @@
 				22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */,
 				22197F1117F472F4003B1883 /* OscBundle.cpp in Sources */,
 				2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */,
+				22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */,
 				22197F1217F472F4003B1883 /* OscListener.cpp in Sources */,
 				2223EC611817EEA400B900CF /* DataNull.cpp in Sources */,
 				22197F1317F472F4003B1883 /* OscMessage.cpp in Sources */,
@@ -1184,6 +1193,7 @@
 				3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */,
 				7E032153AEB04570800DF749 /* IpEndpointName.cpp in Sources */,
 				C2452C7EE2C14005A7CCF7C3 /* OscOutboundPacketStream.cpp in Sources */,
+				22C5DF6218A25BC200920089 /* FactoryNode.cpp in Sources */,
 				14AE91028D3E457C94F76ACD /* OscPrintReceivedElements.cpp in Sources */,
 				9E4FA58CE7D04C19BD3F3283 /* OscReceivedElements.cpp in Sources */,
 				B1B4A3FF90E94360BFE023CC /* OscTypes.cpp in Sources */,

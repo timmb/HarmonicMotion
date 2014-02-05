@@ -49,6 +49,8 @@ namespace hm
 #else
 	#define hm_debug(message) ;;
 #endif
+
+#define hm_info(message) std::cerr << "* Info: "<<message<<std::endl;
 	
 #define hm_error(message) std::cerr << "* Error:" << HM__FILE_NO_DIR__ << ' ' << __LINE__<<'\n'<<message<<std::endl;
 	

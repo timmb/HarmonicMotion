@@ -29,7 +29,7 @@ using namespace std;
 set<string> Node::sNamesInUse;
 boost::mutex Node::sNamesInUseMutex;
 
-Node::Node(Params params, string const& className)
+Node::Node(Params params, string className)
 : mClassName(className)
 , mIsEnabled(true)
 , mIsProcessing(false)
