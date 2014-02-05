@@ -29,6 +29,8 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 {
 	switch (parameter->type())
 	{
+		case BaseParameter::DOUBLE:
+			return create(std::dynamic_pointer_cast<Parameter<double>>(parameter));
 		case BaseParameter::INT:
 			return create(std::dynamic_pointer_cast<Parameter<int>>(parameter));
 		case BaseParameter::STRING:
@@ -46,6 +48,38 @@ WidgetBaseParameter* WidgetBaseParameter::create(std::shared_ptr<Parameter<std::
 	return new WidgetParameterString(parameter);
 }
 
+
+
+// ----------------------------
+
+WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> parameter)
+: WidgetParameter<double>(parameter)
+, mSpinBox(new QDoubleSpinBox)
+{
+	mSpinBox->setRange(parameter->hardMin, parameter->hardMax);
+	
+	// param -> widget
+	mParameter->addNewInternalValueCallback([this](double value)
+											{
+												mSpinBox->blockSignals(true);
+												Q_EMIT newInternalValue(value);
+												mSpinBox->blockSignals(false);
+											});
+	bool success = connect(this, SIGNAL(newInternalValue(double)), mSpinBox, SLOT(setValue(double)));
+	assert(success);
+	
+	// widget -> param
+	success = connect(mSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), [this](double value)
+					  {
+						  mParameter->set(value);
+					  });
+	assert(success);
+	
+	auto layout = new QHBoxLayout;
+	setLayout(layout);
+	
+	layout->addWidget(mSpinBox);
+}
 
 
 // ----------------------------

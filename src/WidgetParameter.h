@@ -12,6 +12,7 @@
 #include <memory>
 #include "Parameter.h"
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <string>
 #include <QLineEdit>
 
@@ -41,6 +42,23 @@ namespace hm
 	protected:
 		std::shared_ptr<Parameter<T>> mParameter;
 	};
+	
+
+	// ---------------------------------------
+	class WidgetParameterDouble : public WidgetParameter<double>
+	{
+		Q_OBJECT;
+		
+	public:
+		WidgetParameterDouble(std::shared_ptr<Parameter<double>> parameter);
+		
+	Q_SIGNALS:
+		void newInternalValue(double value);
+		
+	private:
+		QDoubleSpinBox* mSpinBox;
+	};
+	
 	
 	// ---------------------------------------
 	class WidgetParameterInt : public WidgetParameter<int>
