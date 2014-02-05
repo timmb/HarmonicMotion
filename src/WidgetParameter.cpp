@@ -30,22 +30,27 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 	switch (parameter->type())
 	{
 		case BaseParameter::DOUBLE:
-			return create(std::dynamic_pointer_cast<Parameter<double>>(parameter));
+			return createDelegate(std::dynamic_pointer_cast<Parameter<double>>(parameter));
 		case BaseParameter::INT:
-			return create(std::dynamic_pointer_cast<Parameter<int>>(parameter));
+			return createDelegate(std::dynamic_pointer_cast<Parameter<int>>(parameter));
 		case BaseParameter::STRING:
-			return create(std::dynamic_pointer_cast<Parameter<std::string>>(parameter));
+			return createDelegate(std::dynamic_pointer_cast<Parameter<std::string>>(parameter));
 	}
 }
 
-WidgetBaseParameter* WidgetBaseParameter::create(std::shared_ptr<Parameter<int>> parameter)
+WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Parameter<int>> parameter)
 {
 	return new WidgetParameterInt(parameter);
 }
 
-WidgetBaseParameter* WidgetBaseParameter::create(std::shared_ptr<Parameter<std::string>> parameter)
+WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Parameter<std::string>> parameter)
 {
 	return new WidgetParameterString(parameter);
+}
+
+WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Parameter<double>> parameter)
+{
+	return new WidgetParameterDouble(parameter);
 }
 
 

@@ -80,6 +80,7 @@ Controller::Controller(QObject* parent)
 
 void Controller::checkPipeline()
 {
+	if (mAccum)
 	while (!mAccum->isEmpty())
 	{
 		Data data = mAccum->next();

@@ -23,10 +23,11 @@ namespace hm
 	{
 	public:
 		/// Factory function to create a widget of the correct type for the
-		/// parameter. Delegates to the overloaded functions of the same name
+		/// parameter. Delegates to createDelegate
 		static WidgetBaseParameter* create(ParameterPtr parameter);
-		static WidgetBaseParameter* create(std::shared_ptr<Parameter<int>> parameter);
-		static WidgetBaseParameter* create(std::shared_ptr<Parameter<std::string>> parameter);
+		static WidgetBaseParameter* createDelegate(std::shared_ptr<Parameter<int>> parameter);
+		static WidgetBaseParameter* createDelegate(std::shared_ptr<Parameter<std::string>> parameter);
+		static WidgetBaseParameter* createDelegate(std::shared_ptr<Parameter<double>> parameter);
 	};
 	
 	/// Unfortunately Qt doesn't support templated classes with signals and slots
