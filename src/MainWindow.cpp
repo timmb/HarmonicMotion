@@ -9,11 +9,15 @@
 #include "MainWindow.h"
 #include "NodeRendererGlWidget.h"
 #include <QtWidgets>
+#include "WidgetNode.h"
+#include "WidgetPatchArea.h"
+
 using namespace hm;
 
 MainWindow::MainWindow()
 : mConsole(nullptr)
 , mLayout(nullptr)
+, mPatchArea(new WidgetPatchArea)
 {
 	mLayout = new QVBoxLayout;
 	QWidget* w = new QWidget(this);
@@ -23,11 +27,18 @@ MainWindow::MainWindow()
 	
 	
 	mConsole = new QPlainTextEdit(w);
-	mLayout->addWidget(mConsole);
-	
 	mConsole->setMaximumBlockCount(500);
 	mConsole->setReadOnly(true);
+	mConsole->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
+	mLayout->addWidget(mConsole);
+	mLayout->addWidget(mPatchArea);
 	
+}
+
+void MainWindow::addNode(NodePtr node)
+{
+	new WidgetNode(node, mPatchArea);
 }
 
 NodeRendererGlWidget* MainWindow::createRendererWidget()

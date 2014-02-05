@@ -1,0 +1,36 @@
+#WidgetNode {
+	background-color: #ccc;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 4px;
+	border-color: #999;
+}
+
+#WidgetParameter
+{
+	margin: 0px;
+	padding: 0px;
+	width: 250px;
+}
+
+QLabel
+{
+	font-size: 11px;
+}
+
+#LabelNodeType
+{
+	font-weight: bold;
+	font-size: 13px;
+}
+
+QLineEdit
+{
+	font-size: 12px;
+}
+
+QSpinBox
+{
+	height: 18px;
+	width: 50px;
+}

@@ -12,6 +12,11 @@
 #include <QLineEdit>
 #include "Node.h"
 #include "WidgetParameter.h"
+#include <QFile>
+#include <QTimer>
+#include "Common.h"
+#include <QStyleOption>
+#include <QPainter>
 
 namespace hm
 {
@@ -20,14 +25,19 @@ namespace hm
 	: QWidget(parent)
 	, mNode(node)
 	{
+		setObjectName("WidgetNode");
 		QLabel* type = new QLabel(QString::fromUtf8(mNode->type().c_str()));
+		type->setObjectName("LabelNodeType");
 		QLineEdit* name = new QLineEdit(QString::fromUtf8(mNode->name().c_str()));
-		// wait for Qt5
+		// TODO: wait for Qt5
 		//	bool success = connect(name, &QLineEdit::textChanged, [this](QString const& str)
 		//			{
 		//				mNode->setName(str->toUtf8());
 		//			});
 		//	assert(success);
+		
+		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+//		resize(500, 500);
 		
 		QGridLayout* layout = new QGridLayout;
 		setLayout(layout);
@@ -38,10 +48,39 @@ namespace hm
 		for (ParameterPtr p : node->parameters())
 		{
 			QWidget* widget = WidgetBaseParameter::create(p);
-			layout->addWidget(new QLabel(QString::fromUtf8(p->name().c_str())), row, 0);
-			layout->addWidget(widget, row, 1);
+			layout->addWidget(new QLabel(QString::fromUtf8(p->name().c_str())), row, 0, Qt::AlignRight);
+			layout->addWidget(widget, row, 1, Qt::AlignLeft);
 			row++;
 		}
+		layout->setRowStretch(row, 1);
+		
+		QTimer* t = new QTimer(this);
+		t->setInterval(500);
+		connect(t, SIGNAL(timeout()), this, SLOT(reloadStyleSheet()));
+		t->start();
+		
+	}
+	
+	void WidgetNode::reloadStyleSheet()
+	{
+		//	QFile file(":/qss/WidgetNode.qss");
+		QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNode.qss");
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+		{
+			setStyleSheet(QString::fromUtf8(file.readAll()));
+		}
+		else
+		{
+			hm_error("Failed to load stylesheet WidgetNode.qss");
+		}
+	}
+	
+	void WidgetNode::paintEvent(QPaintEvent *)
+	{
+		QStyleOption opt;
+		opt.init(this);
+		QPainter p(this);
+		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 	}
 	
 }

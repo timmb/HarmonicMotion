@@ -9,12 +9,14 @@
 
 #include <QMainWindow>
 #include <QLayout>
+#include "Common.h"
 
 class QPlainTextEdit;
 
 namespace hm
 {
 	class NodeRendererGlWidget;
+	class WidgetPatchArea;
 	
 	class MainWindow : public QMainWindow
 	{
@@ -26,6 +28,7 @@ namespace hm
 		template <typename WidgetType>
 		void addWidget(WidgetType* widget);
 		
+		void addNode(NodePtr node);
 		
 	public Q_SLOTS:
 		void newConsoleMessage(QString);
@@ -34,6 +37,7 @@ namespace hm
 		QPlainTextEdit* mConsole;
 		QLayout* mLayout;
 		QVector<NodeRendererGlWidget*> mScenes;
+		WidgetPatchArea* mPatchArea;
 	};
 	
 	

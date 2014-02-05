@@ -214,3 +214,4 @@ xcode/HarmonicMotionGui_automoc.cpp
 xcode/qrc_myresources.cpp
 xcode/CMakeScripts/HarmonicMotionGui_automoc_cmakeRulesBuildPhase.*
 xcode/CMakeScripts/ReRunCMake.make
+xcode/__/

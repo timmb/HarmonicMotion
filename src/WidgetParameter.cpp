@@ -8,6 +8,11 @@
 
 #include "WidgetParameter.h"
 #include <QFormLayout>
+#include <QWidget>
+#include <QStyleOption>
+#include <QPainter>
+#include <QTimer>
+#include <QDebug>
 
 using namespace hm;
 
@@ -25,6 +30,20 @@ template<typename... Args> struct SELECT {
 
 
 // ----------------------------
+WidgetBaseParameter::WidgetBaseParameter()
+{
+	setContentsMargins(0, 0, 0, 0);
+	setObjectName("WidgetParameter");
+}
+
+void WidgetBaseParameter::paintEvent(QPaintEvent *)
+{
+	QStyleOption opt;
+	opt.init(this);
+	QPainter p(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
 WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 {
 	switch (parameter->type())
@@ -59,9 +78,11 @@ WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Paramet
 
 WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> parameter)
 : WidgetParameter<double>(parameter)
-, mSpinBox(new QDoubleSpinBox)
+, mSpinBox(new QDoubleSpinBox(this))
 {
+	mSpinBox->setMaximumWidth(100);
 	mSpinBox->setRange(parameter->hardMin, parameter->hardMax);
+	mSpinBox->move(0,0);
 	
 	// param -> widget
 	mParameter->addNewInternalValueCallback([this](double value)
@@ -80,10 +101,11 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 					  });
 	assert(success);
 	
-	auto layout = new QHBoxLayout;
-	setLayout(layout);
-	
-	layout->addWidget(mSpinBox);
+//	auto layout = new QHBoxLayout;
+//	layout->setAlignment(Qt::AlignLeft);
+//	setLayout(layout);
+//	
+//	layout->addWidget(mSpinBox);
 }
 
 
@@ -91,9 +113,10 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 
 WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter)
 : WidgetParameter<int>(parameter)
-, mSpinBox(new QSpinBox)
+, mSpinBox(new QSpinBox(this))
 {
 	mSpinBox->setRange(parameter->hardMin, parameter->hardMax);
+	mSpinBox->move(0, 0);
 	
 	// param -> widget
 	mParameter->addNewInternalValueCallback([this](int value)
@@ -111,11 +134,14 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 		mParameter->set(value);
 	});
 	assert(success);
-	
-	auto layout = new QHBoxLayout;
-	setLayout(layout);
-	
-	layout->addWidget(mSpinBox);
+		
+	auto t = new QTimer(this);
+	t->setInterval(1000);
+	t->start();
+	connect(t, &QTimer::timeout, [this]() {
+		qDebug() << "pos" << mSpinBox->pos() << "geom"<<mSpinBox->geometry();
+		
+	});
 }
 
 
@@ -123,8 +149,12 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 
 WidgetParameterString::WidgetParameterString(std::shared_ptr<Parameter<std::string>> parameter)
 : WidgetParameter<std::string>(parameter)
-, mWidget(new QLineEdit)
+, mWidget(new QLineEdit(this))
 {
+	mWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	mWidget->move(0,0);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	
 	// param -> widget
 	mParameter->addNewInternalValueCallback([this](std::string value)
 	{
@@ -140,12 +170,7 @@ WidgetParameterString::WidgetParameterString(std::shared_ptr<Parameter<std::stri
 		mParameter->set(std::string(value.toUtf8()));
 	});
 	assert(success);
-	
-	auto layout = new QHBoxLayout;
-	setLayout(layout);
-	
-	layout->addWidget(mWidget);
-	
+		
 }
 
 

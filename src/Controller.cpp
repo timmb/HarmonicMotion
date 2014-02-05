@@ -29,7 +29,7 @@ Controller::Controller(QObject* parent)
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");
 	mNodes << gen;
 	mPipeline.addNode(gen);
-	mMainWindow->addWidget(new WidgetNode(gen));
+	mMainWindow->addNode(gen);
 	
 //	mAccum = std::shared_ptr<NodeAccumulator>(new NodeAccumulator);
 ////	kinect->outlet(0)->connect(mAccum->inlet(0));
@@ -43,7 +43,7 @@ Controller::Controller(QObject* parent)
 //	kinect->outlet(0)->connect(osc->inlet(0));
 	gen->outlet(0)->connect(osc->inlet(0));
 	mPipeline.addNode(osc);
-	mMainWindow->addWidget(new WidgetNode(osc));
+	mMainWindow->addNode(osc);
 	
 ////	auto filter = NodePtr(new NodeFilter);
 ////	kinect->outlet(0)->connect(filter->inlet(0));
