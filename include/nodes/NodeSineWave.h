@@ -17,44 +17,31 @@ namespace hm
 	class NodeSineWave : public NodeThreaded
 	{
 	public:
-		struct Params : public Node::Params
-		{
-			/// Cycles per second
-			double frequency;
-			/// Ranges from 0 to 1
-			double phase;
-			double amplitude;
-			/// How long to wait between outputting values. This class isn't
-			/// super-accurate and the actual output rate may differ from
-			/// this
-			double outputDelta;
-			
-			Params(double frequency_=0.2, double phase_=0., double amplitude_=1., std::string const& name_="")
-			: Node::Params(name_)
-			, frequency(frequency_)
-			, phase(phase_)
-			, amplitude(amplitude_)
-			, outputDelta(0.05)
-			{}
-		};
-		
-		NodeSineWave(Params const& params = Params(), std::string const& className="NodeSineWave");
+		NodeSineWave(Node::Params params, std::string className="NodeSineWave");
 		virtual ~NodeSineWave();
 		
 	protected:
+		virtual NodePtr create(Node::Params params) override;
 		virtual void run() override;
 		
 	private:
-//		typedef boost::chrono::duration<double> Duration;
-//		typedef boost::chrono::time_point<boost::chrono::high_resolution_clock, Duration> Time;
-
 		void emitValue(double currentTime);
 		
-		Params mParams;
 		OutletPtr mOutlet;
+		
+		//MARK: State
 		double mStartTime;
 		double mTimeOfLastOutput;
-//		Time mTimeOfLastOutput;
-//		Time mStartTime;
+		
+		//MARK: Parameters
+		/// Cycles per second
+		double mFrequency;
+		/// Ranges from 0 to 1
+		double mPhase;
+		double mAmplitude;
+		/// How long to wait between outputting values. This class isn't
+		/// super-accurate and the actual output rate may differ from
+		/// this
+		double mOutputDelta;
 	};
 }

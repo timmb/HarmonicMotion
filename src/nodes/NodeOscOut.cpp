@@ -42,23 +42,27 @@ NodeOscOut::NodeOscOut(Params const& params, std::string const& className)
 , mDestinationHost("localhost")
 , mDestinationPort(7110) // OSCeleton default
 , mPrefix("hm")
+, mDestinationHasChanged(true)
+, mIsSocketOpen(false)
 {
-	setParams(params);
 	mInlet = createInlet(VALUE | SKELETON3D | SCENE3D,
 						 "Data to be sent",
 						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
-	addParameter("Destination hostname", &mDestinationHost);
-	addParameter("Destination hostname 2", &mDestinationHost);
+	addParameter("Destination hostname", &mDestinationHost)->addNewExternalValueCallback([=](){ callbackDestinationChanged(); });
 	auto p = addParameter("Destination port", &mDestinationPort);
 	p->hardMin = p->softMin = 0;
 	p->hardMax = p->softMax = 65535;
-	addParameter("OSC address prefix", &mPrefix);
+	p->addNewExternalValueCallback([=](){ callbackDestinationChanged(); });
+	addParameter("OSC address prefix", &mPrefix)->addNewExternalValueCallback([=](){ callbackOscAddressChanged(); });
 }
 
-void NodeOscOut::setParams(Params params)
+NodePtr NodeOscOut::create(Params params)
 {
-	unique_lock<shared_mutex> lock(mParamsMutex);
-	mParams = params;
+	return NodePtr(new NodeOscOut(params));
+}
+
+void NodeOscOut::callbackOscAddressChanged()
+{
 	if (!mPrefix.empty() && mPrefix[0] != '/')
 	{
 		mPrefixWithSlash = '/'+mPrefix;
@@ -67,23 +71,18 @@ void NodeOscOut::setParams(Params params)
 	{
 		mPrefixWithSlash = mPrefixWithSlash.substr(0, mPrefixWithSlash.size()-1);
 	}
-	setNodeParams(params);
 }
 
-NodeOscOut::Params NodeOscOut::params() const
+void NodeOscOut::callbackDestinationChanged()
 {
-	shared_lock<shared_mutex> lock(mParamsMutex);
-	return mParams;
+	mDestinationHasChanged = true;
 }
 
 
 void NodeOscOut::send(Value const& value)
 {
 	Message m;
-	{
-		shared_lock<shared_mutex> lock(mParamsMutex);
-		m.setAddress(mPrefixWithSlash);
-	}
+	m.setAddress(mPrefixWithSlash);
 	m.addFloatArg(value.value());
 	//	m.setRemoteEndpoint(mParams.destinationHost, mParams.destinationPort);
 	mOsc.sendMessage(m);
@@ -93,7 +92,6 @@ void NodeOscOut::send(Skeleton3d const& skel)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		shared_lock<shared_mutex> lock(mParamsMutex);
 		Message m = JointMessage(mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i));
 		mOsc.sendMessage(m);
 	}
@@ -102,10 +100,7 @@ void NodeOscOut::send(Skeleton3d const& skel)
 void NodeOscOut::send(Scene3d const& scene)
 {
 	Message m;
-	{
-		shared_lock<shared_mutex> lock(mParamsMutex);
-		m.setAddress(mPrefixWithSlash+"num_users");
-	}
+	m.setAddress(mPrefixWithSlash+"num_users");
 	m.addIntArg(scene.skeletons().size());
 	mOsc.sendMessage(m);
 	for (Skeleton3d const& skel: scene.skeletons())
@@ -116,33 +111,38 @@ void NodeOscOut::send(Scene3d const& scene)
 
 void NodeOscOut::step()
 {
-	// TODO: Change to use callback and Parameter
+	if (mDestinationHasChanged)
 	{
-		shared_lock<shared_mutex> lock(mParamsMutex);
 		try
 		{
 			mOsc.setup(mDestinationHost, mDestinationPort);
+			mIsSocketOpen = true;
 		}
 		catch (std::exception& e)
 		{
 			hm_error((std::stringstream()<<"Error opening "<<mDestinationHost<<":"<<mDestinationPort<<" "<<e.what()).str());
+			mIsSocketOpen = false;
 			return;
 		}
+		mDestinationHasChanged = false;
 	}
-	Data data = mInlet->dataIfNewerThan(mLastSentTimestamp);
-	if (!data.isNull())
+	if (mIsSocketOpen)
 	{
-		if (data.isSkeleton3d())
+		Data data = mInlet->dataIfNewerThan(mLastSentTimestamp);
+		if (!data.isNull())
 		{
-			send(data.asSkeleton3d());
-		}
-		else if (data.isScene3d())
-		{
-			send(data.asScene3d());
-		}
-		else if (data.isValue())
-		{
-			send(data.asValue());
+			if (data.isSkeleton3d())
+			{
+				send(data.asSkeleton3d());
+			}
+			else if (data.isScene3d())
+			{
+				send(data.asScene3d());
+			}
+			else if (data.isValue())
+			{
+				send(data.asValue());
+			}
 		}
 	}
 }

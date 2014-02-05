@@ -87,6 +87,12 @@ namespace hm
 		/// subclassed.
 		Node(Params params, std::string const& className);
 		
+		/// Factory function to create new instances of a node. Derived types
+		/// must implement this for nodes to be able to be created.
+		/// \return A new instance of the derived Node type constructed with
+		/// the \p params provided.
+		virtual NodePtr create(Params params) = 0;
+		
 		/// This function may only be used at construction otherwise a runtime error
 		/// will be thrown.
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");

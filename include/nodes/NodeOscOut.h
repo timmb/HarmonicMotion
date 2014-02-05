@@ -28,31 +28,35 @@ namespace hm
 		
 		NodeOscOut(Node::Params const& params=Node::Params(), std::string const& className="NodeOscOut");
 		
-		/// Thread-safe
-		void setParams(Params params);
-		/// Thread-safe
-		Params params() const;
-
 	protected:
+		virtual NodePtr create(Params params) override;
 		virtual void step() override;
 
 	private:
 		void send(Value const& value);
 		void send(Skeleton3d const& skeleton);
 		void send(Scene3d const& scene);
+		
+		void callbackOscAddressChanged();
+		void callbackDestinationChanged();
 
-		/// Guards mParams and mPrefixWithSlash
-		mutable boost::shared_mutex mParamsMutex;
-		Params mParams;
-		std::string mPrefixWithSlash;
 		ci::osc::Sender mOsc;
 		InletPtr mInlet;
+		
+		// MARK: State
 		double mLastSentTimestamp;
+		bool mDestinationHasChanged;
+		bool mIsSocketOpen;
 		
 		// MARK: Parameters
+		// These are thread-safe as Parameters are always updated outside of
+		// the step() function
 		std::string mDestinationHost;
 		int mDestinationPort;
 		/// Prefix used to form OSC addresses
 		std::string mPrefix;
+		
+		// MARK: Cached values
+		std::string mPrefixWithSlash;
 	};
 }
