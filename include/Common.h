@@ -9,6 +9,8 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <ostream>
+#include <iostream>
 #include "Type.h"
 
 namespace hm
