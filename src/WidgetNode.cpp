@@ -25,6 +25,7 @@ namespace hm
 	: QWidget(parent)
 	, mNode(node)
 	{
+		loadStyleSheet();
 		setObjectName("WidgetNode");
 		QLabel* type = new QLabel(QString::fromUtf8(mNode->type().c_str()));
 		type->setObjectName("LabelNodeType");
@@ -56,12 +57,12 @@ namespace hm
 		
 		QTimer* t = new QTimer(this);
 		t->setInterval(500);
-		connect(t, SIGNAL(timeout()), this, SLOT(reloadStyleSheet()));
+		connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
 		t->start();
 		
 	}
 	
-	void WidgetNode::reloadStyleSheet()
+	void WidgetNode::loadStyleSheet()
 	{
 		//	QFile file(":/qss/WidgetNode.qss");
 		QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNode.qss");
@@ -83,4 +84,27 @@ namespace hm
 		style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 	}
 	
+	void WidgetNode::mousePressEvent(QMouseEvent* event)
+	{
+		event->accept(); // do not propagate
+		if (isWindow())
+			mDragOffset = event->globalPos() - pos();
+		else
+			mDragOffset = event->pos();
+	}
+	
+	void WidgetNode::mouseMoveEvent(QMouseEvent* event)
+	{
+		event->accept(); // do not propagate
+		if (isWindow())
+			move(event->globalPos() - mDragOffset);
+		else
+			move(mapToParent(event->pos() - mDragOffset));
+	}
+	
+	void WidgetNode::mouseReleaseEvent(QMouseEvent* event)
+	{
+		event->accept(); // do not propagate
+		mDragOffset = QPoint();
+	}
 }

@@ -22,14 +22,19 @@ namespace hm
 	protected:
 		/// Necessary to reimplement to make stylesheet work
 		/// see http://stackoverflow.com/questions/7276330/qt-stylesheet-for-custom-widget
-		void paintEvent(QPaintEvent*);
+		virtual void paintEvent(QPaintEvent*) override;
+		// For drag and drop
+		virtual void mousePressEvent(QMouseEvent* event) override;
+		virtual void mouseMoveEvent(QMouseEvent* event) override;
+		virtual void mouseReleaseEvent(QMouseEvent* event) override;
 		
 	protected Q_SLOTS:
-		void reloadStyleSheet();
+		void loadStyleSheet();
 		
 
 		
 	private:
+		QPoint mDragOffset;
 		NodePtr mNode;
 	};
 }
