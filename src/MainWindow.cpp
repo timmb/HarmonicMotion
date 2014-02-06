@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include "WidgetNode.h"
 #include "WidgetPatchArea.h"
+#include "WidgetNodeList.h"
 
 using namespace hm;
 
@@ -19,20 +20,21 @@ MainWindow::MainWindow()
 , mLayout(nullptr)
 , mPatchArea(new WidgetPatchArea)
 {
-	mLayout = new QVBoxLayout;
-	QWidget* w = new QWidget(this);
-	setCentralWidget(w);
-	w->setLayout(mLayout);
-	
-	
-	
-	mConsole = new QPlainTextEdit(w);
-	mConsole->setMaximumBlockCount(500);
-	mConsole->setReadOnly(true);
-	mConsole->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+//	mLayout = new QVBoxLayout;
+//	QWidget* w = new QWidget(this);
+//	setCentralWidget(w);
+//	w->setLayout(mLayout);
+		
+//	mConsole = new QPlainTextEdit(w);
+//	mConsole->setMaximumBlockCount(500);
+//	mConsole->setReadOnly(true);
+//	mConsole->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-	mLayout->addWidget(mConsole);
-	mLayout->addWidget(mPatchArea);
+//	mLayout->addWidget(mConsole);
+//	mLayout->addWidget(mPatchArea);
+	
+	setCentralWidget(mPatchArea);
+	addDockWidget(Qt::LeftDockWidgetArea, new WidgetNodeList(this, this));
 	
 }
 

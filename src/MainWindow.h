@@ -21,6 +21,7 @@ namespace hm
 	class MainWindow : public QMainWindow
 	{
 		Q_OBJECT;
+		
 	public:
 		MainWindow();
 		NodeRendererGlWidget* createRendererWidget();
@@ -29,6 +30,8 @@ namespace hm
 		void addWidget(WidgetType* widget);
 		
 		void addNode(NodePtr node);
+		
+		WidgetPatchArea* patchArea() const { return mPatchArea; }
 		
 	public Q_SLOTS:
 		void newConsoleMessage(QString);

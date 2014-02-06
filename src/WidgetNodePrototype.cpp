@@ -1,0 +1,140 @@
+//
+//  WidgetNodePrototype.cpp
+//  HarmonicMotionGui
+//
+//  Created by Tim Murray-Browne on 06/02/2014.
+//
+//
+
+#include "WidgetNodePrototype.h"
+//#include "FactoryNode.h"
+#include "Common.h"
+#include <QStyleOption>
+#include <QPainter>
+#include <QFile>
+#include <QLabel>
+#include <QBoxLayout>
+#include <QMouseEvent>
+#include "Utilities.h"
+#include "MainWindow.h"
+#include "WidgetPatchArea.h"
+#include "WidgetNode.h"
+#include <QApplication>
+
+using namespace hm;
+
+WidgetNodePrototype::WidgetNodePrototype(NodeInfo const& info, MainWindow* mainWindow, QWidget* parent)
+: QWidget(parent)
+, mNodeInfo(info)
+, mIsMouseDown(false)
+, mMainWindow(mainWindow)
+{
+	assert(mMainWindow != nullptr);
+	setObjectName("WidgetNodePrototype");
+	loadStyleSheet();
+	
+	QLabel* name = new QLabel(str(info.friendlyName));
+	name->setObjectName("name");
+	QLabel* description = new QLabel(str(info.friendlyDescription));
+	description->setObjectName("description");
+	
+	QVBoxLayout* layout = new QVBoxLayout;
+	layout->addWidget(name);
+	layout->addWidget(description);
+	
+	setLayout(layout);
+}
+
+
+
+
+void WidgetNodePrototype::loadStyleSheet()
+{
+	//	QFile file(":/qss/WidgetNode.qss");
+	QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNodeList.qss");
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		setStyleSheet(QString::fromUtf8(file.readAll()));
+	}
+	else
+	{
+		hm_error("Failed to load stylesheet WidgetNodeList.qss");
+	}
+}
+
+void WidgetNodePrototype::paintEvent(QPaintEvent *)
+{
+	QStyleOption opt;
+	opt.init(this);
+	QPainter p(this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void WidgetNodePrototype::mousePressEvent(QMouseEvent* e)
+{
+	qDebug() << "WidgetNodePrototype::mousePressEvent";
+	e->accept();
+	mIsMouseDown = true;
+}
+
+void WidgetNodePrototype::mouseMoveEvent(QMouseEvent* e)
+{
+	if (mIsMouseDown)
+	{
+		qDebug() << "WidgetNodePrototype drag";
+		e->accept();
+		auto drag = new WidgetNodePrototypeBeingDragged(this, e);
+		drag->show();
+		mIsMouseDown = false;
+	}
+}
+
+void WidgetNodePrototype::mouseReleaseEvent(QMouseEvent* e)
+{
+	e->accept();
+	mIsMouseDown = false;
+}
+
+
+// ----------------------------------------
+
+WidgetNodePrototypeBeingDragged::WidgetNodePrototypeBeingDragged(WidgetNodePrototype const* prototype, QMouseEvent* mousePressEvent)
+: WidgetNodePrototype(prototype->nodeInfo(), prototype->mainWindow(), (QWidget*) prototype->mainWindow())
+{
+	setObjectName("WidgetNodePrototypeBeingDragged");
+	setGeometry(prototype->geometry());
+	mDragOffset = mousePressEvent->pos();
+	// Grab the mouse to continue the drag that was started on the original WidgetNodePrototype
+	grabMouse();
+}
+
+void WidgetNodePrototypeBeingDragged::mousePressEvent(QMouseEvent* event)
+{
+//	// We shouldnt receive mouse press events as this dragging widget will
+//	// disappear as soon as the mouse is released
+	hm_error("WidgetNodePrototypeBeingDragged received unexpected mousePressEvent");
+}
+
+void WidgetNodePrototypeBeingDragged::mouseMoveEvent(QMouseEvent* e)
+{
+	e->accept();
+	move(mapToParent(e->pos() - mDragOffset));
+}
+
+void WidgetNodePrototypeBeingDragged::mouseReleaseEvent(QMouseEvent* e)
+{
+	e->accept();
+	WidgetPatchArea* patchArea = mMainWindow->patchArea();
+	if (geometry().intersects(patchArea->geometry()))
+	{
+		// create node and widget for it
+		NodePtr node = FactoryNode::instance()->create(mNodeInfo.className);
+		WidgetNode* widget = new WidgetNode(node, patchArea);
+		QPoint posRelativeToWindow = mapTo(mMainWindow, QPoint());
+		QPoint posRelativeToPatchArea = patchArea->mapFrom(mMainWindow, posRelativeToWindow);
+		widget->move(posRelativeToPatchArea);
+		widget->show();
+	}
+	deleteLater();
+}
+

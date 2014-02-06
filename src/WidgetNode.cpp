@@ -17,6 +17,7 @@
 #include "Common.h"
 #include <QStyleOption>
 #include <QPainter>
+#include "Utilities.h"
 
 namespace hm
 {
@@ -27,9 +28,9 @@ namespace hm
 	{
 		loadStyleSheet();
 		setObjectName("WidgetNode");
-		QLabel* type = new QLabel(QString::fromUtf8(mNode->type().c_str()));
+		QLabel* type = new QLabel(str(mNode->type()));
 		type->setObjectName("LabelNodeType");
-		QLineEdit* name = new QLineEdit(QString::fromUtf8(mNode->name().c_str()));
+		QLineEdit* name = new QLineEdit(str(mNode->name()));
 		// TODO: wait for Qt5
 		//	bool success = connect(name, &QLineEdit::textChanged, [this](QString const& str)
 		//			{
@@ -49,7 +50,7 @@ namespace hm
 		for (ParameterPtr p : node->parameters())
 		{
 			QWidget* widget = WidgetBaseParameter::create(p);
-			layout->addWidget(new QLabel(QString::fromUtf8(p->name().c_str())), row, 0, Qt::AlignRight);
+			layout->addWidget(new QLabel(str(p->name())), row, 0, Qt::AlignRight);
 			layout->addWidget(widget, row, 1, Qt::AlignLeft);
 			row++;
 		}

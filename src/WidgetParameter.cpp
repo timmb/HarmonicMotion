@@ -13,6 +13,7 @@
 #include <QPainter>
 #include <QTimer>
 #include <QDebug>
+#include "Utilities.h"
 
 using namespace hm;
 
@@ -135,13 +136,13 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 	});
 	assert(success);
 		
-	auto t = new QTimer(this);
-	t->setInterval(1000);
-	t->start();
-	connect(t, &QTimer::timeout, [this]() {
-		qDebug() << "pos" << mSpinBox->pos() << "geom"<<mSpinBox->geometry();
-		
-	});
+//	auto t = new QTimer(this);
+//	t->setInterval(1000);
+//	t->start();
+//	connect(t, &QTimer::timeout, [this]() {
+//		qDebug() << "pos" << mSpinBox->pos() << "geom"<<mSpinBox->geometry();
+//		
+//	});
 }
 
 
@@ -159,7 +160,7 @@ WidgetParameterString::WidgetParameterString(std::shared_ptr<Parameter<std::stri
 	mParameter->addNewInternalValueCallback([this](std::string value)
 	{
 		mWidget->blockSignals(true);
-		Q_EMIT newInternalValue(QString::fromUtf8(value.c_str()));
+		Q_EMIT newInternalValue(str(value));
 		mWidget->blockSignals(false);
 	});
 	bool success = connect(this, SIGNAL(newInternalValue(QString const&)), mWidget, SLOT(setText(QString const&)));
