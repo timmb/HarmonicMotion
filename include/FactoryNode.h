@@ -11,29 +11,51 @@
 
 namespace hm
 {
-	
-#define HM_REGISTER_NODE(ClassName) namespace { \
+
+/// Use this Macro in the header file for defining a node, right after the class
+/// declaration. Example usage:
+/// class NodeOscOut : public NodeUnthreaded {
+///     //...
+/// };
+/// hm_register_node(NodeOscOut, "OSC out", "Sends received data to another application via OSC")
+#define hm_register_node(ClassName, FriendlyName, FriendlyDescription) namespace { \
 	static bool hm__registrar_##ClassName = ([]() { \
 		if (!hm::FactoryNode::instance()->hasNodeType(#ClassName)) { \
-			hm::FactoryNode::instance()->registerNodeType(hm::NodeInfo(#ClassName, [](hm::Node::Params params) { \
+			hm::FactoryNode::instance()->registerNodeType(hm::NodeInfo(\
+				#ClassName, \
+				FriendlyName, \
+				FriendlyDescription, \
+				[](hm::Node::Params params) { \
 					return hm::NodePtr(new hm::ClassName(params)); \
 				})); \
 		} return true; \
 	})(); \
 }
-	
+
 	
 	/// Information describing a node type required by FactoryNode.
 	struct NodeInfo
 	{
 		/// The name of the class of the node type.
+		/// e.g. NodeOscOut
 		std::string className;
+		/// The node type name as presented to the user
+		/// e.g. OSC out
+		std::string friendlyName;
+		/// A brief description of what the node does, as presented to the user
+		/// e.g. Sends received data to another application using Open Sound Control (OSC).
+		std::string friendlyDescription;
 		/// A function that generates new instances
 		/// of the node.
-		std::function<NodePtr (Node::Params)> creationFunction;
+		NodeCreationFunction creationFunction;
 		
-		NodeInfo(std::string className_, std::function<NodePtr (Node::Params)> creationFunction_)
+		NodeInfo(std::string className_,
+				 std::string friendlyName_,
+				 std::string friendlyDescription_,
+				 NodeCreationFunction creationFunction_)
 		: className(className_)
+		, friendlyName(friendlyName_)
+		, friendlyDescription(friendlyDescription_)
 		, creationFunction(creationFunction_)
 		{}
 	};
@@ -57,10 +79,20 @@ namespace hm
 		/// Create a new node of the specified type.
 		/// \return A shared pointer to the new node instance, or nullptr if
 		/// \p className has not been registered
-		NodePtr create(std::string className, Node::Params params = Node::Params()) const;
+		NodePtr create(std::string className, Node::Params params = Node::Params());
+		
+		std::vector<NodeInfo> nodeTypes();
 		
 	private:
+		// Singleton class
+		FactoryNode();
+		FactoryNode(FactoryNode const&) = delete;
+		FactoryNode& operator=(FactoryNode const&) = delete;
+		
 		std::map<std::string, NodeInfo> mNodeInfos;
+		/// We ensure that  no new nodes are registered after
+		/// the create or nodeType functions have been called.
+		std::atomic<bool> mNodeFunctionsCalled;
 	};
 	
 }

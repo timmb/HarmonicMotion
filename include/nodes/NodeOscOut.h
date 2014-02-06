@@ -62,4 +62,4 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-HM_REGISTER_NODE(NodeOscOut);
+hm_register_node(NodeOscOut, "OSC out", "Sends received data to another application via Open Sound Control (OSC)");

@@ -47,5 +47,5 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-HM_REGISTER_NODE(NodeSineWave)
+hm_register_node(NodeSineWave, "Sine wave generator", "Continuously outputs a scalar value following a sine wave")
 

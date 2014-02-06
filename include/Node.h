@@ -149,6 +149,8 @@ namespace hm
 		static boost::mutex sNamesInUseMutex;
 	};
 	
+	typedef std::function<NodePtr (Node::Params)> NodeCreationFunction;
+	
 	std::ostream& operator<<(std::ostream&, Node const&);
 	
 
