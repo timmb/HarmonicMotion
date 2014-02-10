@@ -18,12 +18,16 @@
 #include <QStyleOption>
 #include <QPainter>
 #include "Utilities.h"
+#include "WidgetOutlet.h"
+#include <algorithm>
+#include "WidgetPatchArea.h"
+#include "WidgetInlet.h"
 
 namespace hm
 {
 	
-	WidgetNode::WidgetNode(NodePtr node, QWidget* parent)
-	: QWidget(parent)
+	WidgetNode::WidgetNode(NodePtr node, WidgetPatchArea* patchArea)
+	: QWidget(patchArea)
 	, mNode(node)
 	{
 		loadStyleSheet();
@@ -39,7 +43,6 @@ namespace hm
 		//	assert(success);
 		
 		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-//		resize(500, 500);
 		
 		QGridLayout* layout = new QGridLayout;
 		setLayout(layout);
@@ -56,11 +59,38 @@ namespace hm
 		}
 		layout->setRowStretch(row, 1);
 		
+		assert(parentWidget() != nullptr);
+		for (OutletPtr outlet: mNode->outlets())
+		{
+			WidgetOutlet* w = new WidgetOutlet(outlet, parentWidget());
+			mWidgetOutlets.push_back(w);
+		}
+		for (InletPtr inlet: mNode->inlets())
+		{
+			WidgetInlet* w = new WidgetInlet(inlet, parentWidget());
+			mWidgetInlets.push_back(w);
+		}
+		
+		connect(this, SIGNAL(geometryChanged()), this, SLOT(arrangeLets()));
+		connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
+		preventNegativePosition();
+		Q_EMIT geometryChanged();
+		
+		// TODO: temp
 		QTimer* t = new QTimer(this);
 		t->setInterval(500);
 		connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
 		t->start();
-		
+	}
+	
+	WidgetNode::~WidgetNode()
+	{
+//		for (auto w: mWidgetOutlets)
+//		{
+//			assert(w->parent() == nullptr);
+//			delete w;
+//		}
+//		mWidgetOutlets.clear();
 	}
 	
 	void WidgetNode::loadStyleSheet()
@@ -107,5 +137,49 @@ namespace hm
 	{
 		event->accept(); // do not propagate
 		mDragOffset = QPoint();
+	}
+	
+	void WidgetNode::resizeEvent(QResizeEvent* event)
+	{
+		Q_EMIT geometryChanged();
+	}
+	
+	void WidgetNode::moveEvent(QMoveEvent* event)
+	{
+		preventNegativePosition();
+		Q_EMIT geometryChanged();
+	}
+	
+	void WidgetNode::preventNegativePosition()
+	{
+		// prevent widgets from having negative positions (relative to the
+		// patch area
+		if (pos().x() < 0 || pos().y() < 0)
+		{
+			move(QPoint(std::max(0, pos().x()),
+						std::max(0, pos().y())));
+			return;
+		}
+	}
+	
+	void WidgetNode::arrangeLets()
+	{
+		QPoint p;
+		if (mWidgetInlets.size() > 0)
+		{
+			p = mapToParent(QPoint(- mWidgetInlets[0]->width(), 0));
+			for (auto w: mWidgetInlets)
+			{
+				w->move(p);
+				p += QPoint(0, w->height());
+			}
+		}
+		
+		p = mapToParent(QPoint(width(), 0));
+		for (auto w: mWidgetOutlets)
+		{
+			w->move(p);
+			p += QPoint(0, w->height());
+		}
 	}
 }

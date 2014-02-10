@@ -7,6 +7,8 @@
 //
 
 #include "WidgetPatchArea.h"
+#include <cassert>
+#include <QDebug>
 
 using namespace hm;
 
@@ -21,4 +23,15 @@ WidgetPatchArea::WidgetPatchArea(QWidget* parent)
 QSize WidgetPatchArea::sizeHint() const
 {
 	return QSize(500, 300);
+}
+
+void WidgetPatchArea::updateSize()
+{
+	QRect content = childrenRect();
+	content.setLeft(0);
+	content.setTop(0);
+	content.setWidth(qMax(sizeHint().width(), content.width()));
+	content.setHeight(qMax(sizeHint().height(), content.height()));
+	qDebug() << "settings patcharea geometry to"<<content;
+	setGeometry(content);
 }

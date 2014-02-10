@@ -33,7 +33,12 @@ MainWindow::MainWindow()
 //	mLayout->addWidget(mConsole);
 //	mLayout->addWidget(mPatchArea);
 	
-	setCentralWidget(mPatchArea);
+	QScrollArea* patchScrollArea = new QScrollArea(this);
+	patchScrollArea->setWidget(mPatchArea);
+	patchScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	patchScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	
+	setCentralWidget(patchScrollArea);
 	addDockWidget(Qt::LeftDockWidgetArea, new WidgetNodeList(this, this));
 	
 }

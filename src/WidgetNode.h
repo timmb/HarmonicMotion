@@ -13,11 +13,14 @@
 
 namespace hm
 {
+	class WidgetPatchArea;
+	
 	class WidgetNode : public QWidget
 	{
 		Q_OBJECT;
 	public:
-		WidgetNode(NodePtr node, QWidget* parent=nullptr);
+		WidgetNode(NodePtr node, WidgetPatchArea* patchArea=nullptr);
+		virtual ~WidgetNode();
 		
 	protected:
 		/// Necessary to reimplement to make stylesheet work
@@ -27,13 +30,23 @@ namespace hm
 		virtual void mousePressEvent(QMouseEvent* event) override;
 		virtual void mouseMoveEvent(QMouseEvent* event) override;
 		virtual void mouseReleaseEvent(QMouseEvent* event) override;
+		virtual void resizeEvent(QResizeEvent* event) override;
+		virtual void moveEvent(QMoveEvent* event) override;
+		
+	Q_SIGNALS:
+		void geometryChanged();
 		
 	protected Q_SLOTS:
 		void loadStyleSheet();
+		void arrangeLets();
 		
 
 		
 	private:
+		void preventNegativePosition();
+		
+		QVector<class WidgetOutlet*> mWidgetOutlets;
+		QVector<class WidgetInlet*> mWidgetInlets;
 		QPoint mDragOffset;
 		NodePtr mNode;
 	};
