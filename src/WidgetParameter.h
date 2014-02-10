@@ -68,8 +68,9 @@ namespace hm
 		void newInternalValue(double value);
 		
 	protected:
+//		QSize sizeHint() const { return QSize(65, 20); }
 		QSize sizeHint() const { return mSpinBox->sizeHint(); }
-		
+	
 	private:
 		QDoubleSpinBox* mSpinBox;
 	};

@@ -34,3 +34,9 @@ QSpinBox
 	height: 18px;
 	width: 50px;
 }
+
+QDoubleSpinBox
+{
+height: 18px;
+width: 50px;
+}

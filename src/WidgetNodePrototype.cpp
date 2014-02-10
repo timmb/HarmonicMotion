@@ -20,6 +20,7 @@
 #include "WidgetPatchArea.h"
 #include "WidgetNode.h"
 #include <QApplication>
+#include <QTimer>
 
 using namespace hm;
 
@@ -35,14 +36,21 @@ WidgetNodePrototype::WidgetNodePrototype(NodeInfo const& info, MainWindow* mainW
 	
 	QLabel* name = new QLabel(str(info.friendlyName));
 	name->setObjectName("name");
+	name->setWordWrap(true);
 	QLabel* description = new QLabel(str(info.friendlyDescription));
 	description->setObjectName("description");
+	description->setWordWrap(true);
 	
 	QVBoxLayout* layout = new QVBoxLayout;
 	layout->addWidget(name);
 	layout->addWidget(description);
 	
 	setLayout(layout);
+	
+	auto t = new QTimer(this);
+	t->setInterval(500);
+	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
+	t->start();
 }
 
 
@@ -51,14 +59,14 @@ WidgetNodePrototype::WidgetNodePrototype(NodeInfo const& info, MainWindow* mainW
 void WidgetNodePrototype::loadStyleSheet()
 {
 	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNodeList.qss");
+	QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNodePrototype.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));
 	}
 	else
 	{
-		hm_error("Failed to load stylesheet WidgetNodeList.qss");
+		hm_error("Failed to load stylesheet WidgetNodePrototype.qss");
 	}
 }
 
@@ -103,6 +111,8 @@ WidgetNodePrototypeBeingDragged::WidgetNodePrototypeBeingDragged(WidgetNodeProto
 {
 	setObjectName("WidgetNodePrototypeBeingDragged");
 	setGeometry(prototype->geometry());
+	//TODO: Make new object apepar in the corrent place immediately
+//	move(mapFromGlobal(prototype->mapToGlobal(QPoint())));
 	mDragOffset = mousePressEvent->pos();
 	// Grab the mouse to continue the drag that was started on the original WidgetNodePrototype
 	grabMouse();
