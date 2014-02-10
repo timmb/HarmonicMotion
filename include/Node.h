@@ -49,10 +49,12 @@ namespace hm
 		int numInlets() const;
 		InletPtr inlet(int index);
 		const InletPtr inlet(int index) const;
+		std::vector<InletPtr> inlets();
 
 		int numOutlets() const;
 		OutletPtr outlet(int index);
 		const OutletPtr outlet(int index) const;
+		std::vector<OutletPtr> outlets();
 		
 		std::vector<ParameterPtr> parameters();
 		

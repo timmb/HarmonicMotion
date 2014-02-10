@@ -23,6 +23,9 @@ NodeSineWave::NodeSineWave(Node::Params params, std::string className)
 , mOutputDelta(0.3)
 {
 	mOutlet = createOutlet(VALUE, "Value", "Outputs a value from the sin wave `outputRate` number of times a second");
+	// TODO: temp
+	createOutlet(VALUE, "Test outlet", "temp test outlet");
+	createOutlet(VALUE, "Test outlet 2", "temp test outlet");
 	addParameter("Frequency", &mFrequency)->softMin = 0.;
 	auto p = addParameter("Phase (0-1)", &mPhase);
 	p->softMin = 0.;

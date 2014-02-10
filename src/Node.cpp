@@ -96,6 +96,11 @@ InletPtr Node::inlet(int index)
 	return mInlets[index];
 }
 
+vector<InletPtr> Node::inlets()
+{
+	return mInlets;
+}
+
 OutletPtr Node::outlet(int index)
 {
 	assert(0 <= index && index < mOutlets.size());
@@ -112,6 +117,11 @@ const OutletPtr Node::outlet(int index) const
 {
 	assert(0 <= index && index < mOutlets.size());
 	return mOutlets[index];
+}
+
+vector<OutletPtr> Node::outlets()
+{
+	return mOutlets;
 }
 
 int Node::numInlets() const
