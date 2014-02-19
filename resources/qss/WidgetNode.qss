@@ -1,10 +1,21 @@
-#WidgetNode {
+#mMainArea {
 	background-color: #ccc;
 	border-width: 1px;
 	border-style: solid;
 	border-radius: 4px;
 	border-color: #999;
 }
+
+QWidget {
+	padding: 0;
+	margin: 0;
+}
+
+/*QWidget::hover
+{
+	background-color: #0ff;
+}*/
+
 
 #WidgetParameter
 {

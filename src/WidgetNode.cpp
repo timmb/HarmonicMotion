@@ -29,9 +29,14 @@ namespace hm
 	WidgetNode::WidgetNode(NodePtr node, WidgetPatchArea* patchArea)
 	: QWidget(patchArea)
 	, mNode(node)
+    , mIsDragging(false)
+    , mMainArea(nullptr)
 	{
 		loadStyleSheet();
 		setObjectName("WidgetNode");
+        
+//        mInnerBox = new QWidget(this);
+//        mInnerBox->setObjectName("InnerBox");
 		QLabel* type = new QLabel(str(mNode->type()));
 		type->setObjectName("LabelNodeType");
 		QLineEdit* name = new QLineEdit(str(mNode->name()));
@@ -42,40 +47,62 @@ namespace hm
 		//			});
 		//	assert(success);
 		
+//        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		
-		QGridLayout* layout = new QGridLayout;
-		setLayout(layout);
-		layout->addWidget(type, 0, 0);
-		layout->addWidget(name, 0, 1);
+		QGridLayout* mainLayout = new QGridLayout;
+        QVBoxLayout* inletsLayout = new QVBoxLayout;
+        QVBoxLayout* outletsLayout = new QVBoxLayout;
+        
+        inletsLayout->setAlignment(Qt::AlignTop);
+        outletsLayout->setAlignment(Qt::AlignTop);
+        
+//		mInnerBox->setLayout(layout);
+		mainLayout->addWidget(type, 0, 0);
+		mainLayout->addWidget(name, 0, 1);
 		
 		int row = 1;
 		for (ParameterPtr p : node->parameters())
 		{
 			QWidget* widget = WidgetBaseParameter::create(p);
-			layout->addWidget(new QLabel(str(p->name())), row, 0, Qt::AlignRight);
-			layout->addWidget(widget, row, 1, Qt::AlignLeft);
+			mainLayout->addWidget(new QLabel(str(p->name())), row, 0, Qt::AlignRight);
+			mainLayout->addWidget(widget, row, 1, Qt::AlignLeft);
 			row++;
 		}
-		layout->setRowStretch(row, 1);
+		mainLayout->setRowStretch(row, 1);
 		
 		assert(parentWidget() != nullptr);
-		for (OutletPtr outlet: mNode->outlets())
-		{
-			WidgetOutlet* w = new WidgetOutlet(outlet, parentWidget());
-			mWidgetOutlets.push_back(w);
-		}
 		for (InletPtr inlet: mNode->inlets())
 		{
-			WidgetInlet* w = new WidgetInlet(inlet, parentWidget());
+			WidgetInlet* w = new WidgetInlet(inlet, this);
 			mWidgetInlets.push_back(w);
+            inletsLayout->addWidget(w);
+		}
+		for (OutletPtr outlet: mNode->outlets())
+		{
+			WidgetOutlet* w = new WidgetOutlet(outlet, this);
+			mWidgetOutlets.push_back(w);
+            outletsLayout->addWidget(w);
 		}
 		
-		connect(this, SIGNAL(geometryChanged()), this, SLOT(arrangeLets()));
+		connect(this, SIGNAL(geometryChanged()), this, SLOT(layout()));
 		connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
 		preventNegativePosition();
 		Q_EMIT geometryChanged();
+        
+        mMainArea = new QWidget;
+        mMainArea->setObjectName("mMainArea");
+        mMainArea->setLayout(mainLayout);
 		
+        QHBoxLayout* layout = new QHBoxLayout;
+        layout->addLayout(inletsLayout);
+//        layout->addLayout(mainLayout);
+        layout->addWidget(mMainArea);
+        layout->addLayout(outletsLayout);
+        layout->setSpacing(0);
+        layout->setSizeConstraint(QLayout::SetFixedSize);
+        setLayout(layout);
+        
 		// TODO: temp
 		QTimer* t = new QTimer(this);
 		t->setInterval(500);
@@ -92,6 +119,15 @@ namespace hm
 //		}
 //		mWidgetOutlets.clear();
 	}
+    
+    QSize WidgetNode::sizeHint() const
+    {
+        QSize size = mMainArea->sizeHint();
+        return QSize(size.width()
+                     + (mWidgetOutlets.empty()? 0 : mWidgetOutlets[0]->width())
+                     + (mWidgetInlets.empty()? 0 : mWidgetInlets[0]->width()),
+                     size.height());
+    }
 	
 	void WidgetNode::loadStyleSheet()
 	{
@@ -117,26 +153,40 @@ namespace hm
 	
 	void WidgetNode::mousePressEvent(QMouseEvent* event)
 	{
-		event->accept(); // do not propagate
-		if (isWindow())
-			mDragOffset = event->globalPos() - pos();
-		else
-			mDragOffset = event->pos();
+		mIsDragging = mMainArea->geometry().contains(event->pos());
+        if (mIsDragging)
+        {
+            event->accept(); // do not propagate
+            if (isWindow())
+                mDragOffset = event->globalPos() - pos();
+            else
+                mDragOffset = event->pos();
+        }
+        else
+        {
+            event->ignore();
+        }
 	}
 	
 	void WidgetNode::mouseMoveEvent(QMouseEvent* event)
 	{
-		event->accept(); // do not propagate
-		if (isWindow())
-			move(event->globalPos() - mDragOffset);
-		else
-			move(mapToParent(event->pos() - mDragOffset));
+        if (mIsDragging)
+        {
+            event->accept(); // do not propagate
+            if (isWindow())
+                move(event->globalPos() - mDragOffset);
+            else
+                move(mapToParent(event->pos() - mDragOffset));
+        }
 	}
 	
 	void WidgetNode::mouseReleaseEvent(QMouseEvent* event)
 	{
-		event->accept(); // do not propagate
-		mDragOffset = QPoint();
+        if (mIsDragging)
+        {
+            event->accept(); // do not propagate
+            mDragOffset = QPoint();
+        }
 	}
 	
 	void WidgetNode::resizeEvent(QResizeEvent* event)
@@ -162,24 +212,42 @@ namespace hm
 		}
 	}
 	
-	void WidgetNode::arrangeLets()
+	void WidgetNode::layout()
 	{
-		QPoint p;
-		if (mWidgetInlets.size() > 0)
-		{
-			p = mapToParent(QPoint(- mWidgetInlets[0]->width(), 0));
-			for (auto w: mWidgetInlets)
-			{
-				w->move(p);
-				p += QPoint(0, w->height());
-			}
-		}
-		
-		p = mapToParent(QPoint(width(), 0));
-		for (auto w: mWidgetOutlets)
-		{
-			w->move(p);
-			p += QPoint(0, w->height());
-		}
+//        QPoint p(0,0);
+//        for (auto w: mWidgetInlets)
+//        {
+//            w->move(p);
+//            p += QPoint(0, w->height());
+//        }
+//        if (!mWidgetInlets.empty())
+//        {
+//            p = QPoint(0, mWidgetInlets[0]->width());
+//        }
+//        mInnerBox->move(p);
+//        p += QPoint(0, mInnerBox->width());
+//        for (auto w: mWidgetInlets)
+//        {
+//            w->move(p);
+//            p += QPoint(0, w->height());
+//        }
+//        
+//		QPoint p;
+//		if (mWidgetInlets.size() > 0)
+//		{
+//			p = mapToParent(QPoint(- mWidgetInlets[0]->width(), 0));
+//			for (auto w: mWidgetInlets)
+//			{
+//				w->move(p);
+//				p += QPoint(0, w->height());
+//			}
+//		}
+//		
+//		p = mapToParent(QPoint(width(), 0));
+//		for (auto w: mWidgetOutlets)
+//		{
+//			w->move(p);
+//			p += QPoint(0, w->height());
+//		}
 	}
 }

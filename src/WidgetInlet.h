@@ -10,6 +10,7 @@
 
 #include "Common.h"
 #include "WidgetLet.h"
+#include <QMouseEvent>
 
 namespace hm
 {
@@ -18,6 +19,9 @@ namespace hm
 		Q_OBJECT
 	public:
 		WidgetInlet(InletPtr inlet, QWidget* parent);
+        
+    protected:
+        virtual void mousePressEvent(QMouseEvent*) override;
 		
 	protected Q_SLOTS:
 		void loadStyleSheet();

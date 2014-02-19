@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QIcon>
 #include <QTimer>
+#include <QDebug>
 
 using namespace hm;
 
@@ -31,18 +32,24 @@ WidgetInlet::WidgetInlet(InletPtr inlet, QWidget* parent)
 }
 
 
+void WidgetInlet::mousePressEvent(QMouseEvent * e)
+{
+    qDebug() << "Mouse pressed on inlet.";
+}
+
+
 void WidgetInlet::loadStyleSheet()
 {
 	//TODO: make resource
 	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetInlet.qss");
+	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetLet.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));
 	}
 	else
 	{
-		hm_error("Failed to load stylesheet WidgetInlet.qss");
+		hm_error("Failed to load stylesheet WidgetLet.qss");
 	}
 }
 

@@ -35,13 +35,13 @@ WidgetOutlet::WidgetOutlet(OutletPtr outlet, QWidget* parent)
 void WidgetOutlet::loadStyleSheet()
 {
 	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetOutlet.qss");
+	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetLet.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));
 	}
 	else
 	{
-		hm_error("Failed to load stylesheet WidgetOutlet.qss");
+		hm_error("Failed to load stylesheet WidgetLet.qss");
 	}
 }

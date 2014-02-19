@@ -32,13 +32,14 @@ namespace hm
 		virtual void mouseReleaseEvent(QMouseEvent* event) override;
 		virtual void resizeEvent(QResizeEvent* event) override;
 		virtual void moveEvent(QMoveEvent* event) override;
+        virtual QSize sizeHint() const override;
 		
 	Q_SIGNALS:
 		void geometryChanged();
 		
 	protected Q_SLOTS:
 		void loadStyleSheet();
-		void arrangeLets();
+		void layout();
 		
 
 		
@@ -48,6 +49,8 @@ namespace hm
 		QVector<class WidgetOutlet*> mWidgetOutlets;
 		QVector<class WidgetInlet*> mWidgetInlets;
 		QPoint mDragOffset;
+        bool mIsDragging;
 		NodePtr mNode;
+        QWidget* mMainArea;
 	};
 }
