@@ -135,7 +135,7 @@ LINK_DIRECTORIES(
 	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/BlockOpenNI/lib/macosx
 )
 
-ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
+ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE WIN32 ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
 
 qt5_use_modules(HarmonicMotionGui Widgets OpenGL)
 
@@ -165,11 +165,85 @@ debug libHarmonicMotiond.${STATIC_LIBRARY_EXTENSION}
 optimized libcinder.${STATIC_LIBRARY_EXTENSION}
 debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
 ${CINDER_DEPENDENCIES}
-# OpenNI
-libltdl.7.${DYNAMIC_LIBRARY_EXTENSION}
-libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}
-libnimCodecs.${DYNAMIC_LIBRARY_EXTENSION}
-libnimMockNodes.${DYNAMIC_LIBRARY_EXTENSION}
-libnimRecorder.${DYNAMIC_LIBRARY_EXTENSION}
-libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
+# # OpenNI
+# libltdl.7.${DYNAMIC_LIBRARY_EXTENSION}
+# libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}
+# libnimCodecs.${DYNAMIC_LIBRARY_EXTENSION}
+# libnimMockNodes.${DYNAMIC_LIBRARY_EXTENSION}
+# libnimRecorder.${DYNAMIC_LIBRARY_EXTENSION}
+# libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
 )
+
+# Custom script to copy in dylibs in Xcode
+add_custom_command(TARGET HarmonicMotionGui
+	POST_BUILD
+	COMMAND /bin/bash ${PROJECT_SOURCE_DIR}/../other/copy_in_dylibs.sh
+)
+
+# # Copy dynamic libraries to bundle
+# set(plugin_dest_dir bin)
+# set(qtconf_dest_dir bin)
+# if(APPLE)
+# 	set(plugin_dest_dir HarmonicMotionGui.app/Contents/MacOS)
+# 	set(QTCONF_DEST_DIR HarmonicMotionGui.app/Contents/Resources)
+# 	set(APPS "\${CMAKE_INSTALL_PREFIX}/HarmonicMotionGui.app")
+# endif(APPLE)
+# if(WIN32)
+# 	set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/HarmonicMotionGui.exe")
+# endif(WIN32)
+
+# #--------------------------------------------------------------------------------
+# # Install the application, on Apple, the bundle is at the root of the
+# # install tree, and on other platforms it'll go into the bin directory.
+# INSTALL(TARGETS HarmonicMotionGui
+# 	BUNDLE DESTINATION . COMPONENT Runtime
+# 	RUNTIME DESTINATION bin COMPONENT Runtime
+# 	)
+
+# #--------------------------------------------------------------------------------
+# # Install needed Qt plugins by copying directories from the qt installation
+# # One can cull what gets copied by using 'REGEX "..." EXCLUDE'
+# INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/platforms" 
+# 	DESTINATION ${plugin_dest_dir}/plugins 
+# 	COMPONENT Runtime
+# 	)
+
+# #--------------------------------------------------------------------------------
+# # install a qt.conf file
+# # this inserts some cmake code into the install script to write the file
+# INSTALL(CODE "
+#     file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"\")
+#     " COMPONENT Runtime)
+
+
+# #--------------------------------------------------------------------------------
+# # Use BundleUtilities to get all other dependencies for the application to work.
+# # It takes a bundle or executable along with possible plugins and inspects it
+# # for dependencies.  If they are not system dependencies, they are copied.
+
+# # directories to look for dependencies
+# SET(DIRS ${QT_LIBRARY_DIRS})
+# if (APPLE)
+# 	set(DIRS ${DIRS} ${PROJECT_SOURCE_DIR}/../../lib/macosx)
+# endif (APPLE)
+
+# # Now the work of copying dependencies into the bundle/package
+# # The quotes are escaped and variables to use at install time have their $ escaped
+# # An alternative is the do a configure_file() on a script and use install(SCRIPT  ...).
+# # Note that the image plugins depend on QtSvg and QtXml, and it got those copied
+# # over.
+# INSTALL(CODE "
+#     file(GLOB_RECURSE QTPLUGINS
+#       \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+#     include(BundleUtilities)
+#     fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
+#     " COMPONENT Runtime)
+
+
+# # To Create a package, one can run "cpack -G DragNDrop CPackConfig.cmake" on Mac OS X
+# # where CPackConfig.cmake is created by including CPack
+# # And then there's ways to customize this as well
+# set(CPACK_BINARY_DRAGNDROP ON)
+# include(CPack)
+
+
