@@ -28,9 +28,10 @@ namespace hm
 	
 	WidgetNode::WidgetNode(NodePtr node, WidgetPatchArea* patchArea)
 	: QWidget(patchArea)
-	, mNode(node)
     , mIsDragging(false)
+	, mNode(node)
     , mMainArea(nullptr)
+    , mPatchArea(patchArea)
 	{
 		loadStyleSheet();
 		setObjectName("WidgetNode");
@@ -120,6 +121,30 @@ namespace hm
 //		mWidgetOutlets.clear();
 	}
     
+//    WidgetInlet* WidgetNode::widgetInlet(InletPtr inlet)
+//    {
+//        for (auto w: mWidgetInlets)
+//        {
+//            if (w->inlet() == inlet)
+//            {
+//                return w;
+//            }
+//        }
+//        return nullptr;
+//    }
+//    
+//    WidgetOutlet* WidgetNode::widgetOutlet(OutletPtr outlet)
+//    {
+//        for (auto w: mWidgetOutlets)
+//        {
+//            if (w->outlet() == outlet)
+//            {
+//                return w;
+//            }
+//        }
+//        return nullptr;
+//    }
+//    
     QSize WidgetNode::sizeHint() const
     {
         QSize size = mMainArea->sizeHint();

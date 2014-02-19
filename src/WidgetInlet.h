@@ -18,7 +18,8 @@ namespace hm
 	{
 		Q_OBJECT
 	public:
-		WidgetInlet(InletPtr inlet, QWidget* parent);
+		WidgetInlet(InletPtr inlet, WidgetNode* parent);
+        InletPtr inlet() const { return mInlet; }
         
     protected:
         virtual void mousePressEvent(QMouseEvent*) override;

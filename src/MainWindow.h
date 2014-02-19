@@ -29,8 +29,6 @@ namespace hm
 		template <typename WidgetType>
 		void addWidget(WidgetType* widget);
 		
-		void addNode(NodePtr node);
-		
 		WidgetPatchArea* patchArea() const { return mPatchArea; }
 		
 	public Q_SLOTS:

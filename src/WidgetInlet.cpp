@@ -14,11 +14,14 @@
 
 using namespace hm;
 
-WidgetInlet::WidgetInlet(InletPtr inlet, QWidget* parent)
+WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 : WidgetLet(parent)
 , mInlet(inlet)
 {
-	setObjectName("WidgetOutlet");
+    // for CSS
+	setObjectName("WidgetInlet");
+    // for WigetPatchArea to find inlets
+    setProperty("isInlet", true);
 	QIcon icon(":/icons/inlet.svg");
 	setPixmap(icon.pixmap(20, 20));
 	

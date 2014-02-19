@@ -43,10 +43,6 @@ MainWindow::MainWindow()
 	
 }
 
-void MainWindow::addNode(NodePtr node)
-{
-	new WidgetNode(node, mPatchArea);
-}
 
 NodeRendererGlWidget* MainWindow::createRendererWidget()
 {

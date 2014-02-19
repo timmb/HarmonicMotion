@@ -13,6 +13,7 @@
 #include <QTimer>
 #include "WidgetNode.h"
 #include "FactoryNode.h"
+#include "WidgetPatchArea.h"
 
 
 using namespace hm;
@@ -29,7 +30,7 @@ Controller::Controller(QObject* parent)
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");
 	mNodes << gen;
 	mPipeline.addNode(gen);
-	mMainWindow->addNode(gen);
+	mMainWindow->patchArea()->addNode(gen);
 	
 //	mAccum = std::shared_ptr<NodeAccumulator>(new NodeAccumulator);
 ////	kinect->outlet(0)->connect(mAccum->inlet(0));
@@ -43,7 +44,7 @@ Controller::Controller(QObject* parent)
 //	kinect->outlet(0)->connect(osc->inlet(0));
 	gen->outlet(0)->connect(osc->inlet(0));
 	mPipeline.addNode(osc);
-	mMainWindow->addNode(osc);
+	mMainWindow->patchArea()->addNode(osc);
 	
 ////	auto filter = NodePtr(new NodeFilter);
 ////	kinect->outlet(0)->connect(filter->inlet(0));

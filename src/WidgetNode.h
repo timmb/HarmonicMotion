@@ -14,13 +14,31 @@
 namespace hm
 {
 	class WidgetPatchArea;
-	
+	class WidgetInlet;
+    class WidgetOutlet;
+    
 	class WidgetNode : public QWidget
 	{
 		Q_OBJECT;
 	public:
 		WidgetNode(NodePtr node, WidgetPatchArea* patchArea=nullptr);
 		virtual ~WidgetNode();
+        
+//        /// \return the WidgetInlet for the specified inlet if it belongs
+//        /// to this WidgetNode, or nullptr if not.
+//        WidgetInlet* widgetInlet(InletPtr inlet);
+//        /// \return the WidgetOutlet for the specified outlet if it belongs
+//        /// to this WidgetNode, or nullptr if not.
+//        WidgetOutlet* widgetOutlet(OutletPtr outlet);
+        
+        /// The widgets for the inlets or outlets to this class. These are
+        /// guaranteed not to change over the course of the widget's life.
+        QVector<WidgetInlet*> widgetInlets() const { return mWidgetInlets; }
+        QVector<WidgetOutlet*> widgetOutlets() const { return mWidgetOutlets; }
+        NodePtr node() const { return mNode; }
+        /// \return A pointer to the WidgetPatchArea that contains this
+        /// WidgetNode
+        WidgetPatchArea* patchArea() const { return mPatchArea; }
 		
 	protected:
 		/// Necessary to reimplement to make stylesheet work
@@ -52,5 +70,6 @@ namespace hm
         bool mIsDragging;
 		NodePtr mNode;
         QWidget* mMainArea;
+        WidgetPatchArea* mPatchArea;
 	};
 }
