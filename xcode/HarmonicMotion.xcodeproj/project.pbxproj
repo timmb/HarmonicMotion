@@ -7,15 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0091D8F80E81B9330029341E /* OpenGL.framework */; };
-		14AE91028D3E457C94F76ACD /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF253A52FD1499F8539D0F7 /* OscPrintReceivedElements.cpp */; };
-		22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECD17F44B1B003B1883 /* Inlet.cpp */; };
 		22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECD17F44B1B003B1883 /* Inlet.cpp */; };
-		22197ED617F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
 		22197ED717F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
-		22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
 		22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
-		22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
 		22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
 		22197EDE17F44B4F003B1883 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */; };
 		22197EE317F44B4F003B1883 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F52E0884EA104563B765C094 /* IpEndpointName.cpp */; };
@@ -53,41 +47,24 @@
 		22197F1817F47306003B1883 /* OscPrintReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAF253A52FD1499F8539D0F7 /* OscPrintReceivedElements.cpp */; };
 		22197F1917F47306003B1883 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCA07E28394A4DE2A0C75053 /* OscReceivedElements.cpp */; };
 		22197F1A17F47306003B1883 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 245157AC12684402B9CE4270 /* OscTypes.cpp */; };
-		22197F7A17F48EE3003B1883 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F0C17F47293003B1883 /* Accelerate.framework */; };
-		22197F7B17F48EE3003B1883 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F0D17F47293003B1883 /* AudioToolbox.framework */; };
-		22197F7C17F48EE3003B1883 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F0E17F47293003B1883 /* AudioUnit.framework */; };
-		22197F7D17F48EE3003B1883 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F0F17F47293003B1883 /* Cocoa.framework */; };
-		22197F7E17F48EE3003B1883 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F1017F47293003B1883 /* CoreAudio.framework */; };
-		22197F7F17F48EE3003B1883 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
-		22197F8017F48EE3003B1883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
-		22197F8217F4900D003B1883 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8117F4900D003B1883 /* QTKit.framework */; };
-		22197F8417F49044003B1883 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22197F8317F49044003B1883 /* CoreVideo.framework */; };
-		22197F8817F4A4F3003B1883 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
 		221E90221816E0CD0028EAFD /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
 		221E90231816E10C0028EAFD /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F8717F4A4F3003B1883 /* Data.h */; };
-		221E90311817242A0028EAFD /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E902F181724290028EAFD /* DataType.cpp */; };
 		221E90321817242A0028EAFD /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E902F181724290028EAFD /* DataType.cpp */; };
 		221E9035181724460028EAFD /* DataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9034181724450028EAFD /* DataType.h */; };
 		221E9037181725A10028EAFD /* Type.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9036181725A10028EAFD /* Type.h */; };
-		221E903A1817270D0028EAFD /* Point3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90381817270C0028EAFD /* Point3d.cpp */; };
 		221E903B1817270D0028EAFD /* Point3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90381817270C0028EAFD /* Point3d.cpp */; };
-		221E903F181727240028EAFD /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E903D181727220028EAFD /* Value.cpp */; };
 		221E9040181727240028EAFD /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E903D181727220028EAFD /* Value.cpp */; };
 		221E90441817273C0028EAFD /* Point3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E90421817273B0028EAFD /* Point3d.h */; };
 		221E90451817273C0028EAFD /* Value.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E90431817273C0028EAFD /* Value.h */; };
-		2223EC601817EEA400B900CF /* DataNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC5E1817EEA400B900CF /* DataNull.cpp */; };
 		2223EC611817EEA400B900CF /* DataNull.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC5E1817EEA400B900CF /* DataNull.cpp */; };
 		2223EC641817EEAF00B900CF /* DataNull.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC631817EEAF00B900CF /* DataNull.h */; };
-		2223EC671818027300B900CF /* SceneMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC651818027300B900CF /* SceneMeta.cpp */; };
 		2223EC681818027300B900CF /* SceneMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2223EC651818027300B900CF /* SceneMeta.cpp */; };
 		2223EC6C1818056400B900CF /* SceneMeta.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC6B1818056400B900CF /* SceneMeta.h */; };
 		2223EC7518194A6F00B900CF /* Predictor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC7218194A6F00B900CF /* Predictor.h */; };
 		2223EC7818196C2500B900CF /* Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2223EC7718196C2500B900CF /* Filter.h */; };
-		22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22261AA6181574AC00DBA3F8 /* Common.cpp */; };
 		22293670181586F2008CAA09 /* HarmonicMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229366F181586F2008CAA09 /* HarmonicMotion.h */; };
 		22293672181591A2008CAA09 /* Skeleton3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293671181591A2008CAA09 /* Skeleton3d.h */; };
-		22293674181591AD008CAA09 /* Skeleton3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293673181591AD008CAA09 /* Skeleton3d.cpp */; };
 		22293675181591AD008CAA09 /* Skeleton3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293673181591AD008CAA09 /* Skeleton3d.cpp */; };
 		2229367618159B01008CAA09 /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F8517F4996F003B1883 /* Common.h */; };
 		222936C9181677BD008CAA09 /* XnPlatformAndroid-Arm.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229367A181677BC008CAA09 /* XnPlatformAndroid-Arm.h */; };
@@ -165,44 +142,31 @@
 		22293711181677BD008CAA09 /* XnUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 222936C7181677BD008CAA09 /* XnUtils.h */; };
 		22293712181677BD008CAA09 /* XnVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 222936C8181677BD008CAA09 /* XnVersion.h */; };
 		22293727181677C8008CAA09 /* SkeletonPoseDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293714181677C8008CAA09 /* SkeletonPoseDetector.h */; };
-		22293728181677C8008CAA09 /* VFakeKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293715181677C8008CAA09 /* VFakeKinect.cpp */; };
 		22293729181677C8008CAA09 /* VFakeKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293715181677C8008CAA09 /* VFakeKinect.cpp */; };
 		2229372A181677C8008CAA09 /* VFakeKinect.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293716181677C8008CAA09 /* VFakeKinect.h */; };
-		2229372B181677C8008CAA09 /* VKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293717181677C8008CAA09 /* VKinect.cpp */; };
 		2229372C181677C8008CAA09 /* VKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293717181677C8008CAA09 /* VKinect.cpp */; };
 		2229372D181677C8008CAA09 /* VKinect.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293718181677C8008CAA09 /* VKinect.h */; };
 		2229372E181677C8008CAA09 /* VOpenNIBone.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293719181677C8008CAA09 /* VOpenNIBone.h */; };
 		2229372F181677C8008CAA09 /* VOpenNICommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229371A181677C8008CAA09 /* VOpenNICommon.h */; };
-		22293730181677C8008CAA09 /* VOpenNIDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229371B181677C8008CAA09 /* VOpenNIDevice.cpp */; };
 		22293731181677C8008CAA09 /* VOpenNIDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229371B181677C8008CAA09 /* VOpenNIDevice.cpp */; };
 		22293732181677C8008CAA09 /* VOpenNIDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229371C181677C8008CAA09 /* VOpenNIDevice.h */; };
-		22293733181677C8008CAA09 /* VOpenNIDeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229371D181677C8008CAA09 /* VOpenNIDeviceManager.cpp */; };
 		22293734181677C8008CAA09 /* VOpenNIDeviceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229371D181677C8008CAA09 /* VOpenNIDeviceManager.cpp */; };
 		22293735181677C8008CAA09 /* VOpenNIDeviceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229371E181677C8008CAA09 /* VOpenNIDeviceManager.h */; };
 		22293736181677C8008CAA09 /* VOpenNIHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229371F181677C8008CAA09 /* VOpenNIHeaders.h */; };
-		22293737181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293720181677C8008CAA09 /* VOpenNINetwork.cpp */; };
 		22293738181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293720181677C8008CAA09 /* VOpenNINetwork.cpp */; };
 		22293739181677C8008CAA09 /* VOpenNINetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293721181677C8008CAA09 /* VOpenNINetwork.h */; };
-		2229373A181677C8008CAA09 /* VOpenNIRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293722181677C8008CAA09 /* VOpenNIRecorder.cpp */; };
 		2229373B181677C8008CAA09 /* VOpenNIRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293722181677C8008CAA09 /* VOpenNIRecorder.cpp */; };
 		2229373C181677C8008CAA09 /* VOpenNIRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293723181677C8008CAA09 /* VOpenNIRecorder.h */; };
 		2229373D181677C8008CAA09 /* VOpenNISurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293724181677C8008CAA09 /* VOpenNISurface.h */; };
-		2229373E181677C8008CAA09 /* VOpenNIUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293725181677C8008CAA09 /* VOpenNIUser.cpp */; };
 		2229373F181677C8008CAA09 /* VOpenNIUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22293725181677C8008CAA09 /* VOpenNIUser.cpp */; };
 		22293740181677C8008CAA09 /* VOpenNIUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 22293726181677C8008CAA09 /* VOpenNIUser.h */; };
-		22293745181679AA008CAA09 /* libnimCodecs.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293741181679AA008CAA09 /* libnimCodecs.dylib */; };
 		22293746181679AA008CAA09 /* libnimCodecs.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293741181679AA008CAA09 /* libnimCodecs.dylib */; };
-		22293747181679AA008CAA09 /* libnimMockNodes.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293742181679AA008CAA09 /* libnimMockNodes.dylib */; };
 		22293748181679AA008CAA09 /* libnimMockNodes.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293742181679AA008CAA09 /* libnimMockNodes.dylib */; };
-		22293749181679AA008CAA09 /* libnimRecorder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293743181679AA008CAA09 /* libnimRecorder.dylib */; };
 		2229374A181679AA008CAA09 /* libnimRecorder.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293743181679AA008CAA09 /* libnimRecorder.dylib */; };
-		2229374B181679AA008CAA09 /* libOpenNI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293744181679AA008CAA09 /* libOpenNI.dylib */; };
 		2229374C181679AA008CAA09 /* libOpenNI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22293744181679AA008CAA09 /* libOpenNI.dylib */; };
-		2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2229375218168E5F008CAA09 /* Scene3d.cpp */; };
 		2229375618168E67008CAA09 /* Scene3d.h in Headers */ = {isa = PBXBuildFile; fileRef = 2229375518168E67008CAA09 /* Scene3d.h */; };
 		22483AC0189F9EFE002DE5C4 /* NodeUnthreaded.h in Headers */ = {isa = PBXBuildFile; fileRef = 22483ABF189F9EFE002DE5C4 /* NodeUnthreaded.h */; };
-		22483AC2189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22483AC1189F9F06002DE5C4 /* NodeUnthreaded.cpp */; };
 		22483AC3189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22483AC1189F9F06002DE5C4 /* NodeUnthreaded.cpp */; };
 		2262C5B018997035006CCA1A /* Parameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 2262C5AF18997035006CCA1A /* Parameter.h */; };
 		2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2262C5B11899703F006CCA1A /* Parameter.cpp */; };
@@ -213,40 +177,17 @@
 		226A9662189BECF60056DCD1 /* NodePrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 226A965B189BECF60056DCD1 /* NodePrinter.h */; };
 		226A9663189BECF60056DCD1 /* NodeRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 226A965C189BECF60056DCD1 /* NodeRenderer.h */; };
 		226A9664189BECF60056DCD1 /* NodeSineWave.h in Headers */ = {isa = PBXBuildFile; fileRef = 226A965D189BECF60056DCD1 /* NodeSineWave.h */; };
-		226A966C189BED140056DCD1 /* NodeAccumulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9665189BED140056DCD1 /* NodeAccumulator.cpp */; };
 		226A966D189BED140056DCD1 /* NodeAccumulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9665189BED140056DCD1 /* NodeAccumulator.cpp */; };
-		226A966E189BED140056DCD1 /* NodeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9666189BED140056DCD1 /* NodeFilter.cpp */; };
 		226A966F189BED140056DCD1 /* NodeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9666189BED140056DCD1 /* NodeFilter.cpp */; };
-		226A9670189BED140056DCD1 /* NodeKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9667189BED140056DCD1 /* NodeKinect.cpp */; };
 		226A9671189BED140056DCD1 /* NodeKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9667189BED140056DCD1 /* NodeKinect.cpp */; };
-		226A9672189BED140056DCD1 /* NodeOscOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9668189BED140056DCD1 /* NodeOscOut.cpp */; };
 		226A9673189BED140056DCD1 /* NodeOscOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9668189BED140056DCD1 /* NodeOscOut.cpp */; };
-		226A9674189BED140056DCD1 /* NodePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9669189BED140056DCD1 /* NodePrinter.cpp */; };
 		226A9675189BED140056DCD1 /* NodePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A9669189BED140056DCD1 /* NodePrinter.cpp */; };
-		226A9676189BED140056DCD1 /* NodeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A966A189BED140056DCD1 /* NodeRenderer.cpp */; };
 		226A9677189BED140056DCD1 /* NodeRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A966A189BED140056DCD1 /* NodeRenderer.cpp */; };
-		226A9678189BED140056DCD1 /* NodeSineWave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A966B189BED140056DCD1 /* NodeSineWave.cpp */; };
 		226A9679189BED140056DCD1 /* NodeSineWave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226A966B189BED140056DCD1 /* NodeSineWave.cpp */; };
-		2294120A189AA33D009550EF /* NodeThreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22941209189AA33D009550EF /* NodeThreaded.cpp */; };
 		2294120B189AA349009550EF /* NodeThreaded.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22941209189AA33D009550EF /* NodeThreaded.cpp */; };
 		2294120D189AA35D009550EF /* NodeThreaded.h in Headers */ = {isa = PBXBuildFile; fileRef = 2294120C189AA35D009550EF /* NodeThreaded.h */; };
-		22C5DF6218A25BC200920089 /* FactoryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22C5DF6118A25BC200920089 /* FactoryNode.cpp */; };
 		22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22C5DF6118A25BC200920089 /* FactoryNode.cpp */; };
 		22C5DF6518A25BCA00920089 /* FactoryNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 22C5DF6418A25BCA00920089 /* FactoryNode.h */; };
-		22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F461816BCCE004E1219 /* libltdl.7.dylib */; };
-		22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22E50F471816BCCE004E1219 /* libusb-1.0.0.dylib */; };
-		2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 654BA4339A504E0DBB619D47 /* OscListener.cpp */; };
-		37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 091A1E3B4E6B409381228E3B /* UdpSocket.cpp */; };
-		3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B3D62D1A13644681B0BF691A /* OscSender.cpp */; };
-		757F077DABA7415EB988676F /* OscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 971E0AC2F4364D21B058718F /* OscBundle.cpp */; };
-		7E032153AEB04570800DF749 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F52E0884EA104563B765C094 /* IpEndpointName.cpp */; };
-		93FF82F99FA24357B6E6A466 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 30C86A9766774100B26992D5 /* CinderApp.icns */; };
-		9E4FA58CE7D04C19BD3F3283 /* OscReceivedElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BCA07E28394A4DE2A0C75053 /* OscReceivedElements.cpp */; };
-		B1B4A3FF90E94360BFE023CC /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 245157AC12684402B9CE4270 /* OscTypes.cpp */; };
-		B8E4FA98F66F42B883191911 /* OscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C475A0063E924B01A67D0B00 /* OscMessage.cpp */; };
-		C2452C7EE2C14005A7CCF7C3 /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00D0B577A695452F8729F95B /* OscOutboundPacketStream.cpp */; };
-		D446572B6E354FF8A1195B97 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8243BE64E706494C8C11A0B8 /* NetworkingUtils.cpp */; };
-		D8747D8A237442168BF330E1 /* HarmonicMotionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -423,7 +364,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		2D82E4E07408451887DC09BB /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = ../../Cinder/blocks/OSC/src/osc/MessageMappingOscPacketListener.h; sourceTree = "<group>"; };
 		30C86A9766774100B26992D5 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
-		3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = HarmonicMotionApp.cpp; path = ../src/HarmonicMotionApp.cpp; sourceTree = "<group>"; };
+		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		3D4E9ABC9ACD428BBF3DDEA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		498C0072AC6647318164B760 /* OscMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscMessage.h; path = ../../Cinder/blocks/OSC/src/OscMessage.h; sourceTree = "<group>"; };
 		567058A301B142BDBF7A2AEE /* HarmonicMotion_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = HarmonicMotion_Prefix.pch; sourceTree = "<group>"; };
@@ -435,7 +376,6 @@
 		833FF891C262404D93C00D48 /* OscTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscTypes.h; path = ../../Cinder/blocks/OSC/src/osc/OscTypes.h; sourceTree = "<group>"; };
 		8B41705BDB4F437F899186F7 /* OscHostEndianness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = ../../Cinder/blocks/OSC/src/osc/OscHostEndianness.h; sourceTree = "<group>"; };
 		8BB9C6EC0FD44828BA81EF6F /* OscListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscListener.h; path = ../../Cinder/blocks/OSC/src/OscListener.h; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* HarmonicMotion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HarmonicMotion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		971E0AC2F4364D21B058718F /* OscBundle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscBundle.cpp; path = ../../Cinder/blocks/OSC/src/OscBundle.cpp; sourceTree = "<group>"; };
 		9DCEA716492547B396FEA488 /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscOutboundPacketStream.h; path = ../../Cinder/blocks/OSC/src/osc/OscOutboundPacketStream.h; sourceTree = "<group>"; };
 		A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CinderOpenCV.h; path = "../../Cinder/blocks/Cinder-OpenCV/include/CinderOpenCV.h"; sourceTree = "<group>"; };
@@ -463,29 +403,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8D11072E0486CEB800E47090 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0091D8F90E81B9330029341E /* OpenGL.framework in Frameworks */,
-				22197F7A17F48EE3003B1883 /* Accelerate.framework in Frameworks */,
-				22197F7B17F48EE3003B1883 /* AudioToolbox.framework in Frameworks */,
-				22197F7C17F48EE3003B1883 /* AudioUnit.framework in Frameworks */,
-				22197F7D17F48EE3003B1883 /* Cocoa.framework in Frameworks */,
-				22197F7E17F48EE3003B1883 /* CoreAudio.framework in Frameworks */,
-				22197F7F17F48EE3003B1883 /* AppKit.framework in Frameworks */,
-				22197F8017F48EE3003B1883 /* Foundation.framework in Frameworks */,
-				22197F8217F4900D003B1883 /* QTKit.framework in Frameworks */,
-				22197F8417F49044003B1883 /* CoreVideo.framework in Frameworks */,
-				22293745181679AA008CAA09 /* libnimCodecs.dylib in Frameworks */,
-				22293747181679AA008CAA09 /* libnimMockNodes.dylib in Frameworks */,
-				22293749181679AA008CAA09 /* libnimRecorder.dylib in Frameworks */,
-				2229374B181679AA008CAA09 /* libOpenNI.dylib in Frameworks */,
-				22E50F481816BCCE004E1219 /* libltdl.7.dylib in Frameworks */,
-				22E50F491816BCCE004E1219 /* libusb-1.0.0.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -509,7 +426,6 @@
 				22C5DF6118A25BC200920089 /* FactoryNode.cpp */,
 				22C5DF6418A25BCA00920089 /* FactoryNode.h */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
-				3B0763F2032F4188AD240FD9 /* HarmonicMotionApp.cpp */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
 				22197EFF17F44B76003B1883 /* Inlet.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
@@ -576,7 +492,6 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* HarmonicMotion.app */,
 				22197EC717F447BF003B1883 /* libHarmonicMotiond.a */,
 			);
 			name = Products;
@@ -821,6 +736,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */,
 			);
 			name = HarmonicMotion;
 			sourceTree = "<group>";
@@ -1073,24 +989,6 @@
 			productReference = 22197EC717F447BF003B1883 /* libHarmonicMotiond.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		8D1107260486CEB800E47090 /* HarmonicMotionApp */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HarmonicMotionApp" */;
-			buildPhases = (
-				8D1107290486CEB800E47090 /* Resources */,
-				8D11072C0486CEB800E47090 /* Sources */,
-				8D11072E0486CEB800E47090 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = HarmonicMotionApp;
-			productInstallPath = "$(HOME)/Applications";
-			productName = HarmonicMotion;
-			productReference = 8D1107320486CEB800E47090 /* HarmonicMotion.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1112,22 +1010,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1107260486CEB800E47090 /* HarmonicMotionApp */,
 				22197EC617F447BF003B1883 /* HarmonicMotion */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		8D1107290486CEB800E47090 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				93FF82F99FA24357B6E6A466 /* CinderApp.icns in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		22197EC317F447BF003B1883 /* Sources */ = {
@@ -1176,55 +1062,6 @@
 				221E90321817242A0028EAFD /* DataType.cpp in Sources */,
 				221E903B1817270D0028EAFD /* Point3d.cpp in Sources */,
 				221E9040181727240028EAFD /* Value.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8D11072C0486CEB800E47090 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2294120A189AA33D009550EF /* NodeThreaded.cpp in Sources */,
-				226A9678189BED140056DCD1 /* NodeSineWave.cpp in Sources */,
-				D8747D8A237442168BF330E1 /* HarmonicMotionApp.cpp in Sources */,
-				757F077DABA7415EB988676F /* OscBundle.cpp in Sources */,
-				22483AC2189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */,
-				2B41AEC331B745E09E98D885 /* OscListener.cpp in Sources */,
-				B8E4FA98F66F42B883191911 /* OscMessage.cpp in Sources */,
-				3BF7EB33D4B941098C9E056D /* OscSender.cpp in Sources */,
-				7E032153AEB04570800DF749 /* IpEndpointName.cpp in Sources */,
-				C2452C7EE2C14005A7CCF7C3 /* OscOutboundPacketStream.cpp in Sources */,
-				22C5DF6218A25BC200920089 /* FactoryNode.cpp in Sources */,
-				14AE91028D3E457C94F76ACD /* OscPrintReceivedElements.cpp in Sources */,
-				9E4FA58CE7D04C19BD3F3283 /* OscReceivedElements.cpp in Sources */,
-				B1B4A3FF90E94360BFE023CC /* OscTypes.cpp in Sources */,
-				226A9670189BED140056DCD1 /* NodeKinect.cpp in Sources */,
-				226A9674189BED140056DCD1 /* NodePrinter.cpp in Sources */,
-				D446572B6E354FF8A1195B97 /* NetworkingUtils.cpp in Sources */,
-				37D41E82A9CA4ABC821C0896 /* UdpSocket.cpp in Sources */,
-				22197ED417F44B1B003B1883 /* Inlet.cpp in Sources */,
-				22197ED617F44B1B003B1883 /* Node.cpp in Sources */,
-				22197ED817F44B1B003B1883 /* Outlet.cpp in Sources */,
-				22197EDC17F44B1B003B1883 /* Pipeline.cpp in Sources */,
-				22197F8817F4A4F3003B1883 /* Data.cpp in Sources */,
-				22261AA8181574AC00DBA3F8 /* Common.cpp in Sources */,
-				22293674181591AD008CAA09 /* Skeleton3d.cpp in Sources */,
-				226A966C189BED140056DCD1 /* NodeAccumulator.cpp in Sources */,
-				22293728181677C8008CAA09 /* VFakeKinect.cpp in Sources */,
-				2229372B181677C8008CAA09 /* VKinect.cpp in Sources */,
-				226A9672189BED140056DCD1 /* NodeOscOut.cpp in Sources */,
-				22293730181677C8008CAA09 /* VOpenNIDevice.cpp in Sources */,
-				22293733181677C8008CAA09 /* VOpenNIDeviceManager.cpp in Sources */,
-				22293737181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */,
-				226A966E189BED140056DCD1 /* NodeFilter.cpp in Sources */,
-				2229373A181677C8008CAA09 /* VOpenNIRecorder.cpp in Sources */,
-				2229373E181677C8008CAA09 /* VOpenNIUser.cpp in Sources */,
-				2229375318168E5F008CAA09 /* Scene3d.cpp in Sources */,
-				2223EC601817EEA400B900CF /* DataNull.cpp in Sources */,
-				221E90311817242A0028EAFD /* DataType.cpp in Sources */,
-				226A9676189BED140056DCD1 /* NodeRenderer.cpp in Sources */,
-				2223EC671818027300B900CF /* SceneMeta.cpp in Sources */,
-				221E903A1817270D0028EAFD /* Point3d.cpp in Sources */,
-				221E903F181727240028EAFD /* Value.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1278,102 +1115,6 @@
 					"\"$(SRCROOT)/../lib/CinderBlocks/BlockOpenNI/lib/macosx\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		C01FCF4B08A954540054247B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HarmonicMotion_Prefix.pch;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../lib/CinderBlocks/BlockOpenNI/lib/macosx\"",
-					"\"$(SRCROOT)/../lib/macosx\"",
-				);
-				MACH_O_TYPE = mh_execute;
-				OTHER_LDFLAGS = (
-					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_calib3d.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_contrib.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_core.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_features2d.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_flann.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_gpu.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_imgproc.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_legacy.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ml.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_nonfree.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_objdetect.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_photo.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_stitching.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ts.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_video.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_videostab.a\"",
-					"\"$(LIB_PATH)/macosx/libboost_date_time.a\"",
-					"\"$(LIB_PATH)/macosx/libboost_system.a\"",
-					"$(LIB_PATH)/macosx/libboost_chrono.a",
-					"$(LIB_PATH)/macosx/libboost_thread.a",
-				);
-				PRODUCT_NAME = HarmonicMotion;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug;
-		};
-		C01FCF4C08A954540054247B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_FAST_MATH = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HarmonicMotion_Prefix.pch;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../lib/CinderBlocks/BlockOpenNI/lib/macosx\"",
-					"\"$(SRCROOT)/../lib/macosx\"",
-				);
-				MACH_O_TYPE = mh_execute;
-				OTHER_LDFLAGS = (
-					"\"$(CINDER_PATH)/lib/libcinder.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_calib3d.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_contrib.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_core.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_features2d.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_flann.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_gpu.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_imgproc.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_legacy.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ml.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_nonfree.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_objdetect.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_photo.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_stitching.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_ts.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_video.a\"",
-					"\"$(CINDER_PATH)/blocks/Cinder-OpenCV/lib/macosx/libopencv_videostab.a\"",
-					"\"$(CINDER_PATH)/lib/macosx/libboost_date_time.a\"",
-					"\"$(CINDER_PATH)/lib/macosx/libboost_system.a\"",
-				);
-				PRODUCT_NAME = HarmonicMotion;
-				STRIP_INSTALLED_PRODUCT = YES;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
@@ -1431,15 +1172,6 @@
 			buildConfigurations = (
 				22197EC917F447BF003B1883 /* Debug */,
 				22197ECA17F447BF003B1883 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HarmonicMotionApp" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C01FCF4B08A954540054247B /* Debug */,
-				C01FCF4C08A954540054247B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
