@@ -22,11 +22,20 @@ namespace hm
 		/// \return false if cannot connect with inlet due to being wrong
 		/// type
 		bool connect(InletPtr inlet);
+        bool isConnectedTo(InletPtr inlet) const;
+        /// Disconnects an inlet that was previously connected using
+        /// \c connect(InletPtr). If there is no connection, this either
+        /// fails an assertion (in debug) or fails silently (in release).
+        void disconnect(InletPtr inlet);
 		void outputNewData(Data& data);
 		/// \return true if this outlet is connected to any inlets
 		int numInlets() const { return mOutputs.size(); }
 		
-//		std::string nodeName() const;
+        /// If this inlet is owned by a node and that node was was
+        /// created by FactoryNode then this function will return a weak
+        /// pointer to the node. Otherwise it returns
+        /// std::weak_ptr<Node>(nullptr)
+        std::weak_ptr<Node> node() const;
 		
 	private:
 		/// Outlets are constructed with a reference to their owning node

@@ -9,6 +9,7 @@
 #include "Outlet.h"
 #include "Inlet.h"
 #include "Node.h"
+#include "FactoryNode.h"
 
 using namespace std;
 using namespace hm;
@@ -78,4 +79,51 @@ void Outlet::outputNewData(Data& data)
 		}
 	}
 }
+
+
+std::weak_ptr<Node> Outlet::node() const
+{
+    return FactoryNode::instance()->getNodePtr(mNode);
+}
+
+
+bool Outlet::isConnectedTo(InletPtr inlet) const
+{
+    for (auto weakInletPtr: mOutputs)
+    {
+        InletPtr i = weakInletPtr.lock();
+        assert(i != nullptr);
+        if (i==inlet)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void Outlet::disconnect(InletPtr inlet)
+{
+    std::weak_ptr<Inlet> weakPtr(inlet);
+    for (auto it=mOutputs.begin(); it!=mOutputs.end(); )
+    {
+        InletPtr o = it->lock();
+        assert(o != nullptr);
+        if (o == inlet)
+        {
+            it = mOutputs.erase(it);
+            return;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    // If we reach here then we weren't connected to inlet.
+    assert(false);
+}
+
+
+
+
 

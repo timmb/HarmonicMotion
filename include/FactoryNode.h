@@ -82,17 +82,33 @@ namespace hm
 		NodePtr create(std::string className, Node::Params params = Node::Params());
 		
 		std::vector<NodeInfo> nodeTypes();
+        
+        /// \return The NodePtr (shared pointer) to an \p existingNode that
+        /// was previously constructed by the factory. If \p existingNode was
+        /// not constructed by the factory or existingNode has been
+        /// destroyed then returns nullptr.
+        NodePtr getNodePtr(Node* existingNode) const;
 		
 	private:
 		// Singleton class
 		FactoryNode();
 		FactoryNode(FactoryNode const&) = delete;
 		FactoryNode& operator=(FactoryNode const&) = delete;
+        
+        /// Removes any references to destroyed nodes
+        /// from mCreatedNodes. This is to avoid a minimal memory leak
+        /// in the case where many nodes are created and destroyed.
+        void cleanUp();
 		
 		std::map<std::string, NodeInfo> mNodeInfos;
 		/// We ensure that  no new nodes are registered after
 		/// the create or nodeType functions have been called.
 		std::atomic<bool> mNodeFunctionsCalled;
+        std::map<Node*, std::weak_ptr<Node>> mCreatedNodes;
 	};
 	
 }
+
+
+
+

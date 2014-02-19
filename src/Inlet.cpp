@@ -9,6 +9,7 @@
 #include "Inlet.h"
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
+#include "FactoryNode.h"
 
 using namespace hm;
 using namespace std;
@@ -101,4 +102,7 @@ void Inlet::provideNewData(Data const& data)
 }
 
 
-
+std::weak_ptr<Node> Inlet::node() const
+{
+    return FactoryNode::instance()->getNodePtr(mNode);
+}

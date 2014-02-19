@@ -39,10 +39,11 @@ namespace hm
 		/// The timestamp of the new data is provided as argument to the function
 		/// \note This function must be thread safe and should not block
 		void setNotifyCallback(std::function<void(double)> function);
-//		/// Set the name of the node that this inlet is attached to. Nodes
-//		/// do this automatically when an inlet is added
-//		void setNodeName(std::string const& nodeName) { mNodeName = nodeName; }
-//		std::string nodeName() const { return mNodeName; }
+        /// If this inlet is owned by a node and that node was was
+        /// created by FactoryNode then this function will return a weak
+        /// pointer to the node. Otherwise it returns
+        /// std::weak_ptr<Node>(nullptr)
+        std::weak_ptr<Node> node() const;
 		
 	private:
 		/// Type may be a combination of Type flags.

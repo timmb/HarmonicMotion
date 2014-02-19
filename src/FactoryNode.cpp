@@ -59,6 +59,7 @@ std::vector<NodeInfo> FactoryNode::nodeTypes()
 
 NodePtr FactoryNode::create(std::string className, Node::Params params)
 {
+    cleanUp();
 	mNodeFunctionsCalled = true;
 	if (!hasNodeType(className))
 	{
@@ -66,6 +67,39 @@ NodePtr FactoryNode::create(std::string className, Node::Params params)
 	}
 	else
 	{
-		return mNodeInfos.at(className).creationFunction(params);
+		NodePtr node = mNodeInfos.at(className).creationFunction(params);
+        assert(mCreatedNodes.count(node.get()) == 0);
+        mCreatedNodes[node.get()] = std::weak_ptr<Node>(node);
+        return node;
 	}
 }
+
+NodePtr FactoryNode::getNodePtr(Node* existingNode) const
+{
+    if (mCreatedNodes.count(existingNode)==0)
+    {
+        return nullptr;
+    }
+    return mCreatedNodes.at(existingNode).lock();
+    
+}
+
+void FactoryNode::cleanUp()
+{
+    for (auto it=mCreatedNodes.begin(); it!=mCreatedNodes.end(); )
+    {
+        if (it->second.expired())
+        {
+            it = mCreatedNodes.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+
+
+
+
