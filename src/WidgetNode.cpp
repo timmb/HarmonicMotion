@@ -96,7 +96,7 @@ namespace hm
 	void WidgetNode::loadStyleSheet()
 	{
 		//	QFile file(":/qss/WidgetNode.qss");
-		QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNode.qss");
+		QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNode.qss");
 		if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 		{
 			setStyleSheet(QString::fromUtf8(file.readAll()));

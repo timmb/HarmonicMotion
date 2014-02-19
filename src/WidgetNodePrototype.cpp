@@ -59,7 +59,7 @@ WidgetNodePrototype::WidgetNodePrototype(NodeInfo const& info, MainWindow* mainW
 void WidgetNodePrototype::loadStyleSheet()
 {
 	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/tim/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNodePrototype.qss");
+	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetNodePrototype.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));
