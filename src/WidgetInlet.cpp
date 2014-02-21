@@ -24,10 +24,8 @@ WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 {
 	assert(mInlet != nullptr);
 	assert(mParent != nullptr);
-    // for CSS
+    // for CSS and WidgetPatchArea
 	setObjectName("WidgetInlet");
-    // for WigetPatchArea to find inlets
-    setProperty("isInlet", true);
 	QIcon icon(":/icons/inlet.svg");
 	setPixmap(icon.pixmap(20, 20));
 	
@@ -38,14 +36,6 @@ WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
 	t->setInterval(500);
 	t->start();
-}
-
-
-void WidgetInlet::mousePressEvent(QMouseEvent * e)
-{
-    qDebug() << "Mouse pressed on inlet.";
-	e->accept();
-	mParent->patchArea()->createPatchCord(this);
 }
 
 

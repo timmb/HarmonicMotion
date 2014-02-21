@@ -123,9 +123,19 @@ namespace hm
 	
 	void WidgetNode::erase()
 	{
+		// NB it is important that the patch area is updated before the
+		// underlying model to ensure that callbacks from the model do not
+		// cause the patch area to attempt to start removing this widget
+		// a second time.
+		mPatchArea->eraseNode(this);
 		mPatchArea->pipeline()->removeNode(mNode);
 		mHasBeenErased = true;
-		mPatchArea->deleteNode(this);
+	}
+	
+	void WidgetNode::eraseWithoutUpdatingModel()
+	{
+		mHasBeenErased = true;
+		mPatchArea->eraseNode(this);
 	}
     
     QSize WidgetNode::sizeHint() const

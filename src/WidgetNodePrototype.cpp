@@ -137,6 +137,7 @@ void WidgetNodePrototypeBeingDragged::mouseReleaseEvent(QMouseEvent* e)
 	WidgetPatchArea* patchArea = mMainWindow->patchArea();
 	if (geometry().intersects(patchArea->geometry()))
 	{
+		// TODO: This node and widgetnode must be made by WidgetPatchArea
 		// create node and widget for it
 		NodePtr node = FactoryNode::instance()->create(mNodeInfo.className);
 		WidgetNode* widget = new WidgetNode(node, patchArea);

@@ -20,10 +20,7 @@ namespace hm
 		WidgetOutlet(OutletPtr outlet, class WidgetNode* parent);
         
         OutletPtr outlet() const { return mOutlet; }
-        
-    protected:
-        virtual void mousePressEvent(class QMouseEvent*) override;
-		
+   	
 	protected Q_SLOTS:
 		void loadStyleSheet();
 		

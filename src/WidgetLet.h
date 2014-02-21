@@ -22,6 +22,9 @@ namespace hm
         /// to this Let should be drawn, relative to the containing
         /// WigetPatchArea
         QPoint connectionPoint() const;
+		
+		/// \return the WidgetNode that owns this WidgetLet.
+		WidgetNode* node() const { return mParent; }
         
     Q_SIGNALS:
         /// Emitted when the Inlet/Outlet moves.
@@ -31,6 +34,7 @@ namespace hm
 		WidgetLet(WidgetNode* parent);
         virtual void moveEvent(QMoveEvent*) override;
         virtual void resizeEvent(QResizeEvent*) override;
+		virtual void mousePressEvent(QMouseEvent*) override;
         
         WidgetNode* mParent;
 	};

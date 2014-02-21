@@ -20,10 +20,7 @@ namespace hm
 	public:
 		WidgetInlet(InletPtr inlet, WidgetNode* parent);
         InletPtr inlet() const { return mInlet; }
-        
-    protected:
-        virtual void mousePressEvent(QMouseEvent*) override;
-		
+        		
 	protected Q_SLOTS:
 		void loadStyleSheet();
 		

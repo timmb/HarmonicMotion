@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QMouseEvent>
 #include "WidgetNode.h"
+#include "WidgetPatchArea.h"
 
 using namespace hm;
 
@@ -20,10 +21,9 @@ WidgetOutlet::WidgetOutlet(OutletPtr outlet, WidgetNode* parent)
 : WidgetLet(parent)
 , mOutlet(outlet)
 {
-    // for CSS
+	assert(mOutlet != nullptr);
+    // for CSS and WidgetPatchArea
 	setObjectName("WidgetOutlet");
-    // for WidgetPatchArea to find outlets
-    setProperty("isOutlet", true);
 	QIcon icon(":/icons/outlet.svg");
 	setPixmap(icon.pixmap(20, 20));
 	
@@ -51,11 +51,3 @@ void WidgetOutlet::loadStyleSheet()
 	}
 }
 
-
-void WidgetOutlet::mousePressEvent(QMouseEvent* event)
-{
-    if (event->button()==Qt::LeftButton)
-    {
-        event->accept();
-    }
-}

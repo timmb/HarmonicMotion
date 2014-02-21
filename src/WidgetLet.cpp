@@ -10,6 +10,7 @@
 #include "WidgetNode.h"
 #include <cassert>
 #include "WidgetPatchArea.h"
+#include <QCoreApplication>
 
 using namespace hm;
 
@@ -33,4 +34,15 @@ void WidgetLet::moveEvent(QMoveEvent*)
 void WidgetLet::resizeEvent(QResizeEvent*)
 {
     Q_EMIT positionChanged();
+}
+
+
+void WidgetLet::mousePressEvent(QMouseEvent* event)
+{
+    if (event->button()==Qt::LeftButton)
+    {
+        // forward to the patch area to potentially start new patchcord
+		QPoint posRelativeToPatchArea = mapTo(node()->patchArea(), event->pos());
+		node()->patchArea()->mousePressEventFromWidgetLet(this, posRelativeToPatchArea);
+    }
 }

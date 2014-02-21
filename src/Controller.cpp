@@ -21,9 +21,9 @@ using namespace hm;
 Controller::Controller(QObject* parent)
 : QObject()
 , mMainWindow(new MainWindow)
+, mPipeline(nullptr)
 , mAccum(nullptr)
 , mRedrawIsRequired(false)
-, mPipeline(nullptr)
 {
 	mPipeline = mMainWindow->patchArea()->pipeline();
 	
@@ -33,7 +33,7 @@ Controller::Controller(QObject* parent)
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");
 	mNodes << gen;
 	mPipeline->addNode(gen);
-	mMainWindow->patchArea()->addNode(gen);
+//	mMainWindow->patchArea()->addNode(gen);
 	
 //	mAccum = std::shared_ptr<NodeAccumulator>(new NodeAccumulator);
 ////	kinect->outlet(0)->connect(mAccum->inlet(0));
@@ -45,9 +45,9 @@ Controller::Controller(QObject* parent)
 	
 	NodePtr osc = FactoryNode::instance()->create("NodeOscOut");
 //	kinect->outlet(0)->connect(osc->inlet(0));
-	mPipeline->connect(gen->outlet(0), osc->inlet(0));
 	mPipeline->addNode(osc);
-	mMainWindow->patchArea()->addNode(osc);
+	mPipeline->connect(gen->outlet(0), osc->inlet(0));
+//	mMainWindow->patchArea()->addNode(osc);
 	
 ////	auto filter = NodePtr(new NodeFilter);
 ////	kinect->outlet(0)->connect(filter->inlet(0));

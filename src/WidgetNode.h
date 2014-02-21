@@ -29,6 +29,10 @@ namespace hm
 		/// This instance will be deleted on the next cycle of the event
 		/// loop.
 		void erase();
+		/// Request that this node is deleted without making the
+		/// corresponding change to the underlying model. Used if the
+		/// model has been updated externally.
+		void eraseWithoutUpdatingModel();
         
         /// The widgets for the inlets or outlets to this class. These are
         /// guaranteed not to change over the course of the widget's life.

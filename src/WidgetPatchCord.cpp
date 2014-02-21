@@ -6,6 +6,11 @@
 #include <cassert>
 #include <QPainter>
 #include "Pipeline.h"
+#include "WidgetNode.h"
+#include "Inlet.h"
+#include "Outlet.h"
+#include <QCoreApplication>
+#include "WidgetLet.h"
 
 using namespace hm;
 
@@ -17,6 +22,7 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea)
 , mPatchArea(patchArea)
 {
     assert(mPatchArea != nullptr);
+	hm_debug("New disconnected WidgetPatchCord.");
 }
 
 WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outlet, WidgetInlet* inlet)
@@ -34,6 +40,8 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
     connectInletSignals();
     connectOutletSignals();
     redraw();
+	hm_debug("New WidgetPatchCord with outlet "+mOutlet->outlet()->toString()+" and inlet "+mInlet->inlet()->toString());
+	show();
 }
 
 WidgetPatchCord::~WidgetPatchCord()
@@ -43,29 +51,41 @@ WidgetPatchCord::~WidgetPatchCord()
 		hm_error("WidgetPatchCord destroyed before being erased.");
 		assert(mHasBeenErased);
 	}
+	hm_debug("WidgetPatchCord destroyed.");
 }
 
 
 void WidgetPatchCord::erase()
 {
+	// NB it is important that the patch area is updated before the
+	// underlying model to ensure that callbacks from the model do not
+	// cause the patch area to attempt to start removing this widget
+	// a second time.
+	mPatchArea->erasePatchCord(this);
     // This disconnects any patch in the underlying model
     setOutlet(nullptr);
     setInlet(nullptr);
-	mPatchArea->deletePatchCord(this);
 	mHasBeenErased = true;
 }
 
 
-void WidgetPatchCord::outletDestroyed()
+void WidgetPatchCord::eraseWithoutUpdatingModel()
 {
-    setOutlet(nullptr);
+	mPatchArea->erasePatchCord(this);
+	mHasBeenErased = true;
 }
 
 
-void WidgetPatchCord::inletDestroyed()
-{
-    setInlet(nullptr);
-}
+//void WidgetPatchCord::outletDestroyed()
+//{
+//    setOutlet(nullptr);
+//}
+//
+//
+//void WidgetPatchCord::inletDestroyed()
+//{
+//    setInlet(nullptr);
+//}
 
 void WidgetPatchCord::redraw()
 {
@@ -91,15 +111,6 @@ void WidgetPatchCord::redraw()
         bounds.setBottom(qMax(mLine.y1(), mLine.y2()));
         setGeometry(bounds);
     }
-    
-    if (isMouseInteractionActive())
-    {
-        setMouseTracking(true);
-    }
-    else
-    {
-        setMouseTracking(false);
-    }
     update();
 }
 
@@ -117,47 +128,115 @@ void WidgetPatchCord::paintEvent(QPaintEvent* event)
 }
 
 
-void WidgetPatchCord::mousePressEvent(QMouseEvent* event)
+bool WidgetPatchCord::trySettingUnconnectedLet(WidgetLet* let)
 {
-    if (isMouseInteractionActive())
-    {
-        if (mInlet==nullptr)
-        {
-            assert(mOutlet != nullptr);
-            WidgetInlet* inlet = mPatchArea->findInlet(event->pos());
-            if (inlet && mPatchArea->isConnectionValid(mOutlet, inlet))
-            {
-                setInlet(inlet);
-            }
-        }
-        else if (mOutlet==nullptr)
-        {
-            assert(mInlet != nullptr);
-            WidgetOutlet* outlet = mPatchArea->findOutlet(event->pos());
-            if (outlet && mPatchArea->isConnectionValid(outlet, mInlet))
-            {
-                setOutlet(outlet);
-            }
-        }
-    }
+	if (!isPartiallyConnected())
+	{
+		hm_error("trySettingsUnconnectedPoint called on WidgetPatchCord that is not partially connected,");
+		assert(isPartiallyConnected());
+		return false;
+	}
+	if (mInlet==nullptr)
+	{
+		WidgetInlet* inlet = dynamic_cast<WidgetInlet*>(let);
+		if (inlet && (inlet->inlet()->types() & mOutlet->outlet()->types()))
+		{
+			setInlet(inlet);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		assert(mOutlet==nullptr);
+		WidgetOutlet* outlet = dynamic_cast<WidgetOutlet*>(let);
+		if (outlet && (mInlet->inlet()->types() & outlet->outlet()->types()))
+		{
+			setOutlet(outlet);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
-void WidgetPatchCord::mouseMoveEvent(QMouseEvent* event)
+
+//void WidgetPatchCord::mousePressEvent(QMouseEvent* event)
+//{
+//	hm_debug("WidgetPatchCord::mousePressEvent");
+//    if (isPartiallyConnected())
+//    {
+//		event->accept();
+//        if (mInlet==nullptr)
+//        {
+//            assert(mOutlet != nullptr);
+//            WidgetInlet* inlet = mPatchArea->findInlet(event->pos());
+//			hm_debug("Found inlet");
+//            if (inlet && mPatchArea->isConnectionValid(mOutlet, inlet))
+//            {
+//                setInlet(inlet);
+//				hm_debug("WidgetPatchCord inlet set to "+inlet->inlet()->toString());
+//            }
+//        }
+//        else if (mOutlet==nullptr)
+//        {
+//            assert(mInlet != nullptr);
+//            WidgetOutlet* outlet = mPatchArea->findOutlet(event->pos());
+//			hm_debug("Found outlet");
+//            if (outlet && mPatchArea->isConnectionValid(outlet, mInlet))
+//            {
+//                setOutlet(outlet);
+//				hm_debug("WidgetPatchCord outlet set to "+outlet->outlet()->toString());
+//            }
+//        }
+//    }
+//}
+
+//void WidgetPatchCord::mouseMoveEvent(QMouseEvent* event)
+//{
+////	hm_debug("WidgetPatchCord::mouseMoveEvent");
+//    if (isMouseInteractionActive())
+//    {
+//		event->accept();
+//        if (mOutlet==nullptr)
+//        {
+//            assert(mInlet!=nullptr);
+//            mLine.setP1(event->pos());
+//        }
+//        else
+//        {
+//            assert(mOutlet!=nullptr && mInlet==nullptr);
+//            mLine.setP2(event->pos());
+//        }
+//    }
+//}
+
+
+//void WidgetPatchCord::mousePressEvent(QMouseEvent* event)
+//{
+//	QCoreApplication::sendEvent(mPatchArea, event);
+//}
+
+
+void WidgetPatchCord::setUnconnectedPointDrawPosition(QPoint position)
 {
-    if (isMouseInteractionActive())
-    {
-        if (mOutlet==nullptr)
-        {
-            assert(mInlet!=nullptr);
-            mLine.setP1(event->pos());
-        }
-        else
-        {
-            assert(mOutlet!=nullptr && mInlet==nullptr);
-            mLine.setP2(event->pos());
-        }
-    }
+	assert((mOutlet==nullptr) != (mInlet==nullptr));
+	
+	if (mOutlet==nullptr)
+	{
+		mLine.setP1(position);
+	}
+	else
+	{
+		mLine.setP2(position);
+	}
 }
+
 
 
 void WidgetPatchCord::connectOutletSignals()
@@ -167,11 +246,11 @@ void WidgetPatchCord::connectOutletSignals()
     {
         bool success(true);
         
-        success = connect(mOutlet, SIGNAL(newPosition()), this, SLOT(redraw()));
+        success = connect(mOutlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
         assert(success);
         
-        success = connect(mOutlet, SIGNAL(destroyed()), this, SLOT(outletDestroyed()));
-        assert(success);
+//        success = connect(mOutlet, SIGNAL(destroyed()), this, SLOT(outletDestroyed()));
+//        assert(success);
     }
 }
 
@@ -182,11 +261,11 @@ void WidgetPatchCord::connectInletSignals()
     {
         bool success(true);
         
-        success = connect(mInlet, SIGNAL(newPosition()), this, SLOT(redraw()));
+        success = connect(mInlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
         assert(success);
         
-        success = connect(mInlet, SIGNAL(destroyed()), this, SLOT(inletDestroyed()));
-        assert(success);
+//        success = connect(mInlet, SIGNAL(destroyed()), this, SLOT(inletDestroyed()));
+//        assert(success);
     }
 }
 
@@ -201,8 +280,8 @@ void WidgetPatchCord::disconnectOutletSignals()
         success = disconnect(mOutlet, SIGNAL(newPosition()), this, SLOT(outletMoved()));
         assert(success);
         
-        success = disconnect(mOutlet, SIGNAL(destroyed()), this, SLOT(outletDestroyed()));
-        assert(success);
+//        success = disconnect(mOutlet, SIGNAL(destroyed()), this, SLOT(outletDestroyed()));
+//        assert(success);
     }
 }
 
@@ -217,8 +296,8 @@ void WidgetPatchCord::disconnectInletSignals()
         success = disconnect(mInlet, SIGNAL(newPosition()), this, SLOT(inletMoved()));
         assert(success);
         
-        success = disconnect(mInlet, SIGNAL(destroyed()), this, SLOT(inletDestroyed()));
-        assert(success);
+//        success = disconnect(mInlet, SIGNAL(destroyed()), this, SLOT(inletDestroyed()));
+//        assert(success);
     }
 }
 
@@ -230,6 +309,7 @@ void WidgetPatchCord::disconnectUnderlyingModel()
 	InletPtr inlet = mInlet->inlet();
 	assert(mPatchArea->pipeline()->isConnected(outlet, inlet));
 	mPatchArea->pipeline()->disconnect(outlet, inlet);
+	hm_info(outlet->toString()+" disconnected via WidgetPatchCord from "+inlet->toString());
 }
 
 void WidgetPatchCord::connectUnderlyingModel()
@@ -240,7 +320,7 @@ void WidgetPatchCord::connectUnderlyingModel()
 	InletPtr inlet = mInlet->inlet();
 	assert(!mPatchArea->pipeline()->isConnected(outlet, inlet));
     mPatchArea->pipeline()->connect(outlet, inlet);
-   
+	hm_info(outlet->toString()+" connected via WidgetPatchCord to "+inlet->toString());
 }
 
 void WidgetPatchCord::setOutlet(WidgetOutlet* outlet)
@@ -254,6 +334,14 @@ void WidgetPatchCord::setOutlet(WidgetOutlet* outlet)
         }
     }
     mOutlet = outlet;
+	if (mOutlet)
+	{
+		hm_debug("WidgetPatchCord: outlet set to "+mOutlet->outlet()->toString());
+	}
+	else
+	{
+		hm_debug("WidgetPatchCord: outlet set to nullptr");
+	}
     if (mOutlet)
     {
         connectOutletSignals();
@@ -291,8 +379,16 @@ void WidgetPatchCord::setInlet(WidgetInlet* inlet)
 }
 
 
-bool WidgetPatchCord::isMouseInteractionActive() const
+bool WidgetPatchCord::isPartiallyConnected() const
 {
     // mouse interaction is active iff we have only one of (inlet, outlet)
     return (mInlet==nullptr) != (mOutlet==nullptr);
 }
+
+
+bool WidgetPatchCord::isFullyConnected() const
+{
+	return mInlet!=nullptr && mOutlet!=nullptr;
+}
+
+
