@@ -47,7 +47,11 @@ void Outlet::detachOwnerNode()
 
 void Outlet::addPatchCord(PatchCordPtr patchCord)
 {
-	bool isValid = std::find(mPatchCords.begin(), mPatchCords.end(), patchCord) != mPatchCords.end()
+	// check no equivalent patch cord has been added, and that the outlet
+	// of the new one is correct
+	bool isValid = !any_of(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
+		return *p == *patchCord;
+		})
 		&& patchCord->outlet().get() == this;
 	assert(isValid);
 	if (isValid)
@@ -84,7 +88,6 @@ void Outlet::outputNewData(Data& data)
 		{
 			history.push_front("(unknown)");
 		}
-		hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
 		for (PatchCordPtr cord: mPatchCords)
 		{
 			assert(data.type() & cord->inlet()->types());

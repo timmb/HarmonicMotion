@@ -95,7 +95,7 @@ void Inlet::provideNewData(Data const& data)
 	boost::unique_lock<boost::shared_mutex> lock(mMutex);
 	mData = data;
 	mDataTimestamp = data.timestamp();
-	hm_debug("New data at inlet ("+mNodeName+"): "+data.toString());
+//	hm_debug("New data at inlet ("+mNodeName+"): "+data.toString());
 	mWaitCondition.notify_all();
 	if (mNotifyCallback)
 		mNotifyCallback(mDataTimestamp);

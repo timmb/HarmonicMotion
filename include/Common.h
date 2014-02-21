@@ -52,7 +52,7 @@ namespace hm
 	
 	// For printing verbose debugging info
 #if defined(DEBUG) || defined(_DEBUG)
-//#define HM_LOG_DEBUG
+#define HM_LOG_DEBUG
 #endif
 	
 #define HM__FILE_NO_DIR__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)

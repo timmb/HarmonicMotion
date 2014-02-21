@@ -35,6 +35,10 @@ void Pipeline::addNode(NodePtr node)
 {
 	mNodes.push_back(node);
 	hm_debug("Added node "+node->toString());
+	for (Listener* listener: mListeners)
+	{
+		listener->nodeAdded(node);
+	}
 }
 
 void Pipeline::removeNode(NodePtr node)
@@ -43,6 +47,17 @@ void Pipeline::removeNode(NodePtr node)
 	if (it != mNodes.end())
 	{
 		mNodes.erase(it);
+	}
+	/// Check invariants
+	for (OutletPtr outlet: node->outlets())
+	{
+		assert(outlet->numInlets()==0);
+	}
+	assert(patchCordInvariant());
+	hm_debug("Removed node "+node->toString());
+	for (Listener* listener: mListeners)
+	{
+		listener->nodeRemoved(node);
 	}
 }
 
@@ -86,6 +101,20 @@ void Pipeline::stop()
 
 bool Pipeline::patchCordInvariant() const
 {
+	// check inlets referred to in patch cords belong to nodes in this
+	// pipelines
+	for (auto p: mPatchCords)
+	{
+		if (!contains(mNodes, p->inlet()->node().lock()))
+		{
+			return false;
+		}
+		if (!contains(mNodes, p->outlet()->node().lock()))
+		{
+			return false;
+		}
+	}
+	
 	// check all patch cord outlets are aware of patch cord and correctly
 	// report the connection
 	for (auto p: mPatchCords)
@@ -175,6 +204,11 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 	inlet->incrementNumConnections();
 	mPatchCords.push_back(p);
 	assert(patchCordInvariant());
+	hm_debug("Connected "+outlet->toString()+" and "+inlet->toString());
+	for (Listener* listener: mListeners)
+	{
+		listener->patchCordAdded(outlet, inlet);
+	}
 	return true;
 }
 
@@ -193,6 +227,11 @@ bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 	outlet->removePatchCord(*it);
 	mPatchCords.erase(it);
 	assert(patchCordInvariant());
+	hm_debug("Disconnected "+outlet->toString()+" and "+inlet->toString());
+	for (Listener* listener: mListeners)
+	{
+		listener->patchCordRemoved(outlet, inlet);
+	}
 	return true;
 }
 
@@ -205,3 +244,28 @@ bool Pipeline::isConnected(OutletPtr outlet, InletPtr inlet) const
 		return p->outlet() == outlet && p->inlet() == inlet;
 	}) != mPatchCords.end();
 }
+
+
+void Pipeline::addListener(Listener* listener)
+{
+	mListeners.push_back(listener);
+}
+
+bool Pipeline::removeListener(Listener* listener)
+{
+	auto it = std::find(mListeners.begin(), mListeners.end(), listener);
+	if (it==mListeners.end())
+	{
+		return false;
+	}
+	else
+	{
+		mListeners.erase(it);
+		return true;
+	}
+}
+
+
+
+
+
