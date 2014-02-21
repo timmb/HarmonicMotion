@@ -197,4 +197,11 @@ bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 }
 
 
-
+bool Pipeline::isConnected(OutletPtr outlet, InletPtr inlet) const
+{
+	// outlet is connected to inlet if there exists a patch cord containing
+	// them both.
+	return find_if(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
+		return p->outlet() == outlet && p->inlet() == inlet;
+	}) != mPatchCords.end();
+}

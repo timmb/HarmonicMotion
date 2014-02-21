@@ -21,6 +21,7 @@ namespace hm
 	class Node;
 	class BaseParameter;
 	class PatchCord;
+	class Pipeline;
 	
 	// forward declare data types
 	class Value;
@@ -34,6 +35,7 @@ namespace hm
 	typedef std::shared_ptr<Node> NodePtr;
 	typedef std::shared_ptr<BaseParameter> ParameterPtr;
 	typedef std::shared_ptr<PatchCord> PatchCordPtr;
+	typedef std::shared_ptr<Pipeline> PipelinePtr;
 	
 	/// \return number of seconds since the program began
 	double elapsedTime();
