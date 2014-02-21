@@ -20,6 +20,7 @@ namespace hm
 	class Outlet;
 	class Node;
 	class BaseParameter;
+	class PatchCord;
 	
 	// forward declare data types
 	class Value;
@@ -32,11 +33,19 @@ namespace hm
 	typedef std::shared_ptr<Outlet> OutletPtr;
 	typedef std::shared_ptr<Node> NodePtr;
 	typedef std::shared_ptr<BaseParameter> ParameterPtr;
+	typedef std::shared_ptr<PatchCord> PatchCordPtr;
 	
 	/// \return number of seconds since the program began
 	double elapsedTime();
 	
 	std::vector<Type> const& listOfTypes();
+	
+	// Check if STL container contains an element
+	template <typename Container, typename Value>
+	bool contains(Container container, Value const& value)
+	{
+		return std::find(container.begin(), container.end(), value) != container.end();
+	}
 
 	
 	// For printing verbose debugging info

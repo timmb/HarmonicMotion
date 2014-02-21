@@ -45,6 +45,10 @@ namespace hm
         /// std::weak_ptr<Node>(nullptr)
         std::weak_ptr<Node> node() const;
 		
+		std::string toString() const { // TODO: implement
+			return "Inlet";
+		}
+		
 	private:
 		/// Type may be a combination of Type flags.
 		Inlet(Types types, Node& node, std::string const& name, std::string const& helpText);
@@ -55,9 +59,12 @@ namespace hm
 
 		// Accessed by Outlet ------------
 		void provideNewData(Data const& data);
+		// -------------------------------
+
+		// Accessed by Pipeline ----------
 		void incrementNumConnections();
 		void decrementNumConnections();
-		// --------------------------
+		// -------------------------------
 		
 		Node* mNode;
 		Types mTypes;
@@ -77,5 +84,6 @@ namespace hm
 		
 		friend class Node;
 		friend class Outlet;
+		friend class Pipeline;
 	};
 }

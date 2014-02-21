@@ -45,6 +45,15 @@ Node::~Node()
 	for (InletPtr inlet: mInlets)
 	{
 		inlet->detachOwnerNode();
+		// Inlets should have had all their patch cords removed by the pipeline
+		assert(inlet->numConnections()==0);
+		// Inlets should no longer be known by any third parties
+		assert(inlet.use_count()==1);
+	}
+	for (OutletPtr outlet: mOutlets)
+	{
+		assert(outlet->numInlets()==0);
+		assert(outlet.use_count()==1);
 	}
 }
 

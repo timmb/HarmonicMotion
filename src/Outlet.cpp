@@ -10,6 +10,8 @@
 #include "Inlet.h"
 #include "Node.h"
 #include "FactoryNode.h"
+#include "PatchCord.h"
+#include <algorithm>
 
 using namespace std;
 using namespace hm;
@@ -32,23 +34,47 @@ void Outlet::detachOwnerNode()
 //	return node != nullptr? node->type() : "(No node set)";
 //}
 
-bool Outlet::connect(InletPtr inlet)
+//bool Outlet::connect(InletPtr inlet)
+//{
+//	if ((inlet->types() & types()) == 0)
+//	{
+//		return false;
+//	}
+//	mOutputs.push_back(inlet);
+//	inlet->incrementNumConnections();
+//	return true;
+//}
+
+void Outlet::addPatchCord(PatchCordPtr patchCord)
 {
-	if ((inlet->types() & types()) == 0)
+	bool isValid = std::find(mPatchCords.begin(), mPatchCords.end(), patchCord) != mPatchCords.end()
+		&& patchCord->outlet().get() == this;
+	assert(isValid);
+	if (isValid)
 	{
-		return false;
+		mPatchCords.push_back(patchCord);
 	}
-	mOutputs.push_back(inlet);
-	inlet->incrementNumConnections();
-	return true;
+}
+
+void Outlet::removePatchCord(PatchCordPtr patchCord)
+{
+	auto it = std::find(mPatchCords.begin(), mPatchCords.end(), patchCord);
+	bool isValid = it != mPatchCords.end();
+	assert(isValid);
+	if (isValid)
+	{
+		mPatchCords.erase(it);
+	}
 }
 
 
 void Outlet::outputNewData(Data& data)
 {
-	assert(mTypes & data.type());
-	// Add this node to the data's history list
+	bool isDataTypeValid = mTypes & data.type();
+	assert(isDataTypeValid);
+	if (isDataTypeValid)
 	{
+		// Add this node to the data's history list
 		deque<std::string>& history = data.asDataType()->nodeHistory;
 		if (mNode != nullptr)
 		{
@@ -58,26 +84,31 @@ void Outlet::outputNewData(Data& data)
 		{
 			history.push_front("(unknown)");
 		}
-	}
-	hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
-	for (auto outRefIt=mOutputs.begin(); outRefIt!=mOutputs.end(); )
-	{
-		InletPtr out = outRefIt->lock();
-		// check the inlet still exists. if it doesn't then remove the connection
-		if (out == nullptr)
+		hm_debug("New data at outlet ("+nodeName()+"): "+data.toString());
+		for (PatchCordPtr cord: mPatchCords)
 		{
-			outRefIt = mOutputs.erase(outRefIt);
-		}
-		else
-		{
-			// Only send data to inlets that support it
-			if (out->types() & data.type())
-			{
-				out->provideNewData(data);
-			}
-			++outRefIt;
+			assert(data.type() & cord->inlet()->types());
+			cord->inlet()->provideNewData(data);
 		}
 	}
+//	for (auto outRefIt=mOutputs.begin(); outRefIt!=mOutputs.end(); )
+//	{
+//		InletPtr out = outRefIt->lock();
+//		// check the inlet still exists. if it doesn't then remove the connection
+//		if (out == nullptr)
+//		{
+//			outRefIt = mOutputs.erase(outRefIt);
+//		}
+//		else
+//		{
+//			// Only send data to inlets that support it
+//			if (out->types() & data.type())
+//			{
+//				out->provideNewData(data);
+//			}
+//			++outRefIt;
+//		}
+//	}
 }
 
 
@@ -89,39 +120,42 @@ std::weak_ptr<Node> Outlet::node() const
 
 bool Outlet::isConnectedTo(InletPtr inlet) const
 {
-    for (auto weakInletPtr: mOutputs)
-    {
-        InletPtr i = weakInletPtr.lock();
-        assert(i != nullptr);
-        if (i==inlet)
-        {
-            return true;
-        }
-    }
-    return false;
+	return std::any_of(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
+		return p->inlet()==inlet;
+	});
+//    for (auto weakInletPtr: mOutputs)
+//    {
+//        InletPtr i = weakInletPtr.lock();
+//        assert(i != nullptr);
+//        if (i==inlet)
+//        {
+//            return true;
+//        }
+//    }
+//    return false;
 }
 
 
-void Outlet::disconnect(InletPtr inlet)
-{
-    std::weak_ptr<Inlet> weakPtr(inlet);
-    for (auto it=mOutputs.begin(); it!=mOutputs.end(); )
-    {
-        InletPtr o = it->lock();
-        assert(o != nullptr);
-        if (o == inlet)
-        {
-            it = mOutputs.erase(it);
-            return;
-        }
-        else
-        {
-            ++it;
-        }
-    }
-    // If we reach here then we weren't connected to inlet.
-    assert(false);
-}
+//void Outlet::disconnect(InletPtr inlet)
+//{
+//    std::weak_ptr<Inlet> weakPtr(inlet);
+//    for (auto it=mOutputs.begin(); it!=mOutputs.end(); )
+//    {
+//        InletPtr o = it->lock();
+//        assert(o != nullptr);
+//        if (o == inlet)
+//        {
+//            it = mOutputs.erase(it);
+//            return;
+//        }
+//        else
+//        {
+//            ++it;
+//        }
+//    }
+//    // If we reach here then we weren't connected to inlet.
+//    assert(false);
+//}
 
 
 
