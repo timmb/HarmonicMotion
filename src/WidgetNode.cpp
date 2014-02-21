@@ -22,6 +22,7 @@
 #include <algorithm>
 #include "WidgetPatchArea.h"
 #include "WidgetInlet.h"
+#include "Pipeline.h"
 
 namespace hm
 {
@@ -32,6 +33,7 @@ namespace hm
 	, mNode(node)
     , mMainArea(nullptr)
     , mPatchArea(patchArea)
+	, mHasBeenErased(false)
 	{
 		loadStyleSheet();
 		setObjectName("WidgetNode");
@@ -97,7 +99,6 @@ namespace hm
 		
         QHBoxLayout* layout = new QHBoxLayout;
         layout->addLayout(inletsLayout);
-//        layout->addLayout(mainLayout);
         layout->addWidget(mMainArea);
         layout->addLayout(outletsLayout);
         layout->setSpacing(0);
@@ -113,38 +114,20 @@ namespace hm
 	
 	WidgetNode::~WidgetNode()
 	{
-//		for (auto w: mWidgetOutlets)
-//		{
-//			assert(w->parent() == nullptr);
-//			delete w;
-//		}
-//		mWidgetOutlets.clear();
+		if (!mHasBeenErased)
+		{
+			hm_error("WidgetNode destroyed before erase() was called.");
+			assert(mHasBeenErased);
+		}
+	}
+	
+	void WidgetNode::erase()
+	{
+		mPatchArea->pipeline()->removeNode(mNode);
+		mHasBeenErased = true;
+		mPatchArea->deleteNode(this);
 	}
     
-//    WidgetInlet* WidgetNode::widgetInlet(InletPtr inlet)
-//    {
-//        for (auto w: mWidgetInlets)
-//        {
-//            if (w->inlet() == inlet)
-//            {
-//                return w;
-//            }
-//        }
-//        return nullptr;
-//    }
-//    
-//    WidgetOutlet* WidgetNode::widgetOutlet(OutletPtr outlet)
-//    {
-//        for (auto w: mWidgetOutlets)
-//        {
-//            if (w->outlet() == outlet)
-//            {
-//                return w;
-//            }
-//        }
-//        return nullptr;
-//    }
-//    
     QSize WidgetNode::sizeHint() const
     {
         QSize size = mMainArea->sizeHint();

@@ -29,6 +29,7 @@ namespace hm
 		
 	private:
 		InletPtr mInlet;
+		WidgetNode* mParent;
 	};
 	
 }

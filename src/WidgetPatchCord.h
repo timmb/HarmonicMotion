@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QLine>
+#include "Common.h"
 
 namespace hm
 {
@@ -14,12 +15,21 @@ namespace hm
         Q_OBJECT;
     public:
         /// Create a patch cord with null inlet and outlet. Used for
-        /// creating a cord before it is attached to nodes
+        /// creating a cord before it is attached to nodes.
+		/// \note WidgetPatchCord should not be constructed directly - only
+		/// through the functions in WidgetPatchArea
         WidgetPatchCord(WidgetPatchArea* patchArea);
         /// Creates a patch cord for a pre-existing connection. This does
         /// not create a connection if it does not exist.
+		/// \note WidgetPatchCord should not be constructed directly - only
+		/// through the functions in WidgetPatchArea
         WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outlet, WidgetInlet* inlet);
         virtual ~WidgetPatchCord();
+		
+		/// Request that this patch cord is deleted. Updates the underlying
+		/// model. This widget instance will be deleted during the next
+		/// cycle of the event loop.
+		void erase();
         
         /// \copydoc setInlet
         void setOutlet(WidgetOutlet* outlet);
@@ -31,6 +41,12 @@ namespace hm
         /// be considered as being actively edited and the other end will
         /// track the mouse
         void setInlet(WidgetInlet* inlet);
+		
+		/// \return the inlet/outlet of this patch cord, or nullptr if it
+		/// does not yet have an inlet/outlet.
+		WidgetOutlet* outlet() { return mOutlet; }
+		/// \copydoc outlet()
+		WidgetInlet* inlet() { return mInlet; }
         
     protected Q_SLOTS:
         /// Adjusts the location of this patch cord.
@@ -72,5 +88,7 @@ namespace hm
         bool mIsLineDrawn;
         
         WidgetPatchArea* mPatchArea;
+		
+		bool mHasBeenErased;
     };
 }

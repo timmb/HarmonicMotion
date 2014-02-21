@@ -5,6 +5,7 @@
 #include "Outlet.h"
 #include <cassert>
 #include <QPainter>
+#include "Pipeline.h"
 
 using namespace hm;
 
@@ -24,6 +25,7 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
 , mInlet(inlet)
 , mIsLineDrawn(false)
 , mPatchArea(patchArea)
+, mHasBeenErased(false)
 {
     assert(mPatchArea != nullptr);
     assert(mOutlet != nullptr);
@@ -36,9 +38,21 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
 
 WidgetPatchCord::~WidgetPatchCord()
 {
+	if (!mHasBeenErased)
+	{
+		hm_error("WidgetPatchCord destroyed before being erased.");
+		assert(mHasBeenErased);
+	}
+}
+
+
+void WidgetPatchCord::erase()
+{
     // This disconnects any patch in the underlying model
     setOutlet(nullptr);
     setInlet(nullptr);
+	mPatchArea->deletePatchCord(this);
+	mHasBeenErased = true;
 }
 
 
@@ -109,16 +123,18 @@ void WidgetPatchCord::mousePressEvent(QMouseEvent* event)
     {
         if (mInlet==nullptr)
         {
+            assert(mOutlet != nullptr);
             WidgetInlet* inlet = mPatchArea->findInlet(event->pos());
-            if (inlet)
+            if (inlet && mPatchArea->isConnectionValid(mOutlet, inlet))
             {
                 setInlet(inlet);
             }
         }
         else if (mOutlet==nullptr)
         {
+            assert(mInlet != nullptr);
             WidgetOutlet* outlet = mPatchArea->findOutlet(event->pos());
-            if (outlet)
+            if (outlet && mPatchArea->isConnectionValid(outlet, mInlet))
             {
                 setOutlet(outlet);
             }
@@ -208,18 +224,22 @@ void WidgetPatchCord::disconnectInletSignals()
 
 void WidgetPatchCord::disconnectUnderlyingModel()
 {
-        assert(mInlet);
+	assert(mInlet);
     assert(mOutlet);
-        assert(mOutlet->outlet()->isConnectedTo(mInlet->inlet()));
-        mOutlet->outlet()->disconnect(mInlet->inlet());
+	OutletPtr outlet = mOutlet->outlet();
+	InletPtr inlet = mInlet->inlet();
+	assert(mPatchArea->pipeline()->isConnected(outlet, inlet));
+	mPatchArea->pipeline()->disconnect(outlet, inlet);
 }
 
 void WidgetPatchCord::connectUnderlyingModel()
 {
-    assert(mInlet);
+	assert(mInlet);
     assert(mOutlet);
-    assert(!mOutlet->outlet()->isConnectedTo(mInlet->inlet()));
-    mOutlet->outlet()->connect(mInlet->inlet());
+	OutletPtr outlet = mOutlet->outlet();
+	InletPtr inlet = mInlet->inlet();
+	assert(!mPatchArea->pipeline()->isConnected(outlet, inlet));
+    mPatchArea->pipeline()->connect(outlet, inlet);
    
 }
 

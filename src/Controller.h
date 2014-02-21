@@ -29,7 +29,7 @@ namespace hm
 	
 	private:
 		MainWindow* mMainWindow;
-		Pipeline mPipeline;
+		PipelinePtr mPipeline;
 		std::shared_ptr<NodeAccumulator> mAccum;
 		QList<NodePtr> mNodes;
 		std::atomic<bool> mRedrawIsRequired;

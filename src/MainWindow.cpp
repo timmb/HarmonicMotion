@@ -15,10 +15,10 @@
 
 using namespace hm;
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(PipelinePtr pipeline)
 : mConsole(nullptr)
 , mLayout(nullptr)
-, mPatchArea(new WidgetPatchArea)
+, mPatchArea(new WidgetPatchArea(pipeline))
 {
 //	mLayout = new QVBoxLayout;
 //	QWidget* w = new QWidget(this);

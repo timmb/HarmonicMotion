@@ -11,13 +11,19 @@
 #include <QIcon>
 #include <QTimer>
 #include <QDebug>
+#include <cassert>
+#include "WidgetNode.h"
+#include "WidgetPatchArea.h"
 
 using namespace hm;
 
 WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 : WidgetLet(parent)
 , mInlet(inlet)
+, mParent(parent)
 {
+	assert(mInlet != nullptr);
+	assert(mParent != nullptr);
     // for CSS
 	setObjectName("WidgetInlet");
     // for WigetPatchArea to find inlets
@@ -38,6 +44,8 @@ WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 void WidgetInlet::mousePressEvent(QMouseEvent * e)
 {
     qDebug() << "Mouse pressed on inlet.";
+	e->accept();
+	mParent->patchArea()->createPatchCord(this);
 }
 
 

@@ -23,7 +23,8 @@ namespace hm
 		Q_OBJECT;
 		
 	public:
-		MainWindow();
+		/// \param pipeline will be created if null.
+		MainWindow(PipelinePtr pipeline=nullptr);
 		NodeRendererGlWidget* createRendererWidget();
 		
 		template <typename WidgetType>

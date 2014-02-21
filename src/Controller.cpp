@@ -23,13 +23,16 @@ Controller::Controller(QObject* parent)
 , mMainWindow(new MainWindow)
 , mAccum(nullptr)
 , mRedrawIsRequired(false)
+, mPipeline(nullptr)
 {
+	mPipeline = mMainWindow->patchArea()->pipeline();
+	
 //	NodePtr kinect = NodePtr(new NodeKinect);
 //	mNodes << kinect;
 //	mPipeline.addNode(kinect);
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");
 	mNodes << gen;
-	mPipeline.addNode(gen);
+	mPipeline->addNode(gen);
 	mMainWindow->patchArea()->addNode(gen);
 	
 //	mAccum = std::shared_ptr<NodeAccumulator>(new NodeAccumulator);
@@ -42,8 +45,8 @@ Controller::Controller(QObject* parent)
 	
 	NodePtr osc = FactoryNode::instance()->create("NodeOscOut");
 //	kinect->outlet(0)->connect(osc->inlet(0));
-	gen->outlet(0)->connect(osc->inlet(0));
-	mPipeline.addNode(osc);
+	mPipeline->connect(gen->outlet(0), osc->inlet(0));
+	mPipeline->addNode(osc);
 	mMainWindow->patchArea()->addNode(osc);
 	
 ////	auto filter = NodePtr(new NodeFilter);
@@ -76,7 +79,7 @@ Controller::Controller(QObject* parent)
 	timer->start();
 	
 	mMainWindow->show();
-	mPipeline.start();
+	mPipeline->start();
 }
 
 void Controller::checkPipeline()

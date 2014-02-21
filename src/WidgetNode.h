@@ -22,19 +22,18 @@ namespace hm
 		Q_OBJECT;
 	public:
 		WidgetNode(NodePtr node, WidgetPatchArea* patchArea=nullptr);
+		/// WidgetNode should only be destroyed by WidgetPatchArea.
 		virtual ~WidgetNode();
-        
-//        /// \return the WidgetInlet for the specified inlet if it belongs
-//        /// to this WidgetNode, or nullptr if not.
-//        WidgetInlet* widgetInlet(InletPtr inlet);
-//        /// \return the WidgetOutlet for the specified outlet if it belongs
-//        /// to this WidgetNode, or nullptr if not.
-//        WidgetOutlet* widgetOutlet(OutletPtr outlet);
+		
+		/// Request that this node is deleted (from both view and model).
+		/// This instance will be deleted on the next cycle of the event
+		/// loop.
+		void erase();
         
         /// The widgets for the inlets or outlets to this class. These are
         /// guaranteed not to change over the course of the widget's life.
-        QVector<WidgetInlet*> widgetInlets() const { return mWidgetInlets; }
-        QVector<WidgetOutlet*> widgetOutlets() const { return mWidgetOutlets; }
+        QVector<WidgetInlet*> inlets() const { return mWidgetInlets; }
+        QVector<WidgetOutlet*> outlets() const { return mWidgetOutlets; }
         NodePtr node() const { return mNode; }
         /// \return A pointer to the WidgetPatchArea that contains this
         /// WidgetNode
@@ -64,12 +63,15 @@ namespace hm
 	private:
 		void preventNegativePosition();
 		
+		// Owning reference
 		QVector<class WidgetOutlet*> mWidgetOutlets;
+		// Owning reference
 		QVector<class WidgetInlet*> mWidgetInlets;
 		QPoint mDragOffset;
         bool mIsDragging;
 		NodePtr mNode;
         QWidget* mMainArea;
         WidgetPatchArea* mPatchArea;
+		bool mHasBeenErased;
 	};
 }
