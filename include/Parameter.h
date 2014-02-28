@@ -29,11 +29,16 @@ namespace hm {
 		
 		virtual ~BaseParameter() {}
 		
-		/// Given the root of a JSON tree, this will read/write
-		/// a value based on \c mPath.
-		virtual void writeJson(Json::Value& root) const;
-		/// \copydoc writeJson
-		virtual bool readJson(Json::Value const& root);
+		/// Set \p value to the value of this parameter
+		virtual void toJson(Json::Value& value) const = 0;
+		/// Set this node to the value of \p value
+		virtual bool fromJson(Json::Value const& value) = 0;
+//
+//		/// This will read/write the value of this parameter to/from
+//		/// \c element[name()]
+//		virtual void writeJson(Json::Value& element) const;
+//		/// \copydoc writeJson
+//		virtual bool readJson(Json::Value const& );
 		
 		/// e.g. "/My Node/My Parameter"
 		std::string path() const;
@@ -75,8 +80,6 @@ namespace hm {
 		/// or "/value"
 		BaseParameter(Node& parent, std::string name);
 
-		virtual void toJson(Json::Value& node) const = 0;
-		virtual bool fromJson(Json::Value const& node) = 0;
 		/// If an external value is pending, derived class should write the
 		/// most recent external value to the pointer registered with this
 		/// parameter and return true.
@@ -85,9 +88,9 @@ namespace hm {
 		virtual bool checkExternalValue() = 0;
 
 	private:
-		/// \return the JSON element corresponding to the given path
-		template <typename JsonOrConstJson>
-		static JsonOrConstJson& getChild(JsonOrConstJson& root, std::string const& path);
+//		/// \return the JSON element corresponding to the given path
+//		template <typename JsonOrConstJson>
+//		static JsonOrConstJson& getChild(JsonOrConstJson& root, std::string const& path);
 		
 		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
 		boost::mutex mNewExternalValueCallbacksMutex;
@@ -96,23 +99,23 @@ namespace hm {
 //		const Type mType;
 	};
 	
-	template <typename T>
-	T& BaseParameter::getChild(T& root, std::string const& path)
-	{
-		auto slashPos = path.find_first_of('/');
-		// Treat as a name if there are no slashes or final character is a slash
-		if (slashPos==std::string::npos || slashPos==path.size()-1)
-		{
-			return root[path];
-		}
-		else
-		{
-			assert(slashPos < path.size());
-			std::string head = path.substr(0, slashPos);
-			std::string tail = path.substr(slashPos+1);
-			return getChild(root[head], tail);
-		}
-	}
+//	template <typename T>
+//	T& BaseParameter::getChild(T& root, std::string const& path)
+//	{
+//		auto slashPos = path.find_first_of('/');
+//		// Treat as a name if there are no slashes or final character is a slash
+//		if (slashPos==std::string::npos || slashPos==path.size()-1)
+//		{
+//			return root[path];
+//		}
+//		else
+//		{
+//			assert(slashPos < path.size());
+//			std::string head = path.substr(0, slashPos);
+//			std::string tail = path.substr(slashPos+1);
+//			return getChild(root[head], tail);
+//		}
+//	}
 
 	
 	
@@ -162,23 +165,46 @@ namespace hm {
 			mNewInternalValueCallbacksIsNotEmpty = true;
 		}
 		
-	protected:
-		virtual void toJson(Json::Value& child) const override
+		virtual void toJson(Json::Value& value) const override
 		{
-			child << *mValue;
+			// We rely on mExternalValue as our most recently cached value
+			// of mValue. This avoids potential thread-safety issues from
+			// accessing mValue outside of checkExternalValue().
+			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+			value << mExternalValue;
 		}
 		
-		virtual bool fromJson(Json::Value const& child) override
+		virtual bool fromJson(Json::Value const& value) override
 		{
-			T tempValue;
-			if (child >> tempValue)
+			T t;
+			if (value >> t)
 			{
-				child >> *mValue;
+				set(t);
 				return true;
 			}
 			else
+			{
 				return false;
+			}
 		}
+		
+	protected:
+//		virtual void toJson(Json::Value& child) const override
+//		{
+//			child << *mValue;
+//		}
+//		
+//		virtual bool fromJson(Json::Value const& child) override
+//		{
+//			T tempValue;
+//			if (child >> tempValue)
+//			{
+//				child >> *mValue;
+//				return true;
+//			}
+//			else
+//				return false;
+//		}
 		
 		virtual bool checkExternalValue()
 		{
@@ -220,10 +246,10 @@ namespace hm {
 		
 		T* mValue;
 		T mExternalValue;
-		boost::mutex mExternalValueMutex;
+		mutable boost::mutex mExternalValueMutex;
 		std::atomic<bool> mHasNewExternalValue;
 		std::vector<std::function<void(T)>> mNewInternalValueCallbacks;
-		boost::mutex mNewInternalValueCallbacksMutex;
+		mutable boost::mutex mNewInternalValueCallbacksMutex;
 		std::atomic<bool> mNewInternalValueCallbacksIsNotEmpty;
 	};
 	

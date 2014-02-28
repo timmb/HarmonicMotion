@@ -15,6 +15,7 @@
 #include <string>
 #include "Common.h"
 #include "Parameter.h"
+#include "json/json.h"
 
 namespace hm
 {
@@ -45,21 +46,22 @@ namespace hm
 		std::string path() const;
 		void setName(std::string name);
 		std::string toString() const;
-				
+		
 		int numInlets() const;
-//		InletPtr inlet(int index);
+		//		InletPtr inlet(int index);
 		InletPtr inlet(int index) const;
 		std::vector<InletPtr> inlets() const;
-
+		
 		int numOutlets() const;
-//		OutletPtr outlet(int index);
+		//		OutletPtr outlet(int index);
 		OutletPtr outlet(int index) const;
 		std::vector<OutletPtr> outlets() const;
 		
 		std::vector<ParameterPtr> parameters();
+		std::vector<ParameterConstPtr> parameters() const;
 		
 		
-
+		
 		/// Enabled is a node-specific, user adjustable setting. When disabled,
 		/// a node should ignore all input and does not produce new output.
 		/// step() will not be called
@@ -95,7 +97,7 @@ namespace hm
 		/// \return A new instance of the derived Node type constructed with
 		/// the \p params provided.
 		virtual NodePtr create(Params params) const = 0;
-
+		
 		/// This function may only be used at construction otherwise a runtime error
 		/// will be thrown.
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
@@ -127,7 +129,7 @@ namespace hm
 		
 		
 		
-
+		
 		
 		// MARK: Accessors
 		Params nodeParams() const;
@@ -146,16 +148,24 @@ namespace hm
 		std::atomic<bool> mIsProcessing;
 		std::atomic<bool> mHasStartEverBeenCalled;
 		const std::string mClassName;
-
+		
 		static std::set<std::string> sNamesInUse;
 		static boost::mutex sNamesInUseMutex;
+		
+		friend Json::Value& operator<<(Json::Value&, Node const&);
+		friend bool operator>>(Json::Value const&, Node&);
 	};
 	
 	typedef std::function<NodePtr (Node::Params)> NodeCreationFunction;
 	
 	std::ostream& operator<<(std::ostream&, Node const&);
 	
-
+	Json::Value& operator<<(Json::Value&, Node const&);
+	bool operator>>(Json::Value const&, Node&);
+	
+	Json::Value& operator<<(Json::Value&, Node::Params const&);
+	bool operator>>(Json::Value const&, Node::Params&);
+	
 	
 	template <typename T>
 	Parameter<T>* Node::addParameter(std::string name, T* value)

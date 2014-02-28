@@ -11,10 +11,15 @@
 #include "Outlet.h"
 #include "Inlet.h"
 #include "PatchCord.h"
+#include "FactoryNode.h"
 #include <algorithm>
 #include <boost/thread.hpp>
+#include <boost/tokenizer.hpp>
+#include <fstream>
+#include "json/writer.h"
 
 using namespace hm;
+using namespace std;
 
 Pipeline::Pipeline()
 : mIsRunning(false)
@@ -215,7 +220,6 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 
 bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 {
-	assert(patchCordInvariant());
 	auto it=find_if(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
 		return p->outlet() == outlet && p->inlet() == inlet;
 	});
@@ -224,15 +228,22 @@ bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 		hm_info("Unable to disconnect "+outlet->toString()+" from "+inlet->toString()+" as they are not connected.");
 		return false;
 	}
-	outlet->removePatchCord(*it);
-	mPatchCords.erase(it);
+	disconnect(*it);
+	return true;
+}
+
+
+void Pipeline::disconnect(PatchCordPtr p)
+{
 	assert(patchCordInvariant());
-	hm_debug("Disconnected "+outlet->toString()+" and "+inlet->toString());
+	p->outlet()->removePatchCord(p);
+	mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
+	assert(patchCordInvariant());
+	hm_debug("Disconnected "+p->outlet()->toString()+" and "+p->inlet()->toString());
 	for (Listener* listener: mListeners)
 	{
-		listener->patchCordRemoved(outlet, inlet);
+		listener->patchCordRemoved(p->outlet(), p->inlet());
 	}
-	return true;
 }
 
 
@@ -264,6 +275,221 @@ bool Pipeline::removeListener(Listener* listener)
 		return true;
 	}
 }
+
+
+NodePtr Pipeline::nodeFromPath(string path)
+{
+	if (!path.empty() && path[0]=='/')
+	{
+		path = path.substr(1);
+	}
+	if (!path.empty() && path[path.size()-1]=='/')
+	{
+		path = path.substr(path.size()-1);
+	}
+	
+	// Nodes are always at the root element of a path so the path equals
+	// the nodename when stripped of any leading or trailing slashes
+	if (path.empty())
+	{
+		hm_info("Unable to find node for empty path");
+		return nullptr;
+	}
+	for (NodePtr n: mNodes)
+	{
+		if (n->name() == path)
+		{
+			return n;
+		}
+	}
+	hm_info("No node found with name "+path);
+	return nullptr;
+}
+
+
+vector<string> tokenizePath(string path)
+{
+	using namespace boost;
+	tokenizer<char_separator<char>> tokens(path, char_separator<char>("/"));
+	std::vector<std::string> splitPath;
+	copy(tokens.begin(), tokens.end(), back_inserter(splitPath));
+	return splitPath;
+}
+
+
+OutletPtr Pipeline::outletFromPath(std::string path)
+{
+	std::vector<std::string> splitPath = tokenizePath(path);
+	if (splitPath.size() < 2)
+	{
+		hm_info("Path '"+path+"' does not contain both a node name and outlet name.");
+		return nullptr;
+	}
+	NodePtr node = nodeFromPath(splitPath[0]);
+	if (node)
+	{
+		for (OutletPtr outlet: node->outlets())
+		{
+			if (outlet->name() == splitPath[1])
+			{
+				return outlet;
+			}
+		}
+		hm_info("Node "+node->name()+" of type "+node->type()+" does not have "
+				"an outlet named "+splitPath[1]);
+		return nullptr;
+	}
+	else
+	{
+		hm_info("No Node found with name "+node->name());
+		return nullptr;
+	}
+}
+
+
+InletPtr Pipeline::inletFromPath(std::string path)
+{
+	std::vector<std::string> splitPath = tokenizePath(path);
+	if (splitPath.size() < 2)
+	{
+		hm_info("Path '"+path+"' does not contain both a node name and inlet name.");
+		return nullptr;
+	}
+	NodePtr node = nodeFromPath(splitPath[0]);
+	if (node)
+	{
+		for (InletPtr inlet: node->inlets())
+		{
+			if (inlet->name() == splitPath[1])
+			{
+				return inlet;
+			}
+		}
+		hm_info("Node "+node->name()+" of type "+node->type()+" does not have "
+				"an inlet named "+splitPath[1]);
+		return nullptr;
+	}
+	else
+	{
+		hm_info("No Node found with name "+node->name());
+		return nullptr;
+	}
+}
+
+
+void Pipeline::toJson(Json::Value& json) const
+{
+	json = Json::Value();
+	for (int i=0; i<mNodes.size(); i++)
+	{
+		json["nodes"][i] << *mNodes[i];
+	}
+	int i=0;
+	for (PatchCordPtr p: mPatchCords)
+	{
+		json["patchcords"][i] << *p;
+		i++;
+	}
+}
+
+
+void Pipeline::clear()
+{
+	while (!mPatchCords.empty())
+	{
+		disconnect(mPatchCords.back());
+	}
+	while (!mNodes.empty())
+	{
+		removeNode(mNodes.back());
+	}
+}
+
+
+bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
+{
+	clear();
+	FactoryNode& factory = *FactoryNode::instance();
+	for (auto& jNode: json["nodes"])
+	{
+		string type = jNode["type"].asString();
+		if (type.empty())
+		{
+			errors.push_back("Node element found in JSON with no 'type' value. Skipping this node.");
+			continue;
+		}
+		if (!factory.hasNodeType(type))
+		{
+			errors.push_back("Node element found in JSON with unrecognised node type: '"+type+"'. Skipping this node.");
+			continue;
+		}
+		Node::Params nodeParams;
+		if (!(jNode["settings"] >> nodeParams))
+		{
+			errors.push_back("Failed to parse 'settings' element for node of type '"+type+"'. Skipping this node.");
+			continue;
+		}
+		NodePtr node = factory.create(type, nodeParams);
+		assert(node!=nullptr);
+		if (node!=nullptr)
+		{
+			addNode(node);
+		}
+		else
+		{
+			errors.push_back("Unanticipated error when creating node '"+nodeParams.name+"'.");
+		}
+	}
+	for (auto& jPatchCord: json["patchcords"])
+	{
+		string jOutlet = jPatchCord["outlet"].asString();
+		if (jOutlet.empty())
+		{
+			errors.push_back("patchcord element found with no 'outlet' element. Skipping this patch cord.");
+		}
+		string jInlet = jPatchCord["inlet"].asString();
+		if (jInlet.empty())
+		{
+			errors.push_back("patchcord element found with no 'inlet' element. Skipping this patch cord.");
+		}
+		OutletPtr outlet = outletFromPath(jOutlet);
+		if (outlet==nullptr)
+		{
+			errors.push_back("patchcord element found with an outlet that could not be found: '"+jOutlet+"'. Skipping this patchcord.");
+		}
+		InletPtr inlet = inletFromPath(jInlet);
+		if (inlet==nullptr)
+		{
+			errors.push_back("patchcord element found with an inlet that could not be found: '"+jInlet+"'. Skipping this patchcord.");
+		}
+		bool connectSuccess = connect(outlet, inlet);
+		assert(connectSuccess);
+	}
+	return errors.empty();
+}
+
+
+bool Pipeline::saveJson(string filePath) const
+{
+	Json::Value json;
+	toJson(json);
+	ofstream out(filePath, ofstream::out);
+	if (!out.good())
+	{
+		hm_warning("Failed to open "+filePath+" for writing. Pipeline has not been saved.");
+		return false;
+	}
+	Json::StyledStreamWriter writer;
+	writer.write(out, json);
+	if (out.fail())
+	{
+		hm_warning("Error when writing to "+filePath+". Pipeline has not been saved.");
+		return false;
+	}
+	return true;	
+}
+
+
 
 
 

@@ -7,15 +7,41 @@
 //
 
 #include "PatchCord.h"
+#include "Inlet.h"
+#include "Outlet.h"
+#include "Pipeline.h"
 
-using namespace hm;
-
-PatchCord::PatchCord(OutletPtr outlet, InletPtr inlet)
-: mOutlet(outlet)
-, mInlet(inlet)
-{}
-
-bool PatchCord::operator==(PatchCord const& rhs) const
+namespace hm
 {
-	return mOutlet == rhs.mOutlet && mInlet == rhs.mInlet;
+	
+	PatchCord::PatchCord(OutletPtr outlet, InletPtr inlet)
+	: mOutlet(outlet)
+	, mInlet(inlet)
+	{}
+	
+	PatchCord::PatchCord(Json::Value const& json, PipelinePtr p)
+	: mOutlet(p->outletFromPath(json["outlet"].asString()))
+	, mInlet(p->inletFromPath(json["inlet"].asString()))
+	{
+	}
+	
+	bool PatchCord::isValid() const
+	{
+		return mOutlet && mInlet;
+	}
+	
+	bool PatchCord::operator==(PatchCord const& rhs) const
+	{
+		return mOutlet == rhs.mOutlet && mInlet == rhs.mInlet;
+	}
+	
+	Json::Value& operator<<(Json::Value& j, PatchCord const& p)
+	{
+		j["outlet"] = p.outlet()->path();
+		j["inlet"] = p.inlet()->path();
+		return j;
+	}
+	
+	
+	
 }

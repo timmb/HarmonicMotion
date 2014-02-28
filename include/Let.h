@@ -21,6 +21,7 @@ namespace hm
 		std::string name() const { return mName; }
 		std::string helpText() const { return mHelpText; }
 		virtual std::string toString() const = 0;
+		std::string path() const;
 
         /// If this inlet is owned by a node and that node was was
         /// created by FactoryNode then this function will return a weak

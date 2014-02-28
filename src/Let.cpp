@@ -31,3 +31,17 @@ void Let::detachOwnerNode()
 {
 	mNode = nullptr;
 }
+
+
+std::string Let::path() const
+{
+	assert(mNode != nullptr);
+	if (mNode==nullptr)
+	{
+		return "[detached]/"+name();
+	}
+	else
+	{
+		return mNode->path() + '/' + name();
+	}
+}

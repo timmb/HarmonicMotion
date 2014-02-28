@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Common.h"
+#include "json/json.h"
 #include <vector>
 #include <atomic>
 #include <boost/thread.hpp>
@@ -35,10 +36,22 @@ namespace hm
 		Pipeline();
 		virtual ~Pipeline();
 		
+		// MARK: Access pipeline elements
+		
 		std::vector<NodePtr> const& nodes() const;
+		/// \param path e.g. "My node" or "/My node/
+		///
+		NodePtr nodeFromPath(std::string path);
+		/// \param path e.g. "/My node/My outlet"
+		OutletPtr outletFromPath(std::string path);
+		InletPtr inletFromPath(std::string path);
+		
+		// MARK: Modify pipeline
 		
 		void addNode(NodePtr node);
 		void removeNode(NodePtr node);
+		/// Delete all patchcords and nodes
+		void clear();
 		
 		/// Connect an outlet to an inlet.
 		/// \return true if the connection was succcessfully made.
@@ -50,6 +63,8 @@ namespace hm
 		/// \return true if \p outlet is connected to \p inlet
 		bool isConnected(OutletPtr outlet, InletPtr inlet) const;
 		
+		// MARK: Listen to pipeline
+		
 		/// Register a listener to be notified of updates to this pipeline.
 		/// Listeners are notified in the order that they are added, from
 		/// the same thread that caused the modification to the pipeline.
@@ -60,16 +75,33 @@ namespace hm
 		/// removed, false if \p listener was not registered.
 		bool removeListener(Listener* listener);
 		
+		// MARK: Start/stop pipeline
+		
 		/// Starts processing nodes
 		void start();
 		void stop();
 		
-		// TODO: Save/load from json
+		// MARK: Save/load from json
 		// Json should be encoded UTF 8
+		/// \p json will be wiped and have this pipeline saved to it
+		void toJson(Json::Value& json) const;
+		/// This will destroy all nodes and patchcords from this pipeline
+		/// and create new ones based on the data in \p json.
+		/// \return true if any errors were encountered. Messages for each
+		/// error will be added to \p errors.
+		bool fromJson(Json::Value const& json, std::vector<std::string>& errors);
+		/// Write JSON to file
+		/// \return true if the file was saved OK.
+		bool saveJson(std::string filePath) const;
+		/// Read JSON from file, overwriting the current state of this pipeline
+		/// with its values.
+		bool loadJson(std::string filePath);
 		
 	private:
 		/// \return Whether the invariant for patch cords holds
 		bool patchCordInvariant() const;
+		/// Disconnect and delete a patchcord
+		void disconnect(PatchCordPtr p);
 		
 		std::unique_ptr<boost::thread> mThread;
 		std::vector<NodePtr> mNodes;

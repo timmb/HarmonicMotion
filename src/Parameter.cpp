@@ -38,18 +38,18 @@ namespace hm {
 	}
 
 	
-	void BaseParameter::writeJson(Json::Value& root) const
-	{
-		Json::Value& child = getChild(root, path());
-		toJson(child);
-	}
-	
-	
-	bool BaseParameter::readJson(Json::Value const& root)
-	{
-		Json::Value const& child = getChild(root, path());
-		return fromJson(child);
-	}
+//	void BaseParameter::writeJson(Json::Value& root) const
+//	{
+//		Json::Value& child = getChild(root, path());
+//		toJson(child);
+//	}
+//	
+//	
+//	bool BaseParameter::readJson(Json::Value const& root)
+//	{
+//		Json::Value const& child = getChild(root, path());
+//		return fromJson(child);
+//	}
 	
 	void BaseParameter::addNewExternalValueCallback(std::function<void(void)> callbackFunction)
 	{
