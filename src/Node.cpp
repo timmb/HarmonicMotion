@@ -16,10 +16,18 @@ namespace hm
 {
 	std::ostream& operator<<(std::ostream& out, Node const& node)
 	{
-		return out
-		<< "Node "<<node.name()<<" ("<<node.type()<<")"
-		<<" inlets:"<<node.numInlets()
-		<<" outlets:"<<node.numOutlets();
+		out	<< "Node "<<node.name()<<" ("<<node.type()<<")"
+		<<"\nInlets:";
+		for (InletPtr inlet: node.inlets())
+		{
+			out << "\n    " << *inlet;
+		}
+		out << "\nOutlets:";
+		for (OutletPtr outlet: node.outlets())
+		{
+			out << "\n    " << *outlet;
+		}
+		return out;
 	}
 }
 
@@ -99,36 +107,36 @@ std::vector<ParameterPtr> Node::parameters()
 }
 
 
-InletPtr Node::inlet(int index)
+InletPtr Node::inlet(int index) const
 {
 	assert(0 <= index && index < mInlets.size());
-	return mInlets[index];
+	return (0 <= index && index < mInlets.size())? mInlets[index] : nullptr;
 }
 
-vector<InletPtr> Node::inlets()
+vector<InletPtr> Node::inlets() const
 {
 	return mInlets;
 }
 
-OutletPtr Node::outlet(int index)
+OutletPtr Node::outlet(int index) const
 {
 	assert(0 <= index && index < mOutlets.size());
-	return mOutlets[index];
+	return (0 <= index && index < mOutlets.size())? mOutlets[index] : nullptr;
 }
 
-const InletPtr Node::inlet(int index) const 
-{
-	assert(0 <= index && index < mInlets.size());
-	return mInlets[index];
-}
+//const InletPtr Node::inlet(int index) const 
+//{
+//	assert(0 <= index && index < mInlets.size());
+//	return (0 <= index && index < mInlets.size())? mInlets[index] : nullptr;
+//}
+//
+//const OutletPtr Node::outlet(int index) const
+//{
+//	assert(0 <= index && index < mOutlets.size());
+//	return (0 <= index && index < mOutlets.size())? mOutlets[index] : nullptr;
+//}
 
-const OutletPtr Node::outlet(int index) const
-{
-	assert(0 <= index && index < mOutlets.size());
-	return mOutlets[index];
-}
-
-vector<OutletPtr> Node::outlets()
+vector<OutletPtr> Node::outlets() const
 {
 	return mOutlets;
 }

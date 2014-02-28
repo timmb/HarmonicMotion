@@ -47,14 +47,14 @@ namespace hm
 		std::string toString() const;
 				
 		int numInlets() const;
-		InletPtr inlet(int index);
-		const InletPtr inlet(int index) const;
-		std::vector<InletPtr> inlets();
+//		InletPtr inlet(int index);
+		InletPtr inlet(int index) const;
+		std::vector<InletPtr> inlets() const;
 
 		int numOutlets() const;
-		OutletPtr outlet(int index);
-		const OutletPtr outlet(int index) const;
-		std::vector<OutletPtr> outlets();
+//		OutletPtr outlet(int index);
+		OutletPtr outlet(int index) const;
+		std::vector<OutletPtr> outlets() const;
 		
 		std::vector<ParameterPtr> parameters();
 		

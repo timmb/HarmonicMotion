@@ -46,10 +46,7 @@ namespace hm
 //        /// std::weak_ptr<Node>(nullptr)
 //        std::weak_ptr<Node> node() const;
 		
-		virtual std::string toString() const override
-		{ // TODO: implement
-			return "Inlet";
-		}
+		virtual std::string toString() const override;
 		
 	private:
 		/// Type may be a combination of Type flags.
@@ -87,5 +84,6 @@ namespace hm
 		friend class Node;
 		friend class Outlet;
 		friend class Pipeline;
+		friend std::ostream& operator<<(std::ostream&, Inlet const&);
 	};
 }

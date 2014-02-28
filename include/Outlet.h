@@ -31,9 +31,7 @@ namespace hm
 //        /// std::weak_ptr<Node>(nullptr)
 //        std::weak_ptr<Node> node() const;
 		
-		virtual std::string toString() const override { // TODO: implement
-			return "Outlet";
-		}
+		virtual std::string toString() const override;
 		
 	private:
 		/// Outlets are constructed with a reference to their owning node
@@ -74,8 +72,10 @@ namespace hm
 		
 		friend class Node;
 		friend class Pipeline;
+		friend std::ostream& operator<<(std::ostream&, Outlet const&);
 	};
 	
+	std::ostream& operator<<(std::ostream&, Outlet const&);
 }
 
 

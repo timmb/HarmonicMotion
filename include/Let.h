@@ -15,7 +15,7 @@ namespace hm
 	class Let
 	{
 	public:
-		virtual ~Let();
+		virtual ~Let() {}
 		
 		Types types() const { return mTypes; }
 		std::string name() const { return mName; }
