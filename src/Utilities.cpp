@@ -7,11 +7,19 @@
 //
 
 #include "Utilities.h"
+#include <QWidget>
+#include <QStyle>
 
 namespace hm
 {
 	QString str(std::string utf8String)
 	{
 		return QString::fromUtf8(utf8String.c_str());
+	}
+	
+	void repolish(QWidget* widget)
+	{
+		widget->style()->unpolish(widget);
+		widget->style()->polish(widget);
 	}
 }

@@ -17,4 +17,8 @@ namespace hm
 {
 	/// Convert a std::string to a QString assuming UTF8 encoding
 	QString str(std::string utf8String);
+	
+	/// Unpolish and repolish the style of a widget to force it to update
+	/// its appearance (based on its CSS) after a property has changed
+	void repolish(class QWidget* widget);
 }

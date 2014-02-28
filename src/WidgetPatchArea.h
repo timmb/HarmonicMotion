@@ -31,6 +31,8 @@ namespace hm
 		/// Will be created if null.
 		WidgetPatchArea(PipelinePtr pipeline, QWidget* parent=nullptr);
 		
+		/// \return A shared pointer to the pipeline represented by this patch
+		/// area
 		PipelinePtr pipeline() const { return mPipeline; }
         
 		// MARK: Element access and querying
@@ -86,7 +88,14 @@ namespace hm
 		/// moves or is resized to ensure the scroll area
 		/// encapsulating this widget updates
 		void updateSize();
+		/// Provide new Info Panel data to this patch area, to be forwarded
+		/// on to the info panel
+		void provideInfoPanelText(QString);
         
+	Q_SIGNALS:
+		/// New text to be sent to the info panel
+		void newInfoPanelText(QString);
+		
 	protected:
 		virtual QSize sizeHint() const override;
 //		virtual void mousePressEvent(QMouseEvent*) override;

@@ -34,6 +34,11 @@ namespace hm
 		
 	public Q_SLOTS:
 		void newConsoleMessage(QString);
+		/// Update the info panel
+		void provideInfoPanelText(QString);
+		
+	Q_SIGNALS:
+		void newInfoPanelText(QString);
 		
 	private:
 		QPlainTextEdit* mConsole;

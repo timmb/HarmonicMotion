@@ -53,10 +53,15 @@ namespace hm
 		virtual void mouseReleaseEvent(QMouseEvent* event) override;
 		virtual void resizeEvent(QResizeEvent* event) override;
 		virtual void moveEvent(QMoveEvent* event) override;
+		virtual void focusInEvent(QFocusEvent* event) override;
+		virtual void focusOutEvent(QFocusEvent* event) override;
         virtual QSize sizeHint() const override;
 		
 	Q_SIGNALS:
 		void geometryChanged();
+		/// Emitted when this node has gained focus and so the info panel
+		/// needs updating
+		void newInfoPanelText(QString);
 		
 	protected Q_SLOTS:
 		void loadStyleSheet();

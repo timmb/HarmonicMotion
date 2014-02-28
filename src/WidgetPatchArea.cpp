@@ -76,24 +76,10 @@ void WidgetPatchArea::eraseNode(WidgetNode* node)
 	node->deleteLater();
 }
 
-//void WidgetPatchArea::callbackWidgetNodeDestroyed(WidgetNode* w)
-//{
-//    NodePtr node = w->node();
-//    assert(mWidgetNodes.contains(node));
-//    mWidgetNodes.remove(node);
-//    for (WidgetInlet* i: w->widgetInlets())
-//    {
-//        InletPtr inlet = i->inlet();
-//        assert(mWidgetInlets.contains(inlet));
-//        mWidgetInlets.remove(inlet);
-//    }
-//    for (WidgetOutlet* o: w->widgetOutlets())
-//    {
-//        OutletPtr outlet = o->outlet();
-//        assert(mWidgetOutlets.contains(outlet));
-//        mWidgetOutlets.remove(outlet);
-//    }
-//}
+void WidgetPatchArea::provideInfoPanelText(QString string)
+{
+	Q_EMIT newInfoPanelText(string);
+}
 
 WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
 {

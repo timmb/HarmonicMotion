@@ -32,6 +32,10 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 
 //	mLayout->addWidget(mConsole);
 //	mLayout->addWidget(mPatchArea);
+	bool success(true);
+	
+	success = connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString)));
+	assert(success);
 	
 	QScrollArea* patchScrollArea = new QScrollArea(this);
 	patchScrollArea->setWidget(mPatchArea);
@@ -41,6 +45,19 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	setCentralWidget(patchScrollArea);
 	addDockWidget(Qt::LeftDockWidgetArea, new WidgetNodeList(this, this));
 	
+	QDockWidget* infoPanelDock = new QDockWidget("Info", this);
+	QPlainTextEdit* infoPanel = new QPlainTextEdit(infoPanelDock);
+	infoPanelDock->setWidget(infoPanel);
+	addDockWidget(Qt::BottomDockWidgetArea, infoPanelDock);
+	
+	success = connect(this, SIGNAL(newInfoPanelText(QString)), infoPanel, SLOT(setPlainText(QString)));
+	assert(success);
+}
+
+
+void MainWindow::provideInfoPanelText(QString text)
+{
+	Q_EMIT newInfoPanelText(text);
 }
 
 

@@ -6,6 +6,13 @@
 	border-color: #999;
 }
 
+#mMainArea[hasFocus="true"] {
+border-width: 1px;
+border-style: solid;
+
+	border-color: #000;
+}
+
 QWidget {
 	padding: 0;
 	margin: 0;

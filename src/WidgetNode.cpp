@@ -38,11 +38,11 @@ namespace hm
 		loadStyleSheet();
 		setObjectName("WidgetNode");
         
-//        mInnerBox = new QWidget(this);
-//        mInnerBox->setObjectName("InnerBox");
 		QLabel* type = new QLabel(str(mNode->type()));
 		type->setObjectName("LabelNodeType");
-		QLineEdit* name = new QLineEdit(str(mNode->name()));
+		
+		setFocusPolicy(Qt::ClickFocus);
+		
 		// TODO: wait for Qt5
 		//	bool success = connect(name, &QLineEdit::textChanged, [this](QString const& str)
 		//			{
@@ -51,6 +51,11 @@ namespace hm
 		//	assert(success);
 		
 //        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+		
+		// LAYOUT AND WIDGETS
+		
+		QLineEdit* name = new QLineEdit(str(mNode->name()));
+
 		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		
 		QGridLayout* mainLayout = new QGridLayout;
@@ -60,7 +65,6 @@ namespace hm
         inletsLayout->setAlignment(Qt::AlignTop);
         outletsLayout->setAlignment(Qt::AlignTop);
         
-//		mInnerBox->setLayout(layout);
 		mainLayout->addWidget(type, 0, 0);
 		mainLayout->addWidget(name, 0, 1);
 		
@@ -88,10 +92,7 @@ namespace hm
             outletsLayout->addWidget(w);
 		}
 		
-		connect(this, SIGNAL(geometryChanged()), this, SLOT(layout()));
-		connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
 		preventNegativePosition();
-		Q_EMIT geometryChanged();
         
         mMainArea = new QWidget;
         mMainArea->setObjectName("mMainArea");
@@ -105,6 +106,19 @@ namespace hm
         layout->setSizeConstraint(QLayout::SetFixedSize);
         setLayout(layout);
         
+		// CONNECTIONS
+		
+		bool success(true);
+		
+		success = connect(this, SIGNAL(geometryChanged()), this, SLOT(layout()));
+		assert(success);
+		success = connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
+		assert(success);
+		success = connect(this, SIGNAL(newInfoPanelText(QString)), patchArea, SLOT(provideInfoPanelText(QString)));
+		assert(success);
+		
+		Q_EMIT geometryChanged();
+
 		// TODO: temp
 		QTimer* t = new QTimer(this);
 		t->setInterval(500);
@@ -220,6 +234,22 @@ namespace hm
 	{
 		preventNegativePosition();
 		Q_EMIT geometryChanged();
+	}
+	
+	void WidgetNode::focusInEvent(QFocusEvent* event)
+	{
+		/// this property adds the black border around the widget
+		mMainArea->setProperty("hasFocus", true);
+		// force update of appearance
+		repolish(mMainArea);
+		Q_EMIT newInfoPanelText(str(mNode->toString()));
+	}
+	
+	void WidgetNode::focusOutEvent(QFocusEvent* event)
+	{
+		mMainArea->setProperty("hasFocus", false);
+		// force update of appearance
+		repolish(mMainArea);
 	}
 	
 	void WidgetNode::preventNegativePosition()
