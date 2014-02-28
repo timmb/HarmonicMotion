@@ -344,6 +344,29 @@ namespace hm
 		}
 		return success;
 	}
+	
+	Json::Value& operator<<(Json::Value& value, Node::Params const& params)
+	{
+		value["name"] = params.name;
+		return value;
+	}
+
+	bool operator>>(Json::Value const& value, Node::Params& params)
+	{
+		// TODO: Check name is unique
+		string name = value["name"].asString();
+		if (!name.empty())
+		{
+			params.name = name;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+
 }
 
 
