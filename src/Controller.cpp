@@ -46,7 +46,7 @@ Controller::Controller(QObject* parent)
 	NodePtr osc = FactoryNode::instance()->create("NodeOscOut");
 //	kinect->outlet(0)->connect(osc->inlet(0));
 	mPipeline->addNode(osc);
-	mPipeline->connect(gen->outlet(0), osc->inlet(0));
+//	mPipeline->connect(gen->outlet(0), osc->inlet(0));
 //	mMainWindow->patchArea()->addNode(osc);
 	
 ////	auto filter = NodePtr(new NodeFilter);

@@ -100,6 +100,7 @@ WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
 	assert(outlet != nullptr);
     WidgetPatchCord* p = new WidgetPatchCord(this);
 	p->setOutlet(outlet);
+	p->setUnconnectedPointDrawPosition(outlet->connectionPoint());
 	mNewPatchCord = p;
 	setMouseTracking(true);
     return p;
@@ -288,6 +289,7 @@ void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint positi
 			// We have been passed a bogus WidgetLet
 			assert(let->objectName()=="WidgetInlet" || let->objectName()=="WidgetOutlet");
 		}
+		setMouseTracking(true);
 	}
 	
 	

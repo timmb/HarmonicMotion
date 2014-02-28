@@ -196,6 +196,10 @@ namespace hm
             else
                 move(mapToParent(event->pos() - mDragOffset));
         }
+		else
+		{
+			event->ignore();
+		}
 	}
 	
 	void WidgetNode::mouseReleaseEvent(QMouseEvent* event)

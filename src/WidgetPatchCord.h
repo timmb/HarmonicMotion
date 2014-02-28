@@ -81,6 +81,7 @@ namespace hm
         void redraw();
 //        void outletDestroyed();
 //        void inletDestroyed();
+//		void loadStyleSheet();
         
     protected:
         virtual void paintEvent(QPaintEvent* event) override;

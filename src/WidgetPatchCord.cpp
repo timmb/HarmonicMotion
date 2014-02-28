@@ -12,6 +12,10 @@
 #include <QCoreApplication>
 #include "WidgetLet.h"
 
+#include <QFile>
+#include <QTimer>
+#include <QDebug>
+
 using namespace hm;
 
 WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea)
@@ -23,6 +27,11 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea)
 {
     assert(mPatchArea != nullptr);
 	hm_debug("New disconnected WidgetPatchCord.");
+	
+//	QTimer* t = new QTimer;
+//	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
+//	t->setInterval(500);
+//	t->start();
 }
 
 WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outlet, WidgetInlet* inlet)
@@ -53,6 +62,21 @@ WidgetPatchCord::~WidgetPatchCord()
 	}
 	hm_debug("WidgetPatchCord destroyed.");
 }
+
+//
+//void WidgetPatchCord::loadStyleSheet()
+//{
+//	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetPatchCord.qss");
+//	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+//	{
+//		setStyleSheet(QString::fromUtf8(file.readAll()));
+//	}
+//	else
+//	{
+//		hm_error("Failed to load stylesheet WidgetPatchCord.qss");
+//	}
+//
+//}
 
 
 void WidgetPatchCord::erase()
@@ -92,10 +116,12 @@ void WidgetPatchCord::redraw()
     if (mInlet==nullptr && mOutlet==nullptr)
     {
         mIsLineDrawn = false;
+//		qDebug() << "redraw line is not drawn";
     }
     else
     {
         mIsLineDrawn = true;
+//		qDebug() << "redraw line is drawn";
         if (mOutlet!=nullptr)
         {
             mLine.setP1(mOutlet->connectionPoint());
@@ -110,6 +136,7 @@ void WidgetPatchCord::redraw()
         bounds.setRight(qMax(mLine.x1(), mLine.x2()));
         bounds.setBottom(qMax(mLine.y1(), mLine.y2()));
         setGeometry(bounds);
+//		qDebug() << "line"<<mLine<<"bounds"<<bounds;
     }
     update();
 }
@@ -118,12 +145,15 @@ void WidgetPatchCord::redraw()
 
 void WidgetPatchCord::paintEvent(QPaintEvent* event)
 {
+//	qDebug() << "paintEvent";
     if (mIsLineDrawn)
     {
+//		qDebug() << "line is drawn";
+		QLine lineRelativeToThis = mLine.translated(-pos());
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(QPen(QColor(50,50,50)));
-        painter.drawLine(mLine);
+        painter.drawLine(lineRelativeToThis);
     }
 }
 
@@ -225,6 +255,7 @@ bool WidgetPatchCord::trySettingUnconnectedLet(WidgetLet* let)
 
 void WidgetPatchCord::setUnconnectedPointDrawPosition(QPoint position)
 {
+//	qDebug() << "setUnconnected..";
 	assert((mOutlet==nullptr) != (mInlet==nullptr));
 	
 	if (mOutlet==nullptr)
@@ -235,6 +266,7 @@ void WidgetPatchCord::setUnconnectedPointDrawPosition(QPoint position)
 	{
 		mLine.setP2(position);
 	}
+	redraw();
 }
 
 
@@ -350,6 +382,7 @@ void WidgetPatchCord::setOutlet(WidgetOutlet* outlet)
         {
             connectUnderlyingModel();
         }
+		show();
     }
     redraw();
 }
@@ -374,6 +407,7 @@ void WidgetPatchCord::setInlet(WidgetInlet* inlet)
         {
             connectUnderlyingModel();
         }
+		show();
     }
     redraw();
 }
