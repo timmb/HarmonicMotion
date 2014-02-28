@@ -17,17 +17,11 @@ using namespace std;
 using namespace hm;
 
 Outlet::Outlet(Types types, Node& node, string const& name, string const& helpText)
-: mTypes(types)
-, mName(name)
+: Let(types, node, name, helpText)
 , mNode(&node)
-, mHelpText(helpText)
 {
 }
 
-void Outlet::detachOwnerNode()
-{
-	mNode = nullptr;
-}
 
 //std::string Outlet::nodeName() const
 //{
@@ -74,7 +68,7 @@ void Outlet::removePatchCord(PatchCordPtr patchCord)
 
 void Outlet::outputNewData(Data& data)
 {
-	bool isDataTypeValid = mTypes & data.type();
+	bool isDataTypeValid = types() & data.type();
 	assert(isDataTypeValid);
 	if (isDataTypeValid)
 	{
@@ -115,10 +109,6 @@ void Outlet::outputNewData(Data& data)
 }
 
 
-std::weak_ptr<Node> Outlet::node() const
-{
-    return FactoryNode::instance()->getNodePtr(mNode);
-}
 
 
 bool Outlet::isConnectedTo(InletPtr inlet) const

@@ -9,28 +9,29 @@
 #pragma once
 #include "Common.h"
 #include "Data.h"
+#include "Let.h"
 
 namespace hm
 {
-	class Outlet
+	class Outlet : public Let
 	{
 	public:
-		Types types() const { return mTypes; }
-		std::string name() const { return mName; }
-		std::string helpText() const { return mHelpText; }
+//		Types types() const { return mTypes; }
+//		std::string name() const { return mName; }
+//		std::string helpText() const { return mHelpText; }
 		
         bool isConnectedTo(InletPtr inlet) const;
 		void outputNewData(Data& data);
 		/// \return The number of inlets this outlet is connected to.
 		int numInlets() const { return mPatchCords.size(); }
 		
-        /// If this inlet is owned by a node and that node was was
-        /// created by FactoryNode then this function will return a weak
-        /// pointer to the node. Otherwise it returns
-        /// std::weak_ptr<Node>(nullptr)
-        std::weak_ptr<Node> node() const;
+//        /// If this inlet is owned by a node and that node was was
+//        /// created by FactoryNode then this function will return a weak
+//        /// pointer to the node. Otherwise it returns
+//        /// std::weak_ptr<Node>(nullptr)
+//        std::weak_ptr<Node> node() const;
 		
-		std::string toString() const { // TODO: implement
+		virtual std::string toString() const override { // TODO: implement
 			return "Outlet";
 		}
 		
@@ -40,9 +41,6 @@ namespace hm
 		/// it.
 		/// Outlets are only created by Nodes
 		Outlet(Types type, Node& owner, std::string const& name, std::string const& helpText);
-		/// This is used by the node when it is destroyed just in case the
-		/// outlet outlives its node. There is no need to call it normally
-		void detachOwnerNode();
 		
 		
 		/// Connections are all managed exclusively by the owning pipeline.
@@ -68,13 +66,11 @@ namespace hm
 //        /// fails an assertion (in debug) or fails silently (in release).
 //        void disconnect(InletPtr inlet);
 		
-		Node* mNode;
-		Types mTypes;
-		std::string mName;
-		std::string mHelpText;
 //		std::string mNodeName;
 //		std::vector<std::weak_ptr<Inlet>> mOutputs;
 		std::vector<PatchCordPtr> mPatchCords;
+		
+		Node* mNode;
 		
 		friend class Node;
 		friend class Pipeline;

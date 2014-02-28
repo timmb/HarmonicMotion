@@ -22,12 +22,10 @@ Inlet::Inlet(Types types,
 			 Node& node,
 			 string const& name,
 			 string const& helpText)
-: mNode(&node)
-, mTypes(types)
-, mName(name)
-, mHelpText(helpText)
+: Let(types, node, name, helpText)
+, mNode(&node)
 , mDestructorHasBeenCalled(false)
-, mNodeName("(mNodeName unset)")
+//, mNodeName("(mNodeName unset)")
 {
 	assert(types!=UNDEFINED);
 }
@@ -101,8 +99,3 @@ void Inlet::provideNewData(Data const& data)
 		mNotifyCallback(mDataTimestamp);
 }
 
-
-std::weak_ptr<Node> Inlet::node() const
-{
-    return FactoryNode::instance()->getNodePtr(mNode);
-}

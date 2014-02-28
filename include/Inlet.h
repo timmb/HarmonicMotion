@@ -9,19 +9,20 @@
 #pragma once
 #include "Common.h"
 #include "Data.h"
+#include "Let.h"
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
 namespace hm
 {
-	class Inlet
+	class Inlet : public Let
 	{
 	public:
 		virtual ~Inlet();
 		
-		Types types() const { return mTypes; }
-		virtual std::string name() const { return mName; }
-		virtual std::string helpText() const { return mHelpText; }
+//		Types types() const { return mTypes; }
+//		virtual std::string name() const { return mName; }
+//		virtual std::string helpText() const { return mHelpText; }
 		
 		int numConnections() const { return mNumConnections; }
 		
@@ -39,13 +40,14 @@ namespace hm
 		/// The timestamp of the new data is provided as argument to the function
 		/// \note This function must be thread safe and should not block
 		void setNotifyCallback(std::function<void(double)> function);
-        /// If this inlet is owned by a node and that node was was
-        /// created by FactoryNode then this function will return a weak
-        /// pointer to the node. Otherwise it returns
-        /// std::weak_ptr<Node>(nullptr)
-        std::weak_ptr<Node> node() const;
+//        /// If this inlet is owned by a node and that node was was
+//        /// created by FactoryNode then this function will return a weak
+//        /// pointer to the node. Otherwise it returns
+//        /// std::weak_ptr<Node>(nullptr)
+//        std::weak_ptr<Node> node() const;
 		
-		std::string toString() const { // TODO: implement
+		virtual std::string toString() const override
+		{ // TODO: implement
 			return "Inlet";
 		}
 		
@@ -67,10 +69,10 @@ namespace hm
 		// -------------------------------
 		
 		Node* mNode;
-		Types mTypes;
-		std::string mName;
-		std::string mHelpText;
-		std::string mNodeName;
+//		Types mTypes;
+//		std::string mName;
+//		std::string mHelpText;
+//		std::string mNodeName;
 		/// Guarded by mMutex
 		Data mData;
 		/// Guarded by mMutex
