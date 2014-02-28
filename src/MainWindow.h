@@ -10,6 +10,7 @@
 #include <QMainWindow>
 #include <QLayout>
 #include "Common.h"
+#include <QSaveFile>
 
 class QPlainTextEdit;
 
@@ -36,15 +37,32 @@ namespace hm
 		void newConsoleMessage(QString);
 		/// Update the info panel
 		void provideInfoPanelText(QString);
+		void actionNew();
+		void actionSave();
+		void actionSaveAs();
+		void actionOpen();
+		
+		// TODO: Implement close event and check whether we should save
 		
 	Q_SIGNALS:
 		void newInfoPanelText(QString);
 		
 	private:
+		/// Asks the user if they want to save current document.
+		/// \return true if it's OK to carry on and destroy the document
+		/// or false if the user clicked Cancel.
+		bool confirmDestroyWithUser();
+		/// Presents a save as dialog, returns true if the file successfully saves
+		bool saveAs();
+		/// Saves the current pipeline to mOpenedFile, or launches actionSaveAs
+		/// if mOpenedFile does not point to a file
+		bool saveOpenFile();
+		
 		QPlainTextEdit* mConsole;
 		QLayout* mLayout;
 		QVector<NodeRendererGlWidget*> mScenes;
 		WidgetPatchArea* mPatchArea;
+		QString mOpenedFile;
 	};
 	
 	

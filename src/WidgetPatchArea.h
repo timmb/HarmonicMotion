@@ -23,6 +23,7 @@ namespace hm
 	class WidgetLet;
     
     
+	/// WidgetPatchArea manages a Pipeline.
 	class WidgetPatchArea : public QWidget, public Pipeline::Listener
 	{
 		Q_OBJECT
