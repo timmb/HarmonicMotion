@@ -38,4 +38,5 @@ namespace hm
 	};
 	
 	Json::Value& operator<<(Json::Value&, PatchCord const&);
+	std::ostream& operator<<(std::ostream&, PatchCord const&);
 }

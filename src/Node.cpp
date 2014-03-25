@@ -11,6 +11,7 @@
 #include "Outlet.h"
 #include "cinder/Utilities.h"
 #include "Parameter.h"
+#include "Common.h"
 
 namespace hm
 {
@@ -18,14 +19,15 @@ namespace hm
 	{
 		out	<< "Node "<<node.name()<<" ("<<node.type()<<")"
 		<<"\nInlets:";
+		OStreamIndenter<std::ostream> indented(out);
 		for (InletPtr inlet: node.inlets())
 		{
-			out << "\n    " << *inlet;
+			indented << "\n" << *inlet;
 		}
 		out << "\nOutlets:";
 		for (OutletPtr outlet: node.outlets())
 		{
-			out << "\n    " << *outlet;
+			indented << "\n" << *outlet;
 		}
 		return out;
 	}

@@ -31,6 +31,13 @@ Pipeline::~Pipeline()
 {
 }
 
+std::string Pipeline::toString() const
+{
+	stringstream ss;
+	ss << *this;
+	return ss.str();
+}
+
 std::vector<NodePtr> const& Pipeline::nodes() const
 {
 	return mNodes;
@@ -490,8 +497,28 @@ bool Pipeline::saveJson(string filePath) const
 }
 
 
-
-
+namespace hm
+{
+	std::ostream& operator<<(std::ostream& out, Pipeline const& rhs)
+	{
+		out << "[Pipeline: "
+		<< (rhs.mIsRunning? "running" : "stopped")
+		<< "\nNodes: [";
+		auto indentedOut = OStreamIndenter<std::ostream>(out);
+		for (int i=0; i<rhs.mNodes.size(); i++)
+		{
+			indentedOut << *rhs.mNodes[i] << (i < rhs.mNodes.size()-1? ",\n" : "");
+		}
+		out << "\n], Patchcords: [";
+		for (auto it=begin(rhs.mPatchCords); it!=end(rhs.mPatchCords); )
+		{
+			indentedOut << **it;
+			++it;
+			indentedOut << (it!=end(rhs.mPatchCords)? ",\n" : "");
+		}
+		return out << "\n]";
+	}
+}
 
 
 

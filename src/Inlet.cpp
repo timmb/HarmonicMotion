@@ -26,6 +26,8 @@ namespace hm
 				 string const& helpText)
 	: Let(types, node, name, helpText)
 	, mNode(&node)
+	, mDataTimestamp(-42)
+	, mNumConnections(0)
 	, mDestructorHasBeenCalled(false)
 	//, mNodeName("(mNodeName unset)")
 	{

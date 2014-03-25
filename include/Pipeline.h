@@ -36,6 +36,8 @@ namespace hm
 		Pipeline();
 		virtual ~Pipeline();
 		
+		std::string toString() const;
+		
 		// MARK: Access pipeline elements
 		
 		std::vector<NodePtr> const& nodes() const;
@@ -109,7 +111,11 @@ namespace hm
 		/// All patch cords in the pipeline, sorted by inlet
 		std::list<PatchCordPtr> mPatchCords;
 		std::list<Listener*> mListeners;
+		
+		friend std::ostream& operator<<(std::ostream&, Pipeline const&);
 	};
+	
+	std::ostream& operator<<(std::ostream&, Pipeline const&);
 	
 }
 

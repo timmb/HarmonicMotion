@@ -42,6 +42,10 @@ namespace hm
 		return j;
 	}
 	
-	
+	std::ostream& operator<<(std::ostream& out, PatchCord const& p)
+	{
+		return out << "[" << (!p.isValid()? "INVALID " : "") << "Patchcord "
+		<<p.outlet()->path() << " --> " << p.inlet()->path() << "]";
+	}
 	
 }
