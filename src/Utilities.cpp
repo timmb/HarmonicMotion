@@ -12,7 +12,7 @@
 
 namespace hm
 {
-	QString str(std::string utf8String)
+	QString str(std::string const& utf8String)
 	{
 		return QString::fromUtf8(utf8String.c_str());
 	}

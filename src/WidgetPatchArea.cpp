@@ -34,6 +34,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	}
 	mPipeline->addListener(this);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	setFocusPolicy(Qt::ClickFocus);
 	setAutoFillBackground(true);
 	//	mPatchArea->setColor(QPalette::Window, QColor("gray"));
 }
@@ -322,6 +323,10 @@ void WidgetPatchArea::mouseMoveEvent(QMouseEvent* event)
 }
 
 
+void WidgetPatchArea::focusInEvent(QFocusEvent* event)
+{
+	Q_EMIT newInfoPanelText(str(mPipeline->toString()));
+}
 
 
 

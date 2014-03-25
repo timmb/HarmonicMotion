@@ -101,6 +101,7 @@ namespace hm
 		virtual QSize sizeHint() const override;
 //		virtual void mousePressEvent(QMouseEvent*) override;
 		virtual void mouseMoveEvent(QMouseEvent*) override;
+		virtual void focusInEvent(QFocusEvent* event) override;
         
     private:
 		// MARK: Functions that do not affect the underlying Pipeline model
