@@ -56,7 +56,7 @@ namespace hm
 	/// Wrapper to add indent to output stream whenever
 	/// '\n' or std::endl is passed.
 	template <typename OutputStream>
-	class OStreamIndenter 
+	class OStreamIndenter
 	{
 	public:
 		OStreamIndenter(OutputStream & out, int indentSize_ = 2);
@@ -136,6 +136,17 @@ namespace hm
 	{
 		out.out << std::string(rhs);
 		return out;
+	}
+	
+	template <typename OutputStream>
+	OStreamIndenter<OutputStream>& operator<<(OStreamIndenter<OutputStream> & out, char rhs)
+	{
+		if (rhs=='\n')
+		{
+			out.newLineIndent();
+			return out;
+		}
+		return out.out << rhs;
 	}
 	
 	template <typename OutputStream>
