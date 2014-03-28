@@ -11,7 +11,6 @@
 #include <vector>
 #include <ostream>
 #include <iostream>
-#include <sstream>
 #include "Type.h"
 
 namespace hm
@@ -51,113 +50,9 @@ namespace hm
 		return std::find(container.begin(), container.end(), value) != container.end();
 	}
 	
+	/// Add an indent to newlines on a string
+	std::string indent(std::string const& s, int indentAmount=2);
 	
-	
-	/// Wrapper to add indent to output stream whenever
-	/// '\n' or std::endl is passed.
-	template <typename OutputStream>
-	class OStreamIndenter
-	{
-	public:
-		OStreamIndenter(OutputStream & out, int indentSize_ = 2);
-		OStreamIndenter(OStreamIndenter<OutputStream> const& rhs);
-		
-		OutputStream& out;
-		const int indentSize;
-		/// Print new line and indent
-		void newLineIndent();
-	};
-	
-	template <typename OutputStream>
-	OStreamIndenter<OutputStream>::OStreamIndenter(OutputStream & out_, int indentSize_)
-	: out(out_)
-	, indentSize(indentSize_)
-	{}
-	
-	template <typename OutputStream>
-	OStreamIndenter<OutputStream>::OStreamIndenter(OStreamIndenter<OutputStream> const& rhs)
-	: out(rhs.out)
-	, indentSize(rhs.indentSize)
-	{}
-	
-	template <typename OutputStream>
-	void OStreamIndenter<OutputStream>::newLineIndent()
-	{
-		out << '\n';
-		for (int i=0; i<indentSize; i++)
-		{
-			out << ' ';
-		}
-	}
-	
-	template <typename OutputStream, typename T>
-	OStreamIndenter<OutputStream>& operator<<(OStreamIndenter<OutputStream> & out, T const& rhs)
-	{
-		std::stringstream ss;
-		ss << rhs;
-		return out << ss.str();
-	}
-	
-	template <typename OutputStream, typename _CharT, typename _Traits>
-	OStreamIndenter<OutputStream>& operator<<(OStreamIndenter<OutputStream> & out, std::basic_ostream<_CharT, _Traits> rhs)
-	{
-		if (rhs==std::endl)
-		{
-			out.newLineIndent();
-		}
-		else
-		{
-			out.out << rhs;
-		}
-		return out;
-	}
-	
-	template <typename OutputStream>
-	OStreamIndenter<OutputStream>& operator<<(OStreamIndenter<OutputStream> & out, std::string const& rhs)
-	{
-		auto lineStart = 0;
-		auto lineEnd = rhs.find('\n');
-		for (;;)
-		{
-			out.out << rhs.substr(lineStart, lineEnd);
-			if (lineEnd==std::string::npos)
-			{
-				break;
-			}
-			lineStart = lineEnd + 1;
-			lineEnd = rhs.find('\n', lineStart);
-			out.newLineIndent();
-		}
-		return out;
-	}
-	
-	template <typename OutputStream>
-	OStreamIndenter<OutputStream>& operator<<(OStreamIndenter<OutputStream> & out, char const* rhs)
-	{
-		out.out << std::string(rhs);
-		return out;
-	}
-	
-	template <typename OutputStream>
-	OStreamIndenter<OutputStream>& operator<<(OStreamIndenter<OutputStream> & out, char rhs)
-	{
-		if (rhs=='\n')
-		{
-			out.newLineIndent();
-			return out;
-		}
-		return out.out << rhs;
-	}
-	
-	template <typename OutputStream>
-	OStreamIndenter<OutputStream> indent(OutputStream & out, int indentSize=2)
-	{
-		return OStreamIndenter<OutputStream>(out, indentSize);
-	}
-
-	
-	
-
 	
 	// For printing verbose debugging info
 #if defined(DEBUG) || defined(_DEBUG)

@@ -8,6 +8,7 @@
 
 #include "Common.h"
 #include "cinder/Timer.h"
+#include <sstream>
 
 namespace hm
 {
@@ -30,6 +31,21 @@ namespace hm
 			IMAGE3D
 		};
 		return types;
+	}
+	
+	std::string indent(std::string const& s, int indentAmount)
+	{
+		std::string indent(indentAmount, ' ');
+		std::stringstream ss;
+		for (char c: s)
+		{
+			ss << c;
+			if (c=='\n')
+			{
+				ss << indent;
+			}
+		}
+		return ss.str();
 	}
 	
 }

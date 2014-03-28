@@ -27,7 +27,7 @@ namespace hm
 	
 	std::ostream& operator<<(std::ostream& out, Outlet const& o)
 	{
-		out << "Outlet " << o.name() << " [";
+		out << "[Outlet " << o.name() << " ";
 		for (int i=0; i<o.mPatchCords.size(); i++)
 		{
 			InletPtr inlet = o.mPatchCords[i]->inlet();

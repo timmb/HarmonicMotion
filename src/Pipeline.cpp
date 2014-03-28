@@ -504,17 +504,16 @@ namespace hm
 		out << "[Pipeline: "
 		<< (rhs.mIsRunning? "running" : "stopped")
 		<< "\nNodes: [";
-		auto indentedOut = OStreamIndenter<std::ostream>(out);
 		for (int i=0; i<rhs.mNodes.size(); i++)
 		{
-			indentedOut << *rhs.mNodes[i] << (i < rhs.mNodes.size()-1? ",\n" : "");
+			out << indent(rhs.mNodes[i]->toString() + (i < rhs.mNodes.size()-1? ",\n" : ""));
 		}
-		out << "\n], Patchcords: [";
+		out << "\n],\nPatchcords: [";
 		for (auto it=begin(rhs.mPatchCords); it!=end(rhs.mPatchCords); )
 		{
-			indentedOut << **it;
+			out << indent((**it).toString());
 			++it;
-			indentedOut << (it!=end(rhs.mPatchCords)? ",\n" : "");
+			out << indent(it!=end(rhs.mPatchCords)? ",\n" : "");
 		}
 		return out << "\n]";
 	}

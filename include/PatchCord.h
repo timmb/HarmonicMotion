@@ -24,6 +24,7 @@ namespace hm
 		
 		/// \return true if both outlet and inlet are valid.
 		bool isValid() const;
+		std::string toString() const;
 		
 	private:
 		// Accessed only by Pipeline

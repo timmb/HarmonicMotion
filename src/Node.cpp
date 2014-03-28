@@ -19,15 +19,14 @@ namespace hm
 	{
 		out	<< "Node "<<node.name()<<" ("<<node.type()<<")"
 		<<"\nInlets:";
-		OStreamIndenter<std::ostream> indented(out);
 		for (InletPtr inlet: node.inlets())
 		{
-			indented << "\n" << *inlet;
+			out << indent("\n" + inlet->toString());
 		}
 		out << "\nOutlets:";
 		for (OutletPtr outlet: node.outlets())
 		{
-			indented << "\n" << *outlet;
+			out << indent("\n" + outlet->toString());
 		}
 		return out;
 	}

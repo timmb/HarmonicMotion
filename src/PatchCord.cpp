@@ -10,6 +10,7 @@
 #include "Inlet.h"
 #include "Outlet.h"
 #include "Pipeline.h"
+#include <sstream>
 
 namespace hm
 {
@@ -33,6 +34,11 @@ namespace hm
 	bool PatchCord::operator==(PatchCord const& rhs) const
 	{
 		return mOutlet == rhs.mOutlet && mInlet == rhs.mInlet;
+	}
+	
+	std::string PatchCord::toString() const
+	{
+		return (std::stringstream() << *this).str();
 	}
 	
 	Json::Value& operator<<(Json::Value& j, PatchCord const& p)
