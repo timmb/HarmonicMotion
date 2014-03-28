@@ -506,7 +506,7 @@ namespace hm
 		<< "\nNodes: [";
 		for (int i=0; i<rhs.mNodes.size(); i++)
 		{
-			out << indent(rhs.mNodes[i]->toString() + (i < rhs.mNodes.size()-1? ",\n" : ""));
+			out << indent("\n"+rhs.mNodes[i]->toString() + (i < rhs.mNodes.size()-1? "," : ""));
 		}
 		out << "\n],\nPatchcords: [";
 		for (auto it=begin(rhs.mPatchCords); it!=end(rhs.mPatchCords); )

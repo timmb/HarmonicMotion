@@ -36,6 +36,24 @@ namespace hm {
 	{
 		return mParent.path() + '/' + name();
 	}
+	
+	std::string BaseParameter::typeString() const
+	{
+		static_assert(NUM_TYPES==3, "BaseParameter::typeString() needs to be updated to accommodate all the different types defined.");
+		
+		switch (type())
+		{
+			case DOUBLE:
+				return "double";
+			case INT:
+				return "int";
+			case STRING:
+				return "string";
+			default:
+				assert(false);
+				return "";
+		}
+	}
 
 	
 //	void BaseParameter::writeJson(Json::Value& root) const

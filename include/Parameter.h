@@ -24,7 +24,8 @@ namespace hm {
 		{
 			DOUBLE,
 			INT,
-			STRING
+			STRING,
+			NUM_TYPES
 		};
 		
 		virtual ~BaseParameter() {}
@@ -33,18 +34,15 @@ namespace hm {
 		virtual void toJson(Json::Value& value) const = 0;
 		/// Set this node to the value of \p value
 		virtual bool fromJson(Json::Value const& value) = 0;
-//
-//		/// This will read/write the value of this parameter to/from
-//		/// \c element[name()]
-//		virtual void writeJson(Json::Value& element) const;
-//		/// \copydoc writeJson
-//		virtual bool readJson(Json::Value const& );
-		
+
 		/// e.g. "/My Node/My Parameter"
 		std::string path() const;
 		/// e.g. "My Parameter"
 		std::string name() const { return mName; }
 		virtual Type type() const = 0;
+		/// \return Type in string format
+		std::string typeString() const;
+		virtual std::string toString() const = 0;
 		
 		/// Register a callback to be alerted when the internal value (corresponding
 		/// to the pointer this parameter was constructed with) is altered
@@ -125,7 +123,7 @@ namespace hm {
 	class Parameter : public BaseParameter
 	{
 	public:
-		/// Create a parameter to wathc and control \p value.
+		/// Create a parameter to watch and control \p value.
 		/// Callbacks and external updates will only take effect when
 		/// BaseParameter::update() is called.
 		/// NB value must not be changed during a call to
@@ -136,6 +134,7 @@ namespace hm {
 		Parameter(Node& parent, std::string name, T* value)
 		: BaseParameter(parent, name)
 		, mValue(value)
+		, mExternalValue(*value)
 		, mHasNewExternalValue(false)
 		, mNewInternalValueCallbacksIsNotEmpty(false)
 		{
@@ -143,6 +142,14 @@ namespace hm {
 		}
 		
 		virtual Type type() const override;
+		
+		virtual std::string toString() const override
+		{
+			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+			std::stringstream ss;
+			ss << name() << " ("<<typeString()<<") = "<<mExternalValue;
+			return ss.str();
+		}
 		
 		/// Externally set this parameter from, e.g., a GUI. The actual value
 		/// won't be updated until BaseParameter::update is called.
@@ -251,6 +258,8 @@ namespace hm {
 		std::vector<std::function<void(T)>> mNewInternalValueCallbacks;
 		mutable boost::mutex mNewInternalValueCallbacksMutex;
 		std::atomic<bool> mNewInternalValueCallbacksIsNotEmpty;
+		
+		friend std::ostream& operator<<(std::ostream& out, Parameter<T> const& rhs);
 	};
 	
 	template<>
@@ -267,6 +276,12 @@ namespace hm {
 	
 	template<>
 	void Parameter<double>::validateExternalValue(double& value) const;
+	
+	template <typename T>
+	std::ostream& operator<<(std::ostream& out, Parameter<T> const& rhs)
+	{
+		return out << rhs.toString();
+	}
 	
 	
 } // namespace tmb

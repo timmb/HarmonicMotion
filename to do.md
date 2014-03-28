@@ -2,10 +2,12 @@ A list (MVP)
 ============
 
 - Test JSON
--- get rid of .pipeline in filename
+X-- get rid of .pipeline in filename
 -- Save doesn't work
 -- Parameters saving wrong values
--- Missing node from save (use created nodes)
+X-- Missing node from save (use created nodes)
+-- Open doesn't work
+- crash on New
 - IA Filter nodes
 - Expression node
 - OSCeleton OSC output
@@ -34,6 +36,7 @@ D Desirable
 ===========
 - BUG cannot create nodes in right area
 - BUG mouse wheel over spin boxes
+- REFACTOR move headers to hm/
 - OSC in/out between instances
 - Info display
 - Auto calibrate multiple Kinects

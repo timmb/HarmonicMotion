@@ -18,7 +18,12 @@ namespace hm
 	std::ostream& operator<<(std::ostream& out, Node const& node)
 	{
 		out	<< "Node "<<node.name()<<" ("<<node.type()<<")"
-		<<"\nInlets:";
+		<< "\nParameters:";
+		for (auto p: node.parameters())
+		{
+			out << indent("\n" + p->toString());
+		}
+		out << "\nInlets:";
 		for (InletPtr inlet: node.inlets())
 		{
 			out << indent("\n" + inlet->toString());
@@ -56,13 +61,13 @@ Node::~Node()
 		inlet->detachOwnerNode();
 		// Inlets should have had all their patch cords removed by the pipeline
 		assert(inlet->numConnections()==0);
-		// Inlets should no longer be known by any third parties
-		assert(inlet.use_count()==1);
+//		// Inlets should no longer be known by any third parties
+//		assert(inlet.use_count()==1);
 	}
 	for (OutletPtr outlet: mOutlets)
 	{
 		assert(outlet->numInlets()==0);
-		assert(outlet.use_count()==1);
+//		assert(outlet.use_count()==1);
 	}
 }
 
