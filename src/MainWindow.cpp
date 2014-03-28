@@ -173,7 +173,7 @@ void MainWindow::actionOpen()
 {
 	if (confirmDestroyWithUser())
 	{
-		QString filename = QFileDialog::getOpenFileName(this, "Open pipeline...", QString(), "Pipeline JSON files (.json)");
+		QString filename = QFileDialog::getOpenFileName(this, "Open pipeline...", QString(), "Pipeline JSON files (*.json)");
 		if (!filename.isEmpty())
 		{
 			QFile file(filename);
