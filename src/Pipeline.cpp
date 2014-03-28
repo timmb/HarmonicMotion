@@ -387,10 +387,12 @@ InletPtr Pipeline::inletFromPath(std::string path)
 void Pipeline::toJson(Json::Value& json) const
 {
 	json = Json::Value();
+	json["nodes"] = Json::Value(Json::arrayValue);
 	for (int i=0; i<mNodes.size(); i++)
 	{
 		json["nodes"][i] << *mNodes[i];
 	}
+	json["patchcords"] = Json::Value(Json::arrayValue);
 	int i=0;
 	for (PatchCordPtr p: mPatchCords)
 	{
@@ -413,8 +415,41 @@ void Pipeline::clear()
 }
 
 
+bool Pipeline::fromJsonString(std::string const& jsonString, vector<string>& errors)
+{
+	Json::Reader reader;
+	Json::Value json;
+	bool ok = reader.parse(jsonString, json);
+	if (ok)
+	{
+		return fromJson(json, errors);
+	}
+	else
+	{
+		errors.push_back(reader.getFormatedErrorMessages());
+		return false;
+	}
+}
+
+
 bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 {
+	if (!json["nodes"].isArray())
+	{
+		errors.push_back("'nodes' array is missing.");
+		return false;
+	}
+	if (!json["patchcords"].isArray())
+	{
+		errors.push_back("'patchcords' array is missing.");
+		return false;
+	}
+	
+	bool wasRunning = isRunning();
+	if (wasRunning)
+	{
+		stop();
+	}
 	clear();
 	FactoryNode& factory = *FactoryNode::instance();
 	for (auto& jNode: json["nodes"])
@@ -471,6 +506,10 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 		}
 		bool connectSuccess = connect(outlet, inlet);
 		assert(connectSuccess);
+	}
+	if (wasRunning)
+	{
+		start();
 	}
 	return errors.empty();
 }

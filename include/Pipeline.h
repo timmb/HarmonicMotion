@@ -81,6 +81,7 @@ namespace hm
 		
 		/// Starts processing nodes
 		void start();
+		bool isRunning() const { return mIsRunning; }
 		void stop();
 		
 		// MARK: Save/load from json
@@ -92,6 +93,8 @@ namespace hm
 		/// \return true if any errors were encountered. Messages for each
 		/// error will be added to \p errors.
 		bool fromJson(Json::Value const& json, std::vector<std::string>& errors);
+		/// \copydoc fromJson(Json::Value const&, std::vector<std::string>&)
+		bool fromJsonString(std::string const& jsonString, std::vector<std::string> & errors);
 		/// Write JSON to file
 		/// \return true if the file was saved OK.
 		bool saveJson(std::string filePath) const;

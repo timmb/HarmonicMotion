@@ -34,6 +34,7 @@ C Spec described in NIME paper
 
 D Desirable
 ===========
+- Refactor to improve MVC: nodes should only be created by pipeline. WidgetNode, etc should be renamed ViewNode, etc.
 - BUG cannot create nodes in right area
 - BUG mouse wheel over spin boxes
 - REFACTOR move headers to hm/
