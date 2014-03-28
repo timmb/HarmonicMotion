@@ -55,18 +55,20 @@ namespace hm
         /// \copydoc isConnectionValid(OutletPtr, InletPtr)
 		bool isConnectionValid(WidgetOutlet* outlet, WidgetInlet* inlet) const;
 		
-		// MARK: Functions that cause modifications the underlying Pipeline
-		// model (as well as this view).
+		// MARK: Functions that cause modifications the underlying Pipeline model (as well as this view).
 		
 		/// This will call deleteLater() on \p patchCord, so may be called
 		/// by patchCord itself. The destructor of WidgetPatchCord
 		/// is responsible for updating the underlying model
 		void erasePatchCord(WidgetPatchCord* patchCord);
-		
 		/// This will call deleteLater() on \p node so may be called
 		/// by node itself. The destructor of WidgetNode is responsible
 		/// for updating the underlying model.
 		void eraseNode(WidgetNode* node);
+		// not needed at the moment
+//		/// Erases the node that currently has focus.
+//		/// \return true if a node had focused (in which case it was deleted.
+//		bool eraseNodeWithFocus();
 		
 		// MARK: Other functions
 		/// This is called by WidgetLet when it receives a mouse press

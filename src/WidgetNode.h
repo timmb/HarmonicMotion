@@ -66,7 +66,9 @@ namespace hm
 	protected Q_SLOTS:
 		void loadStyleSheet();
 		void layout();
-		
+		/// Removes this widgetnode from the patcharea, removes the corresponding
+		/// node from the model and deletes this widgetnode.
+		void eraseAndDelete();
 
 		
 	private:

@@ -23,6 +23,7 @@
 #include "WidgetPatchArea.h"
 #include "WidgetInlet.h"
 #include "Pipeline.h"
+#include <QAction>
 
 namespace hm
 {
@@ -42,6 +43,7 @@ namespace hm
 		type->setObjectName("LabelNodeType");
 		
 		setFocusPolicy(Qt::ClickFocus);
+		setContextMenuPolicy(Qt::ActionsContextMenu);
 		
 		// TODO: wait for Qt5
 		//	bool success = connect(name, &QLineEdit::textChanged, [this](QString const& str)
@@ -117,6 +119,15 @@ namespace hm
 		success = connect(this, SIGNAL(newInfoPanelText(QString)), patchArea, SLOT(provideInfoPanelText(QString)));
 		assert(success);
 		
+		// ACTIONS
+		QAction* eraseAction = new QAction("Delete", this);
+		eraseAction->setShortcuts(QList<QKeySequence>() << QKeySequence::Delete << Qt::Key_Backspace);
+		eraseAction->setShortcutContext(Qt::WidgetShortcut);
+		addAction(eraseAction);
+		success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(eraseAndDelete()));
+		assert(success);
+		
+		
 		Q_EMIT geometryChanged();
 
 		// TODO: temp
@@ -150,6 +161,12 @@ namespace hm
 	{
 		mHasBeenErased = true;
 		mPatchArea->eraseNode(this);
+	}
+	
+	void WidgetNode::eraseAndDelete()
+	{
+		erase();
+		deleteLater();
 	}
     
     QSize WidgetNode::sizeHint() const

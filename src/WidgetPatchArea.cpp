@@ -20,6 +20,7 @@
 #include <QCoreApplication>
 #include <QRegularExpression>
 #include "Utilities.h"
+#include <QApplication>
 
 using namespace hm;
 
@@ -77,6 +78,16 @@ void WidgetPatchArea::eraseNode(WidgetNode* node)
 	mWidgetNodes.removeOne(node);
 	node->deleteLater();
 }
+
+//bool WidgetPatchArea::eraseNodeWithFocus()
+//{
+//	if (WidgetNode* node = dynamic_cast<WidgetNode*>(QApplication::focusWidget()))
+//	{
+//		eraseNode(node);
+//		return true;
+//	}
+//	return false;
+//}
 
 void WidgetPatchArea::provideInfoPanelText(QString string)
 {
