@@ -87,6 +87,8 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	assert(success);
 	success = connect(actionNew, SIGNAL(triggered()), this, SLOT(actionNew()));
 	assert(success);
+	success = connect(actionSave, SIGNAL(triggered()), this, SLOT(actionSave()));
+	assert(success);
 	success = connect(actionSaveAs, SIGNAL(triggered()), this, SLOT(actionSaveAs()));
 	assert(success);
 	success = connect(actionOpen, SIGNAL(triggered()), this, SLOT(actionOpen()));

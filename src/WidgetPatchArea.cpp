@@ -86,22 +86,28 @@ void WidgetPatchArea::provideInfoPanelText(QString string)
 WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
 {
 	assert(outlet != nullptr);
-    WidgetPatchCord* p = new WidgetPatchCord(this);
-	p->setOutlet(outlet);
-	p->setUnconnectedPointDrawPosition(outlet->connectionPoint());
-	mNewPatchCord = p;
+    mNewPatchCord = new WidgetPatchCord(this);
+	mNewPatchCord->setOutlet(outlet);
+	mNewPatchCord->setUnconnectedPointDrawPosition(outlet->connectionPoint());
 	setMouseTracking(true);
-    return p;
+	mWidgetPatchCords << mNewPatchCord;
+    return mNewPatchCord;
 }
 
 WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetInlet* inlet)
 {
 	assert(inlet != nullptr);
-    WidgetPatchCord* p = new WidgetPatchCord(this);
-	p->setInlet(inlet);
-	mNewPatchCord = p;
+    mNewPatchCord = new WidgetPatchCord(this);
+	mNewPatchCord->setInlet(inlet);
 	setMouseTracking(true);
-    return p;
+	mWidgetPatchCords << mNewPatchCord;
+    return mNewPatchCord;
+}
+
+void WidgetPatchArea::endCreationOfPatchCord()
+{
+	mNewPatchCord = nullptr;
+	setMouseTracking(false);
 }
 
 WidgetPatchCord* WidgetPatchArea::addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet)
@@ -239,13 +245,11 @@ void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint positi
 		{
 			mNewPatchCord->trySettingUnconnectedLet(let);
 		}
-		// if we've completed the patch cord, move to the normal collection
+		// if we've completed the patch cord, end patchcord creation state
 		if (mNewPatchCord->isFullyConnected())
 		{
 			hm_debug("New patchcord successfully created");
-			mWidgetPatchCords << mNewPatchCord;
-			mNewPatchCord = nullptr;
-			setMouseTracking(false);
+			endCreationOfPatchCord();
 		}
 	}
 	// otherwise if an inlet or outlet has been pressed then we start
@@ -320,6 +324,20 @@ void WidgetPatchArea::mouseMoveEvent(QMouseEvent* event)
 	if (mNewPatchCord != nullptr)
 	{
 		mNewPatchCord->setUnconnectedPointDrawPosition(event->pos());
+	}
+}
+
+
+void WidgetPatchArea::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Escape)
+	{
+		if (mNewPatchCord != nullptr)
+		{
+			mNewPatchCord->erase();
+			mNewPatchCord->deleteLater();
+			mNewPatchCord = nullptr;
+		}
 	}
 }
 

@@ -101,6 +101,7 @@ namespace hm
 		virtual QSize sizeHint() const override;
 //		virtual void mousePressEvent(QMouseEvent*) override;
 		virtual void mouseMoveEvent(QMouseEvent*) override;
+		virtual void keyPressEvent(QKeyEvent*) override;
 		virtual void focusInEvent(QFocusEvent* event) override;
         
     private:
@@ -119,6 +120,9 @@ namespace hm
 		/// Create a disconnected patch cord with the given \p inlet.
 		/// \pre inlet != nullptr
         WidgetPatchCord* createPatchCord(WidgetInlet* inlet);
+		/// Called when we stop creating a patch cord, either because
+		/// it was cancelled or because it was successfully completed
+		void endCreationOfPatchCord();
 		
 //		/// Find topmost child widget of type *T under the mouse. Returns
 //		/// nullptr
@@ -142,6 +146,7 @@ namespace hm
 		/// It is not added to mWidgetPatchCords until it is removed from
 		/// this pointer. If we're not creating a patch cord then this
 		/// will equal nullptr.
+		/// \invariant mWidgetPatchCords.count(mNewPatchCord) == 1
 		WidgetPatchCord* mNewPatchCord;
 	};
 	
