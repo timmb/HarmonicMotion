@@ -69,6 +69,11 @@ Node::~Node()
 		assert(outlet->numInlets()==0);
 //		assert(outlet.use_count()==1);
 	}
+	{
+		boost::unique_lock<boost::mutex> lock1(sNamesInUseMutex);
+		boost::unique_lock<boost::shared_mutex> lock2(mNodeParamsMutex);
+		sNamesInUse.erase(mNodeParams.name);
+	}
 }
 
 std::string Node::path() const
