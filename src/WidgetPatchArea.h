@@ -21,6 +21,7 @@ namespace hm
     class WidgetInlet;
     class WidgetOutlet;
 	class WidgetLet;
+	class MouseGrabber;
     
     
 	/// WidgetPatchArea manages a Pipeline.
@@ -98,7 +99,7 @@ namespace hm
 	Q_SIGNALS:
 		/// New text to be sent to the info panel
 		void newInfoPanelText(QString);
-		
+	
 	protected:
 		virtual QSize sizeHint() const override;
 //		virtual void mousePressEvent(QMouseEvent*) override;
@@ -150,6 +151,7 @@ namespace hm
 		/// will equal nullptr.
 		/// \invariant mWidgetPatchCords.count(mNewPatchCord) == 1
 		WidgetPatchCord* mNewPatchCord;
+		MouseGrabber* mMouseGrabber;
 	};
 	
 //	template <typename T>

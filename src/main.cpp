@@ -12,6 +12,8 @@ using namespace hm;
 int main(int argc, char** argv)
 {
 	QApplication* app = new QApplication(argc, argv);
+	QCoreApplication::setOrganizationName("Centre for Digital Music");
+	QCoreApplication::setApplicationName("Harmonic Motion");
 	Controller* c = new Controller(app);
 	int ret = app->exec();
 	delete c;

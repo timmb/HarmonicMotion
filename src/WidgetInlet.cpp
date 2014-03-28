@@ -31,11 +31,11 @@ WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 	
 	loadStyleSheet();
 	
-	// TODO: temp
-	QTimer* t = new QTimer;
-	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
-	t->setInterval(500);
-	t->start();
+//	// TODO: temp
+//	QTimer* t = new QTimer;
+//	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
+//	t->setInterval(500);
+//	t->start();
 }
 
 

@@ -21,6 +21,7 @@
 #include <QRegularExpression>
 #include "Utilities.h"
 #include <QApplication>
+#include "MouseGrabber.h"
 
 using namespace hm;
 
@@ -28,6 +29,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 : QWidget(parent)
 , mPipeline(pipeline)
 , mNewPatchCord(nullptr)
+, mMouseGrabber(new MouseGrabber(this))
 {
 	if (pipeline==nullptr)
 	{
@@ -100,7 +102,8 @@ WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
     mNewPatchCord = new WidgetPatchCord(this);
 	mNewPatchCord->setOutlet(outlet);
 	mNewPatchCord->setUnconnectedPointDrawPosition(outlet->connectionPoint());
-	setMouseTracking(true);
+//	setMouseTracking(true);
+	mMouseGrabber->setEnabled(true);
 	mWidgetPatchCords << mNewPatchCord;
     return mNewPatchCord;
 }
@@ -110,7 +113,8 @@ WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetInlet* inlet)
 	assert(inlet != nullptr);
     mNewPatchCord = new WidgetPatchCord(this);
 	mNewPatchCord->setInlet(inlet);
-	setMouseTracking(true);
+//	setMouseTracking(true);
+	mMouseGrabber->setEnabled(true);
 	mWidgetPatchCords << mNewPatchCord;
     return mNewPatchCord;
 }
@@ -118,7 +122,8 @@ WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetInlet* inlet)
 void WidgetPatchArea::endCreationOfPatchCord()
 {
 	mNewPatchCord = nullptr;
-	setMouseTracking(false);
+//	setMouseTracking(false);
+	mMouseGrabber->setEnabled(false);
 }
 
 WidgetPatchCord* WidgetPatchArea::addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet)
@@ -334,6 +339,8 @@ void WidgetPatchArea::mouseMoveEvent(QMouseEvent* event)
 	// Check if we're currently creating a new patch cord
 	if (mNewPatchCord != nullptr)
 	{
+		// temp
+		Q_EMIT newInfoPanelText(QString("Mouse %1, %2").arg(event->pos().x()).arg(event->pos().y()));
 		mNewPatchCord->setUnconnectedPointDrawPosition(event->pos());
 	}
 }

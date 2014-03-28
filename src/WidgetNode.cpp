@@ -130,11 +130,11 @@ namespace hm
 		
 		Q_EMIT geometryChanged();
 
-		// TODO: temp
-		QTimer* t = new QTimer(this);
-		t->setInterval(500);
-		connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
-		t->start();
+//		// TODO: temp
+//		QTimer* t = new QTimer(this);
+//		t->setInterval(500);
+//		connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
+//		t->start();
 	}
 	
 	WidgetNode::~WidgetNode()

@@ -47,10 +47,10 @@ WidgetNodePrototype::WidgetNodePrototype(NodeInfo const& info, MainWindow* mainW
 	
 	setLayout(layout);
 	
-	auto t = new QTimer(this);
-	t->setInterval(500);
-	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
-	t->start();
+//	auto t = new QTimer(this);
+//	t->setInterval(500);
+//	connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
+//	t->start();
 }
 
 
