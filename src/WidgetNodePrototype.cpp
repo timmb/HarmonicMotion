@@ -140,6 +140,7 @@ void WidgetNodePrototypeBeingDragged::mouseReleaseEvent(QMouseEvent* e)
 		// TODO: This node and widgetnode must be made by WidgetPatchArea
 		// create node and widget for it
 		NodePtr node = FactoryNode::instance()->create(mNodeInfo.className);
+		mMainWindow->patchArea()->pipeline()->addNode(node);
 		WidgetNode* widget = new WidgetNode(node, patchArea);
 		QPoint posRelativeToWindow = mapTo(mMainWindow, QPoint());
 		QPoint posRelativeToPatchArea = patchArea->mapFrom(mMainWindow, posRelativeToWindow);

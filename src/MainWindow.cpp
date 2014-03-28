@@ -132,7 +132,7 @@ bool MainWindow::saveAs()
 {
 	// TODO: Remember open file.
 	// TODO: Persistent store of last directory
-	QString filename = QFileDialog::getSaveFileName(this, "Save pipeline...", QString(), "Pipeline JSON files (*.pipeline.json)");
+	QString filename = QFileDialog::getSaveFileName(this, "Save pipeline...", QString(), "Pipeline JSON files (*.json)");
 	mOpenedFile = filename;
 	if (!mOpenedFile.isEmpty())
 	{
@@ -173,7 +173,7 @@ void MainWindow::actionOpen()
 {
 	if (confirmDestroyWithUser())
 	{
-		QString filename = QFileDialog::getOpenFileName(this, "Open pipeline...", QString(), "Pipeline JSON files (*.pipeline.json)");
+		QString filename = QFileDialog::getOpenFileName(this, "Open pipeline...", QString(), "Pipeline JSON files (.json)");
 		if (!filename.isEmpty())
 		{
 			QFile file(filename);
