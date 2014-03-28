@@ -18,6 +18,8 @@
 #include <QSaveFile>
 #include "json/json.h"
 #include "Utilities.h"
+#include <QStringList>
+#include <QVector>
 
 using namespace hm;
 
@@ -179,6 +181,17 @@ void MainWindow::actionOpen()
 			QFile file(filename);
 			file.open(QIODevice::ReadOnly | QIODevice::Text);
 			QString json = QString::fromUtf8(file.readAll());
+			std::vector<std::string> errors;
+			bool ok = patchArea()->pipeline()->fromJsonString(json.toStdString(), errors);
+			if (!ok)
+			{
+				QStringList _errors;
+				for (std::string const& s: errors)
+				{
+					_errors << str(s);
+				}
+				QMessageBox::warning(this, "Failed to open "+filename+".", _errors.join('\n'));
+			}
 		}
 	}
 }

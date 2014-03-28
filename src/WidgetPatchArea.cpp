@@ -56,6 +56,7 @@ WidgetNode* WidgetPatchArea::addNode(NodePtr node)
 	{
 		mWidgetInlets << inlet;
 	}
+	w->show();
     return w;
 }
 
