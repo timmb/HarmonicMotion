@@ -21,6 +21,7 @@ namespace hm
     class WidgetInlet;
     class WidgetOutlet;
 	class WidgetLet;
+	class WidgetNewPatchCord;
 	class MouseGrabber;
     
     
@@ -48,10 +49,10 @@ namespace hm
         /// If there is an inlet under point \p position then this will
         /// return a pointer to it. Otherwise it will return nullptr.
         WidgetInlet* findInlet(QPoint position) const;
-		/// If there is an inlet or outlet visible at point \p position then
-		/// this will return a pointer to it. Otherwise it will return
-		/// nullptr.
-		WidgetLet* findLet(QPoint position) const;
+//		/// If there is an inlet or outlet visible at point \p position then
+//		/// this will return a pointer to it. Otherwise it will return
+//		/// nullptr.
+//		WidgetLet* findLet(QPoint position) const;
         
         /// \copydoc isConnectionValid(OutletPtr, InletPtr)
 		bool isConnectionValid(WidgetOutlet* outlet, WidgetInlet* inlet) const;
@@ -77,6 +78,9 @@ namespace hm
 		/// \param position is the coordinates of the mouse relative to
 		/// this WidgetPatchArea.
 		void mousePressEventFromWidgetLet(WidgetLet* let, QPoint position);
+		/// This is called by WidgetNewPatchCord when it has completed its
+		/// purpose and would like to be deleted.
+		void clearNewPatchCord(WidgetNewPatchCord* toBeCleared);
 		
 		
 		// MARK: Pipeline::Listener functions
@@ -103,8 +107,8 @@ namespace hm
 	protected:
 		virtual QSize sizeHint() const override;
 //		virtual void mousePressEvent(QMouseEvent*) override;
-		virtual void mouseMoveEvent(QMouseEvent*) override;
-		virtual void keyPressEvent(QKeyEvent*) override;
+//		virtual void mouseMoveEvent(QMouseEvent*) override;
+//		virtual void keyPressEvent(QKeyEvent*) override;
 		virtual void focusInEvent(QFocusEvent* event) override;
         
     private:
@@ -117,15 +121,15 @@ namespace hm
         /// exist before calling this function.
         WidgetPatchCord* addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet);
         
-		/// Create a disconnected patch cord with the given \p outlet.
-		/// \pre outlet != nullptr
-        WidgetPatchCord* createPatchCord(WidgetOutlet* outlet);
-		/// Create a disconnected patch cord with the given \p inlet.
-		/// \pre inlet != nullptr
-        WidgetPatchCord* createPatchCord(WidgetInlet* inlet);
-		/// Called when we stop creating a patch cord, either because
-		/// it was cancelled or because it was successfully completed
-		void endCreationOfPatchCord();
+//		/// Create a disconnected patch cord with the given \p outlet.
+//		/// \pre outlet != nullptr
+//        WidgetPatchCord* createPatchCord(WidgetOutlet* outlet);
+//		/// Create a disconnected patch cord with the given \p inlet.
+//		/// \pre inlet != nullptr
+//        WidgetPatchCord* createPatchCord(WidgetInlet* inlet);
+//		/// Called when we stop creating a patch cord, either because
+//		/// it was cancelled or because it was successfully completed
+//		void endCreationOfPatchCord();
 		
 //		/// Find topmost child widget of type *T under the mouse. Returns
 //		/// nullptr
@@ -145,12 +149,9 @@ namespace hm
 		/// Owning reference
 		QList<WidgetPatchCord*> mWidgetPatchCords;
 		
-		/// If the user is currently creating a patch cord it is kept here.
-		/// It is not added to mWidgetPatchCords until it is removed from
-		/// this pointer. If we're not creating a patch cord then this
-		/// will equal nullptr.
-		/// \invariant mWidgetPatchCords.count(mNewPatchCord) == 1
-		WidgetPatchCord* mNewPatchCord;
+		/// If the user is midway through creating a new patch cord then this
+		/// is non-null.
+		WidgetNewPatchCord* mNewPatchCord;
 		MouseGrabber* mMouseGrabber;
 	};
 	

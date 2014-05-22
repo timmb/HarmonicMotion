@@ -280,9 +280,8 @@ void WidgetPatchCord::connectOutletSignals()
         
         success = connect(mOutlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
         assert(success);
-        
-//        success = connect(mOutlet, SIGNAL(destroyed()), this, SLOT(outletDestroyed()));
-//        assert(success);
+		success = connect(mOutlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+		assert(success);
     }
 }
 
@@ -295,9 +294,8 @@ void WidgetPatchCord::connectInletSignals()
         
         success = connect(mInlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
         assert(success);
-        
-//        success = connect(mInlet, SIGNAL(destroyed()), this, SLOT(inletDestroyed()));
-//        assert(success);
+		success = connect(mInlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+		assert(success);
     }
 }
 
@@ -311,9 +309,10 @@ void WidgetPatchCord::disconnectOutletSignals()
         
         success = disconnect(mOutlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
         assert(success);
-        
-//        success = disconnect(mOutlet, SIGNAL(destroyed()), this, SLOT(outletDestroyed()));
-//        assert(success);
+		success = disconnect(mOutlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+		assert(success);
+		
+
     }
 }
 
@@ -327,9 +326,8 @@ void WidgetPatchCord::disconnectInletSignals()
         
         success = disconnect(mInlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
         assert(success);
-        
-//        success = disconnect(mInlet, SIGNAL(destroyed()), this, SLOT(inletDestroyed()));
-//        assert(success);
+ 		success = disconnect(mInlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+		assert(success);
     }
 }
 

@@ -22,6 +22,7 @@
 #include "Utilities.h"
 #include <QApplication>
 #include "MouseGrabber.h"
+#include "WidgetNewPatchCord.h"
 
 using namespace hm;
 
@@ -96,35 +97,35 @@ void WidgetPatchArea::provideInfoPanelText(QString string)
 	Q_EMIT newInfoPanelText(string);
 }
 
-WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
-{
-	assert(outlet != nullptr);
-    mNewPatchCord = new WidgetPatchCord(this);
-	mNewPatchCord->setOutlet(outlet);
-	mNewPatchCord->setUnconnectedPointDrawPosition(outlet->connectionPoint());
-//	setMouseTracking(true);
-	mMouseGrabber->setEnabled(true);
-	mWidgetPatchCords << mNewPatchCord;
-    return mNewPatchCord;
-}
-
-WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetInlet* inlet)
-{
-	assert(inlet != nullptr);
-    mNewPatchCord = new WidgetPatchCord(this);
-	mNewPatchCord->setInlet(inlet);
-//	setMouseTracking(true);
-	mMouseGrabber->setEnabled(true);
-	mWidgetPatchCords << mNewPatchCord;
-    return mNewPatchCord;
-}
-
-void WidgetPatchArea::endCreationOfPatchCord()
-{
-	mNewPatchCord = nullptr;
-//	setMouseTracking(false);
-	mMouseGrabber->setEnabled(false);
-}
+//WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
+//{
+//	assert(outlet != nullptr);
+//    mNewPatchCord = new WidgetPatchCord(this);
+//	mNewPatchCord->setOutlet(outlet);
+//	mNewPatchCord->setUnconnectedPointDrawPosition(outlet->connectionPoint());
+////	setMouseTracking(true);
+//	mMouseGrabber->setEnabled(true);
+//	mWidgetPatchCords << mNewPatchCord;
+//    return mNewPatchCord;
+//}
+//
+//WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetInlet* inlet)
+//{
+//	assert(inlet != nullptr);
+//    mNewPatchCord = new WidgetPatchCord(this);
+//	mNewPatchCord->setInlet(inlet);
+////	setMouseTracking(true);
+//	mMouseGrabber->setEnabled(true);
+//	mWidgetPatchCords << mNewPatchCord;
+//    return mNewPatchCord;
+//}
+//
+//void WidgetPatchArea::endCreationOfPatchCord()
+//{
+//	mNewPatchCord = nullptr;
+////	setMouseTracking(false);
+//	mMouseGrabber->setEnabled(false);
+//}
 
 WidgetPatchCord* WidgetPatchArea::addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet)
 {
@@ -185,21 +186,21 @@ WidgetInlet* WidgetPatchArea::findInlet(QPoint position) const
 	return nullptr;
 }
 
-WidgetLet* WidgetPatchArea::findLet(QPoint position) const
-{
-	QList<WidgetLet*> lets = findChildren<WidgetLet*>(QRegularExpression("WidgetOutlet|WidgetInlet"));
-	int n = lets.size();
-	for (int i=lets.size()-1; i>=0; i--)
-	{
-		WidgetLet* let = lets[i];
-		if (let->rect().contains(let->mapFromGlobal(mapToGlobal(position))))
-		{
-			return let;
-		}
-	}
-	return nullptr;
-	
-}
+//WidgetLet* WidgetPatchArea::findLet(QPoint position) const
+//{
+//	QList<WidgetLet*> lets = findChildren<WidgetLet*>(QRegularExpression("WidgetOutlet|WidgetInlet"));
+//	int n = lets.size();
+//	for (int i=lets.size()-1; i>=0; i--)
+//	{
+//		WidgetLet* let = lets[i];
+//		if (let->rect().contains(let->mapFromGlobal(mapToGlobal(position))))
+//		{
+//			return let;
+//		}
+//	}
+//	return nullptr;
+//	
+//}
 
 //WidgetOutlet* WidgetPatchArea::findOutlet(QPoint position) const
 //{
@@ -253,111 +254,68 @@ void WidgetPatchArea::updateSize()
 void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint position)
 {
 	hm_debug("mousePressEventFromWidgetLet::mousePressEvent");
-	// if we're currently creating a patch cord then forward it the event
-	if (mNewPatchCord != nullptr)
+	// if we're already creating a new patch cord then that should have
+	// receied the mouse event.
+	assert(mNewPatchCord == nullptr);
+	if (let->objectName() == "WidgetOutlet")
 	{
-		hm_debug("mouse press event received during creation of new patchcord");
-		if (let)
+		WidgetOutlet* outlet = dynamic_cast<WidgetOutlet*>(let);
+		assert(outlet);
+		if (outlet)
 		{
-			mNewPatchCord->trySettingUnconnectedLet(let);
-		}
-		// if we've completed the patch cord, end patchcord creation state
-		if (mNewPatchCord->isFullyConnected())
-		{
-			hm_debug("New patchcord successfully created");
-			endCreationOfPatchCord();
+			mNewPatchCord = new WidgetNewPatchCord(outlet, this);
+			hm_debug("Started creating patchcord from "+outlet->outlet()->toString());
 		}
 	}
-	// otherwise if an inlet or outlet has been pressed then we start
-	// creating a new patch cord
+	else if (let->objectName() == "WidgetInlet")
+	{
+		WidgetInlet* inlet = dynamic_cast<WidgetInlet*>(let);
+		assert(inlet);
+		if (inlet)
+		{
+			mNewPatchCord = new WidgetNewPatchCord(inlet, this);
+			hm_debug("Started creating patchcord from "+inlet->inlet()->toString());
+		}
+	}
 	else
 	{
-		if (let->objectName() == "WidgetOutlet")
-		{
-			WidgetOutlet* outlet = dynamic_cast<WidgetOutlet*>(let);
-			assert(outlet);
-			if (outlet)
-			{
-				createPatchCord(outlet);
-			hm_debug("Started creating patchcord from "+outlet->outlet()->toString());
-			}
-		}
-		else if (let->objectName() == "WidgetInlet")
-		{
-			WidgetInlet* inlet = dynamic_cast<WidgetInlet*>(let);
-			assert(inlet);
-			if (inlet)
-			{
-				createPatchCord(inlet);
-				hm_debug("Started creating patchcord from "+inlet->inlet()->toString());
-			}
-		}
-		else
-		{
-			// We have been passed a bogus WidgetLet
-			assert(let->objectName()=="WidgetInlet" || let->objectName()=="WidgetOutlet");
-		}
-		setMouseTracking(true);
+		// We have been passed a bogus WidgetLet
+		assert(let->objectName()=="WidgetInlet" || let->objectName()=="WidgetOutlet");
 	}
-	
-	
-	
+}
+
+
+void WidgetPatchArea::clearNewPatchCord(WidgetNewPatchCord* toBeCleared)
+{
+	delete mNewPatchCord;
+	mNewPatchCord = nullptr;
+}
+
+
+//void WidgetPatchArea::mouseMoveEvent(QMouseEvent* event)
+//{
 //	// Check if we're currently creating a new patch cord
 //	if (mNewPatchCord != nullptr)
 //	{
-//		// if we are currently editing a patch cord then it should have
-//		// either no inlet xor no outlet.
-//		assert((mNewPatchCord->inlet()==nullptr) != (mNewPatchCord->outlet()==nullptr));
-//		if (mNewPatchCord->inlet() == nullptr)
+//		// temp
+//		Q_EMIT newInfoPanelText(QString("Mouse %1, %2").arg(event->pos().x()).arg(event->pos().y()));
+//		mNewPatchCord->setUnconnectedPointDrawPosition(event->pos());
+//	}
+//}
+
+
+//void WidgetPatchArea::keyPressEvent(QKeyEvent* event)
+//{
+//	if (event->key() == Qt::Key_Escape)
+//	{
+//		if (mNewPatchCord != nullptr)
 //		{
-//			WidgetInlet* inlet = findInlet(event->pos());
-//			if (inlet)
-//			{
-//				mNewPatchCord->setInlet(inlet);
-//			}
-//		}
-//		else
-//		{
-//			WidgetOutlet* outlet = findOutlet(event->pos());
-//			if (outlet)
-//			{
-//				mNewPatchCord->setOutlet(outlet);
-//			}
-//		}
-//		// if we've completed the patch cord, move to the normal collection
-//		if (mNewPatchCord->inlet()!=nullptr && mNewPatchCord->outlet()!=nullptr)
-//		{
-//			mWidgetPatchCords << mNewPatchCord;
+//			mNewPatchCord->erase();
+//			mNewPatchCord->deleteLater();
 //			mNewPatchCord = nullptr;
 //		}
 //	}
-}
-
-
-void WidgetPatchArea::mouseMoveEvent(QMouseEvent* event)
-{
-	// Check if we're currently creating a new patch cord
-	if (mNewPatchCord != nullptr)
-	{
-		// temp
-		Q_EMIT newInfoPanelText(QString("Mouse %1, %2").arg(event->pos().x()).arg(event->pos().y()));
-		mNewPatchCord->setUnconnectedPointDrawPosition(event->pos());
-	}
-}
-
-
-void WidgetPatchArea::keyPressEvent(QKeyEvent* event)
-{
-	if (event->key() == Qt::Key_Escape)
-	{
-		if (mNewPatchCord != nullptr)
-		{
-			mNewPatchCord->erase();
-			mNewPatchCord->deleteLater();
-			mNewPatchCord = nullptr;
-		}
-	}
-}
+//}
 
 
 void WidgetPatchArea::focusInEvent(QFocusEvent* event)
