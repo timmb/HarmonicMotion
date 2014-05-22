@@ -31,7 +31,7 @@ Controller::Controller(QObject* parent)
 //	mNodes << kinect;
 //	mPipeline.addNode(kinect);
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");
-	mNodes << gen;
+//	mNodes << gen;
 	mPipeline->addNode(gen);
 //	mMainWindow->patchArea()->addNode(gen);
 	

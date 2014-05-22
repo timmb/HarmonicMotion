@@ -44,6 +44,9 @@ namespace hm
 		void actionSaveAs();
 		void actionOpen();
 		
+		// Debug actions
+		void actionPrintNodeNames();
+		
 		// TODO: Implement close event and check whether we should save
 		
 	Q_SIGNALS:

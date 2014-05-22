@@ -20,6 +20,8 @@
 #include "Utilities.h"
 #include <QStringList>
 #include <QVector>
+#include <set>
+#include "Node.h"
 
 using namespace hm;
 
@@ -71,7 +73,10 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	actionQuit->setMenuRole(QAction::QuitRole);
 	actionQuit->setShortcut(QKeySequence::Quit);
 	
-	QMenu* menuFile = new QMenu("File", this);
+	QAction* actionPrintNodeNames = new QAction("Print &node names in use", this);
+	
+	
+	QMenu* menuFile = new QMenu("&File", this);
 	menuFile->addAction(actionNew);
 	menuFile->addAction(actionOpen);
 	menuFile->addAction(actionSave);
@@ -79,8 +84,12 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	menuFile->addSeparator();
 	menuFile->addAction(actionQuit);
 	
+	QMenu* menuDebug = new QMenu("&Debug", this);
+	menuDebug->addAction(actionPrintNodeNames);
+	
 	QMenuBar* menuBar = new QMenuBar(this);
 	menuBar->addMenu(menuFile);
+	menuBar->addMenu(menuDebug);
 	
 	setMenuBar(menuBar);
 	
@@ -95,6 +104,9 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	success = connect(actionOpen, SIGNAL(triggered()), this, SLOT(actionOpen()));
 	assert(success);
 	success = connect(actionQuit, SIGNAL(triggered()), QApplication::instance(), SLOT(quit()));
+	
+	success = connect(actionPrintNodeNames, SIGNAL(triggered()), this, SLOT(actionPrintNodeNames()));
+	assert(success);
 }
 
 
@@ -237,5 +249,16 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 	hm_debug("MainWindow::resizeEvent");
 }
 
+
+void MainWindow::actionPrintNodeNames()
+{
+	std::set<std::string> names = Node::nodeNamesInUse();
+	QList<QString> qNames;
+	for (std::string n: names)
+	{
+		qNames << str(n);
+	}
+	qDebug() << "Node names in use:" << qNames;
+}
 
 
