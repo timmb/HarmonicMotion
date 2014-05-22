@@ -141,11 +141,11 @@ void WidgetNodePrototypeBeingDragged::mouseReleaseEvent(QMouseEvent* e)
 		// create node and widget for it
 		NodePtr node = FactoryNode::instance()->create(mNodeInfo.className);
 		mMainWindow->patchArea()->pipeline()->addNode(node);
-		WidgetNode* widget = new WidgetNode(node, patchArea);
-		QPoint posRelativeToWindow = mapTo(mMainWindow, QPoint());
-		QPoint posRelativeToPatchArea = patchArea->mapFrom(mMainWindow, posRelativeToWindow);
-		widget->move(posRelativeToPatchArea);
-		widget->show();
+//		WidgetNode* widget = new WidgetNode(node, patchArea);
+//		QPoint posRelativeToWindow = mapTo(mMainWindow, QPoint());
+//		QPoint posRelativeToPatchArea = patchArea->mapFrom(mMainWindow, posRelativeToWindow);
+//		widget->move(posRelativeToPatchArea);
+//		widget->show();
 	}
 	deleteLater();
 }
