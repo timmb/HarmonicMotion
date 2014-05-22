@@ -32,6 +32,8 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 , mNewPatchCord(nullptr)
 , mMouseGrabber(new MouseGrabber(this))
 {
+	setObjectName("WidgetPatchArea");
+	loadStyleSheet();
 	if (pipeline==nullptr)
 	{
 		mPipeline = PipelinePtr(new Pipeline);
@@ -96,6 +98,21 @@ void WidgetPatchArea::provideInfoPanelText(QString string)
 {
 	Q_EMIT newInfoPanelText(string);
 }
+
+void WidgetPatchArea::loadStyleSheet()
+{
+	//	QFile file(":/qss/WidgetNode.qss");
+	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetPatchArea.qss");
+	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		setStyleSheet(QString::fromUtf8(file.readAll()));
+	}
+	else
+	{
+		hm_error("Failed to load stylesheet WidgetPatchArea.qss");
+	}
+}
+
 
 //WidgetPatchCord* WidgetPatchArea::createPatchCord(WidgetOutlet* outlet)
 //{
@@ -420,5 +437,8 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 
 
 
-
+void WidgetPatchArea::resizeEvent(QResizeEvent* event)
+{
+	hm_debug("WidgetPatchArea::resizeEvent");
+}
 

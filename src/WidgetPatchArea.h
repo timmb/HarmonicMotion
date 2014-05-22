@@ -99,6 +99,7 @@ namespace hm
 		/// Provide new Info Panel data to this patch area, to be forwarded
 		/// on to the info panel
 		void provideInfoPanelText(QString);
+		void loadStyleSheet();
         
 	Q_SIGNALS:
 		/// New text to be sent to the info panel
@@ -110,6 +111,7 @@ namespace hm
 //		virtual void mouseMoveEvent(QMouseEvent*) override;
 //		virtual void keyPressEvent(QKeyEvent*) override;
 		virtual void focusInEvent(QFocusEvent* event) override;
+		virtual void resizeEvent(QResizeEvent* event) override;
         
     private:
 		// MARK: Functions that do not affect the underlying Pipeline model

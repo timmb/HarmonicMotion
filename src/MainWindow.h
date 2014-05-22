@@ -13,6 +13,7 @@
 #include <QSaveFile>
 
 class QPlainTextEdit;
+class QScrollArea;
 
 namespace hm
 {
@@ -32,6 +33,7 @@ namespace hm
 		void addWidget(WidgetType* widget);
 		
 		WidgetPatchArea* patchArea() const { return mPatchArea; }
+		QScrollArea* patchScrollArea() const { return mPatchScrollArea; }
 		
 	public Q_SLOTS:
 		void newConsoleMessage(QString);
@@ -46,6 +48,9 @@ namespace hm
 		
 	Q_SIGNALS:
 		void newInfoPanelText(QString);
+		
+	protected:
+		virtual void resizeEvent(QResizeEvent* event) override;
 		
 	private:
 		/// Asks the user if they want to save current document.
@@ -62,6 +67,7 @@ namespace hm
 		QLayout* mLayout;
 		QVector<NodeRendererGlWidget*> mScenes;
 		WidgetPatchArea* mPatchArea;
+		QScrollArea* mPatchScrollArea;
 		QString mOpenedFile;
 	};
 	

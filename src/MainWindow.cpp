@@ -27,6 +27,7 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 : mConsole(nullptr)
 , mLayout(nullptr)
 , mPatchArea(new WidgetPatchArea(pipeline))
+, mPatchScrollArea(nullptr)
 {
 //	mLayout = new QVBoxLayout;
 //	QWidget* w = new QWidget(this);
@@ -45,12 +46,12 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	success = connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString)));
 	assert(success);
 	
-	QScrollArea* patchScrollArea = new QScrollArea(this);
-	patchScrollArea->setWidget(mPatchArea);
-	patchScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	patchScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	mPatchScrollArea = new QScrollArea(this);
+	mPatchScrollArea->setWidget(mPatchArea);
+	mPatchScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	mPatchScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	
-	setCentralWidget(patchScrollArea);
+	setCentralWidget(mPatchScrollArea);
 	addDockWidget(Qt::LeftDockWidgetArea, new WidgetNodeList(this, this));
 	
 	QDockWidget* infoPanelDock = new QDockWidget("Info", this);
@@ -229,6 +230,11 @@ bool MainWindow::confirmDestroyWithUser()
 			assert(false);
 	}
 	return okToContinue;
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+	hm_debug("MainWindow::resizeEvent");
 }
 
 

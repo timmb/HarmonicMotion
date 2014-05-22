@@ -21,6 +21,7 @@
 #include "WidgetNode.h"
 #include <QApplication>
 #include <QTimer>
+#include <QScrollArea>
 
 using namespace hm;
 
@@ -134,18 +135,16 @@ void WidgetNodePrototypeBeingDragged::mouseMoveEvent(QMouseEvent* e)
 void WidgetNodePrototypeBeingDragged::mouseReleaseEvent(QMouseEvent* e)
 {
 	e->accept();
-	WidgetPatchArea* patchArea = mMainWindow->patchArea();
-	if (geometry().intersects(patchArea->geometry()))
+	// we consider a node as dragged onto the patch area if its to the lower
+	// right of the patch area origin and within the main window geometry.
+//	WidgetPatchArea* patchArea = mMainWindow->patchArea();
+//	bool willCreate = x() > patchArea->x() && y() > patchArea->y()
+//		&& x() < mMainWindow->width() && y() < mMainWindow->height();
+	bool willCreate = mMainWindow->patchScrollArea()->geometry().intersects(geometry());
+	if (willCreate)
 	{
-		// TODO: This node and widgetnode must be made by WidgetPatchArea
-		// create node and widget for it
 		NodePtr node = FactoryNode::instance()->create(mNodeInfo.className);
 		mMainWindow->patchArea()->pipeline()->addNode(node);
-//		WidgetNode* widget = new WidgetNode(node, patchArea);
-//		QPoint posRelativeToWindow = mapTo(mMainWindow, QPoint());
-//		QPoint posRelativeToPatchArea = patchArea->mapFrom(mMainWindow, posRelativeToWindow);
-//		widget->move(posRelativeToPatchArea);
-//		widget->show();
 	}
 	deleteLater();
 }
