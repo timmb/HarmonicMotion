@@ -431,7 +431,7 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 	}
 	// assert we have no more references to this connection
 	assert(std::all_of(mWidgetPatchCords.begin(), mWidgetPatchCords.end(), [&](WidgetPatchCord* w) {
-		return w->outlet()->outlet()!=outlet && w->inlet()->inlet() != inlet;
+		return w->outlet()->outlet()!=outlet || w->inlet()->inlet() != inlet;
 	}));
 }
 
