@@ -17,9 +17,12 @@
 #include <boost/tokenizer.hpp>
 #include <fstream>
 #include "json/writer.h"
+#include <boost/thread/lock_guard.hpp>
+
 
 using namespace hm;
 using namespace std;
+typedef boost::lock_guard<boost::mutex> Lock;
 
 Pipeline::Pipeline()
 : mIsRunning(false)
@@ -45,11 +48,14 @@ std::vector<NodePtr> const& Pipeline::nodes() const
 
 void Pipeline::addNode(NodePtr node)
 {
-	mNodes.push_back(node);
-	hm_debug("Added node "+node->toString());
-	if (isRunning() && !node->isProcessing())
 	{
-		node->startProcessing();
+		Lock lock(mMutex);
+		mNodes.push_back(node);
+		hm_debug("Added node "+node->toString());
+		if (isRunning() && !node->isProcessing())
+		{
+			node->startProcessing();
+		}
 	}
 	for (Listener* listener: mListeners)
 	{
@@ -62,6 +68,7 @@ void Pipeline::removeNode(NodePtr node)
 	auto it = std::find(mNodes.begin(), mNodes.end(), node);
 	if (it != mNodes.end())
 	{
+		Lock lock(mMutex);
 		if (isRunning())
 		{
 			assert((**it).isProcessing());
@@ -95,25 +102,27 @@ void Pipeline::start()
 		p->startProcessing();
 	}
 	mIsRunning = true;
-	mThread = std::unique_ptr<boost::thread>(new boost::thread([this]()
+	mThread = std::unique_ptr<boost::thread>(new boost::thread([this]() {
+		double timeOfLastUpdate = elapsedTime();
+		while (mIsRunning)
 		{
-			double timeOfLastUpdate = elapsedTime();
-			while (mIsRunning)
 			{
+				Lock lock(mMutex);
 				for (NodePtr node: mNodes)
 				{
 					node->stepProcessing();
 				}
-				double delta = elapsedTime() - timeOfLastUpdate;
-				timeOfLastUpdate += delta;
-				// limit framerate to 100fps
-				if (delta < 0.01)
-				{
-					int us = int((0.01 - delta) * 1000000);
-					boost::this_thread::sleep_for(boost::chrono::microseconds(us));
-				}
 			}
-		}));
+			double delta = elapsedTime() - timeOfLastUpdate;
+			timeOfLastUpdate += delta;
+			// limit framerate to 100fps
+			if (delta < 0.01)
+			{
+				int us = int((0.01 - delta) * 1000000);
+				boost::this_thread::sleep_for(boost::chrono::microseconds(us));
+			}
+		}
+	}));
 }
 
 void Pipeline::stop()
@@ -221,11 +230,14 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 		hm_info("Unable to connect "+outlet->toString()+" to "+inlet->toString()+" because "+failReason+'.');
 		return false;
 	}
-
+	
 	PatchCordPtr p(new PatchCord(outlet, inlet));
-	outlet->addPatchCord(p);
-	inlet->incrementNumConnections();
-	mPatchCords.push_back(p);
+	{
+		Lock lock(mMutex);
+		outlet->addPatchCord(p);
+		inlet->incrementNumConnections();
+		mPatchCords.push_back(p);
+	}
 	assert(patchCordInvariant());
 	hm_debug("Connected "+outlet->toString()+" and "+inlet->toString());
 	for (Listener* listener: mListeners)
@@ -254,8 +266,11 @@ bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 void Pipeline::disconnect(PatchCordPtr p)
 {
 	assert(patchCordInvariant());
-	p->outlet()->removePatchCord(p);
-	mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
+	{
+		Lock lock(mMutex);
+		p->outlet()->removePatchCord(p);
+		mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
+	}
 	assert(patchCordInvariant());
 	hm_debug("Disconnected "+p->outlet()->toString()+" and "+p->inlet()->toString());
 	for (Listener* listener: mListeners)
@@ -277,11 +292,15 @@ bool Pipeline::isConnected(OutletPtr outlet, InletPtr inlet) const
 
 void Pipeline::addListener(Listener* listener)
 {
+	Lock lock(mMutex);
+	
 	mListeners.push_back(listener);
 }
 
 bool Pipeline::removeListener(Listener* listener)
 {
+	Lock lock(mMutex);
+	
 	auto it = std::find(mListeners.begin(), mListeners.end(), listener);
 	if (it==mListeners.end())
 	{
@@ -397,6 +416,8 @@ InletPtr Pipeline::inletFromPath(std::string path)
 
 void Pipeline::toJson(Json::Value& json) const
 {
+	Lock lock(mMutex);
+	
 	json = Json::Value();
 	json["nodes"] = Json::Value(Json::arrayValue);
 	for (int i=0; i<mNodes.size(); i++)
@@ -415,6 +436,8 @@ void Pipeline::toJson(Json::Value& json) const
 
 void Pipeline::clear()
 {
+	Lock lock(mMutex);
+	
 	while (!mPatchCords.empty())
 	{
 		disconnect(mPatchCords.back());
@@ -463,61 +486,66 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 	}
 	clear();
 	FactoryNode& factory = *FactoryNode::instance();
-	for (auto& jNode: json["nodes"])
 	{
-		string type = jNode["type"].asString();
-		if (type.empty())
+		Lock lock(mMutex);
+		
+		for (auto& jNode: json["nodes"])
 		{
-			errors.push_back("Node element found in JSON with no 'type' value. Skipping this node.");
-			continue;
+			string type = jNode["type"].asString();
+			if (type.empty())
+			{
+				errors.push_back("Node element found in JSON with no 'type' value. Skipping this node.");
+				continue;
+			}
+			if (!factory.hasNodeType(type))
+			{
+				errors.push_back("Node element found in JSON with unrecognised node type: '"+type+"'. Skipping this node.");
+				continue;
+			}
+			Node::Params nodeParams;
+			if (!(jNode["settings"] >> nodeParams))
+			{
+				errors.push_back("Failed to parse 'settings' element for node of type '"+type+"'. Skipping this node.");
+				continue;
+			}
+			NodePtr node = factory.create(type, nodeParams);
+			assert(node!=nullptr);
+			if (node!=nullptr)
+			{
+				addNode(node);
+			}
+			else
+			{
+				errors.push_back("Unanticipated error when creating node '"+nodeParams.name+"'.");
+			}
 		}
-		if (!factory.hasNodeType(type))
+		for (auto& jPatchCord: json["patchcords"])
 		{
-			errors.push_back("Node element found in JSON with unrecognised node type: '"+type+"'. Skipping this node.");
-			continue;
-		}
-		Node::Params nodeParams;
-		if (!(jNode["settings"] >> nodeParams))
-		{
-			errors.push_back("Failed to parse 'settings' element for node of type '"+type+"'. Skipping this node.");
-			continue;
-		}
-		NodePtr node = factory.create(type, nodeParams);
-		assert(node!=nullptr);
-		if (node!=nullptr)
-		{
-			addNode(node);
-		}
-		else
-		{
-			errors.push_back("Unanticipated error when creating node '"+nodeParams.name+"'.");
+			string jOutlet = jPatchCord["outlet"].asString();
+			if (jOutlet.empty())
+			{
+				errors.push_back("patchcord element found with no 'outlet' element. Skipping this patch cord.");
+			}
+			string jInlet = jPatchCord["inlet"].asString();
+			if (jInlet.empty())
+			{
+				errors.push_back("patchcord element found with no 'inlet' element. Skipping this patch cord.");
+			}
+			OutletPtr outlet = outletFromPath(jOutlet);
+			if (outlet==nullptr)
+			{
+				errors.push_back("patchcord element found with an outlet that could not be found: '"+jOutlet+"'. Skipping this patchcord.");
+			}
+			InletPtr inlet = inletFromPath(jInlet);
+			if (inlet==nullptr)
+			{
+				errors.push_back("patchcord element found with an inlet that could not be found: '"+jInlet+"'. Skipping this patchcord.");
+			}
+			bool connectSuccess = connect(outlet, inlet);
+			assert(connectSuccess);
 		}
 	}
-	for (auto& jPatchCord: json["patchcords"])
-	{
-		string jOutlet = jPatchCord["outlet"].asString();
-		if (jOutlet.empty())
-		{
-			errors.push_back("patchcord element found with no 'outlet' element. Skipping this patch cord.");
-		}
-		string jInlet = jPatchCord["inlet"].asString();
-		if (jInlet.empty())
-		{
-			errors.push_back("patchcord element found with no 'inlet' element. Skipping this patch cord.");
-		}
-		OutletPtr outlet = outletFromPath(jOutlet);
-		if (outlet==nullptr)
-		{
-			errors.push_back("patchcord element found with an outlet that could not be found: '"+jOutlet+"'. Skipping this patchcord.");
-		}
-		InletPtr inlet = inletFromPath(jInlet);
-		if (inlet==nullptr)
-		{
-			errors.push_back("patchcord element found with an inlet that could not be found: '"+jInlet+"'. Skipping this patchcord.");
-		}
-		bool connectSuccess = connect(outlet, inlet);
-		assert(connectSuccess);
-	}
+	
 	if (wasRunning)
 	{
 		start();
@@ -543,7 +571,7 @@ bool Pipeline::saveJson(string filePath) const
 		hm_warning("Error when writing to "+filePath+". Pipeline has not been saved.");
 		return false;
 	}
-	return true;	
+	return true;
 }
 
 

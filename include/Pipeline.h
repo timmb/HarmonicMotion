@@ -12,6 +12,7 @@
 #include <vector>
 #include <atomic>
 #include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
 
 
 namespace hm
@@ -114,6 +115,10 @@ namespace hm
 		/// All patch cords in the pipeline, sorted by inlet
 		std::list<PatchCordPtr> mPatchCords;
 		std::list<Listener*> mListeners;
+		
+		/// Guards against simultaneous updating (by this class's threads)
+		/// and changing of pipeline
+		mutable boost::mutex mMutex;
 		
 		friend std::ostream& operator<<(std::ostream&, Pipeline const&);
 	};
