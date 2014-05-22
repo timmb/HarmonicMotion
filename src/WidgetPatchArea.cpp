@@ -365,7 +365,13 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 	{
 		if (w->node() == node)
 		{
+			// removes w from mWidgetNodes
 			w->eraseWithoutUpdatingModel();
+			// Although eraseNode does request that WidgetNode is later deleted
+			// we delete it right away here to ensure we don't retain any shared
+			// pointers to objects in the underlying model longer than necessary
+			assert(!mWidgetNodes.contains(w));
+			delete w;
 			break;
 		}
 	}
