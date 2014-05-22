@@ -379,7 +379,7 @@ OutletPtr Pipeline::outletFromPath(std::string path)
 	}
 	else
 	{
-		hm_info("No Node found with name "+node->name());
+		hm_info("No Node found with name "+path);
 		return nullptr;
 	}
 }
@@ -409,7 +409,7 @@ InletPtr Pipeline::inletFromPath(std::string path)
 	}
 	else
 	{
-		hm_info("No Node found with name "+node->name());
+		hm_info("No Node found with name "+path);
 		return nullptr;
 	}
 }
@@ -487,9 +487,6 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 	}
 	clear();
 	FactoryNode& factory = *FactoryNode::instance();
-	{
-		Lock lock(mMutex);
-		
 		for (auto& jNode: json["nodes"])
 		{
 			string type = jNode["type"].asString();
@@ -542,11 +539,14 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			{
 				errors.push_back("patchcord element found with an inlet that could not be found: '"+jInlet+"'. Skipping this patchcord.");
 			}
-			bool connectSuccess = connect(outlet, inlet);
+			
+			bool connectSuccess = false;
+			if (inlet!=nullptr && outlet!=nullptr)
+			{
+				connect(outlet, inlet);
+			}
 			assert(connectSuccess);
 		}
-	}
-	
 	if (wasRunning)
 	{
 		start();

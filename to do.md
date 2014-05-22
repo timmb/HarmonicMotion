@@ -58,3 +58,5 @@ D Desirable
 - OSC in/out between instances
 - Info display
 - Auto calibrate multiple Kinects
+- Check if pipeline's actually dirty before asking to save changes
+- remember last open/save directory
