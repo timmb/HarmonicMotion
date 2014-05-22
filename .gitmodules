@@ -1,3 +1,6 @@
 [submodule "HarmonicMotionGui"]
 	path = HarmonicMotionGui
 	url = ./HarmonicMotionGui
+[submodule "lib/CinderBlocks/BlockOpenNI"]
+	path = lib/CinderBlocks/BlockOpenNI
+	url = https://github.com/timmb/BlockOpenNI.git
