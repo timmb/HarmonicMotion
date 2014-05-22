@@ -269,6 +269,7 @@ void Pipeline::disconnect(PatchCordPtr p)
 	{
 		Lock lock(mMutex);
 		p->outlet()->removePatchCord(p);
+		p->inlet()->decrementNumConnections();
 		mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
 	}
 	assert(patchCordInvariant());
@@ -436,12 +437,12 @@ void Pipeline::toJson(Json::Value& json) const
 
 void Pipeline::clear()
 {
-	Lock lock(mMutex);
-	
+	hm_debug("Pipeline::clear(): Erasing all patchcords");
 	while (!mPatchCords.empty())
 	{
 		disconnect(mPatchCords.back());
 	}
+	hm_debug("Pipeline::clear(): Erasing all nodes");
 	while (!mNodes.empty())
 	{
 		removeNode(mNodes.back());
