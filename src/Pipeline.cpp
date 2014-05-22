@@ -47,6 +47,10 @@ void Pipeline::addNode(NodePtr node)
 {
 	mNodes.push_back(node);
 	hm_debug("Added node "+node->toString());
+	if (isRunning() && !node->isProcessing())
+	{
+		node->startProcessing();
+	}
 	for (Listener* listener: mListeners)
 	{
 		listener->nodeAdded(node);
@@ -58,6 +62,13 @@ void Pipeline::removeNode(NodePtr node)
 	auto it = std::find(mNodes.begin(), mNodes.end(), node);
 	if (it != mNodes.end())
 	{
+		if (isRunning())
+		{
+			assert((**it).isProcessing());
+			{
+				(**it).stopProcessing();
+			}
+		}
 		mNodes.erase(it);
 	}
 	/// Check invariants

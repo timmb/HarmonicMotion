@@ -10,10 +10,11 @@ X- Open doesn't work
 X crash on New
 X need escape to cancel patch cord
 X delete nodes
-- BUG CPU usage goes up after cancelling patch cord creation
-- BUG patching from outlets mouse doesn't respond
-- BUG added node while pipeline is running - node is not properly started
--- Refactor partial patch cords to not use WidgetPatchCord
+X BUG CPU usage goes up after cancelling patch cord creation
+X BUG patching from outlets mouse doesn't respond
+X BUG added node while pipeline is running - node is not properly started
+X- Refactor partial patch cords to not use WidgetPatchCord
+X- Node prototypes no longer create WidgetNode - now done via model
 - Test save and load
 - Expression node
 - OSCeleton OSC output
@@ -53,6 +54,7 @@ D Desirable
 - BUG node names cannot be reused (move sNodeNamesInUse to pipeline and make the unique check done when node added to pipeline)
 - REFACTOR make only pipeline able to create nodes
 - REFACTOR move headers to hm/
+- REFACTOR hm should be submodule of gui
 - OSC in/out between instances
 - Info display
 - Auto calibrate multiple Kinects
