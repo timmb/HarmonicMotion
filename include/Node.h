@@ -86,6 +86,9 @@ namespace hm
 		/// (even if isEnabled is false)
 		bool isProcessing() const { return mIsProcessing; }
 		
+		/// \return A set of all node names currently in use
+		static std::set<std::string> nodeNamesInUse();
+		
 	protected:
 		/// Nodes cannot be directly constructed as they are always
 		/// subclassed.

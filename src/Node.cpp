@@ -380,7 +380,11 @@ namespace hm
 
 }
 
-
+set<string> Node::nodeNamesInUse()
+{
+	boost::lock_guard<boost::mutex> lock(sNamesInUseMutex);
+	return sNamesInUse;
+}
 
 
 
