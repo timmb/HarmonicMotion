@@ -439,6 +439,5 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 
 void WidgetPatchArea::resizeEvent(QResizeEvent* event)
 {
-	hm_debug("WidgetPatchArea::resizeEvent");
 }
 
