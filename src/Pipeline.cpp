@@ -543,7 +543,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			bool connectSuccess = false;
 			if (inlet!=nullptr && outlet!=nullptr)
 			{
-				connect(outlet, inlet);
+				connectSuccess = connect(outlet, inlet);
 			}
 			assert(connectSuccess);
 		}

@@ -15,7 +15,7 @@ X BUG patching from outlets mouse doesn't respond
 X BUG added node while pipeline is running - node is not properly started
 X- Refactor partial patch cords to not use WidgetPatchCord
 X- Node prototypes no longer create WidgetNode - now done via model
-- Test save and load
+X- Test save and load
 - Expression node
 - OSCeleton OSC output
 - Refactor Factory to be part of Pipeline
@@ -37,6 +37,7 @@ B list (Essential for NIME)
 - IA Filter nodes
 - Save location with widgets
 - BUG Context menu appearing in wrong place
+- Make changing name on widget actually change name
 
 C Spec described in NIME paper
 ===========
