@@ -11,7 +11,7 @@
 
 using namespace hm;
 
-NodePrinter::NodePrinter(Params const& params, std::string const& className)
+NodePrinter::NodePrinter(Params params, std::string className)
 : NodeUnthreaded(params, className)
 , mParams(params)
 , mInlet(nullptr)
@@ -30,4 +30,10 @@ void NodePrinter::step()
 		std::cout << "-- "<<mParams.name<<" -- "<<mInlet->dataTimestamp()
 		<<" "<<(!history.empty()? history[0] :"")<<"\n   "<<data<<std::endl;
 	}
+}
+
+
+NodePtr NodePrinter::create(Node::Params params) const
+{
+	return NodePtr(new NodePrinter(params));
 }

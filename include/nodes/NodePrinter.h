@@ -15,16 +15,10 @@ namespace hm
 	class NodePrinter : public NodeUnthreaded
 	{
 	public:
-		struct Params : public Node::Params
-		{
-			Params(std::string const& name_="")
-			: Node::Params(name_)
-			{}
-		};
-		
-		NodePrinter(Params const& params=Params(), std::string const& className="NodePrinter");
+		NodePrinter(Params params=Params(), std::string className="NodePrinter");
 		
 	protected:
+		virtual NodePtr create(Node::Params params) const override;
 		virtual void step() override;
 		
 	private:
@@ -33,3 +27,8 @@ namespace hm
 		double mLastTimestamp;
 	};
 }
+
+
+#include "FactoryNode.h"
+hm_register_node(NodePrinter, "Printer", "Print the input to the debug console.")
+
