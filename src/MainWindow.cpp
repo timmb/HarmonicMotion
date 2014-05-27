@@ -246,7 +246,7 @@ bool MainWindow::confirmDestroyWithUser()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-	hm_debug("MainWindow::resizeEvent");
+//	hm_debug("MainWindow::resizeEvent");
 }
 
 
