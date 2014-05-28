@@ -7,23 +7,118 @@
 //
 
 #pragma once
-#include "DataType.h"
+#include "BaseData.h"
 #include "cinder/Vector.h"
 
 namespace hm
 {
-	class Point3d : public ci::Vec3f, public DataType
+	class Point3d : public Base3dData
 	{
 	public:
-		Point3d() : ci::Vec3f() {}
-		Point3d(ci::Vec3f const& v) : ci::Vec3f(v) {}
+		Point3d(ci::Vec3f const& v, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		
+		ci::Vec3f value;
+		
+//		/// Undefined: will result in an assertion error in debug mode
+//		DataNull operator+(DataNull const& rhs) const;
+//		/// \copydoc operator+()
+//		DataNull operator-(DataNull const& rhs) const;
+//		/// \copydoc operator+()
+//		DataNull operator*(DataNull const& rhs) const;
+//		/// \copydoc operator+()
+//		DataNull operator/(DataNull const& rhs) const;
+		
+		Point3d operator+(Point3d const& rhs) const;
+		Point3d operator-(Point3d const& rhs) const;
+		/// Pointwise multiplication
+		Point3d operator*(Point3d const& rhs) const;
+		/// Pointwise division
+		Point3d operator/(Point3d const& rhs) const;
+		Point3d& operator+=(Point3d const& rhs);
+		Point3d& operator-=(Point3d const& rhs);
+		/// Pointwise multiplication
+		Point3d& operator*=(Point3d const& rhs);
+		/// Pointwise division
+		Point3d& operator/=(Point3d const& rhs);
+		
+		Point3d operator*(Value const& rhs) const;
+		Point3d operator/(Value const& rhs) const;
+		
+		// Point3d <op> Skeleton3d applies op to each joint in skeleton
+		Skeleton3d operator+(Skeleton3d const& rhs) const;
+		Skeleton3d operator-(Skeleton3d const& rhs) const;
+		Skeleton3d operator*(Skeleton3d const& rhs) const;
+		Skeleton3d operator/(Skeleton3d const& rhs) const;
+		
+		// Point3d <op> Scene3d applies op to each skeleton in scene
+		Scene3d operator+(Scene3d const& rhs) const;
+		Scene3d operator-(Scene3d const& rhs) const;
+		Scene3d operator*(Scene3d const& rhs) const;
+		Scene3d operator/(Scene3d const& rhs) const;
+		
+		template <typename Scalar>
+		Point3d operator*(Scalar const& rhs) const;
+		template <typename Scalar>
+		Point3d operator/(Scalar const& rhs) const;
+		template <typename Scalar>
+		Point3d& operator*=(Scalar const& rhs);
+		template <typename Scalar>
+		Point3d& operator/=(Scalar const& rhs);
+		
+		bool operator==(Point3d const& rhs) const;
+		bool operator!=(Point3d const& rhs) const;
 		
 		virtual void draw();
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return POINT3D; }
-		/// Point3d may optionally have scene metadata
-		virtual bool hasSceneMeta() const override { return sceneMeta != nullptr; }
+
 	};
-	// To avoid ambiguity with both base classes
-	std::ostream& operator<<(std::ostream& out, Point3d const& rhs);
+	
+	template <typename Scalar>
+	Point3d Point3d::operator*(Scalar const& rhs) const
+	{
+		Point3d out;
+		out.value *= rhs;
+		return out;
+	}
+
+	template <typename Scalar>
+	Point3d Point3d::operator/(Scalar const& rhs) const
+	{
+		Point3d out;
+		out.value /= rhs;
+		return out;
+	}
+	
+	template <typename Scalar>
+	Point3d operator*(Scalar const& lhs, Point3d const& rhs)
+	{
+		return rhs * lhs;
+	}
+
+	template <typename Scalar>
+	Point3d operator/(Scalar const& lhs, Point3d const& rhs)
+	{
+		return Point3d(ci::Vec3f(lhs/rhs.value.x, lhs/rhs.value.y, lhs/rhs.value.z), rhs.timestamp, rhs.sceneMeta);
+	}
+	
+	template <typename Scalar>
+	Point3d& Point3d::operator*=(Scalar const& rhs)
+	{
+		value *= rhs;
+		return *this;
+	}
+	
+	template <typename Scalar>
+	Point3d& Point3d::operator/=(Scalar const& rhs)
+	{
+		value /= rhs;
+		return *this;
+	}
 }
+
+
+
+
+

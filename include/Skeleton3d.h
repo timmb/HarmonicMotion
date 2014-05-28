@@ -2,7 +2,7 @@
 #include "Common.h"
 #include <cassert>
 #include <vector>
-#include "DataType.h"
+#include "BaseData.h"
 #include "Point3d.h"
 #include "SceneMeta.h"
 
@@ -106,10 +106,10 @@ namespace hm
 	
 	
 	// --------------------------------------------------------------
-	class Skeleton3d : public DataType
+	class Skeleton3d : public Base3dData
 	{
 	public:
-		Skeleton3d(SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Skeleton3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 //		std::vector<Point3d> const& joints() const { return mJoints; }
 //		std::vector<Point3d>& joints() { return mJoints; }
@@ -142,22 +142,43 @@ namespace hm
 		virtual Type type() const override { return SKELETON3D; }
 		virtual void draw() override;
 		
-		/// Skeletons must always have scene metadata
-		virtual bool hasSceneMeta() const override;
-		
-		Skeleton3d operator+(Skeleton3d rhs) const;
-		Skeleton3d operator-(Skeleton3d rhs) const;
+		Skeleton3d operator+(Skeleton3d const& rhs) const;
+		Skeleton3d operator-(Skeleton3d const& rhs) const;
+		Skeleton3d operator*(Skeleton3d const& rhs) const;
+		Skeleton3d operator/(Skeleton3d const& rhs) const;
+
 		Skeleton3d& operator+=(Skeleton3d const& rhs);
 		Skeleton3d& operator-=(Skeleton3d const& rhs);
+		Skeleton3d& operator*=(Skeleton3d const& rhs);
+		Skeleton3d& operator/=(Skeleton3d const& rhs);
 		
-		template <typename Scalar>
-		Skeleton3d operator*(Scalar const& rhs) const;
+		Skeleton3d operator+(Point3d const& rhs) const;
+		Skeleton3d operator-(Point3d const& rhs) const;
+		Skeleton3d operator*(Point3d const& rhs) const;
+		Skeleton3d operator/(Point3d const& rhs) const;
 		
-		template <typename Scalar>
-		Skeleton3d& operator*=(Scalar const& rhs);
+		Skeleton3d& operator+=(Point3d const& rhs);
+		Skeleton3d& operator-=(Point3d const& rhs);
+		Skeleton3d& operator*=(Point3d const& rhs);
+		Skeleton3d& operator/=(Point3d const& rhs);
+		
+		Scene3d operator+(Scene3d const& rhs) const;
+		Scene3d operator-(Scene3d const& rhs) const;
+		Scene3d operator*(Scene3d const& rhs) const;
+		Scene3d operator/(Scene3d const& rhs) const;
+		
+		Skeleton3d operator*(Value const& rhs) const;
+		Skeleton3d operator/(Value const& rhs) const;
+		
+		
+		Skeleton3d operator*(double rhs) const;
+		Skeleton3d operator/(double rhs) const;
+
+		Skeleton3d& operator*=(double rhs);
+		Skeleton3d& operator/=(double rhs);
 
 		bool operator==(Skeleton3d const& rhs) const;
-		bool operator!=(Skeleton3d const& rhs) const { return !(*this==rhs); }
+		bool operator!=(Skeleton3d const& rhs) const;
 		
 	private:
 		int mId;
@@ -166,16 +187,9 @@ namespace hm
 		std::vector<float> mJointConfidences;
 	};
 	
-	
-	template <typename T>
-	Skeleton3d operator*(T const& lhs, Skeleton3d const& rhs)
-	{
-		return rhs * lhs;
-	}
-	
-	
-	template <typename Scalar>
-	Skeleton3d Skeleton3d::operator*(Scalar const& rhs) const
+		
+	inline
+	Skeleton3d Skeleton3d::operator*(double rhs) const
 	{
 		Skeleton3d skel = *this;
 		skel *= rhs;
@@ -183,8 +197,8 @@ namespace hm
 	}
 	
 	
-	template <typename Scalar>
-	Skeleton3d& Skeleton3d::operator*=(Scalar const& rhs)
+	inline
+	Skeleton3d& Skeleton3d::operator*=(double rhs)
 	{
 		for (int i=0; i<NUM_JOINTS; i++)
 		{
@@ -193,6 +207,39 @@ namespace hm
 			jointConfidence(i) *= rhs;
 		}
 		return *this;
+	}
+
+	inline
+	Skeleton3d Skeleton3d::operator/(double rhs) const
+	{
+		Skeleton3d skel = *this;
+		skel /= rhs;
+		return skel;
+	}
+	
+	
+	inline
+	Skeleton3d& Skeleton3d::operator/=(double rhs)
+	{
+		for (int i=0; i<NUM_JOINTS; i++)
+		{
+			joint(i) /= rhs;
+			jointProjective(i) /= rhs;
+			jointConfidence(i) /= rhs;
+		}
+		return *this;
+	}
+	
+	inline
+	Skeleton3d operator*(double lhs, Skeleton3d const& rhs)
+	{
+		return rhs * lhs;
+	}
+
+	inline
+	Skeleton3d operator/(double lhs, Skeleton3d const& rhs)
+	{
+		return rhs / lhs;
 	}
 
 	

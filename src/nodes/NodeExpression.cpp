@@ -1,5 +1,6 @@
 #include "NodeExpression.h"
 
+#include <string>
 
 
 // Remove nil and Nil defines as they are incompatible with boost.
@@ -73,11 +74,11 @@ namespace hm
 		int numOutlets = 2;
 		for (int i=0; i<numInlets; i++)
 		{
-			createInlet(VALUE | VECTOR_TYPES, "Input i"+to_string(i+1), "Input here may be used as \"i"+to_string(i+1)+"\" in your expression.");
+			createInlet(VALUE | VECTOR3D_TYPES, "Input i"+std::to_string(i+1), "Input here may be used as \"i"+to_string(i+1)+"\" in your expression.");
 		}
 		for (int i=0; i<numOutlets; i++)
 		{
-			createOutlet(VALUE | VECTOR_TYPES, "Output i"+to_string(i+1), "Output here may be written to as \"o"+to_string(i+1)+"\" in your expression.");
+			createOutlet(VALUE | VECTOR3D_TYPES, "Output i"+to_string(i+1), "Output here may be written to as \"o"+to_string(i+1)+"\" in your expression.");
 		}
 		mGrammar = unique_ptr<NodeExpressionGrammar<string::iterator>>(new NodeExpressionGrammar<string::iterator>);
 	}

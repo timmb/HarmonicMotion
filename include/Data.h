@@ -44,8 +44,8 @@ namespace hm
 		/// \return A pointer to the contained data or nullptr
 		/// if isNull(). The pointer will be invalid once this object
 		/// is destroyed
-		DataType* asDataType();
-		DataType const* asDataType() const;
+		BaseData* asBaseData();
+		BaseData const* asBaseData() const;
 		
 		bool isValue() const;
 		Value const& asValue() const;

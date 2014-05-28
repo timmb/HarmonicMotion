@@ -1,13 +1,15 @@
 #include "Scene3d.h"
+#include "Value.h"
 
 using namespace hm;
+using namespace std;
 
 std::ostream& Scene3d::printTo(std::ostream& out) const
 	{
-		out << "Scene metaPtr:"<<sceneMeta<<" skels:"<<skeletons().size()<<" [";
-		if (!skeletons().empty())
+		out << "Scene metaPtr:"<<sceneMeta<<" skels:"<<skeletons.size()<<" [";
+		if (!skeletons.empty())
 			out << '\n';
-		for (Skeleton3d const& skel: skeletons())
+		for (Skeleton3d const& skel: skeletons)
 		{
 			out << skel << '\n';
 		}
@@ -15,80 +17,256 @@ std::ostream& Scene3d::printTo(std::ostream& out) const
 	}
 
 
-Scene3d::Scene3d(SceneMetaPtr sceneMeta_)
-: DataType(sceneMeta_)
+Scene3d::Scene3d(double timestamp, SceneMetaPtr sceneMeta_)
+: Base3dData(timestamp, sceneMeta_)
 {
-	assert(sceneMeta != nullptr);
 }
 
 
 
 void Scene3d::draw()
 {
-	for (Skeleton3d& s: mSkeletons)
+	for (Skeleton3d& s: skeletons)
 	{
 		s.draw();
 	}
 }
 
-bool Scene3d::hasSceneMeta() const
-{
-	assert(sceneMeta != nullptr);
-	return true;
-}
 
 
-Scene3d Scene3d::operator+(Scene3d rhs) const
+Scene3d Scene3d::operator+(Scene3d const& rhs) const
 {
-	int n = std::min(skeletons().size(), rhs.skeletons().size());
+	Scene3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	out.skeletons.reserve(skeletons.size());
 	for (int i=0; i<n; i++)
 	{
-		rhs.skeletons()[i] += skeletons()[i];
+		out.skeletons.push_back(skeletons[i] + rhs.skeletons[i]);
 	}
 	// add over any skeletons we have that have no corresponding one in rhs
-	for (int i=rhs.skeletons().size(); i<skeletons().size(); i++)
+	for (int i=rhs.skeletons.size(); i<skeletons.size(); i++)
 	{
-		rhs.skeletons().push_back(skeletons()[i]);
+		out.skeletons.push_back(skeletons[i]);
 	}
-	return rhs;
+	return out;
 }
 
-Scene3d Scene3d::operator-(Scene3d rhs) const
+Scene3d Scene3d::operator-(Scene3d const& rhs) const
 {
-	int n = std::min(skeletons().size(), rhs.skeletons().size());
+	Scene3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	out.skeletons.reserve(skeletons.size());
 	for (int i=0; i<n; i++)
 	{
-		rhs.skeletons()[i] -= skeletons()[i];
+		out.skeletons.push_back(skeletons[i] - rhs.skeletons[i]);
 	}
-	// doesn't make sense to add over negative skeletons where there is no
-	// correspondence
-	return rhs;
+	// add over any skeletons we have that have no corresponding one in rhs
+	for (int i=rhs.skeletons.size(); i<skeletons.size(); i++)
+	{
+		out.skeletons.push_back(skeletons[i]);
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator*(Scene3d const& rhs) const
+{
+	Scene3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	out.skeletons.reserve(skeletons.size());
+	for (int i=0; i<n; i++)
+	{
+		out.skeletons.push_back(skeletons[i] * rhs.skeletons[i]);
+	}
+	// add over any skeletons we have that have no corresponding one in rhs
+	for (int i=rhs.skeletons.size(); i<skeletons.size(); i++)
+	{
+		out.skeletons.push_back(skeletons[i]);
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator/(Scene3d const& rhs) const
+{
+	Scene3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	out.skeletons.reserve(skeletons.size());
+	for (int i=0; i<n; i++)
+	{
+		out.skeletons.push_back(skeletons[i] / rhs.skeletons[i]);
+	}
+	// add over any skeletons we have that have no corresponding one in rhs
+	for (int i=rhs.skeletons.size(); i<skeletons.size(); i++)
+	{
+		out.skeletons.push_back(skeletons[i]);
+	}
+	return out;
 }
 
 Scene3d& Scene3d::operator+=(Scene3d const& rhs)
 {
-	int n = std::min(skeletons().size(), rhs.skeletons().size());
+	timestamp = max(timestamp, rhs.timestamp);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
 	for (int i=0; i<n; i++)
 	{
-		skeletons()[i] += rhs.skeletons()[i];
-	}
-	// add over any skeletons in rhs that have no corresponding in this
-	for (int i=skeletons().size(); i<rhs.skeletons().size(); i++)
-	{
-		skeletons().push_back(rhs.skeletons()[i]);
+		skeletons[i] += rhs.skeletons[i];
 	}
 	return *this;
-
 }
+
+Scene3d& Scene3d::operator-=(Scene3d const& rhs)
+{
+	timestamp = max(timestamp, rhs.timestamp);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	for (int i=0; i<n; i++)
+	{
+		skeletons[i] -= rhs.skeletons[i];
+	}
+	return *this;
+}
+
+Scene3d& Scene3d::operator*=(Scene3d const& rhs)
+{
+	timestamp = max(timestamp, rhs.timestamp);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	for (int i=0; i<n; i++)
+	{
+		skeletons[i] *= rhs.skeletons[i];
+	}
+	return *this;
+}
+
+Scene3d& Scene3d::operator/=(Scene3d const& rhs)
+{
+	timestamp = max(timestamp, rhs.timestamp);
+	int n = std::min(skeletons.size(), rhs.skeletons.size());
+	for (int i=0; i<n; i++)
+	{
+		skeletons[i] /= rhs.skeletons[i];
+	}
+	return *this;
+}
+
+Scene3d Scene3d::operator+(Skeleton3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s += rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator-(Skeleton3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s -= rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator*(Skeleton3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s *= rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator/(Skeleton3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s /= rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator+(Point3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s = s + rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator-(Point3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s = s - rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator*(Point3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s *= rhs;
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator/(Point3d const& rhs) const
+{
+	Scene3d out = *this;
+	out.timestamp = max(timestamp, rhs.timestamp);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		s /= rhs;
+	}
+	return out;
+}
+
+
+
+
+Scene3d Scene3d::operator*(Value const& rhs) const
+{
+	Scene3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		out.skeletons.push_back(s * rhs);
+	}
+	return out;
+}
+
+Scene3d Scene3d::operator/(Value const& rhs) const
+{
+	Scene3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	for (Skeleton3d& s: out.skeletons)
+	{
+		out.skeletons.push_back(s / rhs);
+	}
+	return out;
+}
+
+
 
 
 bool Scene3d::operator==(Scene3d const& rhs) const
 {
-	if (sceneMeta != rhs.sceneMeta || skeletons().size() != rhs.skeletons().size())
+	if (sceneMeta != rhs.sceneMeta || skeletons.size() != rhs.skeletons.size())
 		return false;
-	for (int i=0; i<mSkeletons.size(); i++)
+	for (int i=0; i<skeletons.size(); i++)
 	{
-		if (skeletons()[i] != rhs.skeletons()[i])
+		if (skeletons[i] != rhs.skeletons[i])
 			return false;
 	}
 	return true;

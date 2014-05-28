@@ -24,6 +24,7 @@ namespace hm
 	class Pipeline;
 	
 	// forward declare data types
+	class DataNull;
 	class Value;
 	class Point3d;
 	class Skeleton3d;

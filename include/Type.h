@@ -7,6 +7,7 @@
 //
 
 #pragma once
+#include <string>
 
 namespace hm
 {
@@ -20,9 +21,14 @@ namespace hm
 		SCENE3D = (1<<3), // Set of SKELETON3Ds
 		IMAGE3D = (1<<4),
 		ALL_TYPES = (1<<5) - 1,
-		VECTOR_TYPES = POINT3D | SKELETON3D | SCENE3D
+		VECTOR3D_TYPES = POINT3D | SKELETON3D | SCENE3D
 	};
 	static_assert(VALUE | POINT3D | SKELETON3D | SCENE3D | IMAGE3D == ALL_TYPES, "Types have not been properly defined");
 	/// Can be an OR combination of types.
 	typedef int Types;
+}
+
+namespace std
+{
+	std::string to_string(hm::Type type);
 }

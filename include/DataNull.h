@@ -8,14 +8,17 @@
 
 #pragma once
 
-#include "DataType.h"
+#include "BaseData.h"
 
 namespace hm
 {
 	/// Class representing null data, i.e. something to use when we don't
 	/// have any proper data
-	class DataNull : public DataType
+	class DataNull : public BaseData
 	{
+	public:
+		DataNull(double timestamp_ = -1, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return UNDEFINED; }
 	};

@@ -49,8 +49,8 @@
 		22197F1A17F47306003B1883 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 245157AC12684402B9CE4270 /* OscTypes.cpp */; };
 		221E90221816E0CD0028EAFD /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197F8617F4A4F3003B1883 /* Data.cpp */; };
 		221E90231816E10C0028EAFD /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F8717F4A4F3003B1883 /* Data.h */; };
-		221E90321817242A0028EAFD /* DataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E902F181724290028EAFD /* DataType.cpp */; };
-		221E9035181724460028EAFD /* DataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9034181724450028EAFD /* DataType.h */; };
+		221E90321817242A0028EAFD /* BaseData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E902F181724290028EAFD /* BaseData.cpp */; };
+		221E9035181724460028EAFD /* BaseData.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9034181724450028EAFD /* BaseData.h */; };
 		221E9037181725A10028EAFD /* Type.h in Headers */ = {isa = PBXBuildFile; fileRef = 221E9036181725A10028EAFD /* Type.h */; };
 		221E903B1817270D0028EAFD /* Point3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E90381817270C0028EAFD /* Point3d.cpp */; };
 		221E9040181727240028EAFD /* Value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 221E903D181727220028EAFD /* Value.cpp */; };
@@ -191,6 +191,7 @@
 		3442AFD418C0ABE10015B240 /* Let.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3442AFD218C0ABE10015B240 /* Let.cpp */; };
 		3442AFD818C0AF2E0015B240 /* Let.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD618C0AF2E0015B240 /* Let.h */; };
 		3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD718C0AF2E0015B240 /* PatchCord.h */; };
+		3445431219363F8600E90E13 /* Type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3445431119363F8600E90E13 /* Type.cpp */; };
 		34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A8542D1934AE1A00D0E378 /* NodeExpression.h */; };
 		34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A8542F1934AE2400D0E378 /* NodeExpression.cpp */; };
 		34E2062518B76FAF00729934 /* PatchCord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34E2062318B76FAF00729934 /* PatchCord.cpp */; };
@@ -224,8 +225,8 @@
 		22197F8517F4996F003B1883 /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Common.h; path = ../include/Common.h; sourceTree = "<group>"; };
 		22197F8617F4A4F3003B1883 /* Data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Data.cpp; path = ../src/Data.cpp; sourceTree = "<group>"; };
 		22197F8717F4A4F3003B1883 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../include/Data.h; sourceTree = "<group>"; };
-		221E902F181724290028EAFD /* DataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataType.cpp; path = ../src/DataType.cpp; sourceTree = "<group>"; };
-		221E9034181724450028EAFD /* DataType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataType.h; path = ../include/DataType.h; sourceTree = "<group>"; };
+		221E902F181724290028EAFD /* BaseData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseData.cpp; path = ../src/BaseData.cpp; sourceTree = "<group>"; };
+		221E9034181724450028EAFD /* BaseData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseData.h; path = ../include/BaseData.h; sourceTree = "<group>"; };
 		221E9036181725A10028EAFD /* Type.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Type.h; path = ../include/Type.h; sourceTree = "<group>"; };
 		221E90381817270C0028EAFD /* Point3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Point3d.cpp; path = ../src/Point3d.cpp; sourceTree = "<group>"; };
 		221E903D181727220028EAFD /* Value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Value.cpp; path = ../src/Value.cpp; sourceTree = "<group>"; };
@@ -373,6 +374,7 @@
 		3442AFD218C0ABE10015B240 /* Let.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Let.cpp; sourceTree = "<group>"; };
 		3442AFD618C0AF2E0015B240 /* Let.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Let.h; path = ../include/Let.h; sourceTree = "<group>"; };
 		3442AFD718C0AF2E0015B240 /* PatchCord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatchCord.h; path = ../include/PatchCord.h; sourceTree = "<group>"; };
+		3445431119363F8600E90E13 /* Type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Type.cpp; path = ../src/Type.cpp; sourceTree = "<group>"; };
 		34A8542D1934AE1A00D0E378 /* NodeExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeExpression.h; sourceTree = "<group>"; };
 		34A8542F1934AE2400D0E378 /* NodeExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeExpression.cpp; path = ../../src/nodes/NodeExpression.cpp; sourceTree = "<group>"; };
 		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -723,12 +725,12 @@
 		226A967A189BEF930056DCD1 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				221E902F181724290028EAFD /* BaseData.cpp */,
+				221E9034181724450028EAFD /* BaseData.h */,
 				22197F8617F4A4F3003B1883 /* Data.cpp */,
 				22197F8717F4A4F3003B1883 /* Data.h */,
 				2223EC5E1817EEA400B900CF /* DataNull.cpp */,
 				2223EC631817EEAF00B900CF /* DataNull.h */,
-				221E902F181724290028EAFD /* DataType.cpp */,
-				221E9034181724450028EAFD /* DataType.h */,
 				221E90381817270C0028EAFD /* Point3d.cpp */,
 				221E90421817273B0028EAFD /* Point3d.h */,
 				2229375218168E5F008CAA09 /* Scene3d.cpp */,
@@ -738,6 +740,7 @@
 				22293673181591AD008CAA09 /* Skeleton3d.cpp */,
 				22293671181591A2008CAA09 /* Skeleton3d.h */,
 				221E9036181725A10028EAFD /* Type.h */,
+				3445431119363F8600E90E13 /* Type.cpp */,
 				221E903D181727220028EAFD /* Value.cpp */,
 				221E90431817273C0028EAFD /* Value.h */,
 			);
@@ -981,7 +984,7 @@
 				22293740181677C8008CAA09 /* VOpenNIUser.h in Headers */,
 				2229375618168E67008CAA09 /* Scene3d.h in Headers */,
 				221E90231816E10C0028EAFD /* Data.h in Headers */,
-				221E9035181724460028EAFD /* DataType.h in Headers */,
+				221E9035181724460028EAFD /* BaseData.h in Headers */,
 				221E9037181725A10028EAFD /* Type.h in Headers */,
 				22483AC0189F9EFE002DE5C4 /* NodeUnthreaded.h in Headers */,
 				221E90441817273C0028EAFD /* Point3d.h in Headers */,
@@ -1044,6 +1047,7 @@
 				2294120B189AA349009550EF /* NodeThreaded.cpp in Sources */,
 				226A9679189BED140056DCD1 /* NodeSineWave.cpp in Sources */,
 				22197ED517F44B1B003B1883 /* Inlet.cpp in Sources */,
+				3445431219363F8600E90E13 /* Type.cpp in Sources */,
 				22197ED717F44B1B003B1883 /* Node.cpp in Sources */,
 				22483AC3189F9F06002DE5C4 /* NodeUnthreaded.cpp in Sources */,
 				22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */,
@@ -1083,7 +1087,7 @@
 				2229375418168E5F008CAA09 /* Scene3d.cpp in Sources */,
 				221E90221816E0CD0028EAFD /* Data.cpp in Sources */,
 				226A9677189BED140056DCD1 /* NodeRenderer.cpp in Sources */,
-				221E90321817242A0028EAFD /* DataType.cpp in Sources */,
+				221E90321817242A0028EAFD /* BaseData.cpp in Sources */,
 				221E903B1817270D0028EAFD /* Point3d.cpp in Sources */,
 				221E9040181727240028EAFD /* Value.cpp in Sources */,
 			);

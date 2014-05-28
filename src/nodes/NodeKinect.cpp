@@ -106,11 +106,12 @@ void NodeKinect::run()
 		assert(mDevice->_isUserOn);
 		if (mParams.enableScene && mDevice->isUserDataNew())
 		{
+			double timestamp = elapsedTime();
 			OpenNIUserList users = mOpenNi->getUserList();
-			Scene3d scene = Scene3d(sceneMeta());
+			Scene3d scene = Scene3d(timestamp, sceneMeta());
 			for (OpenNIUserRef user: users)
 			{
-				Skeleton3d skeleton(sceneMeta());
+				Skeleton3d skeleton(timestamp, sceneMeta());
 				skeleton.id() = user->getId();
 				for (int i=0; i<NUM_JOINTS; i++)
 				{
@@ -120,11 +121,11 @@ void NodeKinect::run()
 					// SDK standard and use a right handed system with x going
 					// to the left. Also OpenNI uses millimetres whereas we
 					// use metres (like MS SDK).
-					skeleton.joint(i) = ci::Vec3f(-bone.position[0], bone.position[1], bone.position[2]) / 1000.f;
-					skeleton.jointProjective(i) = ci::Vec3f(bone.positionProjective);
+					skeleton.joint(i) = Point3d(ci::Vec3f(-bone.position[0], bone.position[1], bone.position[2]) / 1000.f, timestamp, sceneMeta());
+					skeleton.jointProjective(i) = Point3d(ci::Vec3f(bone.positionProjective), timestamp, sceneMeta());
 					skeleton.jointConfidence(i) = bone.positionConfidence;
 				}
-				scene.skeletons().push_back(skeleton);
+				scene.skeletons.push_back(skeleton);
 			}
 			Data data(scene, elapsedTime());
 			mSceneOutlet->outputNewData(data);

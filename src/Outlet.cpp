@@ -81,7 +81,7 @@ namespace hm
 		if (isDataTypeValid)
 		{
 			// Add this node to the data's history list
-			deque<std::string>& history = data.asDataType()->nodeHistory;
+			deque<std::string>& history = data.asBaseData()->nodeHistory;
 			if (mNode != nullptr)
 			{
 				history.push_front(mNode->name());

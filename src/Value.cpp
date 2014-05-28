@@ -9,42 +9,109 @@
 #include "Value.h"
 #include "Point3d.h"
 #include <sstream>
+#include "Skeleton3d.h"
+#include "Scene3d.h"
+
 
 using namespace hm;
+using namespace std;
 
 std::ostream& Value::printTo(std::ostream& out) const
 {
-	return out << mValue;
+	return out << value;
 }
 
-Value::Value(double value)
-: mValue(value)
+Value::Value(double value_, double timestamp, SceneMetaPtr sceneMeta)
+: BaseData(timestamp, sceneMeta)
+, value(value_)
 {}
 
-Value::Value(float value)
-: mValue(value)
+Value::Value(float value_, double timestamp, SceneMetaPtr sceneMeta)
+: BaseData(timestamp, sceneMeta)
+, value(value_)
 {}
 
 
 Value Value::operator+(Value const& rhs) const
 {
-	return Value(value() + rhs.value());
+	return Value(value + rhs.value);
 }
 
 Value Value::operator-(Value const& rhs) const
 {
-	return Value(mValue - rhs.mValue);
+	return Value(value - rhs.value);
 }
 
 Value Value::operator*(Value const& rhs) const
 {
-	return Value(value() * rhs.value());
+	return Value(value * rhs.value);
 }
 
 Value Value::operator/(Value const& rhs) const
 {
-	return Value(value() / rhs.value());
+	return Value(value / rhs.value);
 }
+
+
+Value& Value::operator+=(Value const& rhs)
+{
+	value += rhs.value;
+	timestamp = max(timestamp, rhs.timestamp);
+	return *this;
+}
+
+Value& Value::operator-=(Value const& rhs)
+{
+	value -= rhs.value;
+	timestamp = max(timestamp, rhs.timestamp);
+	return *this;
+}
+
+Value& Value::operator*=(Value const& rhs)
+{
+	value *= rhs.value;
+	timestamp = max(timestamp, rhs.timestamp);
+	return *this;
+}
+
+Value& Value::operator/=(Value const& rhs)
+{
+	value /= rhs.value;
+	timestamp = max(timestamp, rhs.timestamp);
+	return *this;
+}
+
+
+Point3d Value::operator*(Point3d const& rhs) const
+{
+	return rhs * *this;
+}
+
+Point3d Value::operator/(Point3d const& rhs) const
+{
+	return rhs * (1. / *this);
+}
+
+Skeleton3d Value::operator*(Skeleton3d const& rhs) const
+{
+	return rhs * *this;
+}
+
+Skeleton3d Value::operator/(Skeleton3d const& rhs) const
+{
+	return rhs * (1. / *this);
+}
+
+Scene3d Value::operator*(Scene3d const& rhs) const
+{
+	return rhs * *this;
+}
+
+Scene3d Value::operator/(Scene3d const& rhs) const
+{
+	return rhs * (1. / *this);
+}
+
 
 //Point3d Value::operator*(Point3d const& rhs) const
 //{

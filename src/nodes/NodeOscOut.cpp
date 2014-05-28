@@ -85,7 +85,7 @@ void NodeOscOut::send(Value const& value)
 {
 	Message m;
 	m.setAddress(mPrefixWithSlash);
-	m.addFloatArg(value.value());
+	m.addFloatArg(value.value);
 	//	m.setRemoteEndpoint(mParams.destinationHost, mParams.destinationPort);
 	mOsc.sendMessage(m);
 }
@@ -94,7 +94,7 @@ void NodeOscOut::send(Skeleton3d const& skel)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		Message m = JointMessage(mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i));
+		Message m = JointMessage(mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i).value);
 		mOsc.sendMessage(m);
 	}
 }
@@ -103,9 +103,9 @@ void NodeOscOut::send(Scene3d const& scene)
 {
 	Message m;
 	m.setAddress(mPrefixWithSlash+"num_users");
-	m.addIntArg(scene.skeletons().size());
+	m.addIntArg(scene.skeletons.size());
 	mOsc.sendMessage(m);
-	for (Skeleton3d const& skel: scene.skeletons())
+	for (Skeleton3d const& skel: scene.skeletons)
 	{
 		send(skel);
 	}

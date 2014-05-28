@@ -50,7 +50,7 @@ Data::Data(Scene3d const& x, double timestamp)
 , mTimestamp(timestamp)
 {}
 
-DataType* Data::asDataType()
+BaseData* Data::asBaseData()
 {
 	switch (mType)
 	{
@@ -71,7 +71,7 @@ DataType* Data::asDataType()
 }
 
 
-DataType const* Data::asDataType() const
+BaseData const* Data::asBaseData() const
 {
 	switch (mType)
 	{
@@ -179,7 +179,7 @@ Scene3d& Data::asScene3d()
 namespace hm {
 	std::ostream& operator<<(std::ostream& out, Data const& rhs)
 	{
-		return out << *rhs.asDataType();
+		return out << *rhs.asBaseData();
 	}
 }
 
@@ -194,45 +194,159 @@ namespace
 {
 	using boost::static_visitor;
 	
-	class VisitorAdd : public static_visitor<Data>
+#define BAD_OPERATION(OperationName, LhsType, RhsType) \
+	Data operator()(LhsType const& lhs, RhsType const& Rhs) \
+	{ \
+		assert(false && "Error: Cannot apply operation \""#OperationName"\" with objects of type "#LhsType" and "#RhsType"."); \
+		return Data(); \
+	}
+
+	struct VisitorAdd : public static_visitor<Data>
 	{
+		BAD_OPERATION(addition, Value, Point3d)
+		BAD_OPERATION(addition, Value, Skeleton3d)
+		BAD_OPERATION(addition, Value, Scene3d)
+		BAD_OPERATION(addition, Point3d, Value)
+		BAD_OPERATION(addition, Skeleton3d, Value)
+		BAD_OPERATION(addition, Scene3d, Value)
+
+		template <typename T>
+		Data operator()(T const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Error: Attempting to pass DataNull through addition operator.");
+			return Data();
+		}
+		
+		template <typename U>
+		Data operator()(DataNull const& lhs, U const& rhs)
+		{
+			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through addition operator.");
+			return Data();
+		}
+		
+		Data operator()(DataNull const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through addition operator.");
+			return Data();
+		}
+		
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs + rhs, max(lhs.timestamp(), rhs.timestamp()));
+			return Data(lhs + rhs, max(lhs.timestamp, rhs.timestamp));
 		}
+		
+
 	};
 	VisitorAdd visitorAdd;
 	
-	class VisitorSub : public static_visitor<Data>
+	struct VisitorSub : public static_visitor<Data>
 	{
+		BAD_OPERATION(subtraction, Value, Point3d)
+		BAD_OPERATION(subtraction, Value, Skeleton3d)
+		BAD_OPERATION(subtraction, Value, Scene3d)
+		BAD_OPERATION(subtraction, Point3d, Value)
+		BAD_OPERATION(subtraction, Skeleton3d, Value)
+		BAD_OPERATION(subtraction, Scene3d, Value)
+		
+		template <typename T>
+		Data operator()(T const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Error: Attempting to pass DataNull through subtraction operator.");
+			return Data();
+		}
+		
+		template <typename U>
+		Data operator()(DataNull const& lhs, U const& rhs)
+		{
+			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through subtraction operator.");
+			return Data();
+		}
+		
+		Data operator()(DataNull const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through subtraction operator.");
+			return Data();
+		}
+		
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs - rhs, max(lhs.timestamp(), rhs.timestamp()));
+			return Data(lhs - rhs, max(lhs.timestamp, rhs.timestamp));
 		}
 	};
 	VisitorSub visitorSub;
 	
-	class VisitorMult : public static_visitor<Data>
+	
+	struct VisitorMul : public static_visitor<Data>
 	{
+		template <typename T>
+		Data operator()(T const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+			return Data();
+		}
+		
+		template <typename U>
+		Data operator()(DataNull const& lhs, U const& rhs)
+		{
+			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+			return Data();
+		}
+		
+		Data operator()(DataNull const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+			return Data();
+		}
+		
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs * rhs, max(lhs.timestamp(), rhs.timestamp()));
+			return Data(lhs * rhs, max(lhs.timestamp, rhs.timestamp));
 		}
 	};
-	VisitorMult visitorMult;
+	VisitorMul visitorMul;
 	
-	class VisitorDiv : public static_visitor<Data>
+	
+	struct VisitorDiv : public static_visitor<Data>
 	{
+		template <typename T>
+		Data operator()(T const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+			return Data();
+		}
+		
+		template <typename U>
+		Data operator()(DataNull const& lhs, U const& rhs)
+		{
+			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+			return Data();
+		}
+		
+		Data operator()(DataNull const& lhs, DataNull const& rhs)
+		{
+			// will always fail.
+			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+			return Data();
+		}
+		
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs / rhs, max(lhs.timestamp(), rhs.timestamp()));
+			return Data(lhs / rhs, max(lhs.timestamp, rhs.timestamp));
 		}
 	};
 	VisitorDiv visitorDiv;
+
 }
 
 
@@ -248,7 +362,7 @@ Data Data::operator-(Data const& rhs)
 
 Data Data::operator*(Data const& rhs)
 {
-	return boost::apply_visitor(visitorMult, this->mData, rhs.mData);
+	return boost::apply_visitor(visitorMul, this->mData, rhs.mData);
 }
 
 Data Data::operator/(Data const& rhs)

@@ -37,8 +37,8 @@ void NodeRenderer::draw(int viewportWidth, int viewportHeight)
 	gl::clear(clearColor);
 	gl::color(drawColor);
 	Data data(mInlet->data());
-	DataType* datatype = data.asDataType();
-	if (datatype->hasSceneMeta())
+	BaseData* datatype = data.asBaseData();
+//	if (datatype->hasSceneMeta())
 	{
 		datatype->sceneMeta->setupCamera(viewportWidth, viewportHeight);
 	}

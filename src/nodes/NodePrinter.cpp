@@ -26,7 +26,7 @@ void NodePrinter::step()
 	if (mInlet->dataTimestamp() > mLastTimestamp)
 	{
 		Data data = mInlet->data();
-		auto history = data.asDataType()->nodeHistory;
+		auto history = data.asBaseData()->nodeHistory;
 		std::cout << "-- "<<mParams.name<<" -- "<<mInlet->dataTimestamp()
 		<<" "<<(!history.empty()? history[0] :"")<<"\n   "<<data<<std::endl;
 	}
