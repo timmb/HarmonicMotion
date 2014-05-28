@@ -25,26 +25,26 @@ Data::Data()
 //, mTimestamp(timestamp)
 //{}
 
-Data::Data(Value& value, double timestamp)
+Data::Data(Value const& value, double timestamp)
 : mType(VALUE)
 , mData(value)
 , mTimestamp(timestamp)
 {}
 
 
-Data::Data(Point3d& x, double timestamp)
+Data::Data(Point3d const& x, double timestamp)
 : mType(POINT3D)
 , mData(x)
 , mTimestamp(timestamp)
 {}
 
-Data::Data(Skeleton3d& x, double timestamp)
+Data::Data(Skeleton3d const& x, double timestamp)
 : mType(SKELETON3D)
 , mData(x)
 , mTimestamp(timestamp)
 {}
 
-Data::Data(Scene3d& x, double timestamp)
+Data::Data(Scene3d const& x, double timestamp)
 : mType(SCENE3D)
 , mData(x)
 , mTimestamp(timestamp)
@@ -188,22 +188,79 @@ std::string Data::toString() const
 	return (std::stringstream() << *this).str();
 }
 
-//Data::Variant Data::createVariant(Type type)
-//{
-//	switch (type)
-//	{
-//		case UNDEFINED:
-//			return DataNull();
-//		case VALUE:
-//			return Value();
-//		case POINT3D:
-//			return Point3d();
-//		case SKELETON3D:
-//			return Skeleton3d();
-//		case SCENE3D:
-//			return Scene3d();
-//		default:
-//			assert(false);
-//			return Value();
-//	}
-//}
+// MARK: Operators
+
+namespace
+{
+	using boost::static_visitor;
+	
+	class VisitorAdd : public static_visitor<Data>
+	{
+		template <typename T, typename U>
+		Data operator()(T const& lhs, U const& rhs) const
+		{
+			return Data(lhs + rhs, max(lhs.timestamp(), rhs.timestamp()));
+		}
+	};
+	VisitorAdd visitorAdd;
+	
+	class VisitorSub : public static_visitor<Data>
+	{
+		template <typename T, typename U>
+		Data operator()(T const& lhs, U const& rhs) const
+		{
+			return Data(lhs - rhs, max(lhs.timestamp(), rhs.timestamp()));
+		}
+	};
+	VisitorSub visitorSub;
+	
+	class VisitorMult : public static_visitor<Data>
+	{
+		template <typename T, typename U>
+		Data operator()(T const& lhs, U const& rhs) const
+		{
+			return Data(lhs * rhs, max(lhs.timestamp(), rhs.timestamp()));
+		}
+	};
+	VisitorMult visitorMult;
+	
+	class VisitorDiv : public static_visitor<Data>
+	{
+		template <typename T, typename U>
+		Data operator()(T const& lhs, U const& rhs) const
+		{
+			return Data(lhs / rhs, max(lhs.timestamp(), rhs.timestamp()));
+		}
+	};
+	VisitorDiv visitorDiv;
+}
+
+
+Data Data::operator+(Data const& rhs)
+{
+	return boost::apply_visitor(visitorAdd, this->mData, rhs.mData);
+}
+
+Data Data::operator-(Data const& rhs)
+{
+	return boost::apply_visitor(visitorSub, this->mData, rhs.mData);
+}
+
+Data Data::operator*(Data const& rhs)
+{
+	return boost::apply_visitor(visitorMult, this->mData, rhs.mData);
+}
+
+Data Data::operator/(Data const& rhs)
+{
+	return boost::apply_visitor(visitorDiv, this->mData, rhs.mData);
+}
+
+
+
+
+
+
+
+
+

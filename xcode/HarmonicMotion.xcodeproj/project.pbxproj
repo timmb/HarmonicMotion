@@ -191,6 +191,8 @@
 		3442AFD418C0ABE10015B240 /* Let.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3442AFD218C0ABE10015B240 /* Let.cpp */; };
 		3442AFD818C0AF2E0015B240 /* Let.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD618C0AF2E0015B240 /* Let.h */; };
 		3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD718C0AF2E0015B240 /* PatchCord.h */; };
+		34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A8542D1934AE1A00D0E378 /* NodeExpression.h */; };
+		34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A8542F1934AE2400D0E378 /* NodeExpression.cpp */; };
 		34E2062518B76FAF00729934 /* PatchCord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34E2062318B76FAF00729934 /* PatchCord.cpp */; };
 /* End PBXBuildFile section */
 
@@ -371,6 +373,8 @@
 		3442AFD218C0ABE10015B240 /* Let.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Let.cpp; sourceTree = "<group>"; };
 		3442AFD618C0AF2E0015B240 /* Let.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Let.h; path = ../include/Let.h; sourceTree = "<group>"; };
 		3442AFD718C0AF2E0015B240 /* PatchCord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatchCord.h; path = ../include/PatchCord.h; sourceTree = "<group>"; };
+		34A8542D1934AE1A00D0E378 /* NodeExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeExpression.h; sourceTree = "<group>"; };
+		34A8542F1934AE2400D0E378 /* NodeExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeExpression.cpp; path = ../../src/nodes/NodeExpression.cpp; sourceTree = "<group>"; };
 		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		34E2062318B76FAF00729934 /* PatchCord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchCord.cpp; sourceTree = "<group>"; };
 		3D4E9ABC9ACD428BBF3DDEA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -693,6 +697,8 @@
 		226A9656189BECF60056DCD1 /* nodes */ = {
 			isa = PBXGroup;
 			children = (
+				34A8542F1934AE2400D0E378 /* NodeExpression.cpp */,
+				34A8542D1934AE1A00D0E378 /* NodeExpression.h */,
 				2223EC7718196C2500B900CF /* Filter.h */,
 				226A9665189BED140056DCD1 /* NodeAccumulator.cpp */,
 				226A9657189BECF60056DCD1 /* NodeAccumulator.h */,
@@ -913,6 +919,7 @@
 				222936EA181677BD008CAA09 /* XnLicensing.h in Headers */,
 				3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */,
 				222936EB181677BD008CAA09 /* XnList.h in Headers */,
+				34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */,
 				222936EC181677BD008CAA09 /* XnListT.h in Headers */,
 				222936ED181677BD008CAA09 /* XnLog.h in Headers */,
 				222936EE181677BD008CAA09 /* XnLogTypes.h in Headers */,
@@ -1058,6 +1065,7 @@
 				2223EC681818027300B900CF /* SceneMeta.cpp in Sources */,
 				22197F1717F47306003B1883 /* OscOutboundPacketStream.cpp in Sources */,
 				22197F1817F47306003B1883 /* OscPrintReceivedElements.cpp in Sources */,
+				34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */,
 				22197F1917F47306003B1883 /* OscReceivedElements.cpp in Sources */,
 				22197F1A17F47306003B1883 /* OscTypes.cpp in Sources */,
 				22261AA9181574AC00DBA3F8 /* Common.cpp in Sources */,

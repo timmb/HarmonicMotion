@@ -1,5 +1,5 @@
 //
-//  OutputConsolePrintout.h
+//  NodePrinter.h
 //  HarmonicMotion
 //
 //  Created by Tim Murray-Browne on 21/10/2013.

@@ -27,10 +27,10 @@ namespace hm
 		/// Creates a Data object with a default initialized Type and
 		/// given timestamp)
 //		Data(Type type, double timestamp);
-		Data(Value& value, double timestamp);
-		Data(Point3d& value, double timestamp);
-		Data(Skeleton3d& value, double timestamp);
-		Data(Scene3d& value, double timestamp);
+		Data(Value const& value, double timestamp);
+		Data(Point3d const& value, double timestamp);
+		Data(Skeleton3d const& value, double timestamp);
+		Data(Scene3d const& value, double timestamp);
 
 		Type type() const { return mType; }
 		double timestamp() const { return mTimestamp; }
@@ -64,6 +64,13 @@ namespace hm
 		Scene3d& asScene3d();
 		
 		std::string toString() const;
+		
+		// Mathematical operators. See individual type definitions for notes
+		// on the effect of operators on pairs of distinct types
+		Data operator+(Data const& rhs);
+		Data operator-(Data const& rhs);
+		Data operator*(Data const& rhs);
+		Data operator/(Data const& rhs);
 
 		
 	private:
@@ -76,3 +83,4 @@ namespace hm
 	
 	std::ostream& operator<<(std::ostream& out, Data const& rhs);
 }
+
