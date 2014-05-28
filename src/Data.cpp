@@ -16,38 +16,28 @@ using namespace std;
 Data::Data()
 : mType(UNDEFINED)
 , mData(DataNull())
-, mTimestamp(-42.)
 {}
 
-//Data::Data(Type type, double timestamp)
-//: mType(type)
-//, mData(createVariant(type))
-//, mTimestamp(timestamp)
-//{}
 
-Data::Data(Value const& value, double timestamp)
+Data::Data(Value const& x)
 : mType(VALUE)
-, mData(value)
-, mTimestamp(timestamp)
+, mData(x)
 {}
 
 
-Data::Data(Point3d const& x, double timestamp)
+Data::Data(Point3d const& x)
 : mType(POINT3D)
 , mData(x)
-, mTimestamp(timestamp)
 {}
 
-Data::Data(Skeleton3d const& x, double timestamp)
+Data::Data(Skeleton3d const& x)
 : mType(SKELETON3D)
 , mData(x)
-, mTimestamp(timestamp)
 {}
 
-Data::Data(Scene3d const& x, double timestamp)
+Data::Data(Scene3d const& x)
 : mType(SCENE3D)
 , mData(x)
-, mTimestamp(timestamp)
 {}
 
 BaseData* Data::asBaseData()
@@ -235,7 +225,7 @@ namespace
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs + rhs, max(lhs.timestamp, rhs.timestamp));
+			return lhs + rhs;
 		}
 		
 
@@ -276,7 +266,7 @@ namespace
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs - rhs, max(lhs.timestamp, rhs.timestamp));
+			return lhs - rhs;
 		}
 	};
 	VisitorSub visitorSub;
@@ -309,7 +299,7 @@ namespace
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs * rhs, max(lhs.timestamp, rhs.timestamp));
+			return lhs * rhs;
 		}
 	};
 	VisitorMul visitorMul;
@@ -342,7 +332,7 @@ namespace
 		template <typename T, typename U>
 		Data operator()(T const& lhs, U const& rhs) const
 		{
-			return Data(lhs / rhs, max(lhs.timestamp, rhs.timestamp));
+			return lhs / rhs;
 		}
 	};
 	VisitorDiv visitorDiv;

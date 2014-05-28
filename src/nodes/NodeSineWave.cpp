@@ -69,8 +69,8 @@ void NodeSineWave::run()
 void NodeSineWave::emitValue(double now)
 {
 	double t = now - mStartTime;
-	Value value = sinf(float((t * mFrequency + mPhase) * 2. * M_PI )) * float(mAmplitude);
-	Data data(value, elapsedTime());
+	Value value(sinf(float((t * mFrequency + mPhase) * 2. * M_PI )) * float(mAmplitude), elapsedTime());
+	Data data(value);
 	mOutlet->outputNewData(data);
 }
 

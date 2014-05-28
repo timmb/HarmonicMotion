@@ -127,7 +127,7 @@ void NodeKinect::run()
 				}
 				scene.skeletons.push_back(skeleton);
 			}
-			Data data(scene, elapsedTime());
+			Data data(scene);
 			mSceneOutlet->outputNewData(data);
 		}
 		else

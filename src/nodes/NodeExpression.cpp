@@ -35,7 +35,7 @@ namespace ascii = boost::spirit::ascii;
 namespace hm
 {
 	template <typename Iterator>
-	struct NodeExpressionGrammar : qi::grammar<Iterator, double(), ascii::space_type>
+	struct NodeExpressionGrammar : qi::grammar<Iterator, Data(), ascii::space_type>
 	{
 		qi::rule<Iterator, Data(), ascii::space_type> factor;
 		qi::rule<Iterator, Data(), ascii::space_type> term;
@@ -53,7 +53,7 @@ namespace hm
 			using qi::double_;
 			using boost::phoenix::construct;
 			
-			factor = double_[_val = construct<Data>(construct<Value>(_1), 0.)] | vars | '(' >> expression >> ')';
+			factor = double_[_val = construct<Data>(construct<Value>(_1))] | vars | '(' >> expression >> ')';
 			
 			term = factor[_val = _1]
 			>> *(('*' >> factor)[_val = _val * _1]

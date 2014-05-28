@@ -21,19 +21,15 @@ namespace hm
 	class Data
 	{
 	public:
-		/// Creates a null (i.e. undefined) Data object with timestamp
-		/// -42.
+		/// Creates a null (i.e. undefined) Data object
 		Data();
-		/// Creates a Data object with a default initialized Type and
-		/// given timestamp)
-//		Data(Type type, double timestamp);
-		Data(Value const& value, double timestamp);
-		Data(Point3d const& value, double timestamp);
-		Data(Skeleton3d const& value, double timestamp);
-		Data(Scene3d const& value, double timestamp);
+		Data(Value const& x);
+		Data(Point3d const& x);
+		Data(Skeleton3d const& x);
+		Data(Scene3d const& x);
 
 		Type type() const { return mType; }
-		double timestamp() const { return mTimestamp; }
+		double timestamp() const { return asBaseData()->timestamp; }
 		
 		/// True if this object was constructed using the
 		/// default constructor and has no type or data.
@@ -75,10 +71,8 @@ namespace hm
 		
 	private:
 		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;
-//		static Variant createVariant(Type type);
 		Type mType;
 		Variant mData;
-		double mTimestamp;
 	};
 	
 	std::ostream& operator<<(std::ostream& out, Data const& rhs);
