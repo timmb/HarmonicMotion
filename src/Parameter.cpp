@@ -12,6 +12,27 @@
 #include <ctime>
 #include "Node.h"
 
+namespace std
+{
+	string to_string(hm::BaseParameter::Type type)
+	{
+		static_assert(hm::BaseParameter::NUM_TYPES==3, "to_string(hm::BaseParameter::Type type) needs to be updated to accommodate all the different types defined.");
+
+		switch (type)
+		{
+			case hm::BaseParameter::DOUBLE:
+				return "double";
+			case hm::BaseParameter::INT:
+				return "int";
+			case hm::BaseParameter::STRING:
+				return "string";
+			default:
+				assert(false);
+				return "";
+		}
+	}
+}
+
 using namespace std;
 
 namespace hm {
@@ -39,20 +60,7 @@ namespace hm {
 	
 	std::string BaseParameter::typeString() const
 	{
-		static_assert(NUM_TYPES==3, "BaseParameter::typeString() needs to be updated to accommodate all the different types defined.");
-		
-		switch (type())
-		{
-			case DOUBLE:
-				return "double";
-			case INT:
-				return "int";
-			case STRING:
-				return "string";
-			default:
-				assert(false);
-				return "";
-		}
+		return to_string(type());
 	}
 
 	

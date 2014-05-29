@@ -19,6 +19,12 @@ Data::Data()
 {}
 
 
+Data::Data(double x)
+: mType(VALUE)
+, mData(Value(x))
+{}
+
+
 Data::Data(Value const& x)
 : mType(VALUE)
 , mData(x)
@@ -336,30 +342,77 @@ namespace
 		}
 	};
 	VisitorDiv visitorDiv;
+	
+	
+
+	struct VisitorPos : public static_visitor<Data>
+	{
+		Data operator()(DataNull const& x)
+		{
+			// will always fail.
+			assert(x.type() != UNDEFINED && "Attempting to pass DataNull through unary positive operator.");
+			return Data();
+		}
+		
+		template <typename T>
+		Data operator()(T const& x) const
+		{
+			return +x;
+		}
+	};
+	VisitorPos visitorPos;
+
+	
+	struct VisitorNeg : public static_visitor<Data>
+	{
+		Data operator()(DataNull const& x)
+		{
+			// will always fail.
+			assert(x.type() != UNDEFINED && "Attempting to pass DataNull through unary negation operator.");
+			return Data();
+		}
+		
+		template <typename T>
+		Data operator()(T const& x) const
+		{
+			return -x;
+		}
+	};
+	VisitorNeg visitorNeg;
+
 
 }
 
 
-Data Data::operator+(Data const& rhs)
+Data Data::operator+(Data const& rhs) const
 {
 	return boost::apply_visitor(visitorAdd, this->mData, rhs.mData);
 }
 
-Data Data::operator-(Data const& rhs)
+Data Data::operator-(Data const& rhs) const
 {
 	return boost::apply_visitor(visitorSub, this->mData, rhs.mData);
 }
 
-Data Data::operator*(Data const& rhs)
+Data Data::operator*(Data const& rhs) const
 {
 	return boost::apply_visitor(visitorMul, this->mData, rhs.mData);
 }
 
-Data Data::operator/(Data const& rhs)
+Data Data::operator/(Data const& rhs) const
 {
 	return boost::apply_visitor(visitorDiv, this->mData, rhs.mData);
 }
 
+Data Data::operator-() const
+{
+	return boost::apply_visitor(visitorNeg, this->mData);
+}
+
+Data Data::operator+() const
+{
+	return boost::apply_visitor(visitorPos, this->mData);
+}
 
 
 

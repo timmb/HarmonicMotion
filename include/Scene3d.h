@@ -56,6 +56,8 @@ namespace hm
 		bool operator==(Scene3d const& rhs) const;
 		bool operator!=(Scene3d const& rhs) const { return !(*this==rhs); }
 
+		Scene3d operator+() const { return *this; }
+		Scene3d operator-() const;
 		
 	private:
 	};
@@ -75,6 +77,7 @@ namespace hm
 		{
 			s *= rhs;
 		}
+		return out;
 	}
 	
 	inline
@@ -85,6 +88,7 @@ namespace hm
 		{
 			s /= rhs;
 		}
+		return out;
 	}
 	
 	
@@ -98,6 +102,16 @@ namespace hm
 		return *this;
 	}
 	
-
+	inline
+	Scene3d Scene3d::operator-() const
+	{
+		Scene3d out(timestamp, sceneMeta);
+		out.skeletons.reserve(skeletons.size());
+		for (Skeleton3d const& s: skeletons)
+		{
+			out.skeletons.push_back(-s);
+		}
+		return out;
+	}
 
 }

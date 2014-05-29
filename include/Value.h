@@ -44,6 +44,9 @@ namespace hm
 		Value operator*(double rhs) const;
 		Value operator/(double rhs) const;
 		
+		Value operator+() const { return *this; }
+		Value operator-() const { return Value(-value, timestamp, sceneMeta); }
+		
 		
 //		Value& operator+=(Value const& rhs)
 //		{

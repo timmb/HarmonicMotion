@@ -69,6 +69,9 @@ namespace hm
 		bool operator==(Point3d const& rhs) const;
 		bool operator!=(Point3d const& rhs) const;
 		
+		Point3d operator+() const { return *this; }
+		Point3d operator-() const { return Point3d(-value, timestamp, sceneMeta); }
+
 		virtual void draw();
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return POINT3D; }
@@ -116,6 +119,7 @@ namespace hm
 		value /= rhs;
 		return *this;
 	}
+	
 }
 
 

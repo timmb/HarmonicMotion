@@ -23,6 +23,8 @@ namespace hm
 	public:
 		/// Creates a null (i.e. undefined) Data object
 		Data();
+		/// Convenience function to create a Value object with timestamp 0.
+		Data(double x);
 		Data(Value const& x);
 		Data(Point3d const& x);
 		Data(Skeleton3d const& x);
@@ -63,10 +65,12 @@ namespace hm
 		
 		// Mathematical operators. See individual type definitions for notes
 		// on the effect of operators on pairs of distinct types
-		Data operator+(Data const& rhs);
-		Data operator-(Data const& rhs);
-		Data operator*(Data const& rhs);
-		Data operator/(Data const& rhs);
+		Data operator+(Data const& rhs) const;
+		Data operator-(Data const& rhs) const;
+		Data operator*(Data const& rhs) const;
+		Data operator/(Data const& rhs) const;
+		Data operator+() const;
+		Data operator-() const;
 
 		
 	private:

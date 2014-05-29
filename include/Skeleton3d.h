@@ -180,6 +180,9 @@ namespace hm
 		bool operator==(Skeleton3d const& rhs) const;
 		bool operator!=(Skeleton3d const& rhs) const;
 		
+		Skeleton3d operator+() const { return *this; }
+		Skeleton3d operator-() const;
+		
 	private:
 		int mId;
 		std::vector<Point3d> mJoints;
@@ -277,5 +280,17 @@ namespace hm
 	{
 		assert(isValidJoint(jointId));
 		return mJointConfidences[jointId];
+	}
+	
+	inline
+	Skeleton3d Skeleton3d::operator-() const
+	{
+		Skeleton3d out = *this;
+		for (int i=0; i<NUM_JOINTS; i++)
+		{
+			out.joint(i) = -out.joint(i);
+			out.jointProjective(i) = -out.jointProjective(i);
+		}
+		return out;
 	}
 }

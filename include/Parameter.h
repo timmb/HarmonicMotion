@@ -97,24 +97,15 @@ namespace hm {
 //		const Type mType;
 	};
 	
-//	template <typename T>
-//	T& BaseParameter::getChild(T& root, std::string const& path)
-//	{
-//		auto slashPos = path.find_first_of('/');
-//		// Treat as a name if there are no slashes or final character is a slash
-//		if (slashPos==std::string::npos || slashPos==path.size()-1)
-//		{
-//			return root[path];
-//		}
-//		else
-//		{
-//			assert(slashPos < path.size());
-//			std::string head = path.substr(0, slashPos);
-//			std::string tail = path.substr(slashPos+1);
-//			return getChild(root[head], tail);
-//		}
-//	}
+}
 
+namespace std
+{
+	std::string to_string(hm::BaseParameter::Type type);
+}
+
+namespace hm
+{
 	
 	
 	
