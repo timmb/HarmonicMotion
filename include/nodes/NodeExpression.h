@@ -75,6 +75,7 @@ namespace hm
 		Empty,
 //		double,
 		Data,
+		InletPtr,
 		boost::recursive_wrapper<Signed>,
 		boost::recursive_wrapper<Program>
 		> Operand;
@@ -132,8 +133,8 @@ namespace hm
 			qi::rule<Iterator, Program(), ascii::space_type> term;
 			qi::rule<Iterator, Program(), ascii::space_type> expression;
 			//	qi::rule<Iterator, double(), ascii::space_type> paren;
-			qi::symbols<std::string, InletPtr> inlets;
-			qi::symbols<std::string, InletPtr> outlets;
+			qi::symbols<char, InletPtr> inlets;
+			qi::symbols<OutletPtr> outlets;
 			
 			Grammar()
 			: Grammar::base_type(expression)
@@ -149,6 +150,7 @@ namespace hm
 				
 				factor =
 				double_[_val = construct<Data>(_1)]
+				| inlets[_val = construct<InletPtr>(_1)]
 				/*| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]*/
 				| '(' >> expression >> ')'
 				| (char_('-') >> factor)

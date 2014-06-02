@@ -45,6 +45,11 @@ namespace hm
 				return x;
 			}
 			
+			Data operator()(InletPtr const& i) const
+			{
+				return i->data();
+			}
+			
 			Data operator()(Operation const& op, Data const& lhs) const
 			{
 				Data rhs = boost::apply_visitor(*this, op.operand);
@@ -55,7 +60,7 @@ namespace hm
 					case '*': return lhs * rhs;
 					case '/': return lhs / rhs;
 				}
-				BOOST_ASSERT(false && ("Invalid binary operator character "+to_string(op.operator_)).c_str());
+				BOOST_ASSERT_MSG(false, ("Invalid binary operator character "+to_string(op.operator_)).c_str());
 				return Data();
 			}
 			
@@ -67,7 +72,7 @@ namespace hm
 					case '-': return -rhs;
 					case '+': return +rhs;
 				}
-				BOOST_ASSERT(false && ("Invalid unary operator character "+to_string(x.sign)).c_str());
+				BOOST_ASSERT_MSG(false, ("Invalid unary operator character "+to_string(x.sign)).c_str());
 				return Data();
 			}
 			
@@ -94,18 +99,7 @@ namespace hm
 		int numScalarInlets = 2;
 		int num3dInlets = 2;
 		int numOutlets = 2;
-		for (int i=0; i<numScalarInlets; i++)
-		{
-			createInlet(VALUE, "Scalar Input s"+std::to_string(i+1), "Scalar values inputted here here may be used as \"s"+to_string(i+1)+"\" in your expression.");
-		}
-		for (int i=0; i<num3dInlets; i++)
-		{
-			createInlet(VALUE, "3D Input v"+std::to_string(i+1), "3D values (Point3d, Skeleton3d, Scene3d) inputted here here may be used as \"v"+to_string(i+1)+"\" in your expression.");
-		}
-		for (int i=0; i<numOutlets; i++)
-		{
-			createOutlet(VALUE | VECTOR3D_TYPES, "Output o"+to_string(i+1), "Output here may be written to as \"o"+to_string(i+1)+"\" in your expression.");
-		}
+		setLetCounts(numScalarInlets, num3dInlets, numOutlets);
 		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){ this->expressionChangedCallback(); });
 	}
 	
@@ -126,14 +120,13 @@ namespace hm
 		// At the moment this function may only be called once.
 		assert(numInlets()==0 && numOutlets()==0);
 		mGrammar->inlets.clear();
-		
 		{
 			int i=0;
 			for (; i<numScalarInlets; i++)
 			{
 				string name = "s"+to_string(i+1);
 				InletPtr inlet = createInlet(VALUE, "Scalar Input "+name, "Scalar values inputted here here may be used as \""+name+"\" in your expression.");
-				//			mGrammar->inlets.add(name, inlet);
+				mGrammar->inlets.add(name.c_str(), inlet);
 			}
 			//		for (; i<numScalarInlets + numVectorInlets; i++)
 			//		{
@@ -154,8 +147,8 @@ namespace hm
 	void NodeExpression::expressionChangedCallback()
 	{
 		auto iter = mExpression.cbegin();
-		qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
-		mIsValid = iter == mExpression.cend();
+		mIsValid = qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
+		mIsValid = mIsValid && iter == mExpression.cend();
 		if (mIsValid)
 		{
 			hm_debug("Expression "+mExpression+" parsed successfully.");
