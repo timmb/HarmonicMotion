@@ -13,3 +13,4 @@
 #include "nodes/NodeRenderer.h"
 #include "nodes/NodeOscOut.h"
 #include "nodes/NodeFilter.h"
+#include "nodes/NodeExpression.h"

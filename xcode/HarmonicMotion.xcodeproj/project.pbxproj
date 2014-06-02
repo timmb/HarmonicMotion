@@ -1163,9 +1163,12 @@
 					../lib/CinderBlocks/BlockOpenNI/include/Include,
 				);
 				LIB_PATH = ../lib;
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include\" \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include/opencv2\" $(CINDER_PATH)/blocks/OSC/src ../lib/CinderBlocks/BlockOpenNI/src";
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -1186,9 +1189,12 @@
 					../lib/CinderBlocks/BlockOpenNI/include/Include,
 				);
 				LIB_PATH = ../lib;
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "\"$(CINDER_PATH)/include\" ../include \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include\" \"$(CINDER_PATH)/blocks/Cinder-OpenCV/include/opencv2\" $(CINDER_PATH)/blocks/OSC/src ../lib/CinderBlocks/BlockOpenNI/src";
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};

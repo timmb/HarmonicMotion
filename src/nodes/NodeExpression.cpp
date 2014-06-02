@@ -49,7 +49,8 @@ namespace hm
 		
 		typedef boost::variant<
 		Empty,
-		double,
+//		double,
+		Data,
 		boost::recursive_wrapper<Signed>,
 		boost::recursive_wrapper<Program>
 		> Operand;
@@ -73,8 +74,28 @@ namespace hm
 		{
 			Operand first;
 			std::list<Operation> rest;
+			
 		};
-		
+	}
+}
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
+						  (char, sign)
+						  (hm::expression::Operand, operand))
+
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Operation,
+						  (char, operator_)
+						  (hm::expression::Operand, operand))
+
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
+						  (hm::expression::Operand, first)
+						  (std::list<hm::expression::Operation>, rest))
+
+
+namespace hm
+{
+	namespace expression
+	{
+
 		template <typename Iterator>
 		struct Grammar : qi::grammar<Iterator, Program(), ascii::space_type>
 		{
@@ -95,19 +116,22 @@ namespace hm
 				using qi::double_;
 				using boost::phoenix::construct;
 				using boost::phoenix::bind;
+				using qi::char_;
 				
 				factor =
-				double_[ _val = construct<Data>(construct<Value>(_1)) ]
-				| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]
-				| '(' >> expression >> ')';
+				double_
+				/*| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]*/
+				| '(' >> expression >> ')'
+				| (char_('-') >> factor)
+				| (char_('+') >> factor);
 				
-				term = factor[_val = _1]
-				>> *(('*' >> factor)[_val = _val * _1]
-					 | ('/' >> factor)[_val = _val / _1]);
+				term = factor
+				>> *((char_('*') >> factor)
+					 | (char_('/') >> factor));
 				
-				expression = term[_val = _1]
-				>> *(('+' >> term)[_val = _val + _1]
-					 | ('-' >> term)[_val = _val - _1]);
+				expression = term
+				>> *((char_('+') >> term)
+					 | (char_('-') >> term));
 			}
 			
 			// Based on http://www.boost.org/doc/libs/1_55_0/libs/spirit/example/qi/compiler_tutorial/calc4.cpp
@@ -116,18 +140,6 @@ namespace hm
 	}
 }
 
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
-						  (char, sign)
-						  (hm::expression::Operand, operand))
-
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Operation,
-						  (std::string, operator_)
-						  (hm::expression::Operand, operand))
-
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
-						  (hm::expression::Operand, first)
-						  (std::list<hm::expression::Operation>, rest))
-						  
 
 
 
@@ -151,6 +163,11 @@ namespace hm
 				return x;
 			}
 			
+			Data operator()(Data const& x) const
+			{
+				return x;
+			}
+			
 			Data operator()(Operation const& op, Data const& lhs) const
 			{
 				Data rhs = boost::apply_visitor(*this, op.operand);
@@ -161,7 +178,7 @@ namespace hm
 					case '*': return lhs * rhs;
 					case '/': return lhs / rhs;
 				}
-				BOOST_ASSERT(false);
+				BOOST_ASSERT(false && ("Invalid binary operator character "+to_string(op.operator_)).c_str());
 				return Data();
 			}
 			
@@ -173,7 +190,7 @@ namespace hm
 					case '-': return -rhs;
 					case '+': return +rhs;
 				}
-				BOOST_ASSERT(false);
+				BOOST_ASSERT(false && ("Invalid unary operator character "+to_string(x.sign)).c_str());
 				return Data();
 			}
 			
@@ -237,27 +254,28 @@ namespace hm
 		{
 			string name = "s"+to_string(i+1);
 			InletPtr inlet = createInlet(VALUE, "Scalar Input "+name, "Scalar values inputted here here may be used as \""+name+"\" in your expression.");
-			mGrammar->inlets.add(name, inlet);
+//			mGrammar->inlets.add(name, inlet);
 		}
-		for (; i<numScalarInlets + numVectorInlets; i++)
-		{
-			string name = "v"+to_string(i+1);
-			InletPtr inlet = createInlet(VALUE, "3D Input "+name, "3D values (Point3d, Skeleton3d, Scene3d) inputted here here may be used as \""+name+"\" in your expression.");
-			mGrammar->inlets.add(name, inlet);
+//		for (; i<numScalarInlets + numVectorInlets; i++)
+//		{
+//			string name = "v"+to_string(i+1);
+//			InletPtr inlet = createInlet(VALUE, "3D Input "+name, "3D values (Point3d, Skeleton3d, Scene3d) inputted here here may be used as \""+name+"\" in your expression.");
+//			mGrammar->inlets.add(name, inlet);
+//		}
 		}
-		}
-		for (int j=0; j<numOutlets_; j++)
-		{
-			string name = "o"+to_string(j+1);
-			InletPtr inlet = createInlet(VALUE, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
-			mGrammar->inlets.add(name, inlet);
-		}
+//		for (int j=0; j<numOutlets_; j++)
+//		{
+//			string name = "o"+to_string(j+1);
+//			InletPtr inlet = createInlet(VALUE, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
+//			mGrammar->inlets.add(name, inlet);
+//		}
+			
 	}
 	
 	void NodeExpression::expressionChangedCallback()
 	{
 		auto iter = mExpression.cbegin();
-		mIsValid = qi::phrase_parse(iter, mExpression.cend(), mGrammar, ascii::space, mProgram);
+		mIsValid = qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
 	}
 	
 	void NodeExpression::step()
