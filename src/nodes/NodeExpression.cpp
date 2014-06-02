@@ -4,7 +4,6 @@
 
 
 
-#include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/variant/recursive_variant.hpp>
 #include <boost/variant/apply_visitor.hpp>
 
@@ -17,18 +16,6 @@ using namespace std;
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
-						  (char, sign)
-						  (hm::expression::Operand, operand))
-
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Operation,
-						  (char, operator_)
-						  (hm::expression::Operand, operand))
-
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
-						  (hm::expression::Operand, first)
-						  (std::list<hm::expression::Operation>, rest))
-
 
 
 
@@ -40,17 +27,18 @@ namespace hm
 		/// and evaluates its outcome.
 		struct Evaluator
 		{
+//			typedef double Data;
 			typedef Data result_type;
 			
 			Data operator()(Empty) const
 			{
 				BOOST_ASSERT(false); return Data();
 			}
-			
-			Data operator()(double x) const
-			{
-				return x;
-			}
+//			
+//			Data operator()(double x) const
+//			{
+//				return x;
+//			}
 			
 			Data operator()(Data const& x) const
 			{
@@ -100,6 +88,8 @@ namespace hm
 	: NodeUnthreaded(params, className)
 	, mIsValid(false)
 	, mLastTimestamp(-42.)
+	, mGrammar(new expression::Grammar<string::const_iterator>)
+	, mProgram(new expression::Program)
 	{
 		int numScalarInlets = 2;
 		int num3dInlets = 2;
@@ -116,7 +106,6 @@ namespace hm
 		{
 			createOutlet(VALUE | VECTOR3D_TYPES, "Output o"+to_string(i+1), "Output here may be written to as \"o"+to_string(i+1)+"\" in your expression.");
 		}
-		mGrammar = unique_ptr<expression::Grammar<string::const_iterator>>(new expression::Grammar<string::const_iterator>);
 		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){ this->expressionChangedCallback(); });
 	}
 	
@@ -164,7 +153,6 @@ namespace hm
 	
 	void NodeExpression::expressionChangedCallback()
 	{
-		hm_debug("Attempting to parse "+mExpression);
 		auto iter = mExpression.cbegin();
 		mIsValid = qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
 		if (mIsValid)

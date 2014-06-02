@@ -21,6 +21,7 @@
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/phoenix.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
 
 //// Restore nil and Nil defines
 #ifdef hm__nil_
@@ -102,6 +103,19 @@ namespace hm
 	}
 }
 
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
+						  (char, sign)
+						  (hm::expression::Operand, operand))
+
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Operation,
+						  (char, operator_)
+						  (hm::expression::Operand, operand))
+
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
+						  (hm::expression::Operand, first)
+						  (std::list<hm::expression::Operation>, rest))
+
+
 
 namespace hm
 {
@@ -109,6 +123,7 @@ namespace hm
 	{
 		namespace qi = boost::spirit::qi;
 		namespace ascii = boost::spirit::ascii;
+		using std::cout;
 
 		template <typename Iterator>
 		struct Grammar : qi::grammar<Iterator, Program(), ascii::space_type>
@@ -133,7 +148,7 @@ namespace hm
 				using qi::char_;
 				
 				factor =
-				double_[construct<Data>(_1)]
+				double_[_val = construct<Data>(_1)]
 				/*| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]*/
 				| '(' >> expression >> ')'
 				| (char_('-') >> factor)
