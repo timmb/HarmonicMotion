@@ -22,6 +22,12 @@ using namespace std;
 Point3d::Point3d(Vec3f const& v, double timestamp, SceneMetaPtr sceneMeta)
 : Base3dData(timestamp, sceneMeta)
 , value(v)
+{}
+	
+
+
+Point3d::Point3d(float x, float y, float z, double timestamp, SceneMetaPtr sceneMeta)
+: Point3d(ci::Vec3f(x,y,z), timestamp, sceneMeta)
 {
 	
 }

@@ -47,6 +47,15 @@ namespace hm
 				return Data(Value(x, timestamp));
 			}
 			
+			Data operator()(Vec3 const& v) const
+			{
+				return Data(Point3d(v.x, v.y, v.z, timestamp));			}
+			
+			Data operator()(Constant const& x) const
+			{
+				return boost::apply_visitor(*this, x);
+			}
+			
 			Data operator()(Data const& x) const
 			{
 				return x;
@@ -60,7 +69,6 @@ namespace hm
 			Data operator()(Data const& lhs, Operation const& op)
 			{
 				Data rhs = boost::apply_visitor(*this, op.operand);
-				double t = rhs.timestamp();
 				switch (op.operator_)
 				{
 					case '+':

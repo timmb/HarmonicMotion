@@ -18,6 +18,9 @@ X- Node prototypes no longer create WidgetNode - now done via model
 X- Test save and load
 - Expression node
 -- add support for vector literals to expression node
+-- add support for variables
+-- allow some elements of vector literals to be variables/inputs
+-- enforce not adding scalars to vectors in grammar
 - OSCeleton OSC output
 - Refactor Factory to be part of Pipeline
 -- Pipeline should be able to take a position as part of node creation args

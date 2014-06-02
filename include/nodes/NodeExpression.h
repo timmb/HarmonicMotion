@@ -74,11 +74,19 @@ namespace hm
 		struct Signed;
 		struct Expression;
 		struct Output;
+		struct Vec3
+		{
+			float x, y, z;
+		};
+		
+		typedef boost::variant<
+		double,
+		Vec3
+		> Constant;
 		
 		typedef boost::variant<
 		Empty,
-		double,
-		Data,
+		Constant,
 		InletPtr,
 		boost::recursive_wrapper<Output>,
 		boost::recursive_wrapper<Signed>,
@@ -134,6 +142,11 @@ namespace hm
 	}
 }
 
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Vec3,
+						  (float, x)
+						  (float, y)
+						  (float, z))
+
 BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
 						  (char, sign)
 						  (hm::expression::Operand, operand))
@@ -161,16 +174,19 @@ namespace hm
 		namespace qi = boost::spirit::qi;
 		namespace ascii = boost::spirit::ascii;
 		using std::cout;
+		using ascii::space_type;
 		
 		template <typename Iterator>
 		struct Grammar : qi::grammar<Iterator, Program(), ascii::space_type>
 		{
-			qi::rule<Iterator, Operand(), ascii::space_type> factor;
-			qi::rule<Iterator, Expression(), ascii::space_type> term;
-			qi::rule<Iterator, Expression(), ascii::space_type> expression;
-			qi::rule<Iterator, Output(), ascii::space_type> output;
-			qi::rule<Iterator, Statement(), ascii::space_type> statement;
-			qi::rule<Iterator, Program(), ascii::space_type> program;
+			qi::rule<Iterator, Vec3(), space_type> Vec3_;
+			
+			qi::rule<Iterator, Operand(), space_type> factor;
+			qi::rule<Iterator, Expression(), space_type> term;
+			qi::rule<Iterator, Expression(), space_type> expression;
+			qi::rule<Iterator, Output(), space_type> output;
+			qi::rule<Iterator, Statement(), space_type> statement;
+			qi::rule<Iterator, Program(), space_type> program;
 			
 			qi::symbols<char, InletPtr> inlets;
 			qi::symbols<char, OutletPtr> outlets;
@@ -187,12 +203,16 @@ namespace hm
 				using qi::_1;
 				using qi::_2;
 				using qi::double_;
+				using qi::float_;
 				using boost::phoenix::construct;
 				using boost::phoenix::bind;
 				using qi::char_;
 				
+				Vec3_ %= ('(' >> float_ >> ',' >> float_ >> ',' >> float_ >> ')');//[_val = construct<Vec3>(_1, _2, _3)];
+				
 				factor %=
-				double_
+				Vec3_[_val = _1]
+				| double_
 				| inlets[_val = construct<InletPtr>(_1)]
 				| '(' >> expression[_val=_1] >> ')'
 				| (char_('-') >> factor)
