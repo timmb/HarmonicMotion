@@ -27,18 +27,13 @@ namespace hm
 		/// and evaluates its outcome.
 		struct Evaluator
 		{
-//			typedef double Data;
 			typedef Data result_type;
+			std::vector<std::string> errors;
 			
 			Data operator()(Empty) const
 			{
 				BOOST_ASSERT(false); return Data();
 			}
-//			
-//			Data operator()(double x) const
-//			{
-//				return x;
-//			}
 			
 			Data operator()(Data const& x) const
 			{
@@ -50,21 +45,40 @@ namespace hm
 				return i->data();
 			}
 			
-			Data operator()(Operation const& op, Data const& lhs) const
+		private:
+			Data failWithOp(std::string const& opName, Data const& lhs, Data const& rhs)
+			{
+				errors.push_back("Cannot "+opName+" a "+to_string(lhs.type())+" to a "+to_string(rhs.type()));
+				return Data();
+			}
+			
+		public:
+			Data operator()(Operation const& op, Data const& lhs)
 			{
 				Data rhs = boost::apply_visitor(*this, op.operand);
 				switch (op.operator_)
 				{
-					case '+': return lhs + rhs;
-					case '-': return lhs - rhs;
-					case '*': return lhs * rhs;
-					case '/': return lhs / rhs;
+					case '+':
+						if (lhs.canAdd(rhs))
+						{
+							return lhs + rhs;
+						}
+						else
+						{
+							return failWithOp("add", lhs, rhs);
+						}
+					case '-':
+						return lhs.canSubtract(rhs)? lhs-rhs : failWithOp("subtract", lhs, rhs);
+					case '*':
+						return lhs.canMultiply(rhs)? lhs*rhs : failWithOp("multiply", lhs, rhs);
+					case '/':
+						return lhs.canDivide(rhs)? lhs/rhs : failWithOp("divide", lhs, rhs);
 				}
 				BOOST_ASSERT_MSG(false, ("Invalid binary operator character "+to_string(op.operator_)).c_str());
 				return Data();
 			}
 			
-			Data operator()(Signed const& x) const
+			Data operator()(Signed const& x)
 			{
 				Data rhs = boost::apply_visitor(*this, x.operand);
 				switch (x.sign)
@@ -76,7 +90,7 @@ namespace hm
 				return Data();
 			}
 			
-			Data operator()(Program const& x) const
+			Data operator()(Program const& x)
 			{
 				Data state = boost::apply_visitor(*this, x.first);
 				for(Operation const& op: x.rest)
@@ -96,10 +110,9 @@ namespace hm
 	, mGrammar(new expression::Grammar<string::const_iterator>)
 	, mProgram(new expression::Program)
 	{
-		int numScalarInlets = 2;
-		int num3dInlets = 2;
+		int numInlets = 3;
 		int numOutlets = 2;
-		setLetCounts(numScalarInlets, num3dInlets, numOutlets);
+		setLetCounts(numInlets, numOutlets);
 		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){ this->expressionChangedCallback(); });
 	}
 	
@@ -115,32 +128,26 @@ namespace hm
 		return mIsValid;
 	}
 	
-	void NodeExpression::setLetCounts(int numScalarInlets, int numVectorInlets, int numOutlets_)
+	void NodeExpression::setLetCounts(int inletCount, int outletCount)
 	{
 		// At the moment this function may only be called once.
 		assert(numInlets()==0 && numOutlets()==0);
 		mGrammar->inlets.clear();
 		{
 			int i=0;
-			for (; i<numScalarInlets; i++)
+			for (; i<inletCount; i++)
 			{
 				string name = "s"+to_string(i+1);
 				InletPtr inlet = createInlet(VALUE, "Scalar Input "+name, "Scalar values inputted here here may be used as \""+name+"\" in your expression.");
 				mGrammar->inlets.add(name.c_str(), inlet);
 			}
-			//		for (; i<numScalarInlets + numVectorInlets; i++)
-			//		{
-			//			string name = "v"+to_string(i+1);
-			//			InletPtr inlet = createInlet(VALUE, "3D Input "+name, "3D values (Point3d, Skeleton3d, Scene3d) inputted here here may be used as \""+name+"\" in your expression.");
-			//			mGrammar->inlets.add(name, inlet);
-			//		}
 		}
-		//		for (int j=0; j<numOutlets_; j++)
-		//		{
-		//			string name = "o"+to_string(j+1);
-		//			InletPtr inlet = createInlet(VALUE, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
-		//			mGrammar->inlets.add(name, inlet);
-		//		}
+		for (int j=0; j<outletCount; j++)
+		{
+			string name = "o"+to_string(j+1);
+			InletPtr inlet = createInlet(VALUE, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
+			mGrammar->inlets.add(name, inlet);
+		}
 		
 	}
 	

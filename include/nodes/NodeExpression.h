@@ -55,7 +55,7 @@ namespace hm
 		virtual void step() override;
 		
 	private:
-		void setLetCounts(int numScalarInlets, int numVectorInlets, int numOutlets);
+		void setLetCounts(int numInlets, int numOutlets);
 		void expressionChangedCallback();
 		
 		std::unique_ptr<expression::Grammar<std::string::const_iterator>> mGrammar;
@@ -73,7 +73,7 @@ namespace hm
 		
 		typedef boost::variant<
 		Empty,
-//		double,
+		//		double,
 		Data,
 		InletPtr,
 		boost::recursive_wrapper<Signed>,
@@ -125,7 +125,7 @@ namespace hm
 		namespace qi = boost::spirit::qi;
 		namespace ascii = boost::spirit::ascii;
 		using std::cout;
-
+		
 		template <typename Iterator>
 		struct Grammar : qi::grammar<Iterator, Program(), ascii::space_type>
 		{
@@ -147,11 +147,13 @@ namespace hm
 				using boost::phoenix::construct;
 				using boost::phoenix::bind;
 				using qi::char_;
+#pragma clang diagnostic push
+				// Ignore bogus clang warning about multiple unsequenced _val assignents
+#pragma clang diagnostic ignored "-Wunsequenced"
 				
 				factor =
 				double_[_val = construct<Data>(_1)]
 				| inlets[_val = construct<InletPtr>(_1)]
-				/*| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]*/
 				| '(' >> expression >> ')'
 				| (char_('-') >> factor)
 				| (char_('+') >> factor);
@@ -163,12 +165,14 @@ namespace hm
 				expression = term
 				>> *((char_('+') >> term)
 					 | (char_('-') >> term));
+				
+#pragma clang diagnostic pop
 			}
 			
 			// Based on http://www.boost.org/doc/libs/1_55_0/libs/spirit/example/qi/compiler_tutorial/calc4.cpp
 			
 		};
-
+		
 	}
 }
 

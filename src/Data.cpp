@@ -414,6 +414,44 @@ Data Data::operator+() const
 	return boost::apply_visitor(visitorPos, this->mData);
 }
 
+bool Data::canAdd(Data const& rhs) const
+{
+	Type const& t = type();
+	Type const& u = rhs.type();
+	return (t==VALUE && u==VALUE)
+	|| (t&VECTOR3D_TYPES && u&VECTOR3D_TYPES)
+	|| (t==IMAGE3D && u==IMAGE3D);
+}
+
+bool Data::canSubtract(Data const& rhs) const
+{
+	Type const& t = type();
+	Type const& u = rhs.type();
+	return (t==VALUE && u==VALUE)
+	|| (t&VECTOR3D_TYPES && u&VECTOR3D_TYPES)
+	|| (t==IMAGE3D && u==IMAGE3D);
+}
+
+bool Data::canMultiply(Data const& rhs) const
+{
+	Type const& t = type();
+	Type const& u = rhs.type();
+	return (t & VALUE && u & SCALABLE_TYPES)
+	|| (t & SCALABLE_TYPES && u & VALUE)
+	|| (t & VECTOR3D_TYPES && u & VECTOR3D_TYPES)
+	|| (t & IMAGE3D && u & IMAGE3D);
+}
+
+bool Data::canDivide(Data const& rhs) const
+{
+	Type const& t = type();
+	Type const& u = rhs.type();
+	return (t & VALUE && u & SCALABLE_TYPES)
+	|| (t & SCALABLE_TYPES && u & VALUE)
+	|| (t & VECTOR3D_TYPES && u & VECTOR3D_TYPES)
+	|| (t & IMAGE3D && u & IMAGE3D);
+
+}
 
 
 

@@ -71,6 +71,12 @@ namespace hm
 		Data operator/(Data const& rhs) const;
 		Data operator+() const;
 		Data operator-() const;
+		
+		// Test whether an operation is valid
+		bool canAdd(Data const& rhs) const;
+		bool canSubtract(Data const& rhs) const;
+		bool canMultiply(Data const& rhs) const;
+		bool canDivide(Data const& rhs) const;
 
 		
 	private:

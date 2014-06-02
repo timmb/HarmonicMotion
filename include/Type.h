@@ -21,7 +21,8 @@ namespace hm
 		SCENE3D = (1<<3), // Set of SKELETON3Ds
 		IMAGE3D = (1<<4),
 		ALL_TYPES = (1<<5) - 1,
-		VECTOR3D_TYPES = POINT3D | SKELETON3D | SCENE3D
+		VECTOR3D_TYPES = POINT3D | SKELETON3D | SCENE3D,
+		SCALABLE_TYPES = VALUE | VECTOR3D_TYPES | IMAGE3D
 	};
 	static_assert(VALUE | POINT3D | SKELETON3D | SCENE3D | IMAGE3D == ALL_TYPES, "Types have not been properly defined");
 	/// Can be an OR combination of types.
