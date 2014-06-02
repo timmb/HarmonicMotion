@@ -154,7 +154,8 @@ namespace hm
 	void NodeExpression::expressionChangedCallback()
 	{
 		auto iter = mExpression.cbegin();
-		mIsValid = qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
+		qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
+		mIsValid = iter == mExpression.cend();
 		if (mIsValid)
 		{
 			hm_debug("Expression "+mExpression+" parsed successfully.");
@@ -178,7 +179,8 @@ namespace hm
 			if (t > mLastTimestamp)
 			{
 				expression::Evaluator evaluator;
-				evaluator(*mProgram);
+				cout << t << " :" << evaluator(*mProgram) << endl;
+				mLastTimestamp = t;
 			}
 		}
 	}
