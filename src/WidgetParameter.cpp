@@ -55,6 +55,10 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 			return createDelegate(std::dynamic_pointer_cast<Parameter<int>>(parameter));
 		case BaseParameter::STRING:
 			return createDelegate(std::dynamic_pointer_cast<Parameter<std::string>>(parameter));
+		case BaseParameter::NUM_TYPES:
+		default:
+			assert(false && "Unrecognised parameter type when creating widget.");
+			return new WidgetBaseParameter();
 	}
 }
 
