@@ -17,10 +17,12 @@ X- Refactor partial patch cords to not use WidgetPatchCord
 X- Node prototypes no longer create WidgetNode - now done via model
 X- Test save and load
 - Expression node
+-- add support for vector literals to expression node
 - OSCeleton OSC output
 - Refactor Factory to be part of Pipeline
 -- Pipeline should be able to take a position as part of node creation args
 -- WidgetNode should only be created on request from Pipeline.
+- BUG patchcord square prevents clicking on widget beneath
 
 B list (Essential for NIME)
 ===========================
@@ -38,6 +40,10 @@ B list (Essential for NIME)
 - Save location with widgets
 - BUG Context menu appearing in wrong place
 - Make changing name on widget actually change name
+- Ability to delete patch cords
+- new nodes appear in right place
+- BUG adding patchcord moves node
+- BUG dragging on labels doesn't move node
 
 C Spec described in NIME paper
 ===========

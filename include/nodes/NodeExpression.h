@@ -63,21 +63,26 @@ namespace hm
 		std::unique_ptr<expression::Program> mProgram;
 		bool mIsValid;
 		double mLastTimestamp;
+		bool mDebugPrint;
 	};
+	
+	
 	
 	namespace expression
 	{
 		struct Empty {};
 		struct Signed;
-		struct Program;
+		struct Expression;
+		struct Output;
 		
 		typedef boost::variant<
 		Empty,
-		//		double,
+		double,
 		Data,
 		InletPtr,
+		boost::recursive_wrapper<Output>,
 		boost::recursive_wrapper<Signed>,
-		boost::recursive_wrapper<Program>
+		boost::recursive_wrapper<Expression>
 		> Operand;
 		
 		// A signed element, e.g. +x, -x
@@ -95,11 +100,36 @@ namespace hm
 		};
 		
 		// A program as a left hand operand and a sequence of right hand operations
-		struct Program
+		struct Expression
 		{
 			Operand first;
 			std::list<Operation> rest;
 			
+		};
+
+		// An output assignment that evaluates to what was outputted
+		// e.g. o2 = 3+5
+		struct Output
+		{
+			OutletPtr outlet;
+			Expression expression;
+			
+			Output(OutletPtr const& outlet_, Expression const& expression_)
+			: outlet(outlet_)
+			, expression(expression_)
+			{}
+			
+			Output() {}
+		};
+		
+		typedef boost::variant<
+		Expression,
+		Output
+		> Statement;
+		
+		struct Program
+		{
+			Statement statement;
 		};
 	}
 }
@@ -112,10 +142,16 @@ BOOST_FUSION_ADAPT_STRUCT(hm::expression::Operation,
 						  (char, operator_)
 						  (hm::expression::Operand, operand))
 
-BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Expression,
 						  (hm::expression::Operand, first)
 						  (std::list<hm::expression::Operation>, rest))
 
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Output,
+						  (hm::OutletPtr, outlet)
+						  (hm::expression::Expression, expression))
+
+BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
+						  (hm::expression::Statement, statement))
 
 
 namespace hm
@@ -130,14 +166,21 @@ namespace hm
 		struct Grammar : qi::grammar<Iterator, Program(), ascii::space_type>
 		{
 			qi::rule<Iterator, Operand(), ascii::space_type> factor;
-			qi::rule<Iterator, Program(), ascii::space_type> term;
-			qi::rule<Iterator, Program(), ascii::space_type> expression;
-			//	qi::rule<Iterator, double(), ascii::space_type> paren;
-			qi::symbols<char, InletPtr> inlets;
-			qi::symbols<OutletPtr> outlets;
+			qi::rule<Iterator, Expression(), ascii::space_type> term;
+			qi::rule<Iterator, Expression(), ascii::space_type> expression;
+			qi::rule<Iterator, Output(), ascii::space_type> output;
+			qi::rule<Iterator, Statement(), ascii::space_type> statement;
+			qi::rule<Iterator, Program(), ascii::space_type> program;
 			
+			qi::symbols<char, InletPtr> inlets;
+			qi::symbols<char, OutletPtr> outlets;
+			
+#pragma clang diagnostic push
+			// Ignore bogus clang warning about multiple unsequenced _val assignents
+#pragma clang diagnostic ignored "-Wunsequenced"
+
 			Grammar()
-			: Grammar::base_type(expression)
+			: Grammar::base_type(program)
 			{
 				using qi::lit;
 				using qi::_val;
@@ -147,27 +190,30 @@ namespace hm
 				using boost::phoenix::construct;
 				using boost::phoenix::bind;
 				using qi::char_;
-#pragma clang diagnostic push
-				// Ignore bogus clang warning about multiple unsequenced _val assignents
-#pragma clang diagnostic ignored "-Wunsequenced"
 				
-				factor =
-				double_[_val = construct<Data>(_1)]
+				factor %=
+				double_
 				| inlets[_val = construct<InletPtr>(_1)]
-				| '(' >> expression >> ')'
+				| '(' >> expression[_val=_1] >> ')'
 				| (char_('-') >> factor)
 				| (char_('+') >> factor);
 				
-				term = factor
+				term %= factor
 				>> *((char_('*') >> factor)
 					 | (char_('/') >> factor));
 				
-				expression = term
-				>> *((char_('+') >> term)
-					 | (char_('-') >> term));
+				expression %= term >> *((char_('+') >> term) | (char_('-') >> term));
 				
-#pragma clang diagnostic pop
+				output %= (outlets
+						   >> '=' >> expression);//[_val = construct<Output>(_1, _2)];
+				
+				statement %= output | expression;
+				
+				program %= statement;
+				
 			}
+
+#pragma clang diagnostic pop
 			
 			// Based on http://www.boost.org/doc/libs/1_55_0/libs/spirit/example/qi/compiler_tutorial/calc4.cpp
 			

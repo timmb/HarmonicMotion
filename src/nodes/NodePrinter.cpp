@@ -23,12 +23,14 @@ NodePrinter::NodePrinter(Params params, std::string className)
 
 void NodePrinter::step()
 {
-	if (mInlet->dataTimestamp() > mLastTimestamp)
+	double t = mInlet->dataTimestamp();
+	if (t > mLastTimestamp)
 	{
 		Data data = mInlet->data();
 		auto history = data.asBaseData()->nodeHistory;
-		std::cout << "-- "<<mParams.name<<" -- "<<mInlet->dataTimestamp()
+		std::cout << "-- "<<mParams.name<<" -- "<<t
 		<<" "<<(!history.empty()? history[0] :"")<<"\n   "<<data<<std::endl;
+		mLastTimestamp = t;
 	}
 }
 
