@@ -72,7 +72,7 @@ namespace hm
 		
 		typedef boost::variant<
 		Empty,
-		//		double,
+//		double,
 		Data,
 		boost::recursive_wrapper<Signed>,
 		boost::recursive_wrapper<Program>
@@ -133,7 +133,7 @@ namespace hm
 				using qi::char_;
 				
 				factor =
-				double_
+				double_[construct<Data>(_1)]
 				/*| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]*/
 				| '(' >> expression >> ')'
 				| (char_('-') >> factor)
