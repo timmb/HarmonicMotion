@@ -3,19 +3,7 @@
 #include <string>
 
 
-// Remove nil and Nil defines as they are incompatible with boost.
-//#ifdef nil
-//#define hm__nil_ nil
-//#endif
-//#ifdef Nil
-//#define hm__Nil_ Nil
-//#endif
 
-#undef nil
-#undef Nil
-
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/variant/recursive_variant.hpp>
 #include <boost/variant/apply_visitor.hpp>
@@ -24,60 +12,11 @@
 #include "Inlet.h"
 #include "Outlet.h"
 //
-//// Restore nil and Nil defines
-//#ifdef hm__nil_
-//#define nil hm__nil_
-//#undef hm__nil_
-//#endif
-//#ifdef hm__Nil_
-//#define Nil hm__Nil_
-//#undef hm__Nil_
-//#endif
 
 using namespace std;
-
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
 
-namespace hm
-{
-	namespace expression
-	{
-		struct Empty {};
-		struct Signed;
-		struct Program;
-		
-		typedef boost::variant<
-		Empty,
-//		double,
-		Data,
-		boost::recursive_wrapper<Signed>,
-		boost::recursive_wrapper<Program>
-		> Operand;
-		
-		// A signed element, e.g. +x, -x
-		struct Signed
-		{
-			char sign;
-			Operand operand;
-		};
-		
-		// An operation with its right hand operand
-		struct Operation
-		{
-			char operator_;
-			Operand operand;
-		};
-		
-		// A program as a left hand operand and a sequence of right hand operations
-		struct Program
-		{
-			Operand first;
-			std::list<Operation> rest;
-			
-		};
-	}
-}
 BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
 						  (char, sign)
 						  (hm::expression::Operand, operand))
@@ -89,56 +28,6 @@ BOOST_FUSION_ADAPT_STRUCT(hm::expression::Operation,
 BOOST_FUSION_ADAPT_STRUCT(hm::expression::Program,
 						  (hm::expression::Operand, first)
 						  (std::list<hm::expression::Operation>, rest))
-
-
-namespace hm
-{
-	namespace expression
-	{
-
-		template <typename Iterator>
-		struct Grammar : qi::grammar<Iterator, Program(), ascii::space_type>
-		{
-			qi::rule<Iterator, Operand(), ascii::space_type> factor;
-			qi::rule<Iterator, Program(), ascii::space_type> term;
-			qi::rule<Iterator, Program(), ascii::space_type> expression;
-			//	qi::rule<Iterator, double(), ascii::space_type> paren;
-			qi::symbols<std::string, InletPtr> inlets;
-			qi::symbols<std::string, InletPtr> outlets;
-			
-			Grammar()
-			: Grammar::base_type(expression)
-			{
-				using qi::lit;
-				using qi::_val;
-				using qi::_1;
-				using qi::_2;
-				using qi::double_;
-				using boost::phoenix::construct;
-				using boost::phoenix::bind;
-				using qi::char_;
-				
-				factor =
-				double_
-				/*| inlets[ bind([](InletPtr i) { i->data(); }, _1) ]*/
-				| '(' >> expression >> ')'
-				| (char_('-') >> factor)
-				| (char_('+') >> factor);
-				
-				term = factor
-				>> *((char_('*') >> factor)
-					 | (char_('/') >> factor));
-				
-				expression = term
-				>> *((char_('+') >> term)
-					 | (char_('-') >> term));
-			}
-			
-			// Based on http://www.boost.org/doc/libs/1_55_0/libs/spirit/example/qi/compiler_tutorial/calc4.cpp
-			
-		};
-	}
-}
 
 
 
@@ -228,6 +117,7 @@ namespace hm
 			createOutlet(VALUE | VECTOR3D_TYPES, "Output o"+to_string(i+1), "Output here may be written to as \"o"+to_string(i+1)+"\" in your expression.");
 		}
 		mGrammar = unique_ptr<expression::Grammar<string::const_iterator>>(new expression::Grammar<string::const_iterator>);
+		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){ this->expressionChangedCallback(); });
 	}
 	
 	NodePtr NodeExpression::create(Node::Params params) const
@@ -249,50 +139,62 @@ namespace hm
 		mGrammar->inlets.clear();
 		
 		{
-		int i=0;
-		for (; i<numScalarInlets; i++)
-		{
-			string name = "s"+to_string(i+1);
-			InletPtr inlet = createInlet(VALUE, "Scalar Input "+name, "Scalar values inputted here here may be used as \""+name+"\" in your expression.");
-//			mGrammar->inlets.add(name, inlet);
+			int i=0;
+			for (; i<numScalarInlets; i++)
+			{
+				string name = "s"+to_string(i+1);
+				InletPtr inlet = createInlet(VALUE, "Scalar Input "+name, "Scalar values inputted here here may be used as \""+name+"\" in your expression.");
+				//			mGrammar->inlets.add(name, inlet);
+			}
+			//		for (; i<numScalarInlets + numVectorInlets; i++)
+			//		{
+			//			string name = "v"+to_string(i+1);
+			//			InletPtr inlet = createInlet(VALUE, "3D Input "+name, "3D values (Point3d, Skeleton3d, Scene3d) inputted here here may be used as \""+name+"\" in your expression.");
+			//			mGrammar->inlets.add(name, inlet);
+			//		}
 		}
-//		for (; i<numScalarInlets + numVectorInlets; i++)
-//		{
-//			string name = "v"+to_string(i+1);
-//			InletPtr inlet = createInlet(VALUE, "3D Input "+name, "3D values (Point3d, Skeleton3d, Scene3d) inputted here here may be used as \""+name+"\" in your expression.");
-//			mGrammar->inlets.add(name, inlet);
-//		}
-		}
-//		for (int j=0; j<numOutlets_; j++)
-//		{
-//			string name = "o"+to_string(j+1);
-//			InletPtr inlet = createInlet(VALUE, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
-//			mGrammar->inlets.add(name, inlet);
-//		}
-			
+		//		for (int j=0; j<numOutlets_; j++)
+		//		{
+		//			string name = "o"+to_string(j+1);
+		//			InletPtr inlet = createInlet(VALUE, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
+		//			mGrammar->inlets.add(name, inlet);
+		//		}
+		
 	}
 	
 	void NodeExpression::expressionChangedCallback()
 	{
+		hm_debug("Attempting to parse "+mExpression);
 		auto iter = mExpression.cbegin();
 		mIsValid = qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
+		if (mIsValid)
+		{
+			hm_debug("Expression "+mExpression+" parsed successfully.");
+		}
+		else
+		{
+			hm_debug("Failed to parse "+mExpression);
+		}
 	}
 	
 	void NodeExpression::step()
 	{
-		// check if any new data has arrived
-		double t = 0.;
-		for (int i=0; i<numInlets(); i++)
+		if (mIsValid)
 		{
-			t = max(t, inlet(i)->dataTimestamp());
-		}
-		if (t > mLastTimestamp)
-		{
-			expression::Evaluator evaluator;
-			evaluator(*mProgram);
+			// check if any new data has arrived
+			double t = 0.;
+			for (int i=0; i<numInlets(); i++)
+			{
+				t = max(t, inlet(i)->dataTimestamp());
+			}
+			if (t > mLastTimestamp)
+			{
+				expression::Evaluator evaluator;
+				evaluator(*mProgram);
+			}
 		}
 	}
-
+	
 }
 
 
