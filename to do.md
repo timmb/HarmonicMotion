@@ -16,16 +16,23 @@ X BUG added node while pipeline is running - node is not properly started
 X- Refactor partial patch cords to not use WidgetPatchCord
 X- Node prototypes no longer create WidgetNode - now done via model
 X- Test save and load
-- Expression node
--- add support for vector literals to expression node
--- add support for variables
--- allow some elements of vector literals to be variables/inputs
--- enforce not adding scalars to vectors in grammar
 - OSCeleton OSC output
 - Refactor Factory to be part of Pipeline
 -- Pipeline should be able to take a position as part of node creation args
 -- WidgetNode should only be created on request from Pipeline.
 - BUG patchcord square prevents clicking on widget beneath
+
+- Expression node wishlist
+x- add support for vector literals to expression node
+-- add support for variables
+x- allow some elements of vector literals to be variables/inputs
+-- enforce not adding scalars to vectors in grammar
+-- multiple statements
+-- maths operators (cos, sin, etc)
+-- bigger box to enter text
+-- error reporting
+-- display on widget if expression is invalid
+-- display any evaluation errors on widget
 
 B list (Essential for NIME)
 ===========================

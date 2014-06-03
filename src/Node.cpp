@@ -56,6 +56,7 @@ Node::Node(Params params, string className)
 
 Node::~Node()
 {
+	hm_debug("Destroying node "+toString());
 	for (InletPtr inlet: mInlets)
 	{
 		inlet->detachOwnerNode();

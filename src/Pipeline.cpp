@@ -65,6 +65,28 @@ void Pipeline::addNode(NodePtr node)
 
 void Pipeline::removeNode(NodePtr node)
 {
+	assert(node != nullptr);
+	// disconnect any patchcords. disconnect(PatchCordPtr) modifies
+	// mPatchcords, so we make a copy of it before iterating over it.
+	list<PatchCordPtr> patchcords = mPatchCords;
+	for (PatchCordPtr p: patchcords)
+	{
+		for (InletPtr i: node->inlets())
+		{
+			if (p->inlet() == i)
+			{
+				disconnect(p);
+			}
+		}
+		for (OutletPtr o: node->outlets())
+		{
+			if (p->outlet() == o)
+			{
+				disconnect(p);
+			}
+		}
+	}
+	// Stop and remove node
 	auto it = std::find(mNodes.begin(), mNodes.end(), node);
 	if (it != mNodes.end())
 	{
