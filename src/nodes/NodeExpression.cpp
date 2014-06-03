@@ -47,13 +47,28 @@ namespace hm
 				return Data(Value(x, timestamp));
 			}
 			
-			Data operator()(Vec3 const& v) const
+			Data operator()(Vec3 const& v)
 			{
-				return Data(Point3d(v.x, v.y, v.z, timestamp));			}
-			
-			Data operator()(Constant const& x) const
-			{
-				return boost::apply_visitor(*this, x);
+				Data x = boost::apply_visitor(*this, v.x);
+				Data y = boost::apply_visitor(*this, v.y);
+				Data z = boost::apply_visitor(*this, v.z);
+				if (x.isValue() && y.isValue() && z.isValue())
+					return Point3d(x.asValue(), y.asValue(), z.asValue());
+				else
+				{
+					char errorComponent =
+					!x.isValue()? 'x' :
+					!y.isValue()? 'y' :
+					'z';
+					BOOST_ASSERT(errorComponent!='z' || !z.isValue());
+					errors.push_back(string("Cannot construct vector as ")
+									 +errorComponent+
+									 " component is not a scalar Value (types are x: "
+									 + to_string(x.type()) + ", y: "
+									 + to_string(y.type()) + ", z: "
+									 + to_string(z.type()) + ").");
+					return Data();
+				}
 			}
 			
 			Data operator()(Data const& x) const
@@ -142,7 +157,6 @@ namespace hm
 			Data operator()(Output const& out)
 			{
 				Data rhs = (*this)(out.expression);
-				float t = rhs.timestamp();
 				if (!rhs.isNull())
 				{
 					out.outlet->outputNewData(rhs);

@@ -74,20 +74,14 @@ namespace hm
 		struct Signed;
 		struct Expression;
 		struct Output;
-		struct Vec3
-		{
-			float x, y, z;
-		};
-		
-		typedef boost::variant<
-		double,
-		Vec3
-		> Constant;
+		struct Vec3;
+
 		
 		typedef boost::variant<
 		Empty,
-		Constant,
+		double,
 		InletPtr,
+		boost::recursive_wrapper<Vec3>,
 		boost::recursive_wrapper<Output>,
 		boost::recursive_wrapper<Signed>,
 		boost::recursive_wrapper<Expression>
@@ -98,6 +92,13 @@ namespace hm
 		{
 			char sign;
 			Operand operand;
+		};
+		
+		struct Vec3
+		{
+			Operand x;
+			Operand y;
+			Operand z;
 		};
 		
 		// An operation with its right hand operand
@@ -143,9 +144,9 @@ namespace hm
 }
 
 BOOST_FUSION_ADAPT_STRUCT(hm::expression::Vec3,
-						  (float, x)
-						  (float, y)
-						  (float, z))
+						  (hm::expression::Operand, x)
+						  (hm::expression::Operand, y)
+						  (hm::expression::Operand, z))
 
 BOOST_FUSION_ADAPT_STRUCT(hm::expression::Signed,
 						  (char, sign)
@@ -208,7 +209,7 @@ namespace hm
 				using boost::phoenix::bind;
 				using qi::char_;
 				
-				Vec3_ %= ('(' >> float_ >> ',' >> float_ >> ',' >> float_ >> ')');//[_val = construct<Vec3>(_1, _2, _3)];
+				Vec3_ %= ('(' >> expression >> ',' >> expression >> ',' >> expression >> ')');//[_val = construct<Vec3>(_1, _2, _3)];
 				
 				factor %=
 				Vec3_[_val = _1]

@@ -32,6 +32,7 @@ namespace hm
 
 		Type type() const { return mType; }
 		double timestamp() const { return asBaseData()->timestamp; }
+		SceneMetaPtr sceneMeta() const { return asBaseData()->sceneMeta; }
 		
 		/// True if this object was constructed using the
 		/// default constructor and has no type or data.

@@ -18,6 +18,12 @@ namespace hm
 		Point3d(ci::Vec3f const& v, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		Point3d(float x, float y, float z, double timestamp=0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		Point3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		/// Constructs a Point3d taking the maximum timestamp from
+		/// the given Values. SceneMeta is taken in priority of x,
+		/// y and then z, choosing the first non-default SceneMeta
+		/// found (or keeping the default if all parameters have the
+		/// default SceneMeta)
+		Point3d(Value const& x, Value const& y, Value const& z);
 		
 		ci::Vec3f value;
 		

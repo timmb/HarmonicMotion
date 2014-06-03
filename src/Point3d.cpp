@@ -38,6 +38,14 @@ Point3d::Point3d(double timestamp, SceneMetaPtr sceneMeta)
 	
 }
 
+Point3d::Point3d(Value const& x, Value const& y, Value const& z)
+: Base3dData(max(max(x.timestamp, y.timestamp), z.timestamp),
+			 x.sceneMeta!=SceneMeta::sDefaultSceneMeta? x.sceneMeta :
+			 y.sceneMeta!=SceneMeta::sDefaultSceneMeta? y.sceneMeta :
+			 z.sceneMeta)
+, value(x.value, y.value, z.value)
+{}
+
 std::ostream& Point3d::printTo(std::ostream& out) const
 {
 	return out << value;
