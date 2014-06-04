@@ -118,21 +118,28 @@ if (myprj_uis)
 	QT_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
 endif (myprj_uis)
 
+set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/../../HarmonicMotion)
+set(CinderDir ${HarmonicMotionDir}/../../Cinder)
+
+message(${PROJECT_SOURCE_DIR})
+message(${HarmonicMotionDir})
+message(${CinderDir})
+
 # Include directories - one per line
 INCLUDE_DIRECTORIES(
-	${PROJECT_SOURCE_DIR}/../../include
-	${PROJECT_SOURCE_DIR}/../../../Cinder/include
-	${PROJECT_SOURCE_DIR}/../../../Cinder/boost
-	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/BlockOpenNI/include/Include
-	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/OSC/src
+	${HarmonicMotionDir}/include
+	${CinderDir}/include
+	${CinderDir}/boost
+	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/include/Include
+	${HarmonicMotionDir}/lib/CinderBlocks/OSC/src
 )
 
 # Link directories - one per line
 LINK_DIRECTORIES(
-	${PROJECT_SOURCE_DIR}/../../bin
-	${PROJECT_SOURCE_DIR}/../../lib
-	${PROJECT_SOURCE_DIR}/../../lib/macosx
-	${PROJECT_SOURCE_DIR}/../../lib/CinderBlocks/BlockOpenNI/lib/macosx
+	${HarmonicMotionDir}/bin
+	${HarmonicMotionDir}/lib
+	${HarmonicMotionDir}/lib/macosx
+	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/lib/macosx
 )
 
 ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE WIN32 ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
