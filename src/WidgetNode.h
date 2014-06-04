@@ -25,14 +25,14 @@ namespace hm
 		/// WidgetNode should only be destroyed by WidgetPatchArea.
 		virtual ~WidgetNode();
 		
-		/// Request that this node is deleted (from both view and model).
-		/// This instance will be deleted on the next cycle of the event
-		/// loop.
-		void erase();
-		/// Request that this node is deleted without making the
-		/// corresponding change to the underlying model. Used if the
-		/// model has been updated externally.
-		void eraseWithoutUpdatingModel();
+//		/// Request that this node is deleted (from both view and model).
+//		/// This instance will be deleted on the next cycle of the event
+//		/// loop.
+//		void erase();
+//		/// Request that this node is deleted without making the
+//		/// corresponding change to the underlying model. Used if the
+//		/// model has been updated externally.
+//		void eraseWithoutUpdatingModel();
         
         /// The widgets for the inlets or outlets to this class. These are
         /// guaranteed not to change over the course of the widget's life.
@@ -66,9 +66,8 @@ namespace hm
 	protected Q_SLOTS:
 		void loadStyleSheet();
 		void layout();
-		/// Removes this widgetnode from the patcharea, removes the corresponding
-		/// node from the model and deletes this widgetnode.
-		void eraseAndDelete();
+		/// Requests that the pipeline deletes the node corresponding to this WidgetNode.
+		void deleteFromModel();
 
 		
 	private:
@@ -83,6 +82,6 @@ namespace hm
 		NodePtr mNode;
         QWidget* mMainArea;
         WidgetPatchArea* mPatchArea;
-		bool mHasBeenErased;
+//		bool mHasBeenErased;
 	};
 }

@@ -13,6 +13,7 @@
 #include "Common.h"
 #include <QList>
 #include "Pipeline.h"
+#include "PipelineListener.h"
 
 namespace hm
 {
@@ -27,7 +28,7 @@ namespace hm
     
     
 	/// WidgetPatchArea manages a Pipeline.
-	class WidgetPatchArea : public QWidget, public Pipeline::Listener
+	class WidgetPatchArea : public QWidget
 	{
 		Q_OBJECT
 	public:
@@ -60,14 +61,14 @@ namespace hm
 		
 		// MARK: Functions that cause modifications the underlying Pipeline model (as well as this view).
 		
-		/// This will call deleteLater() on \p patchCord, so may be called
-		/// by patchCord itself. The destructor of WidgetPatchCord
-		/// is responsible for updating the underlying model
-		void erasePatchCord(WidgetPatchCord* patchCord);
-		/// This will call deleteLater() on \p node so may be called
-		/// by node itself. The destructor of WidgetNode is responsible
-		/// for updating the underlying model.
-		void eraseNode(WidgetNode* node);
+//		/// This will call deleteLater() on \p patchCord, so may be called
+//		/// by patchCord itself. The destructor of WidgetPatchCord
+//		/// is responsible for updating the underlying model
+//		void erasePatchCord(WidgetPatchCord* patchCord);
+//		/// This will call deleteLater() on \p node so may be called
+//		/// by node itself. The destructor of WidgetNode is responsible
+//		/// for updating the underlying model.
+//		void eraseNode(WidgetNode* node);
 		// not needed at the moment
 //		/// Erases the node that currently has focus.
 //		/// \return true if a node had focused (in which case it was deleted.
@@ -92,13 +93,11 @@ namespace hm
 		void clearNewPatchCord(WidgetNewPatchCord* toBeCleared);
 		
 		
-		// MARK: Pipeline::Listener functions
-		// These allow the widget to stay updated when the pipeline changes
-		virtual void nodeAdded(NodePtr node);
-		virtual void nodeRemoved(NodePtr node);
-		virtual void patchCordAdded(OutletPtr outlet, InletPtr inlet);
-		virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet);
-
+		// MARK: For debugging
+		/// \return true if the widgets in the patch area match the
+		/// underlying model
+		bool datatypeInvariant() const;
+		void printWidgets() const;
 		
 	public Q_SLOTS:
 		/// Request the patch area update its size. Call this if a contained
@@ -109,6 +108,15 @@ namespace hm
 		/// on to the info panel
 		void provideInfoPanelText(QString);
 		void loadStyleSheet();
+		
+	protected Q_SLOTS:
+		// MARK: PipelineListener slots
+		// These allow the widget to stay updated when the pipeline changes
+		void nodeAdded(NodePtr node);
+		void nodeRemoved(NodePtr node);
+		void patchCordAdded(OutletPtr outlet, InletPtr inlet);
+		void patchCordRemoved(OutletPtr outlet, InletPtr inlet);
+
         
 	Q_SIGNALS:
 		/// New text to be sent to the info panel
@@ -123,14 +131,15 @@ namespace hm
 		virtual void resizeEvent(QResizeEvent* event) override;
         
     private:
-		// MARK: Functions that do not affect the underlying Pipeline model
-        /// Create a widget for an existing node
-        WidgetNode* addNode(NodePtr node);
-        /// Add an already-connected patch cord. \p inlet and \p outlet
-        /// must belong to a node that has already been added to this patch
-        /// area. The connection between inlet and outlet must already
-        /// exist before calling this function.
-        WidgetPatchCord* addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet);
+//		// MARK: Functions that do not affect the underlying Pipeline model
+//        /// Create a widget for an existing node
+//        WidgetNode* addNode(NodePtr node);
+//        /// Add an already-connected patch cord. \p inlet and \p outlet
+//        /// must belong to a node that has already been added to this patch
+//        /// area. The connection between inlet and outlet must already
+//        /// exist before calling this function.
+//        WidgetPatchCord* addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet);
+		
         
 //		/// Create a disconnected patch cord with the given \p outlet.
 //		/// \pre outlet != nullptr
@@ -150,6 +159,7 @@ namespace hm
 //		T findUnderMouse() const;
 
 		PipelinePtr mPipeline;
+		PipelineListener* mPipelineListener;
 		
 		/// Owning reference
 		QList<WidgetNode*> mWidgetNodes;

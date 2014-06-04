@@ -18,6 +18,8 @@ namespace hm
 		Q_OBJECT
         
 	public:
+		virtual ~WidgetLet();
+		
         /// \return the coordinates of the point where connections
         /// to this Let should be drawn, relative to the containing
         /// WigetPatchArea

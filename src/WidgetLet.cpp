@@ -21,6 +21,11 @@ WidgetLet::WidgetLet(WidgetNode* parent)
     assert(mParent != nullptr);
 }
 
+WidgetLet::~WidgetLet()
+{
+	hm_debug("WidgetLet destructor");
+}
+
 QPoint WidgetLet::connectionPoint() const
 {
     return mapTo(mParent->patchArea(), QPoint(width()/2, height()/2));

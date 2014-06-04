@@ -15,7 +15,16 @@ int main(int argc, char** argv)
 	QCoreApplication::setOrganizationName("Centre for Digital Music");
 	QCoreApplication::setApplicationName("Harmonic Motion");
 	Controller* c = new Controller(app);
-	int ret = app->exec();
+	int ret;
+	try
+	{
+	ret = app->exec();
+	}
+	catch (std::exception const& e)
+	{
+		std::string s = e.what();
+		throw e;
+	}
 	delete c;
 	delete app;
 	return ret;

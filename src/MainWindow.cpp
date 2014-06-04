@@ -7,7 +7,7 @@
 //
 
 #include "MainWindow.h"
-#include "NodeRendererGlWidget.h"
+#include "WidgetMonitor.h"
 #include <QtWidgets>
 #include "WidgetNode.h"
 #include "WidgetPatchArea.h"
@@ -74,6 +74,8 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	actionQuit->setShortcut(QKeySequence::Quit);
 	
 	QAction* actionPrintNodeNames = new QAction("Print &node names in use", this);
+	QAction* actionCheckDatatypeInvariant = new QAction("Check datatype invariant", this);
+	QAction* actionPrintWidgets = new QAction("Print widgets", this);
 	
 	
 	QMenu* menuFile = new QMenu("&File", this);
@@ -86,6 +88,8 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	
 	QMenu* menuDebug = new QMenu("&Debug", this);
 	menuDebug->addAction(actionPrintNodeNames);
+	menuDebug->addAction(actionCheckDatatypeInvariant);
+	menuDebug->addAction(actionPrintWidgets);
 	
 	QMenuBar* menuBar = new QMenuBar(this);
 	menuBar->addMenu(menuFile);
@@ -106,6 +110,10 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	success = connect(actionQuit, SIGNAL(triggered()), QApplication::instance(), SLOT(quit()));
 	
 	success = connect(actionPrintNodeNames, SIGNAL(triggered()), this, SLOT(actionPrintNodeNames()));
+	assert(success);
+	success = connect(actionCheckDatatypeInvariant, SIGNAL(triggered()), this, SLOT(actionCheckDatatypeInvariant()));
+	assert(success);
+	success = connect(actionPrintWidgets, SIGNAL(triggered()), this, SLOT(actionPrintWidgets()));
 	assert(success);
 }
 
@@ -261,4 +269,14 @@ void MainWindow::actionPrintNodeNames()
 	qDebug() << "Node names in use:" << qNames;
 }
 
+
+void MainWindow::actionCheckDatatypeInvariant()
+{
+	qDebug() << "Datatype invariant: "<<mPatchArea->datatypeInvariant();
+}
+
+void MainWindow::actionPrintWidgets()
+{
+	mPatchArea->printWidgets();
+}
 

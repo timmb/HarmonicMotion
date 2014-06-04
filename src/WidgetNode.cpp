@@ -34,8 +34,10 @@ namespace hm
 	, mNode(node)
     , mMainArea(nullptr)
     , mPatchArea(patchArea)
-	, mHasBeenErased(false)
+//	, mHasBeenErased(false)
 	{
+		assert(node != nullptr);
+		
 		loadStyleSheet();
 		setObjectName("WidgetNode");
         
@@ -124,7 +126,7 @@ namespace hm
 		eraseAction->setShortcuts(QList<QKeySequence>() << QKeySequence::Delete << Qt::Key_Backspace);
 		eraseAction->setShortcutContext(Qt::WidgetShortcut);
 		addAction(eraseAction);
-		success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(eraseAndDelete()));
+		success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(deleteFromModel()));
 		assert(success);
 		
 		
@@ -139,35 +141,36 @@ namespace hm
 	
 	WidgetNode::~WidgetNode()
 	{
-		if (!mHasBeenErased)
-		{
-			hm_error("WidgetNode destroyed before erase() was called.");
-			assert(mHasBeenErased);
-		}
+//		if (!mHasBeenErased)
+//		{
+//			hm_error("WidgetNode destroyed before erase() was called.");
+//			assert(mHasBeenErased);
+//		}
+		hm_debug("WidgetNode destructor for node "+mNode->name());
 	}
 	
-	void WidgetNode::erase()
+	void WidgetNode::deleteFromModel()
 	{
-		// NB it is important that the patch area is updated before the
-		// underlying model to ensure that callbacks from the model do not
-		// cause the patch area to attempt to start removing this widget
-		// a second time.
-		mPatchArea->eraseNode(this);
+//		// NB it is important that the patch area is updated before the
+//		// underlying model to ensure that callbacks from the model do not
+//		// cause the patch area to attempt to start removing this widget
+//		// a second time.
+//		mPatchArea->eraseNode(this);
 		mPatchArea->pipeline()->removeNode(mNode);
-		mHasBeenErased = true;
+//		mHasBeenErased = true;
 	}
-	
-	void WidgetNode::eraseWithoutUpdatingModel()
-	{
-		mHasBeenErased = true;
-		mPatchArea->eraseNode(this);
-	}
-	
-	void WidgetNode::eraseAndDelete()
-	{
-		erase();
-		deleteLater();
-	}
+//
+//	void WidgetNode::eraseWithoutUpdatingModel()
+//	{
+//		mHasBeenErased = true;
+//		mPatchArea->eraseNode(this);
+//	}
+//	
+//	void WidgetNode::eraseAndDelete()
+//	{
+//		erase();
+//		deleteLater();
+//	}
     
     QSize WidgetNode::sizeHint() const
     {

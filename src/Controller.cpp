@@ -9,11 +9,12 @@
 #include "Controller.h"
 #include "MainWindow.h"
 #include "HarmonicMotion.h"
-#include "NodeRendererGlWidget.h"
+#include "WidgetMonitor.h"
 #include <QTimer>
 #include "WidgetNode.h"
 #include "FactoryNode.h"
 #include "WidgetPatchArea.h"
+#include "MetatypeDeclarations.h"
 
 
 using namespace hm;
@@ -25,6 +26,15 @@ Controller::Controller(QObject* parent)
 , mAccum(nullptr)
 , mRedrawIsRequired(false)
 {
+	qRegisterMetaType<std::shared_ptr<hm::Node>>();
+	qRegisterMetaType<std::shared_ptr<hm::PatchCord>>();
+	qRegisterMetaType<std::shared_ptr<hm::Outlet>>();
+	qRegisterMetaType<std::shared_ptr<hm::Inlet>>();
+	qRegisterMetaType<hm::NodePtr>("NodePtr");
+	qRegisterMetaType<hm::PatchCordPtr>("PatchCordPtr");
+	qRegisterMetaType<hm::OutletPtr>("OutletPtr");
+	qRegisterMetaType<hm::InletPtr>("InletPtr");
+	
 	mPipeline = mMainWindow->patchArea()->pipeline();
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");
 	mPipeline->addNode(gen);

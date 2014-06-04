@@ -10,6 +10,7 @@
 #include <QtGui>
 #include "HarmonicMotion.h"
 
+
 namespace hm
 {
 	class MainWindow;

@@ -24,12 +24,14 @@
 #include "MouseGrabber.h"
 #include "WidgetNewPatchCord.h"
 #include "PatchAreaMousePressFilter.h"
+#include "PatchCord.h"
 
 using namespace hm;
 
 WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 : QWidget(parent)
 , mPipeline(pipeline)
+, mPipelineListener(new PipelineListener(this))
 , mNewPatchCord(nullptr)
 , mMouseGrabber(new MouseGrabber(this))
 , mMousePressFilter(new PatchAreaMousePressFilter(this))
@@ -40,7 +42,17 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	{
 		mPipeline = PipelinePtr(new Pipeline);
 	}
-	mPipeline->addListener(this);
+	mPipeline->addListener(mPipelineListener);
+	bool success(false);
+	success = connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(nodeAdded(NodePtr)));
+	assert(success);
+	success = connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(nodeRemoved(NodePtr)));
+	assert(success);
+	success = connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr)));
+	assert(success);
+	success = connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr)));
+	assert(success);
+	
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setFocusPolicy(Qt::ClickFocus);
 	setAutoFillBackground(true);
@@ -53,44 +65,44 @@ QSize WidgetPatchArea::sizeHint() const
 	return QSize(500, 300);
 }
 
-WidgetNode* WidgetPatchArea::addNode(NodePtr node)
-{
-    WidgetNode* w = new WidgetNode(node, this);
-	mWidgetNodes << w;
-	for (WidgetOutlet* outlet: w->outlets())
-	{
-		mWidgetOutlets << outlet;
-	}
-	for (WidgetInlet* inlet: w->inlets())
-	{
-		mWidgetInlets << inlet;
-	}
-	w->installEventFilter(mMousePressFilter);
-	for (QWidget* child: w->findChildren<QWidget*>())
-	{
-		child->installEventFilter(mMousePressFilter);
-	}
-	w->show();
-    return w;
-}
-
-void WidgetPatchArea::eraseNode(WidgetNode* node)
-{
-	// Remove our weak reference to the node's inlets and outlets.
-	for (WidgetOutlet* outlet: node->outlets())
-	{
-		assert(mWidgetOutlets.count(outlet)==1);
-		mWidgetOutlets.removeOne(outlet);
-	}
-	for (WidgetInlet* inlet: node->inlets())
-	{
-		assert(mWidgetInlets.count(inlet)==1);
-		mWidgetInlets.removeOne(inlet);
-	}
-	assert(mWidgetNodes.count(node)==1);
-	mWidgetNodes.removeOne(node);
-	node->deleteLater();
-}
+//WidgetNode* WidgetPatchArea::addNode(NodePtr node)
+//{
+//    WidgetNode* w = new WidgetNode(node, this);
+//	mWidgetNodes << w;
+//	for (WidgetOutlet* outlet: w->outlets())
+//	{
+//		mWidgetOutlets << outlet;
+//	}
+//	for (WidgetInlet* inlet: w->inlets())
+//	{
+//		mWidgetInlets << inlet;
+//	}
+//	w->installEventFilter(mMousePressFilter);
+//	for (QWidget* child: w->findChildren<QWidget*>())
+//	{
+//		child->installEventFilter(mMousePressFilter);
+//	}
+//	w->show();
+//    return w;
+//}
+//
+//void WidgetPatchArea::eraseNode(WidgetNode* node)
+//{
+//	// Remove our weak reference to the node's inlets and outlets.
+//	for (WidgetOutlet* outlet: node->outlets())
+//	{
+//		assert(mWidgetOutlets.count(outlet)==1);
+//		mWidgetOutlets.removeOne(outlet);
+//	}
+//	for (WidgetInlet* inlet: node->inlets())
+//	{
+//		assert(mWidgetInlets.count(inlet)==1);
+//		mWidgetInlets.removeOne(inlet);
+//	}
+//	assert(mWidgetNodes.count(node)==1);
+//	mWidgetNodes.removeOne(node);
+//	delete node;
+//}
 
 //bool WidgetPatchArea::eraseNodeWithFocus()
 //{
@@ -152,15 +164,15 @@ void WidgetPatchArea::loadStyleSheet()
 //	mMouseGrabber->setEnabled(false);
 //}
 
-WidgetPatchCord* WidgetPatchArea::addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet)
-{
-    assert(mWidgetOutlets.contains(outlet));
-    assert(mWidgetInlets.contains(inlet));
-	assert(isConnectionValid(outlet, inlet));
-    WidgetPatchCord* p = new WidgetPatchCord(this, outlet, inlet);
-	mWidgetPatchCords << p;
-	return p;
-}
+//WidgetPatchCord* WidgetPatchArea::addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet)
+//{
+//    assert(mWidgetOutlets.contains(outlet));
+//    assert(mWidgetInlets.contains(inlet));
+//	assert(isConnectionValid(outlet, inlet));
+//    WidgetPatchCord* p = new WidgetPatchCord(this, outlet, inlet);
+//	mWidgetPatchCords << p;
+//	return p;
+//}
 
 WidgetPatchCord* WidgetPatchArea::getPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet) const
 {
@@ -174,12 +186,12 @@ WidgetPatchCord* WidgetPatchArea::getPatchCord(WidgetOutlet* outlet, WidgetInlet
 	return nullptr;
 }
 
-void WidgetPatchArea::erasePatchCord(WidgetPatchCord* patchCord)
-{
-	assert(mWidgetPatchCords.count(patchCord)==1);
-	mWidgetPatchCords.removeOne(patchCord);
-	patchCord->deleteLater();
-}
+//void WidgetPatchArea::erasePatchCord(WidgetPatchCord* patchCord)
+//{
+//	assert(mWidgetPatchCords.count(patchCord)==1);
+//	mWidgetPatchCords.removeOne(patchCord);
+//	patchCord->deleteLater();
+//}
 
 
 WidgetOutlet* WidgetPatchArea::findOutlet(QPoint position) const
@@ -359,30 +371,96 @@ void WidgetPatchArea::nodeAdded(NodePtr node)
 	{
 		if (w->node() == node)
 		{
+			// we shouldn't already have a widget if we've received this signal.
+			assert(false);
 			return;
 		}
 	}
-	addNode(node);
+//	addNode(node);
+	WidgetNode* w = new WidgetNode(node, this);
+	mWidgetNodes << w;
+	for (WidgetOutlet* outlet: w->outlets())
+	{
+		mWidgetOutlets << outlet;
+	}
+	for (WidgetInlet* inlet: w->inlets())
+	{
+		mWidgetInlets << inlet;
+	}
+	w->installEventFilter(mMousePressFilter);
+	for (QWidget* child: w->findChildren<QWidget*>())
+	{
+		child->installEventFilter(mMousePressFilter);
+	}
+	w->show();
+
 }
 
 void WidgetPatchArea::nodeRemoved(NodePtr node)
 {
-	// If we have a reference to this node then we need to remove it
-	// without attempting to re-remove it from the pipeline.
-	for (WidgetNode* w: mWidgetNodes)
+	hm_debug("WidgetPatchArea::nodeRemoved");
+	// check there are no patch cords connected to this node (there
+	// shouldn't be)
+	for (auto it=mWidgetPatchCords.begin(); it!=mWidgetPatchCords.end(); )
 	{
+		WidgetOutlet* outlet =(**it).outlet();
+		WidgetInlet* inlet = (**it).inlet();
+		if (inlet->node()->node() == node
+			|| outlet->node()->node() == node)
+		{
+			hm_error("nodeRemoved signal received from pipeline "
+				   "while patch cords still attached to node.");
+			assert(false);
+			if (mPipeline->isConnected(outlet->outlet(), inlet->inlet()))
+			{
+				mPipeline->disconnect(outlet->outlet(), inlet->inlet());
+			}
+			it = mWidgetPatchCords.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	
+	// If we have a reference to this node then we need to remove it.
+	int size = mWidgetNodes.size();
+	auto it=mWidgetNodes.begin();
+	for ( ; it!=mWidgetNodes.end(); ++it)
+	{
+		WidgetNode* w = *it;
 		if (w->node() == node)
 		{
-			// removes w from mWidgetNodes
-			w->eraseWithoutUpdatingModel();
-			// Although eraseNode does request that WidgetNode is later deleted
-			// we delete it right away here to ensure we don't retain any shared
-			// pointers to objects in the underlying model longer than necessary
-			assert(!mWidgetNodes.contains(w));
+			// Remove our weak reference to the node's inlets and outlets.
+			for (WidgetOutlet* outlet: w->outlets())
+			{
+				assert(mWidgetOutlets.count(outlet)==1);
+				mWidgetOutlets.removeOne(outlet);
+			}
+			for (WidgetInlet* inlet: w->inlets())
+			{
+				assert(mWidgetInlets.count(inlet)==1);
+				mWidgetInlets.removeOne(inlet);
+			}
+			assert(mWidgetNodes.count(w)==1);
+			mWidgetNodes.removeOne(w);
 			delete w;
+
+//			delete *it;
+//			mWidgetNodes.erase(it);
+			// removes w from mWidgetNodes
+//			w->eraseWithoutUpdatingModel();
+//			delete w;
+//			// Although eraseNode does request that WidgetNode is later deleted
+//			// we delete it right away here to ensure we don't retain any shared
+//			// pointers to objects in the underlying model longer than necessary
+//			assert(!mWidgetNodes.contains(w));
+//			delete w;
 			break;
 		}
 	}
+	// check we have actually removed a widget
+	assert(mWidgetNodes.size() < size);
 	// assert that we don't still have a widget for `node`.
 	assert(std::all_of(mWidgetNodes.begin(), mWidgetNodes.end(), [&](WidgetNode* w) {
 		return w->node() != node;
@@ -397,6 +475,7 @@ void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 	{
 		if (w->outlet()->outlet()==outlet && w->inlet()->inlet()==inlet)
 		{
+			assert(false);
 			return;
 		}
 	}
@@ -414,7 +493,7 @@ void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 		}
 		qDebug() << "Number of inlets:"<<mWidgetInlets.size();
 		assert(itWidgetInlet!=mWidgetInlets.end());
-			   return;
+		return;
 	}
 	WidgetInlet* widgetInlet = *itWidgetInlet;
 	
@@ -429,20 +508,33 @@ void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 	}
 	WidgetOutlet* widgetOutlet = *itWidgetOutlet;
 				
-	addPatchCord(widgetOutlet, widgetInlet);
+//	addPatchCord(widgetOutlet, widgetInlet);
+    assert(mWidgetOutlets.contains(widgetOutlet));
+    assert(mWidgetInlets.contains(widgetInlet));
+	assert(isConnectionValid(widgetOutlet, widgetInlet));
+    WidgetPatchCord* p = new WidgetPatchCord(this, widgetOutlet, widgetInlet);
+	mWidgetPatchCords << p;
+
 }
 
 void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 {
+	hm_debug("WidgetPatchArea::patchCordRemoved");
 	// If we have refernce to the patch cord then we need to remove it
-	for (WidgetPatchCord* w: mWidgetPatchCords)
+	int size=mWidgetPatchCords.size();
+	;
+	for (auto it = mWidgetPatchCords.begin() ; it!=mWidgetPatchCords.end(); ++it)
 	{
+		WidgetPatchCord* w = *it;
 		if (w->outlet()->outlet()==outlet && w->inlet()->inlet()==inlet)
 		{
-			w->eraseWithoutUpdatingModel();
+			delete *it;
+			mWidgetPatchCords.erase(it);
 			break;
 		}
 	}
+	// check we did have a widget to erase
+	assert(mWidgetPatchCords.size() < size);
 	// assert we have no more references to this connection
 	assert(std::all_of(mWidgetPatchCords.begin(), mWidgetPatchCords.end(), [&](WidgetPatchCord* w) {
 		return w->outlet()->outlet()!=outlet || w->inlet()->inlet() != inlet;
@@ -473,4 +565,99 @@ bool WidgetPatchArea::checkToInterceptMousePress(QPoint const& pos, Qt::MouseBut
 }
 
 
-
+bool WidgetPatchArea::datatypeInvariant() const
+{
+	bool invar = true;
+	auto nodes = mPipeline->nodes();
+	for (NodePtr const node: nodes)
+	{
+		int i=0;
+		for ( ; i<mWidgetNodes.size(); i++)
+		{
+			if (mWidgetNodes[i]->node() == node)
+			{
+				break;
+			}
+		}
+		if (i==mWidgetNodes.size())
+		{
+			invar = false;
+			hm_warning("Datatype invariant failed because node was missing widget.");
+		}
+	}
+	for (WidgetNode const* widgetNode: mWidgetNodes)
+	{
+		int i=0;
+		for ( ; i<nodes.size(); i++)
+		{
+			if (widgetNode->node() == nodes[i])
+			{
+				break;
+			}
+		}
+		if (i==nodes.size())
+		{
+			invar = false;
+			hm_warning("Datatype invariant failed because widget exists for non-existant node.");
+		}
+	}
+	auto cords = mPipeline->patchCords();
+	for (PatchCordPtr const cord: cords)
+	{
+		int i=0;
+		for ( ; i<mWidgetPatchCords.size(); i++)
+		{
+			WidgetPatchCord const* w = mWidgetPatchCords[i];
+			if (cord->inlet()==w->inlet()->inlet()
+				&& cord->outlet() == w->outlet()->outlet())
+			{
+				break;
+			}
+			if (i==cords.size())
+			{
+				invar = false;
+				hm_warning("Datatype invariant failed because patchcord "
+						   "exists without corresponding widget.");
+			}
+		}
+	}
+	for (WidgetPatchCord const* w: mWidgetPatchCords)
+	{
+		int i=0;
+		for ( ; i<cords.size(); i++)
+		{
+			PatchCordPtr cord = cords[i];
+			if (cord->inlet()==w->inlet()->inlet()
+				&& cord->outlet() == w->outlet()->outlet())
+			{
+				break;
+			}
+		}
+		if (i==mWidgetPatchCords.size())
+		{
+			invar = false;
+			hm_warning("Datatype invariant failed because widget exists for non-existent patchcord.");
+		}
+	}
+	return invar;
+}
+			
+			
+			
+void WidgetPatchArea::printWidgets() const
+{
+	qDebug() << "---\nWidgetNodes:";
+	for (WidgetNode* w: mWidgetNodes)
+	{
+		qDebug() << "  - "<<str(w->node()->name())
+		<< w->inlets().size() <<"WidgetInlets,"
+		<< w->outlets().size() <<"WidgetOutlets";
+	}
+	qDebug() << "WidgetPatchcords:";
+	for (WidgetPatchCord* w: mWidgetPatchCords)
+	{
+		qDebug() << " - "<<str(w->outlet()->outlet()->toString())
+							  <<" --> "
+							  <<str(w->inlet()->inlet()->toString());
+	}
+}

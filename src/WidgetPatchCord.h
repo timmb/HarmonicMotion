@@ -22,17 +22,19 @@ namespace hm
         WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outlet, WidgetInlet* inlet);
         virtual ~WidgetPatchCord();
 		
-		/// Request that this patch cord is deleted without updating the
-		/// underlying model. This is used if the model has been changed
-		/// externally and we need to update our widget representation of
-		/// it
-		void eraseWithoutUpdatingModel();
+//		/// Request that this patch cord is deleted without updating the
+//		/// underlying model. This is used if the model has been changed
+//		/// externally and we need to update our widget representation of
+//		/// it
+//		void eraseWithoutUpdatingModel();
 		
 		/// \return the inlet/outlet of this patch cord, or nullptr if it
 		/// does not yet have an inlet/outlet.
 		WidgetOutlet* outlet() { return mOutlet; }
+		WidgetOutlet const* outlet() const { return mOutlet; }
 		/// \copydoc outlet()
 		WidgetInlet* inlet() { return mInlet; }
+		WidgetInlet const* inlet() const { return mInlet; }
 		
 		/// Return the QLine object that describes the line drawn by this widget.
 		QLine line() const { return mLine; }
@@ -51,10 +53,8 @@ namespace hm
         /// Adjusts the location of this patch cord.
         void redraw();
 //		void loadStyleSheet();
-		/// Request that this patch cord is deleted. Updates the underlying
-		/// model. This widget instance will be deleted during the next
-		/// cycle of the event loop.
-		void erase();
+		/// Request that the pipeline delete this patch cord.
+		void deleteFromModel();
         
     protected:
         virtual void paintEvent(QPaintEvent* event) override;
@@ -78,7 +78,7 @@ namespace hm
         
         WidgetPatchArea* mPatchArea;
 		
-		bool mHasBeenErased;
+//		bool mHasBeenErased;
 		/// Remember the position of the mouse when clicked to test if we should
 		/// receive focus. This position is relative to this widget.
 		QPointF mMouseClickPosition;

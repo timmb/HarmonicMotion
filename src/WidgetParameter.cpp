@@ -47,14 +47,27 @@ void WidgetBaseParameter::paintEvent(QPaintEvent *)
 
 WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 {
+	assert(parameter != nullptr);
 	switch (parameter->type())
 	{
 		case BaseParameter::DOUBLE:
-			return createDelegate(std::dynamic_pointer_cast<Parameter<double>>(parameter));
+		{
+			auto p = std::dynamic_pointer_cast<Parameter<double>>(parameter);
+			assert(p);
+			return createDelegate(p);
+		}
 		case BaseParameter::INT:
-			return createDelegate(std::dynamic_pointer_cast<Parameter<int>>(parameter));
+		{
+			auto p = std::dynamic_pointer_cast<Parameter<int>>(parameter);
+			assert(p);
+			return createDelegate(p);
+		}
 		case BaseParameter::STRING:
-			return createDelegate(std::dynamic_pointer_cast<Parameter<std::string>>(parameter));
+		{
+			auto p = std::dynamic_pointer_cast<Parameter<std::string>>(parameter);
+			assert(p);
+			return createDelegate(p);
+		}
 		case BaseParameter::NUM_TYPES:
 		default:
 			assert(false && "Unrecognised parameter type when creating widget.");
@@ -120,7 +133,16 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 : WidgetParameter<int>(parameter)
 , mSpinBox(new QSpinBox(this))
 {
-	mSpinBox->setRange(parameter->hardMin, parameter->hardMax);
+	assert(parameter != nullptr);
+	ParameterValueContainer valueContainer = parameter->toContainer();
+	int* value = nullptr;
+	value = boost::get<int>(&valueContainer);
+	assert(value);
+	if (value)
+	{
+		mSpinBox->setValue(*value);
+	}
+	mSpinBox->setRange(parameter->softMin, parameter->softMax);
 	mSpinBox->move(0, 0);
 	
 	// param -> widget

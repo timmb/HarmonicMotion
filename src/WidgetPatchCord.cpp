@@ -27,11 +27,11 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
 , mOutlet(outlet)
 , mInlet(inlet)
 , mPatchArea(patchArea)
-, mHasBeenErased(false)
+//, mHasBeenErased(false)
 {
     assert(mPatchArea != nullptr);
     assert(mOutlet != nullptr);
-    assert(mOutlet->outlet()->isConnectedTo(mInlet->inlet()));
+//    assert(mOutlet->outlet()->isConnectedTo(mInlet->inlet()));
     assert(mInlet != nullptr);
     connectInletSignals();
     connectOutletSignals();
@@ -45,7 +45,7 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
 	eraseAction->setShortcuts(QList<QKeySequence>() << QKeySequence::Delete << Qt::Key_Backspace);
 	eraseAction->setShortcutContext(Qt::WidgetShortcut);
 	addAction(eraseAction);
-	bool success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(erase()));
+	bool success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(deleteFromModel()));
 	assert(success);
 	
 	show();
@@ -53,11 +53,11 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
 
 WidgetPatchCord::~WidgetPatchCord()
 {
-	if (!mHasBeenErased)
-	{
-		hm_error("WidgetPatchCord destroyed before being erased.");
-		assert(mHasBeenErased);
-	}
+//	if (!mHasBeenErased)
+//	{
+//		hm_error("WidgetPatchCord destroyed before being erased.");
+//		assert(mHasBeenErased);
+//	}
 	hm_debug("WidgetPatchCord destroyed.");
 }
 
@@ -77,19 +77,19 @@ WidgetPatchCord::~WidgetPatchCord()
 //}
 
 
-void WidgetPatchCord::erase()
+void WidgetPatchCord::deleteFromModel()
 {
 	bool success = mPatchArea->pipeline()->disconnect(mOutlet->outlet(), mInlet->inlet());
 	assert(success && "Patchcord is removed from underlying model here.");
-	mHasBeenErased = true;
+//	mHasBeenErased = true;
 }
 
 
-void WidgetPatchCord::eraseWithoutUpdatingModel()
-{
-	mPatchArea->erasePatchCord(this);
-	mHasBeenErased = true;
-}
+//void WidgetPatchCord::eraseWithoutUpdatingModel()
+//{
+//	mPatchArea->erasePatchCord(this);
+//	mHasBeenErased = true;
+//}
 
 
 void WidgetPatchCord::redraw()

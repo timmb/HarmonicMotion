@@ -46,6 +46,8 @@ namespace hm
 		
 		// Debug actions
 		void actionPrintNodeNames();
+		void actionCheckDatatypeInvariant();
+		void actionPrintWidgets();
 		
 		// TODO: Implement close event and check whether we should save
 		
