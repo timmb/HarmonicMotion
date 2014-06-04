@@ -23,6 +23,7 @@ namespace hm
 	class WidgetLet;
 	class WidgetNewPatchCord;
 	class MouseGrabber;
+	class PatchAreaMousePressFilter;
     
     
 	/// WidgetPatchArea manages a Pipeline.
@@ -78,6 +79,14 @@ namespace hm
 		/// \param position is the coordinates of the mouse relative to
 		/// this WidgetPatchArea.
 		void mousePressEventFromWidgetLet(WidgetLet* let, QPoint position);
+		/// This is called by an event filter over all widgets to check
+		/// if a mouse press event should be intercepted and used to
+		/// select a patch cord instead. If it should be then the
+		/// respective patch cord is selected instead.
+		/// \param pos should be the position of the mouse relative to
+		/// this widget.
+		/// \return true if the press should be intercepted.
+		bool checkToInterceptMousePress(QPoint const& pos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers);
 		/// This is called by WidgetNewPatchCord when it has completed its
 		/// purpose and would like to be deleted.
 		void clearNewPatchCord(WidgetNewPatchCord* toBeCleared);
@@ -155,6 +164,7 @@ namespace hm
 		/// is non-null.
 		WidgetNewPatchCord* mNewPatchCord;
 		MouseGrabber* mMouseGrabber;
+		PatchAreaMousePressFilter* mMousePressFilter;
 	};
 	
 //	template <typename T>

@@ -51,6 +51,19 @@ namespace hm
 		/// \copydoc outlet()
 		WidgetInlet* inlet() { return mInlet; }
 		
+		/// Return the QLine object that describes the line drawn by this widget.
+		QLine line() const { return mLine; }
+		
+		/// \return true if \p point is near to the line that is drawn
+		/// to represent this patch cord.
+		/// \param point is pixel coordinates of a point relative to the
+		/// origin of this widget.
+		bool isLineNear(QPoint const& point) const;
+		
+		/// To avoid issues with mouse event propagation, we handle click
+		/// events manually on WidgetPatchCord
+		void myMousePressEvent(QMouseEvent const& event);
+		
 		// MARK: Functions for interactive mouse-based creation of patchcords
         /// \return whether this patchcord has either an inlet or an outlet
 		/// connected but not both.
@@ -87,6 +100,8 @@ namespace hm
         virtual void paintEvent(QPaintEvent* event) override;
 //        virtual void mousePressEvent(QMouseEvent* event) override;
 //        virtual void mouseMoveEvent(QMouseEvent* event) override;
+		virtual void focusInEvent(QFocusEvent* event) override;
+		virtual void focusOutEvent(QFocusEvent* event) override;
         
     private:
         
@@ -116,5 +131,23 @@ namespace hm
         WidgetPatchArea* mPatchArea;
 		
 		bool mHasBeenErased;
+		/// Remember the position of the mouse when clicked to test if we should
+		/// receive focus. This position is relative to this widget.
+		QPointF mMouseClickPosition;
     };
+	
+	
+//	class WidgetPatchCordMouseFilter : public QObject
+//	{
+//		Q_OBJECT
+//	public:
+//		WidgetPatchCordMouseFilter(WidgetPatchCord* parent);
+//		
+//	protected:
+//		bool eventFilter(QObject* object, QEvent* event);
+//		
+//	private:
+//		WidgetPatchCord* mCord;
+//	};
+
 }

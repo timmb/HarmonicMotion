@@ -11,12 +11,14 @@
 #include "Outlet.h"
 #include <QCoreApplication>
 #include "WidgetLet.h"
+#include "Utilities.h"
 
 #include <QFile>
 #include <QTimer>
 #include <QDebug>
 #include <QAction>
 #include <cassert>
+
 
 using namespace hm;
 
@@ -36,6 +38,71 @@ using namespace hm;
 ////	t->start();
 //}
 
+//namespace {
+//
+//
+//// based on http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+//float distanceFromPointToLine(QVector2D const& lineStart, QVector2D const& lineEnd, QVector2D const& point) {
+//	QVector2D const& v = lineStart;
+//	QVector2D const& w = lineEnd;
+//	QVector2D const& p = point;
+//	// Return minimum distance between line segment vw and point p
+//	float const l2 = (v - w).lengthSquared();  // i.e. |w-v|^2 -  avoid a sqrt
+//	if (l2 == 0.0) return (p-v).length();   // v == w case
+//	// Consider the line extending the segment, parameterized as v + t (w - v).
+//	// We find projection of point p onto the line.
+//	// It falls where t = [(p-v) . (w-v)] / |w-v|^2
+//	float const t = QVector2D::dotProduct(p - v, w - v) / l2;
+//	if (t < 0.0)
+//		return (p - v).length();       // Beyond the 'v' end of the segment
+//	else if (t > 1.0)
+//		return (p - w).length();  // Beyond the 'w' end of the segment
+//	QVector2D const projection = v + t * (w - v);  // Projection falls on the segment
+//	return (p - projection).length();
+//}
+//
+//}
+//
+//
+//WidgetPatchCordMouseFilter::WidgetPatchCordMouseFilter(WidgetPatchCord* parent)
+//: QObject(parent)
+//, mCord(parent)
+//{
+//	assert(parent != nullptr);
+//}
+//
+//bool WidgetPatchCordMouseFilter::eventFilter(QObject* object, QEvent* event)
+//{
+//	assert(object == mCord);
+//	if (event->type() == QEvent::MouseButtonPress)
+//	{
+//		QMouseEvent* e = dynamic_cast<QMouseEvent*>(event);
+//		assert(e);
+//		if (e)
+//		{
+//			QPoint mouseRelativeToParent = mCord->mapToParent(e->pos());
+//			// calculate distance of mouse click to patch cord
+//			QLineF line(mCord->line());
+//			float distance = distanceFromPointToLine(QVector2D(line.p1()), QVector2D(line.p2()), QVector2D(mouseRelativeToParent));
+//			qDebug() << distance;
+//			const float distanceThreshold = 2.f;
+//			if (distance < distanceThreshold)
+//			{
+//				qDebug() << "consuming mouse click for focus";
+//				mCord->setFocus(Qt::MouseFocusReason);
+//				return true;
+//			}
+//			else{
+//				qDebug() << "mousepressevent too far for focus";
+//				return QObject::eventFilter(object, event);
+//			}
+//		}
+//	}
+//	return false;
+//}
+
+
+
 WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outlet, WidgetInlet* inlet)
 : QWidget(patchArea)
 , mOutlet(outlet)
@@ -52,6 +119,11 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
     connectOutletSignals();
     redraw();
 	hm_debug("New WidgetPatchCord with outlet "+mOutlet->outlet()->toString()+" and inlet "+mInlet->inlet()->toString());
+	
+//	setFocusPolicy(Qt::ClickFocus);
+//	setFocusPolicy(Qt::NoFocus);
+//	installEventFilter(new WidgetPatchCordMouseFilter(this));
+	setAttribute(Qt::WA_TransparentForMouseEvents);
 	
 	// ACTIONS
 	QAction* eraseAction = new QAction("Delete", this);
@@ -139,6 +211,9 @@ void WidgetPatchCord::redraw()
         bounds.setTop(qMin(mLine.y1(), mLine.y2()));
         bounds.setRight(qMax(mLine.x1(), mLine.x2()));
         bounds.setBottom(qMax(mLine.y1(), mLine.y2()));
+	// minimum size to make sure we can click on the wiget
+	bounds.setWidth(qMax(bounds.width(), 2));
+	bounds.setHeight(qMax(bounds.height(), 2));
         setGeometry(bounds);
 //		qDebug() << "line"<<mLine<<"bounds"<<bounds;
 //    }
@@ -156,9 +231,71 @@ void WidgetPatchCord::paintEvent(QPaintEvent* event)
 		QLine lineRelativeToThis = mLine.translated(-pos());
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
+	if (hasFocus())
+	{
+		QPen pen(QColor(220, 150, 150));
+		pen.setWidth(2.5f);
+		painter.setPen(pen);
+		painter.drawLine(lineRelativeToThis);
+	}
         painter.setPen(QPen(QColor(50,50,50)));
         painter.drawLine(lineRelativeToThis);
 //    }
+}
+
+
+void WidgetPatchCord::myMousePressEvent(QMouseEvent const& event)
+{
+	setFocus(Qt::MouseFocusReason);
+}
+
+
+bool WidgetPatchCord::isLineNear(QPoint const& point) const
+{
+	QLine relLine(mLine.p1() - pos(), mLine.p2() - pos());
+	double d = distanceFromPointToLine(QVector2D(relLine.p1()), QVector2D(relLine.p2()), QVector2D(point));
+	return d < 2.f;
+}
+
+//void WidgetPatchCord::mousePressEvent(QMouseEvent* event)
+//{
+////	mMouseClickPosition = event->localPos();
+////	qDebug() << "mouse relative pos " << mMouseClickPosition;
+////	QPoint mouseRelativeToParent = mapToParent(event->pos());
+//////	event->ignore();
+////	// check for focus
+////	const float distanceThreshold = 2.f;
+////	// calculate distance of mouse click to patch cord
+////	QLineF line(mLine);
+////	float distance = distanceFromPointToLine(QVector2D(mLine.p1()), QVector2D(mLine.p2()), QVector2D(mouseRelativeToParent));
+////	qDebug() << distance;
+////	if (distance > distanceThreshold)
+////	{
+////		qDebug() << "ignoring";
+////		event->ignore();
+////	}
+////	else{
+////		qDebug() << "mousepressevent focus";
+////		setFocus(Qt::MouseFocusReason);
+////	}
+//	event->ignore();
+//}
+
+
+
+
+void WidgetPatchCord::focusInEvent(QFocusEvent* event)
+{
+//	else
+	{
+		redraw();
+	}
+}
+
+
+void WidgetPatchCord::focusOutEvent(QFocusEvent* event)
+{
+	redraw();
 }
 
 

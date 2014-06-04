@@ -12,6 +12,7 @@
 #include <string>
 #include <cassert>
 #include <QDebug>
+#include <QVector2D>
 
 namespace hm
 {
@@ -21,4 +22,12 @@ namespace hm
 	/// Unpolish and repolish the style of a widget to force it to update
 	/// its appearance (based on its CSS) after a property has changed
 	void repolish(class QWidget* widget);
+	
+	/// Calculate the shortest distance from \p point to line segments (\p lineStart, \p lineEnd)
+	float distanceFromPointToLine(QVector2D const& lineStart, QVector2D const& lineEnd, QVector2D const& point);
+	
+	/// \return true if \p potentialAncestor is an ancestor (direct/indirect parent) of /p potentialChild
+	bool isAncestor(QObject* potentialAncestor, QObject* potentialChild);
 }
+
+#define hm_print(variable) qDebug() << #variable<<": "<<variable;

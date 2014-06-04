@@ -23,6 +23,7 @@
 #include <QApplication>
 #include "MouseGrabber.h"
 #include "WidgetNewPatchCord.h"
+#include "PatchAreaMousePressFilter.h"
 
 using namespace hm;
 
@@ -31,6 +32,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 , mPipeline(pipeline)
 , mNewPatchCord(nullptr)
 , mMouseGrabber(new MouseGrabber(this))
+, mMousePressFilter(new PatchAreaMousePressFilter(this))
 {
 	setObjectName("WidgetPatchArea");
 	loadStyleSheet();
@@ -43,6 +45,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	setFocusPolicy(Qt::ClickFocus);
 	setAutoFillBackground(true);
 	//	mPatchArea->setColor(QPalette::Window, QColor("gray"));
+	installEventFilter(mMousePressFilter);
 }
 
 QSize WidgetPatchArea::sizeHint() const
@@ -61,6 +64,11 @@ WidgetNode* WidgetPatchArea::addNode(NodePtr node)
 	for (WidgetInlet* inlet: w->inlets())
 	{
 		mWidgetInlets << inlet;
+	}
+	w->installEventFilter(mMousePressFilter);
+	for (QWidget* child: w->findChildren<QWidget*>())
+	{
+		child->installEventFilter(mMousePressFilter);
 	}
 	w->show();
     return w;
@@ -446,4 +454,23 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 void WidgetPatchArea::resizeEvent(QResizeEvent* event)
 {
 }
+
+
+
+bool WidgetPatchArea::checkToInterceptMousePress(QPoint const& pos, Qt::MouseButton button, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers)
+{
+	for (WidgetPatchCord* p: mWidgetPatchCords)
+	{
+		QPoint posLocalToP = p->mapFrom(this, pos);
+		if (p->isLineNear(posLocalToP))
+		{
+			QMouseEvent event(QEvent::MouseButtonPress, posLocalToP, button, buttons, modifiers);
+			p->myMousePressEvent(event);
+			return true;
+		}
+	}
+	return false;
+}
+
+
 
