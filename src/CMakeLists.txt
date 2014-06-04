@@ -118,12 +118,9 @@ if (myprj_uis)
 	QT_WRAP_UI(myprj_ui_hdrs ${myprj_uis})
 endif (myprj_uis)
 
-set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/../../HarmonicMotion)
+set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/../../Core)
 set(CinderDir ${HarmonicMotionDir}/../../Cinder)
 
-message(${PROJECT_SOURCE_DIR})
-message(${HarmonicMotionDir})
-message(${CinderDir})
 
 # Include directories - one per line
 INCLUDE_DIRECTORIES(

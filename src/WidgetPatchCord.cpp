@@ -64,7 +64,7 @@ WidgetPatchCord::~WidgetPatchCord()
 //
 //void WidgetPatchCord::loadStyleSheet()
 //{
-//	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/HarmonicMotionGui/resources/qss/WidgetPatchCord.qss");
+//	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetPatchCord.qss");
 //	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 //	{
 //		setStyleSheet(QString::fromUtf8(file.readAll()));
