@@ -57,6 +57,9 @@ namespace hm
 	private:
 		void setLetCounts(int numInlets, int numOutlets);
 		void expressionChangedCallback();
+		/// triggers a request to replace this node with one with the
+		/// correct let counts.
+		void letCountsChangedCallback();
 		
 		std::unique_ptr<expression::Grammar<std::string::const_iterator>> mGrammar;
 		std::string mExpression;
@@ -64,6 +67,12 @@ namespace hm
 		bool mIsValid;
 		double mLastTimestamp;
 		bool mDebugPrint;
+		int mRequestedNumInlets;
+		int mRequestedNumOutlets;
+		
+		// To prevent callbacks from triggering when we're about to replace this
+		// node
+		bool mIsReplacingThisNode;
 	};
 	
 	

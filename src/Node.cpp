@@ -82,6 +82,19 @@ std::string Node::path() const
 	return '/'+name();
 }
 
+Node::Params Node::exportParams() const
+{
+	Params params = nodeParams();
+	params.parameterInitialValues.clear();
+	for (ParameterConstPtr p: parameters())
+	{
+		ParameterValueContainer v = p->toContainer();
+		cout << "parameter "<<p->name()<<": "<<v<<endl;
+		params.parameterInitialValues[p->name()] = v;
+	}
+	return params;
+}
+
 void Node::setEnabled(bool isEnabled)
 {
 	mIsEnabled = isEnabled;
@@ -99,6 +112,7 @@ void Node::startProcessing()
 void Node::stopProcessing()
 {
 	assert(mIsProcessing);
+	mIsProcessing = false;
 	hm_debug("Processing stopped on Node "+name());
 }
 

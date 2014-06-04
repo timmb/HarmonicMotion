@@ -10,6 +10,7 @@
 #include "Data.h"
 #include "Inlet.h"
 #include "Outlet.h"
+#include "Pipeline.h"
 //
 
 using namespace std;
@@ -186,12 +187,22 @@ namespace hm
 	, mGrammar(new expression::Grammar<string::const_iterator>)
 	, mProgram(new expression::Program)
 	, mDebugPrint(false)
+	, mRequestedNumInlets(1)
+	, mRequestedNumOutlets(1)
+	, mIsReplacingThisNode(false)
 	{
-		int numInlets = 3;
-		int numOutlets = 2;
-		setLetCounts(numInlets, numOutlets);
-		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){ this->expressionChangedCallback(); });
+		addParameter("Number of inlets", &mRequestedNumInlets)->addNewExternalValueCallback([this](){
+			this->letCountsChangedCallback();
+		});
+		addParameter("Number of outlets", &mRequestedNumOutlets)->addNewExternalValueCallback([this](){
+			this->letCountsChangedCallback();
+		});
+		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){
+			this->expressionChangedCallback();
+		});
 //		addParameter("Print final expression (debug)", &mDebugPrint);
+		setLetCounts(mRequestedNumInlets, mRequestedNumOutlets);
+		expressionChangedCallback();
 	}
 	
 	NodePtr NodeExpression::create(Node::Params params) const
@@ -231,6 +242,10 @@ namespace hm
 	
 	void NodeExpression::expressionChangedCallback()
 	{
+		if (mIsReplacingThisNode)
+		{
+			return;
+		}
 		auto iter = mExpression.cbegin();
 		mIsValid = qi::phrase_parse(iter, mExpression.cend(), *mGrammar, ascii::space, *mProgram);
 		mIsValid = mIsValid && iter == mExpression.cend();
@@ -241,6 +256,49 @@ namespace hm
 		else
 		{
 			hm_debug("Failed to parse "+mExpression);
+		}
+	}
+	
+	void NodeExpression::letCountsChangedCallback()
+	{
+		if (mIsReplacingThisNode)
+		{
+			return;
+		}
+		if (numInlets() != mRequestedNumInlets || numOutlets() != mRequestedNumOutlets)
+		{
+			mIsReplacingThisNode = true;
+			bool wasEnabled = isEnabled();
+			setEnabled(false);
+			//		int msSlept = 0;
+			//		while (isProcessing() && msSlept<5000)
+			//		{
+			//			//todo: replace with wait condition
+			//			boost::this_thread::sleep_for(boost::chrono::milliseconds(3));
+			//			msSlept += 3;
+			//		}
+			//		if (msSlept > 5000)
+			//		{
+			//			hm_warning("Failed to stop NodeExpression processing so unable "
+			//					   "to update inlet/outlet count.");
+			//			mRequestedNumInlets = numInlets();
+			//			mRequestedNumOutlets = numOutlets();
+			//			return;
+			//		}
+			
+			NodePtr replacement = FactoryNode::instance()->create(type(), exportParams());
+			replacement->setEnabled(wasEnabled);
+			NodePtr me = FactoryNode::instance()->getNodePtr(this);
+			Pipeline* p = pipeline();
+			if (p==nullptr)
+			{
+				hm_error("Cannot change inlet/outlet count on NodeExpression "
+						 "because it is not attached to a pipeline.");
+			}
+			else
+			{
+				p->replaceNode(me, replacement);
+			}
 		}
 	}
 	

@@ -30,9 +30,22 @@ namespace hm
 			/// nodes must have a unique name and name will be adjusted if
 			/// necessary to enforce this.
 			std::string name;
+			/// Specify initial values for parameters. These will only have
+			/// effect if the derived node's constructor registers these
+			/// parameters and will override the default value specified
+			/// there. Any number of parameters may be specified
+			/// here (you don't have to specify them all). If the type of
+			/// ParameterValueContainer does not match the parameter type
+			/// registered under the name then it will be ignored and an
+			/// error printed.
+			std::map<std::string, ParameterValueContainer> parameterInitialValues;
 			
-			Params(std::string const& name_="")
-			: name(name_) {}
+			Params(std::string const& name_="",
+				   std::map<std::string, ParameterValueContainer> const& parameterInitialValues_=std::map<std::string, ParameterValueContainer>())
+			: name(name_)
+			, parameterInitialValues(parameterInitialValues_)
+			{}
+			
 			virtual ~Params() {}
 		};
 		
@@ -46,6 +59,9 @@ namespace hm
 		std::string path() const;
 		void setName(std::string name);
 		std::string toString() const;
+		/// Export a Params instance that may be used to reproduce this
+		/// object in its current state.
+		Params exportParams() const;
 		
 		int numInlets() const;
 		//		InletPtr inlet(int index);
@@ -115,6 +131,10 @@ namespace hm
 		/// NodeThreaded).
 		/// The path of the parameter will be the path of the node followed by \p
 		/// name.
+		/// \note If an initial value for this parameter has been provided through
+		/// Node::Params then *value will be set to that during this function. Any
+		/// default values for *value should therefore be set before this function
+		/// is called.
 		/// \param The name of the parameter. This needs to be unique relative to
 		/// this node.
 		/// \param A pointer to the value that the parameter will be controlling.
@@ -139,8 +159,18 @@ namespace hm
 		/// \param params may be modified by this function to ensure it has
 		/// valid values
 		void setNodeParams(Params& params);
+		/// The pipeline this node is contained within. This may be nullptr
+		/// and should be checked each time it is called.
+		Pipeline* pipeline() const { return mPipeline; }
 		
 	private:
+		friend Pipeline;
+		/// FUNCTION TO BE ACCESSED BY PIPELINE ONLY.
+		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
+		/////////////////////////////////////
+		
+		/// We retain a reference to the pipeline. This may be nullptr
+		std::atomic<Pipeline*> mPipeline;
 		std::vector<InletPtr> mInlets;
 		std::vector<OutletPtr> mOutlets;
 		std::vector<ParameterPtr> mParameters;
@@ -173,9 +203,34 @@ namespace hm
 	template <typename T>
 	Parameter<T>* Node::addParameter(std::string name, T* value)
 	{
-		std::shared_ptr<Parameter<T>> parameter(new Parameter<T>(*this, name, value));
+		// Check if we have a custom initial value
+		T* initialValue = nullptr;
+		for (std::pair<std::string,ParameterValueContainer> i: nodeParams().parameterInitialValues)
+		{
+			if (i.first == name)
+			{
+				initialValue = boost::get<T>(&i.second);
+				if (initialValue == nullptr)
+				{
+					hm_error("Node was constructed with an initial value for "
+							 "parameter "+name+" that was of the wrong type.");
+				}
+			}
+		}
+		std::shared_ptr<Parameter<T>> parameter;
+		if (initialValue)
+		{
+			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, value, *initialValue));
+		}
+		else
+		{
+			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, value));
+		}
 		boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
 		mParameters.push_back(parameter);
 		return parameter.get();
 	}
 }
+
+
+

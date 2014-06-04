@@ -41,7 +41,8 @@ namespace hm
 		
 		// MARK: Access pipeline elements
 		
-		std::vector<NodePtr> const& nodes() const;
+		std::vector<NodePtr> nodes() const;
+		std::vector<PatchCordPtr> patchCords() const;
 		/// \param path e.g. "My node" or "/My node/
 		///
 		NodePtr nodeFromPath(std::string path);
@@ -53,6 +54,10 @@ namespace hm
 		
 		void addNode(NodePtr node);
 		void removeNode(NodePtr node);
+		/// Removes \p oldNode and adds \p newNode. This function will attempt
+		/// to recreate any patch cords that were on \p oldNode if possible.
+		/// \p newNode will be enabled/disabled based on the state of \p oldNode.
+		void replaceNode(NodePtr oldNode, NodePtr newNode);
 		/// Delete all patchcords and nodes
 		void clear();
 		

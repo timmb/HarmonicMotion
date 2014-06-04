@@ -41,9 +41,16 @@ std::string Pipeline::toString() const
 	return ss.str();
 }
 
-std::vector<NodePtr> const& Pipeline::nodes() const
+std::vector<NodePtr> Pipeline::nodes() const
 {
+	Lock lock(mMutex);
 	return mNodes;
+}
+
+std::vector<PatchCordPtr> Pipeline::patchCords() const
+{
+	Lock lock(mMutex);
+	return vector<PatchCordPtr>(begin(mPatchCords), end(mPatchCords));
 }
 
 void Pipeline::addNode(NodePtr node)
@@ -51,7 +58,8 @@ void Pipeline::addNode(NodePtr node)
 	{
 		Lock lock(mMutex);
 		mNodes.push_back(node);
-		hm_debug("Added node "+node->toString());
+		node->setPipeline(this);
+		hm_info("Added node "+node->toString()+" to pipeline.");
 		if (isRunning() && !node->isProcessing())
 		{
 			node->startProcessing();
@@ -86,19 +94,21 @@ void Pipeline::removeNode(NodePtr node)
 			}
 		}
 	}
+	cerr << "Stop and remove" << endl;
 	// Stop and remove node
 	auto it = std::find(mNodes.begin(), mNodes.end(), node);
 	if (it != mNodes.end())
 	{
 		Lock lock(mMutex);
+		mNodes.erase(it);
 		if (isRunning())
 		{
-			assert((**it).isProcessing());
+			assert(node->isProcessing());
 			{
-				(**it).stopProcessing();
+				node->stopProcessing();
 			}
 		}
-		mNodes.erase(it);
+		node->setPipeline(nullptr);
 	}
 	/// Check invariants
 	for (OutletPtr outlet: node->outlets())
@@ -106,11 +116,62 @@ void Pipeline::removeNode(NodePtr node)
 		assert(outlet->numInlets()==0);
 	}
 	assert(patchCordInvariant());
-	hm_debug("Removed node "+node->toString());
+	hm_info("Removed node "+node->toString()+" from pipeline.");
 	for (Listener* listener: mListeners)
 	{
 		listener->nodeRemoved(node);
 	}
+}
+
+void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
+{
+	assert(oldNode != nullptr);
+	assert(newNode != nullptr);
+	
+	// Remember what patch cords were attached
+	vector<pair<OutletPtr, int>> cordsGoingIn;
+	vector<pair<int, InletPtr>> cordsGoingOut;
+	{
+		auto inlets = oldNode->inlets();
+		auto outlets = oldNode->outlets();
+		for (PatchCordPtr p: mPatchCords)
+		{
+			for (int i=0; i<inlets.size(); i++)
+			{
+				if (p->inlet() == inlets[i])
+				{
+					cordsGoingIn.push_back(pair<OutletPtr, int>(p->outlet(), i));
+				}
+			}
+			for (int i=0; i<outlets.size(); i++)
+			{
+				if (p->outlet() == outlets[i])
+				{
+					cordsGoingOut.push_back(pair<int, InletPtr>(i, p->inlet()));
+				}
+			}
+		}
+	}
+	
+	removeNode(oldNode);
+	addNode(newNode);
+	auto inlets = newNode->inlets();
+	for (auto const& p: cordsGoingIn)
+	{
+		if (p.second < inlets.size())
+		{
+			connect(p.first, inlets[p.second]);
+		}
+	}
+	auto outlets = newNode->outlets();
+	for (auto const& p: cordsGoingOut)
+	{
+		if (p.first < outlets.size())
+		{
+			connect(outlets[p.first], p.second);
+		}
+	}
+	
 }
 
 void Pipeline::start()
@@ -129,10 +190,11 @@ void Pipeline::start()
 		while (mIsRunning)
 		{
 			{
-				Lock lock(mMutex);
+				// todo: replace this with a recursive mutex
+//				Lock lock(mMutex);
 				for (NodePtr node: mNodes)
 				{
-					node->stepProcessing();
+						node->stepProcessing();
 				}
 			}
 			double delta = elapsedTime() - timeOfLastUpdate;
@@ -143,6 +205,10 @@ void Pipeline::start()
 				int us = int((0.01 - delta) * 1000000);
 				boost::this_thread::sleep_for(boost::chrono::microseconds(us));
 			}
+		}
+		for (NodePtr node: mNodes)
+		{
+			node->stopProcessing();
 		}
 	}));
 }
@@ -289,10 +355,12 @@ void Pipeline::disconnect(PatchCordPtr p)
 {
 	assert(patchCordInvariant());
 	{
-		Lock lock(mMutex);
+//		Lock lock(mMutex);
+		mMutex.lock();
 		p->outlet()->removePatchCord(p);
 		p->inlet()->decrementNumConnections();
 		mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
+		mMutex.unlock();
 	}
 	assert(patchCordInvariant());
 	hm_debug("Disconnected "+p->outlet()->toString()+" and "+p->inlet()->toString());
@@ -300,6 +368,7 @@ void Pipeline::disconnect(PatchCordPtr p)
 	{
 		listener->patchCordRemoved(p->outlet(), p->inlet());
 	}
+
 }
 
 
@@ -604,6 +673,7 @@ namespace hm
 	{
 		out << "[Pipeline: "
 		<< (rhs.mIsRunning? "running" : "stopped")
+		<< "\nThread running: "<<!rhs.mThread->get_thread_info()->done
 		<< "\nNodes: [";
 		for (int i=0; i<rhs.mNodes.size(); i++)
 		{

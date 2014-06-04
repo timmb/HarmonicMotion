@@ -17,12 +17,6 @@ namespace hm
 	{
 	public:
 		typedef std::shared_ptr<NodeRenderer> Ptr;
-		struct Params : public Node::Params
-		{
-			Params(std::string const& name_="")
-			: Node::Params(name_)
-			{}
-		};
 		
 		/// Settings applied to drawing of data to a specific outlet
 		struct DrawSettings

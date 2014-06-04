@@ -13,13 +13,22 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
 #include "Common.h"
+#include <boost/variant.hpp>
 
 namespace hm {
+	
+	/// On occasion it's useful to have a container that can contain any
+	/// value that may be represented by a parameter. At the moment this is
+	/// used in Node but not in the Parameter classes which use templates
+	/// and operator overloading.
+	/// Types here should match those in BaseParameter::Type
+	typedef boost::variant<double, int, std::string> ParameterValueContainer;
 
 	/// Base class of all parameters
 	class BaseParameter
 	{
 	public:
+		/// These types should match those in ParameterValueContainer.
 		enum Type
 		{
 			DOUBLE,
@@ -43,6 +52,12 @@ namespace hm {
 		/// \return Type in string format
 		std::string typeString() const;
 		virtual std::string toString() const = 0;
+		/// \return The current value represented by this parameter.
+		/// \note If a new external value has arrived and update() has
+		/// not yet been called then this will return the new external
+		/// value which may not yet be the same as the value actually pointed
+		/// to by this parameter.
+		virtual ParameterValueContainer toContainer() const = 0;
 		
 		/// Register a callback to be alerted when the internal value (corresponding
 		/// to the pointer this parameter was constructed with) is altered
@@ -132,6 +147,20 @@ namespace hm
 			assert(mValue != nullptr);
 		}
 		
+		/// \copydoc Parameter(Node&, std::string, T*)
+		/// \param initialValue This is written to *value without triggering
+		/// any callbacks
+		Parameter(Node& parent, std::string name, T* value, T const& initialValue)
+		: BaseParameter(parent, name)
+		, mValue(value)
+		, mExternalValue(initialValue)
+		, mHasNewExternalValue(false)
+		, mNewInternalValueCallbacksIsNotEmpty(false)
+		{
+			assert(mValue != nullptr);
+			*mValue = initialValue;
+		}
+		
 		virtual Type type() const override;
 		
 		virtual std::string toString() const override
@@ -147,12 +176,12 @@ namespace hm
 		/// Thread-safe
 		void set(T newValue)
 		{
+			std::cout << "new external value: " << newValue << std::endl;
 			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
 			mExternalValue = newValue;
+			std::cout << "new mExternalValue: " << mExternalValue << std::endl;
 			mHasNewExternalValue = true;
 		}
-		// We don't provide a get function as the only guarantee we have over when
-		// mValue changes is when we are within checkExternalValue()
 		/// Register a callback that is called when the internal value corresponding
 		/// to the pointer changes but no new external value has arrived. The
 		/// new value is provided as argument to the callback.
@@ -186,23 +215,16 @@ namespace hm
 			}
 		}
 		
+		virtual ParameterValueContainer toContainer() const override
+		{
+			std::cout << "toContainer: external: "<<mExternalValue<<std::endl;
+			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
+			ParameterValueContainer v(mExternalValue);
+			std::cout << "toContainer: v: "<<v<<std::endl;
+			return v;
+		}
+		
 	protected:
-//		virtual void toJson(Json::Value& child) const override
-//		{
-//			child << *mValue;
-//		}
-//		
-//		virtual bool fromJson(Json::Value const& child) override
-//		{
-//			T tempValue;
-//			if (child >> tempValue)
-//			{
-//				child >> *mValue;
-//				return true;
-//			}
-//			else
-//				return false;
-//		}
 		
 		virtual bool checkExternalValue()
 		{
@@ -275,7 +297,9 @@ namespace hm
 	}
 	
 	
-} // namespace tmb
+	
+	
+}
 
 namespace Json
 {

@@ -9,8 +9,12 @@ namespace hm
 	
 	void NodeUnthreaded::startProcessing()
 	{
+		if (!isProcessing())
+		{
 		Node::startProcessing();
 		start();
+		assert(isProcessing());
+		}
 	}
 	
 	void NodeUnthreaded::stepProcessing()
@@ -27,6 +31,7 @@ namespace hm
 	{
 		Node::stopProcessing();
 		stop();
+		assert(!isProcessing());
 	}
 	
 	std::ostream& operator<<(std::ostream& out, NodeUnthreaded const& node)
