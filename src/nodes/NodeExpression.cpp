@@ -267,38 +267,39 @@ namespace hm
 		}
 		if (numInlets() != mRequestedNumInlets || numOutlets() != mRequestedNumOutlets)
 		{
-			mIsReplacingThisNode = true;
-			bool wasEnabled = isEnabled();
-			setEnabled(false);
-			//		int msSlept = 0;
-			//		while (isProcessing() && msSlept<5000)
-			//		{
-			//			//todo: replace with wait condition
-			//			boost::this_thread::sleep_for(boost::chrono::milliseconds(3));
-			//			msSlept += 3;
-			//		}
-			//		if (msSlept > 5000)
-			//		{
-			//			hm_warning("Failed to stop NodeExpression processing so unable "
-			//					   "to update inlet/outlet count.");
-			//			mRequestedNumInlets = numInlets();
-			//			mRequestedNumOutlets = numOutlets();
-			//			return;
-			//		}
-			
-			NodePtr replacement = FactoryNode::instance()->create(type(), exportParams());
-			replacement->setEnabled(wasEnabled);
-			NodePtr me = FactoryNode::instance()->getNodePtr(this);
-			Pipeline* p = pipeline();
-			if (p==nullptr)
-			{
-				hm_error("Cannot change inlet/outlet count on NodeExpression "
-						 "because it is not attached to a pipeline.");
-			}
-			else
-			{
-				p->replaceNode(me, replacement);
-			}
+			//todo: redo this without replacing node
+//			mIsReplacingThisNode = true;
+//			bool wasEnabled = isEnabled();
+//			setEnabled(false);
+//			//		int msSlept = 0;
+//			//		while (isProcessing() && msSlept<5000)
+//			//		{
+//			//			//todo: replace with wait condition
+//			//			boost::this_thread::sleep_for(boost::chrono::milliseconds(3));
+//			//			msSlept += 3;
+//			//		}
+//			//		if (msSlept > 5000)
+//			//		{
+//			//			hm_warning("Failed to stop NodeExpression processing so unable "
+//			//					   "to update inlet/outlet count.");
+//			//			mRequestedNumInlets = numInlets();
+//			//			mRequestedNumOutlets = numOutlets();
+//			//			return;
+//			//		}
+//			
+//			NodePtr replacement = FactoryNode::instance()->create(type(), exportParams());
+//			replacement->setEnabled(wasEnabled);
+//			NodePtr me = FactoryNode::instance()->getNodePtr(this);
+//			Pipeline* p = pipeline();
+//			if (p==nullptr)
+//			{
+//				hm_error("Cannot change inlet/outlet count on NodeExpression "
+//						 "because it is not attached to a pipeline.");
+//			}
+//			else
+//			{
+//				p->replaceNode(me, replacement);
+//			}
 		}
 	}
 	

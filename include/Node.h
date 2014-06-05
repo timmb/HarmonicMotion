@@ -159,18 +159,18 @@ namespace hm
 		/// \param params may be modified by this function to ensure it has
 		/// valid values
 		void setNodeParams(Params& params);
-		/// The pipeline this node is contained within. This may be nullptr
-		/// and should be checked each time it is called.
-		Pipeline* pipeline() const { return mPipeline; }
+//		/// The pipeline this node is contained within. This may be nullptr
+//		/// and should be checked each time it is called.
+//		Pipeline* pipeline() const { return mPipeline; }
 		
 	private:
-		friend Pipeline;
+//		friend Pipeline;
 		/// FUNCTION TO BE ACCESSED BY PIPELINE ONLY.
-		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
+//		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
 		/////////////////////////////////////
 		
 		/// We retain a reference to the pipeline. This may be nullptr
-		std::atomic<Pipeline*> mPipeline;
+//		std::atomic<Pipeline*> mPipeline;
 		std::vector<InletPtr> mInlets;
 		std::vector<OutletPtr> mOutlets;
 		std::vector<ParameterPtr> mParameters;

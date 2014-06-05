@@ -83,7 +83,7 @@ Pipeline::ListenerEvents Pipeline::p_AddNode(NodePtr node)
 	ListenerEvents events;
 	// todo: assert mutex is locked
 	mNodes.push_back(node);
-	node->setPipeline(this);
+//	node->setPipeline(this);
 	hm_info("Added node "+node->toString()+" to pipeline.");
 	if (isRunning() && !node->isProcessing())
 	{
@@ -144,7 +144,7 @@ Pipeline::ListenerEvents Pipeline::p_RemoveNode(NodePtr node)
 					node->stopProcessing();
 				}
 			}
-			node->setPipeline(nullptr);
+//			node->setPipeline(nullptr);
 			mNodes.erase(it);
 		}
 		events.push_back(ListenerEventPtr(new NodeRemovedEvent(node)));
