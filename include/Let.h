@@ -27,24 +27,34 @@ namespace hm
         /// created by FactoryNode then this function will return a weak
         /// pointer to the node. Otherwise it returns
         /// std::weak_ptr<Node>(nullptr)
-		/// If the owning node is midway through being destroyed then
+		/// If the owning node is midway through being destroyed or has
+		/// detached this Let then
 		/// this may also return nullptr.
+		/// When locking, always check that this is not nullptr
         std::weak_ptr<Node> node() const;
 
+		
+		/// \return Whether this Let has been detached from its owning
+		/// Node. A detached Let is waiting to be destroyed and will
+		/// not perform any normal actions
+		/// isDetached() => node() == nullptr
+		bool isDetached() const { return mIsDetached; }
+		
 	protected:
 		Let(Types types, Node& owner, std::string const& name, std::string const& helpText);
 		
-		
-		
-	private:
 		/// This is used by the owning node when it is destroyed just in case
 		/// the
 		/// outlet outlives its node. There is no need to call it normally
-		void detachOwnerNode();
-	
+		/// It is extended by Inlet and Outlet and not accessed directly
+		/// by Node.
+		virtual void detachOwnerNode();
+		
+	private:
 		Node* mNode;
 		Types mTypes;
 		std::string mName;
 		std::string mHelpText;
+		bool mIsDetached;
 	};
 }

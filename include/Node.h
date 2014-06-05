@@ -64,12 +64,18 @@ namespace hm
 		Params exportParams() const;
 		
 		int numInlets() const;
-		//		InletPtr inlet(int index);
+		/// \warning If this node changes its characteristics during runtime
+		/// (i.e. adds or removes nodes) then the return of this value should
+		/// be checked against \c nullptr event if previously you have tested
+		/// that \p index < \c numInlets(). (Due to threading.)
 		InletPtr inlet(int index) const;
 		std::vector<InletPtr> inlets() const;
 		
 		int numOutlets() const;
-		//		OutletPtr outlet(int index);
+		/// \warning If this node changes its characteristics during runtime
+		/// (i.e. adds or removes nodes) then the return of this value should
+		/// be checked against \c nullptr event if previously you have tested
+		/// that \p index < \c numOutlets(). (Due to threading.)
 		OutletPtr outlet(int index) const;
 		std::vector<OutletPtr> outlets() const;
 		
@@ -93,7 +99,11 @@ namespace hm
 		/// Override this function to implement code that performs a single update.
 		/// This function may be called
 		/// sequentially from different threads (but not concurrently).
-		virtual void stepProcessing() = 0;
+		/// \return true if this node's characteristics have been changed and this
+		/// change has not previously caused this function to return true (i.e.
+		/// each change should only trigger a true return value one time). False
+		/// otherwise.
+		virtual bool stepProcessing();
 		/// Requests that the node stops processing data. Override this function to
 		/// implement code that concludes processing. Call this original function
 		/// first.
@@ -117,12 +127,16 @@ namespace hm
 		/// the \p params provided.
 		virtual NodePtr create(Params params) const = 0;
 		
-		/// This function may only be used at construction otherwise a runtime error
-		/// will be thrown.
+		/// Create an inlet with the given \p name. This will print an error
+		/// and return \c nullptr if \p name is already in use.
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
-		/// This function may only be used at construction otherwise a runtime error
-		/// will be thrown.
+		/// Create an outlet with the given \p name. This will print an error
+		/// and return \c nullptr if \p name is already in use.
 		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& helpText="");
+		/// Removes an inlet from this node.
+		bool removeInlet(InletPtr inlet);
+		/// Removes an outlet from this node.
+		bool removeOutlet(OutletPtr outlet);
 		/// Create a parameter. A pointer to the parameter is returned which may
 		/// be used to customise it.
 		/// Parameter effects (callbacks and updates from external sources) only take
@@ -177,9 +191,16 @@ namespace hm
 		mutable boost::shared_mutex mParametersMutex;
 		Params mNodeParams;
 		mutable boost::shared_mutex mNodeParamsMutex;
+		/// Guards changes to the characteristics of the node (i.e.
+		/// how many inlets and outlets it has)
+		mutable boost::shared_mutex mCharacteristicsMutex;
 		std::atomic<bool> mIsEnabled;
 		std::atomic<bool> mIsProcessing;
 		std::atomic<bool> mHasStartEverBeenCalled;
+		/// If node characteristics change after start has been called
+		/// then this is set to false until we notify the pipeline of the
+		/// event.
+		std::atomic_flag mHaveAllCharacteristicChangesBeenReported;
 		const std::string mClassName;
 		
 		static std::set<std::string> sNamesInUse;

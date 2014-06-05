@@ -17,6 +17,7 @@ Let::Let(Types types, Node& owner, std::string const& name, std::string const& h
 , mTypes(types)
 , mName(name)
 , mHelpText(helpText)
+, mIsDetached(false)
 {
 }
 
@@ -29,19 +30,20 @@ std::weak_ptr<Node> Let::node() const
 
 void Let::detachOwnerNode()
 {
+	mIsDetached = true;
 	mNode = nullptr;
 }
 
 
 std::string Let::path() const
 {
-	assert(mNode != nullptr);
-	if (mNode==nullptr)
+	NodePtr n = node().lock();
+	if (n==nullptr)
 	{
 		return "[detached]/"+name();
 	}
 	else
 	{
-		return mNode->path() + '/' + name();
+		return n->path() + '/' + name();
 	}
 }

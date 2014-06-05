@@ -68,8 +68,6 @@ namespace hm
 //		std::vector<std::weak_ptr<Inlet>> mOutputs;
 		std::vector<PatchCordPtr> mPatchCords;
 		
-		Node* mNode;
-		
 		friend class Node;
 		friend class Pipeline;
 		friend std::ostream& operator<<(std::ostream&, Outlet const&);

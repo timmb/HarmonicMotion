@@ -191,12 +191,20 @@ namespace hm
 	, mRequestedNumOutlets(1)
 	, mIsReplacingThisNode(false)
 	{
-		addParameter("Number of inlets", &mRequestedNumInlets)->addNewExternalValueCallback([this](){
+		auto numInletsParam = addParameter("Number of inlets", &mRequestedNumInlets);
+		numInletsParam->addNewExternalValueCallback([this](){
 			this->letCountsChangedCallback();
 		});
-		addParameter("Number of outlets", &mRequestedNumOutlets)->addNewExternalValueCallback([this](){
+		numInletsParam->hardMin = numInletsParam->softMin = 0;
+		numInletsParam->hardMax = numInletsParam->softMax = 100;
+		
+		auto numOutletsParam = addParameter("Number of outlets", &mRequestedNumOutlets);
+		numOutletsParam->addNewExternalValueCallback([this](){
 			this->letCountsChangedCallback();
 		});
+		numOutletsParam->hardMin = numOutletsParam->softMin = 0;
+		numOutletsParam->hardMax = numOutletsParam->softMax = 100;
+
 		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){
 			this->expressionChangedCallback();
 		});
@@ -219,25 +227,67 @@ namespace hm
 	
 	void NodeExpression::setLetCounts(int inletCount, int outletCount)
 	{
-		// At the moment this function may only be called once.
-		assert(numInlets()==0 && numOutlets()==0);
-		mGrammar->inlets.clear();
+		assert(mRequestedNumInlets >= 0 && mRequestedNumOutlets >= 0);
 		{
-			int i=0;
-			for (; i<inletCount; i++)
+			int i = numInlets();
+			while (i > mRequestedNumInlets)
+			{
+				i--;
+				InletPtr inlet_ = inlet(i);
+				assert(inlet_);
+				if (inlet_)
+				{
+					removeInlet(inlet_);
+				}
+			}
+			while (i < mRequestedNumInlets)
 			{
 				string name = "i"+to_string(i+1);
 				InletPtr inlet = createInlet(ALL_TYPES, "Input "+name, "Scalar values inputted here here may be used as \""+name+"\" in your expression.");
-				mGrammar->inlets.add(name.c_str(), inlet);
+				i++;
 			}
 		}
-		for (int j=0; j<outletCount; j++)
 		{
-			string name = "o"+to_string(j+1);
-			OutletPtr outlet = createOutlet(ALL_TYPES, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
-			mGrammar->outlets.add(name, outlet);
+			int i = numOutlets();
+			while (i > mRequestedNumOutlets)
+			{
+				i--;
+				OutletPtr outlet_ = outlet(i);
+				assert(outlet_);
+				if (outlet_)
+				{
+					removeOutlet(outlet_);
+				}
+			}
+			while (i < mRequestedNumOutlets)
+			{
+				string name = "o"+to_string(i+1);
+				OutletPtr outlet = createOutlet(ALL_TYPES, "Output "+name, "Output here here may be written to as \""+name+"\" in your expression.");
+				i++;
+			}
 		}
 		
+		// Update symbol table in mGrammar
+		
+		mGrammar->inlets.clear();
+		{
+			int i=0;
+			for (InletPtr inlet: inlets())
+			{
+				string name = "i"+to_string(i+1);
+				mGrammar->inlets.add(name.c_str(), inlet);
+				i++;
+			}
+		}
+		{
+			int i=0;
+			for (OutletPtr outlet: outlets())
+			{
+				string name = "o"+to_string(i+1);
+				mGrammar->outlets.add(name.c_str(), outlet);
+				i++;
+			}
+		}
 	}
 	
 	void NodeExpression::expressionChangedCallback()
@@ -261,46 +311,9 @@ namespace hm
 	
 	void NodeExpression::letCountsChangedCallback()
 	{
-		if (mIsReplacingThisNode)
-		{
-			return;
-		}
-		if (numInlets() != mRequestedNumInlets || numOutlets() != mRequestedNumOutlets)
-		{
-			//todo: redo this without replacing node
-//			mIsReplacingThisNode = true;
-//			bool wasEnabled = isEnabled();
-//			setEnabled(false);
-//			//		int msSlept = 0;
-//			//		while (isProcessing() && msSlept<5000)
-//			//		{
-//			//			//todo: replace with wait condition
-//			//			boost::this_thread::sleep_for(boost::chrono::milliseconds(3));
-//			//			msSlept += 3;
-//			//		}
-//			//		if (msSlept > 5000)
-//			//		{
-//			//			hm_warning("Failed to stop NodeExpression processing so unable "
-//			//					   "to update inlet/outlet count.");
-//			//			mRequestedNumInlets = numInlets();
-//			//			mRequestedNumOutlets = numOutlets();
-//			//			return;
-//			//		}
-//			
-//			NodePtr replacement = FactoryNode::instance()->create(type(), exportParams());
-//			replacement->setEnabled(wasEnabled);
-//			NodePtr me = FactoryNode::instance()->getNodePtr(this);
-//			Pipeline* p = pipeline();
-//			if (p==nullptr)
-//			{
-//				hm_error("Cannot change inlet/outlet count on NodeExpression "
-//						 "because it is not attached to a pipeline.");
-//			}
-//			else
-//			{
-//				p->replaceNode(me, replacement);
-//			}
-		}
+		// Note that this callback is triggered by updateParameters
+		// which will not happen concurrently with step()
+		setLetCounts(mRequestedNumInlets, mRequestedNumOutlets);
 	}
 	
 	void NodeExpression::step()

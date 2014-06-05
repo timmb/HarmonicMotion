@@ -16,6 +16,8 @@ using namespace std;
 //using boost::chrono::duration;
 ////using boost::chrono::duration::milli;
 //using boost::timed_mutex;
+typedef boost::unique_lock<boost::shared_mutex> UniqueLock;
+typedef boost::shared_lock<boost::shared_mutex> SharedLock;
 
 namespace hm
 {
@@ -25,7 +27,6 @@ namespace hm
 				 string const& name,
 				 string const& helpText)
 	: Let(types, node, name, helpText)
-	, mNode(&node)
 	, mDataTimestamp(-42)
 	, mNumConnections(0)
 	, mDestructorHasBeenCalled(false)
@@ -36,7 +37,10 @@ namespace hm
 	
 	void Inlet::detachOwnerNode()
 	{
-		mNode = nullptr;
+		UniqueLock lock(mMutex);
+		Let::detachOwnerNode();
+		mWaitCondition.notify_all();
+		setNotifyCallback(nullptr);
 	}
 	
 	Inlet::~Inlet()
@@ -66,6 +70,7 @@ namespace hm
 		assert(mNumConnections>0);
 		mNumConnections--;
 	}
+
 	
 	Data Inlet::data() const
 	{
@@ -87,6 +92,7 @@ namespace hm
 	
 	void Inlet::setNotifyCallback(std::function<void (double)> function)
 	{
+		UniqueLock lock(mNotifyCallbackMutex);
 		mNotifyCallback = function;
 	}
 	
@@ -98,6 +104,8 @@ namespace hm
 		{
 			if (mDestructorHasBeenCalled)
 				return false;
+			if (node().lock() == nullptr)
+				return false;
 			if (mDataTimestamp > lastTimestampReceived)
 				return true;
 			mWaitCondition.wait(lock);
@@ -106,13 +114,24 @@ namespace hm
 	
 	void Inlet::provideNewData(Data const& data)
 	{
-		boost::unique_lock<boost::shared_mutex> lock(mMutex);
-		mData = data;
-		mDataTimestamp = data.timestamp();
-		//	hm_debug("New data at inlet ("+mNodeName+"): "+data.toString());
-		mWaitCondition.notify_all();
-		if (mNotifyCallback)
-			mNotifyCallback(mDataTimestamp);
+		{
+			UniqueLock lock(mMutex);
+			if (node().lock() != nullptr)
+			{
+				mData = data;
+				mDataTimestamp = data.timestamp();
+			}
+			//	hm_debug("New data at inlet ("+mNodeName+"): "+data.toString());
+			mWaitCondition.notify_all();
+		}
+		{
+			SharedLock lock(mNotifyCallbackMutex);
+			if (node().lock() != nullptr && mNotifyCallback != nullptr)
+				mNotifyCallback(mDataTimestamp);
+		}
 	}
 	
 }
+
+
+

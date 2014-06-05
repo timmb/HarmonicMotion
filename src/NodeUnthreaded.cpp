@@ -17,7 +17,7 @@ namespace hm
 		}
 	}
 	
-	void NodeUnthreaded::stepProcessing()
+	bool NodeUnthreaded::stepProcessing()
 	{
 		assert(isProcessing());
 		updateParameters();
@@ -25,6 +25,7 @@ namespace hm
 		{
 			step();
 		}
+		return Node::stepProcessing();
 	}
 	
 	void NodeUnthreaded::stopProcessing()

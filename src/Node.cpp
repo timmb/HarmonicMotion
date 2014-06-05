@@ -40,6 +40,9 @@ namespace hm
 using namespace hm;
 using namespace std;
 
+typedef boost::shared_lock<boost::shared_mutex> SharedLock;
+typedef boost::unique_lock<boost::shared_mutex> UniqueLock;
+
 set<string> Node::sNamesInUse;
 boost::mutex Node::sNamesInUseMutex;
 
@@ -48,6 +51,7 @@ Node::Node(Params params, string className)
 , mIsEnabled(true)
 , mIsProcessing(false)
 , mHasStartEverBeenCalled(false)
+, mHaveAllCharacteristicChangesBeenReported(true)
 {
 	assert(mClassName != "");
 	setNodeParams(params);
@@ -109,6 +113,13 @@ void Node::startProcessing()
 }
 
 
+bool Node::stepProcessing()
+{
+	/// notify the pipeline if our characteristics have changed.
+	return !mHaveAllCharacteristicChangesBeenReported.test_and_set();
+}
+
+
 void Node::stopProcessing()
 {
 	assert(mIsProcessing);
@@ -119,7 +130,7 @@ void Node::stopProcessing()
 
 void Node::updateParameters()
 {
-	boost::shared_lock<boost::shared_mutex> lock(mParametersMutex);
+	SharedLock lock(mParametersMutex);
 	for (ParameterPtr p: mParameters)
 	{
 		p->update();
@@ -128,7 +139,7 @@ void Node::updateParameters()
 
 std::vector<ParameterPtr> Node::parameters()
 {
-	boost::shared_lock<boost::shared_mutex> lock(mParametersMutex);
+	SharedLock lock(mParametersMutex);
 	return mParameters;
 }
 
@@ -136,7 +147,7 @@ std::vector<ParameterPtr> Node::parameters()
 std::vector<ParameterConstPtr> Node::parameters() const
 {
 	std::vector<ParameterConstPtr> parameters;
-	boost::shared_lock<boost::shared_mutex> lock(mParametersMutex);
+	SharedLock lock(mParametersMutex);
 	parameters.assign(mParameters.size(), nullptr);
 	std::copy(mParameters.begin(), mParameters.end(), parameters.begin());
 	return parameters;
@@ -145,45 +156,41 @@ std::vector<ParameterConstPtr> Node::parameters() const
 
 InletPtr Node::inlet(int index) const
 {
+	SharedLock lock(mCharacteristicsMutex);
 	assert(0 <= index && index < mInlets.size());
+	assert(mInlets[index]->node().lock() != nullptr);
 	return (0 <= index && index < mInlets.size())? mInlets[index] : nullptr;
 }
 
 vector<InletPtr> Node::inlets() const
 {
+	SharedLock lock(mCharacteristicsMutex);
 	return mInlets;
 }
 
 OutletPtr Node::outlet(int index) const
 {
+	SharedLock lock(mCharacteristicsMutex);
 	assert(0 <= index && index < mOutlets.size());
+	assert(mOutlets[index]->node().lock() != nullptr);
 	return (0 <= index && index < mOutlets.size())? mOutlets[index] : nullptr;
 }
 
-//const InletPtr Node::inlet(int index) const 
-//{
-//	assert(0 <= index && index < mInlets.size());
-//	return (0 <= index && index < mInlets.size())? mInlets[index] : nullptr;
-//}
-//
-//const OutletPtr Node::outlet(int index) const
-//{
-//	assert(0 <= index && index < mOutlets.size());
-//	return (0 <= index && index < mOutlets.size())? mOutlets[index] : nullptr;
-//}
-
 vector<OutletPtr> Node::outlets() const
 {
+	SharedLock lock(mCharacteristicsMutex);
 	return mOutlets;
 }
 
 int Node::numInlets() const
 {
+	SharedLock lock(mCharacteristicsMutex);
 	return mInlets.size();
 }
 
 int Node::numOutlets() const
 {
+	SharedLock lock(mCharacteristicsMutex);
 	return mOutlets.size();
 }
 
@@ -202,13 +209,13 @@ void Node::setName(std::string name)
 
 Node::Params Node::nodeParams() const
 {
-	boost::shared_lock<boost::shared_mutex> lock(mNodeParamsMutex);
+	SharedLock lock(mNodeParamsMutex);
 	return mNodeParams;
 }
 
 void Node::setNodeParams(Params& params)
 {
-	boost::unique_lock<boost::shared_mutex> lock(mNodeParamsMutex);
+	SharedLock lock(mNodeParamsMutex);
 	{ // validate name
 		if (params.name=="")
 			params.name = mClassName;
@@ -234,47 +241,57 @@ void Node::setNodeParams(Params& params)
 
 InletPtr Node::createInlet(Types types, std::string const& name, std::string const& helpText)
 {
-	// For thread-safety, inlets may only be created before start() is called
-	if (mHasStartEverBeenCalled)
-	{
-		hm_error("Inlets cannot be created after start() has been called.");
-		assert(!mHasStartEverBeenCalled);
-		// TODO: Replace with custom exception
-		throw std::runtime_error("Inlets cannot be created after start() has been called.");
-	}
+	UniqueLock lock(mCharacteristicsMutex);
+//	// For thread-safety, inlets may only be created before start() is called
+//	if (mHasStartEverBeenCalled)
+//	{
+//		hm_error("Inlets cannot be created after start() has been called.");
+//		assert(!mHasStartEverBeenCalled);
+//		// TODO: Replace with custom exception
+//		throw std::runtime_error("Inlets cannot be created after start() has been called.");
+//	}
 	// check name is unique
 	if (any_of(mInlets.begin(), mInlets.end(), [name](InletPtr i) {	return i->name() == name;	}))
 	{
 		hm_error("Inlets must have unique names for a given node. '"
 				 +name+"' has already been used.");
-		throw std::runtime_error("Inlets must have unique names for a given node. '"+name+"' has already been used.");
+		return nullptr;
 	}
 	
 	InletPtr inlet(new Inlet(types, *this, name, helpText));
 	mInlets.push_back(inlet);
+	if (mHasStartEverBeenCalled)
+	{
+		mHaveAllCharacteristicChangesBeenReported.clear();
+	}
 	return inlet;
 }
 
 OutletPtr Node::createOutlet(Types types, std::string const& name, std::string const& helpText)
 {
-	// For thread-safety, outlets may only be created before start() is called
-	if (mHasStartEverBeenCalled)
-	{
-		hm_error("Outlets cannot be created after start() has been called.");
-		assert(!mHasStartEverBeenCalled);
-		// TODO: Replace with custom exception
-		throw std::runtime_error("Outlets cannot be created after start() has been called.");
-	}
+	UniqueLock lock(mCharacteristicsMutex);
+//	// For thread-safety, outlets may only be created before start() is called
+//	if (mHasStartEverBeenCalled)
+//	{
+//		hm_error("Outlets cannot be created after start() has been called.");
+//		assert(!mHasStartEverBeenCalled);
+//		// TODO: Replace with custom exception
+//		throw std::runtime_error("Outlets cannot be created after start() has been called.");
+//	}
 	// check name is unique
 	if (any_of(mOutlets.begin(), mOutlets.end(), [name](OutletPtr o) {	return o->name() == name;	}))
 	{
 		hm_error("Outlets must have unique names for a given node. '"
 				 +name+"' has already been used.");
-		throw std::runtime_error("Outlets must have unique names for a given node. '"+name+"' has already been used.");
+		return nullptr;
 	}
 	
 	OutletPtr outlet(new Outlet(types, *this, name, helpText));
 	mOutlets.push_back(outlet);
+	if (mHasStartEverBeenCalled)
+	{
+		mHaveAllCharacteristicChangesBeenReported.clear();
+	}
 	return outlet;
 }
 
@@ -402,8 +419,37 @@ set<string> Node::nodeNamesInUse()
 }
 
 
+bool Node::removeInlet(InletPtr inlet)
+{
+	UniqueLock lock(mCharacteristicsMutex);
+	auto it = find(begin(mInlets), end(mInlets), inlet);
+	if (it!=end(mInlets))
+	{
+		mInlets.erase(it);
+		(**it).detachOwnerNode();
+	}
+	if (mHasStartEverBeenCalled)
+	{
+		mHaveAllCharacteristicChangesBeenReported.clear();
+	}
+	return it!=end(mInlets);
+}
 
-
+bool Node::removeOutlet(OutletPtr outlet)
+{
+	UniqueLock lock(mCharacteristicsMutex);
+	auto it = find(begin(mOutlets), end(mOutlets), outlet);
+	if (it!=end(mOutlets))
+	{
+		mOutlets.erase(it);
+		(**it).detachOwnerNode();
+	}
+	if (mHasStartEverBeenCalled)
+	{
+		mHaveAllCharacteristicChangesBeenReported.clear();
+	}
+	return it!=end(mOutlets);
+}
 
 
 

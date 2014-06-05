@@ -20,7 +20,6 @@ namespace hm
 	
 	Outlet::Outlet(Types types, Node& node, string const& name, string const& helpText)
 	: Let(types, node, name, helpText)
-	, mNode(&node)
 	{
 	}
 	
@@ -82,13 +81,16 @@ namespace hm
 		{
 			// Add this node to the data's history list
 			deque<std::string>& history = data.asBaseData()->nodeHistory;
-			if (mNode != nullptr)
 			{
-				history.push_front(mNode->name());
-			}
-			else
-			{
-				history.push_front("(unknown)");
+				NodePtr n = node().lock();
+				if (n != nullptr)
+				{
+					history.push_front(n->name());
+				}
+				else
+				{
+					history.push_front("(unknown)");
+				}
 			}
 			for (PatchCordPtr cord: mPatchCords)
 			{

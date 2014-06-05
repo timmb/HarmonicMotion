@@ -20,9 +20,6 @@ namespace hm
 	public:
 		virtual ~Inlet();
 		
-//		Types types() const { return mTypes; }
-//		virtual std::string name() const { return mName; }
-//		virtual std::string helpText() const { return mHelpText; }
 		
 		int numConnections() const { return mNumConnections; }
 		
@@ -43,19 +40,24 @@ namespace hm
 //        /// If this inlet is owned by a node and that node was was
 //        /// created by FactoryNode then this function will return a weak
 //        /// pointer to the node. Otherwise it returns
-//        /// std::weak_ptr<Node>(nullptr)
+//        /// std::weak_ptr<Node>()
 //        std::weak_ptr<Node> node() const;
-		
 		virtual std::string toString() const override;
-		
 	private:
 		/// Type may be a combination of Type flags.
 		Inlet(Types types, Node& node, std::string const& name, std::string const& helpText);
-		/// This is used by the node when it is destroyed just in case the
-		/// outlet outlives its node. There is no need to call it normally.
-		/// TODO: Ensure that this blocks until any callback is complete
-		void detachOwnerNode();
 
+		// Accessed by Node ------------
+		/// This is used by the node when it is destroyed or this Let
+		/// is removed from the node.
+		/// There is no need to call it normally.
+		/// Once this is called, no more callbacks will be called,
+		/// any threads waiting for data from this inlet will be
+		/// sent away empty handed and any new data arriving will be ignored.
+		/// This will also clear the callback function.
+		virtual void detachOwnerNode() override;
+		// -------------------------------
+		
 		// Accessed by Outlet ------------
 		void provideNewData(Data const& data);
 		// -------------------------------
@@ -65,7 +67,6 @@ namespace hm
 		void decrementNumConnections();
 		// -------------------------------
 		
-		Node* mNode;
 //		Types mTypes;
 //		std::string mName;
 //		std::string mHelpText;
@@ -74,11 +75,15 @@ namespace hm
 		Data mData;
 		/// Guarded by mMutex
 		double mDataTimestamp;
-		int mNumConnections;
+		std::atomic<int> mNumConnections;
 		
+		/// Guard for mData
 		mutable boost::shared_mutex mMutex;
+		/// Wait condition for mData
 		mutable boost::condition_variable_any mWaitCondition;
-		std::function<void(double)> mNotifyCallback;
+		/// Guard for notify callback
+		mutable boost::shared_mutex mNotifyCallbackMutex;
+		std::function<void(double)>mNotifyCallback;
 		bool mDestructorHasBeenCalled;
 		
 		friend class Node;
@@ -87,3 +92,6 @@ namespace hm
 		friend std::ostream& operator<<(std::ostream&, Inlet const&);
 	};
 }
+
+
+

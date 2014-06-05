@@ -22,6 +22,7 @@ namespace hm
 	class BaseParameter;
 	class PatchCord;
 	class Pipeline;
+	class Listener;
 	
 	// forward declare data types
 	class DataNull;

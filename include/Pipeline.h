@@ -14,7 +14,7 @@
 #include <boost/thread.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/locks.hpp>
-
+#include "Event.h"
 
 namespace hm
 {
@@ -23,19 +23,6 @@ namespace hm
 	class Pipeline
 	{
 	public:
-		/// Override this class and register it to be notified of updates
-		/// to the Pipeline.
-		class Listener
-		{
-		public:
-			virtual void nodeAdded(NodePtr node) = 0;
-			/// Nodes are guaranteed not to be removed if they are still
-			/// referenced by active patchcords (equivalently if they still
-			/// hold reference to any patchcords).
-			virtual void nodeRemoved(NodePtr node) = 0;
-			virtual void patchCordAdded(OutletPtr outlet, InletPtr inlet) = 0;
-			virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet) = 0;
-		};
 		
 		Pipeline();
 		virtual ~Pipeline();
@@ -124,51 +111,13 @@ namespace hm
 		bool loadJson(std::string filePath);
 		
 	private:
-		// When we perform actions on the pipeline, listener events are
+		// When we perform actions on the pipeline, Events are
 		// created. Rather than notify listeners immediately, we queue
 		// them up and wait until the pipeline mutex is unlocked before
 		// sending them. This way if a listener tries to modify the
 		// pipline within its callback then we avoid a deadlock.
 		
-		struct ListenerEvent
-		{
-			/// Notify \p listener of the event associated with this object
-			virtual void notify(Listener* listener) = 0;
-		};
-		typedef std::shared_ptr<ListenerEvent> ListenerEventPtr;
-		typedef std::vector<ListenerEventPtr> ListenerEvents;
-		
-		struct NodeAddedEvent : public ListenerEvent
-		{
-			NodePtr node;
 
-			NodeAddedEvent(NodePtr node_) : node(node_) {}
-			virtual void notify(Listener* listener);
-		};
-		
-		struct NodeRemovedEvent : public ListenerEvent
-		{
-			NodePtr node;
-
-			NodeRemovedEvent(NodePtr node_) : node(node_) {}
-			virtual void notify(Listener* listener);
-		};
-		
-		struct PatchCordAddedEvent : public ListenerEvent
-		{
-			PatchCordPtr patchCord;
-
-			PatchCordAddedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
-			virtual void notify(Listener* listener);
-		};
-		
-		struct PatchCordRemovedEvent : public ListenerEvent
-		{
-			PatchCordPtr patchCord;
-
-			PatchCordRemovedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
-			virtual void notify(Listener* listener);
-		};
 		
 		// MARK: Private functions with strict mutex requirements.
 		// *********
@@ -179,29 +128,38 @@ namespace hm
 		// * These functions do not notify listeners as doing so while
 		// a unique/upgradable lock is active could cause a deadlock
 		// if the listener callback attempts a further pipeline modification.
-		// Instead they return a ListenerEvents vector that the caller
+		// Instead they return a Events vector that the caller
 		// needs to process once the pipeline mutex is unlocked.
 		// *********
 		
 		/// \pre Requires a unique lock to be active.
+		/// \param skipInvariant Normally in debug mode this function
+		/// checks the patchcord invariant is true before and after it acts.
+		/// Set this to true if you want to skip this check (e.g. if you know
+		/// the invariant shouldn't be true before/after calling this function).
 		/// Disconnect and delete a patchcord
-		ListenerEvents p_Disconnect(PatchCordPtr p);
+		Events p_Disconnect(PatchCordPtr p, bool skipInvariant=false);
 		
 		/// \pre Requires an unique lock to be active
-		ListenerEvents p_AddNode(NodePtr node);
+		Events p_AddNode(NodePtr node);
 		
 		/// \pre Requires a unique lock to be active and node to be
 		/// a member of mNodes
-		ListenerEvents p_RemoveNode(NodePtr node);
+		Events p_RemoveNode(NodePtr node);
 		
 		/// \pre Requires a unique lock to be active
-		ListenerEvents p_Clear();
+		Events p_Clear();
 		
 		/// \pre Requires a unique lock to be active
-		ListenerEvents p_Connect(OutletPtr outlet, InletPtr inlet);
+		Events p_Connect(OutletPtr outlet, InletPtr inlet);
 
 		/// \pre Requires a unique lock to be active
-		ListenerEvents p_Disconnect(OutletPtr outlet, InletPtr inlet);
+		Events p_Disconnect(OutletPtr outlet, InletPtr inlet);
+		
+		/// \pre Requires a unique lock to be active
+		/// Checks for any patch cords that are attached to Lets that are
+		/// detached from their node and deletes them.
+		Events p_RemoveDeadPatchCords();
 		
 		/// \pre Requires a shared lock to be active
 		bool p_IsConnected(OutletPtr outlet, InletPtr inlet) const;
@@ -219,7 +177,7 @@ namespace hm
 		/// \pre Requires no unique or upgrade lock of mPipelineMutex to be
 		/// active, and no unique or upgrade lock of mListenersMutex to be
 		/// active.
-		void p_Process(ListenerEvents const& events) const;
+		void p_Process(Events const& events) const;
 		
 		
 		std::unique_ptr<boost::thread> mThread;

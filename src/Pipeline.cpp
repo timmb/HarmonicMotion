@@ -58,7 +58,7 @@ std::vector<PatchCordPtr> Pipeline::patchCords() const
 
 void Pipeline::addNode(NodePtr node)
 {
-	ListenerEvents events;
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		events = p_AddNode(node);
@@ -66,10 +66,10 @@ void Pipeline::addNode(NodePtr node)
 	p_Process(events);
 }
 
-void Pipeline::p_Process(ListenerEvents const& events) const
+void Pipeline::p_Process(Events const& events) const
 {
 	SharedLock listenerLock(mListenersMutex);
-	for (ListenerEventPtr event: events)
+	for (EventPtr event: events)
 	{
 		for (Listener* listener: mListeners)
 		{
@@ -78,9 +78,9 @@ void Pipeline::p_Process(ListenerEvents const& events) const
 	}
 }
 
-Pipeline::ListenerEvents Pipeline::p_AddNode(NodePtr node)
+Events Pipeline::p_AddNode(NodePtr node)
 {
-	ListenerEvents events;
+	Events events;
 	// todo: assert mutex is locked
 	mNodes.push_back(node);
 //	node->setPipeline(this);
@@ -89,13 +89,13 @@ Pipeline::ListenerEvents Pipeline::p_AddNode(NodePtr node)
 	{
 		node->startProcessing();
 	}
-	events.push_back(ListenerEventPtr(new NodeAddedEvent(node)));
+	events.push_back(EventPtr(new NodeAddedEvent(node)));
 	return events;
 }
 
 void Pipeline::removeNode(NodePtr node)
 {
-	ListenerEvents events;
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		events = p_RemoveNode(node);
@@ -103,9 +103,9 @@ void Pipeline::removeNode(NodePtr node)
 	p_Process(events);
 }
 
-Pipeline::ListenerEvents Pipeline::p_RemoveNode(NodePtr node)
+Events Pipeline::p_RemoveNode(NodePtr node)
 {
-	ListenerEvents events;
+	Events events;
 	// todo: assert mutex is locked
 	assert(node != nullptr);
 	assert(p_PatchCordInvariant());
@@ -118,7 +118,7 @@ Pipeline::ListenerEvents Pipeline::p_RemoveNode(NodePtr node)
 		{
 			if (p->inlet() == i)
 			{
-				ListenerEvents e = p_Disconnect(p);
+				Events e = p_Disconnect(p);
 				events.insert(end(events), begin(e), end(e));
 			}
 		}
@@ -126,7 +126,7 @@ Pipeline::ListenerEvents Pipeline::p_RemoveNode(NodePtr node)
 		{
 			if (p->outlet() == o)
 			{
-				ListenerEvents e = p_Disconnect(p);
+				Events e = p_Disconnect(p);
 				events.insert(end(events), begin(e), end(e));
 			}
 		}
@@ -147,7 +147,7 @@ Pipeline::ListenerEvents Pipeline::p_RemoveNode(NodePtr node)
 //			node->setPipeline(nullptr);
 			mNodes.erase(it);
 		}
-		events.push_back(ListenerEventPtr(new NodeRemovedEvent(node)));
+		events.push_back(EventPtr(new NodeRemovedEvent(node)));
 		/// Check invariants
 		for (OutletPtr outlet: node->outlets())
 		{
@@ -164,7 +164,7 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 	assert(oldNode != nullptr);
 	assert(newNode != nullptr);
 	
-	ListenerEvents events;
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		
@@ -192,12 +192,12 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 		}
 		
 		{
-			ListenerEvents e = p_RemoveNode(oldNode);
+			Events e = p_RemoveNode(oldNode);
 			events.insert(end(events), begin(e), end(e));
 		}
 		{
 			
-			ListenerEvents e = p_AddNode(newNode);
+			Events e = p_AddNode(newNode);
 			events.insert(end(events), begin(e), end(e));
 		}
 		
@@ -206,7 +206,7 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 		{
 			if (p.second < newInlets.size())
 			{
-				ListenerEvents e = p_Connect(p.first, newInlets[p.second]);
+				Events e = p_Connect(p.first, newInlets[p.second]);
 				events.insert(end(events), begin(e), end(e));
 			}
 		}
@@ -215,7 +215,7 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 		{
 			if (p.first < newOutlets.size())
 			{
-				ListenerEvents e = p_Connect(newOutlets[p.first], p.second);
+				Events e = p_Connect(newOutlets[p.first], p.second);
 				events.insert(end(events), begin(e), end(e));
 			}
 		}
@@ -238,12 +238,37 @@ void Pipeline::start()
 		double timeOfLastUpdate = elapsedTime();
 		while (mIsRunning)
 		{
+			// if characteristics have changed on a node, we need to act on
+			// it with a unique lock
+			std::list<NodePtr> nodesWithChangedCharacteristics;
 			{
 				SharedLock lock(mPipelineMutex);
 				for (NodePtr node: mNodes)
 				{
-					node->stepProcessing();
+					if (node->stepProcessing())
+					{
+						nodesWithChangedCharacteristics.push_back(node);
+					}
 				}
+			}
+			// if node characteristics have changed then we might have
+			// some dead patch cords (attached to a detached inlet/outlet).
+			// we also need to notify any listeners with p_Process, but
+			// this needs to happen when we don't have any locks active.
+			if (!nodesWithChangedCharacteristics.empty())
+			{
+				Events events;
+				{
+					UniqueLock lock(mPipelineMutex);
+					Events e = p_RemoveDeadPatchCords();
+					assert(p_PatchCordInvariant());
+					events.insert(end(events), begin(e), end(e));
+				}
+				for (NodePtr node: nodesWithChangedCharacteristics)
+				{
+					events.push_back(EventPtr(new NodeCharacteristicsChangedEvent(node)));
+				}
+				p_Process(events);
 			}
 			double delta = elapsedTime() - timeOfLastUpdate;
 			timeOfLastUpdate += delta;
@@ -313,21 +338,22 @@ bool Pipeline::p_PatchCordInvariant() const
 	// check inlets have correct number of connections registered
 	{
 		std::map<InletPtr, int> inletNumConnectionsInNodes;
+		std::map<InletPtr, int> inletNumConnectionsInPatchCords;
 		for (NodePtr node: mNodes)
 		{
 			for (InletPtr inlet: node->inlets())
 			{
-				inletNumConnectionsInNodes[inlet]++;
+				inletNumConnectionsInNodes[inlet] += inlet->numConnections();
+				inletNumConnectionsInPatchCords[inlet] = 0;
 			}
 		}
-		std::map<InletPtr, int> inletNumConnectionsInPatchCords;
 		for (PatchCordPtr p: mPatchCords)
 		{
 			inletNumConnectionsInPatchCords[p->inlet()]++;
 		}
 		if (inletNumConnectionsInNodes != inletNumConnectionsInPatchCords)
 		{
-			return true;
+			return false;
 		}
 	}
 	// check we have no duplicate patch cords
@@ -347,7 +373,11 @@ bool Pipeline::p_PatchCordInvariant() const
 
 bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 {
-	ListenerEvents events;
+	if (outlet==nullptr || inlet==nullptr)
+	{
+		return false;
+	}
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		events = p_Connect(outlet, inlet);
@@ -371,9 +401,10 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 }
 
 
-Pipeline::ListenerEvents Pipeline::p_Connect(OutletPtr outlet, InletPtr inlet)
+Events Pipeline::p_Connect(OutletPtr outlet, InletPtr inlet)
 {
-	ListenerEvents events;
+	assert(outlet != nullptr && inlet != nullptr);
+	Events events;
 	assert(p_PatchCordInvariant());
 	bool connectionFail(false);
 	std::string failReason;
@@ -399,14 +430,14 @@ Pipeline::ListenerEvents Pipeline::p_Connect(OutletPtr outlet, InletPtr inlet)
 	mPatchCords.push_back(p);
 	assert(p_PatchCordInvariant());
 	hm_debug("Connected "+outlet->toString()+" and "+inlet->toString());
-	events.push_back(ListenerEventPtr(new PatchCordAddedEvent(p)));
+	events.push_back(EventPtr(new PatchCordAddedEvent(p)));
 	return events;
 }
 
 
 bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 {
-	ListenerEvents events;
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		events = p_Disconnect(outlet, inlet);
@@ -446,31 +477,55 @@ PatchCordPtr Pipeline::p_FindPatchCord(OutletPtr outlet, InletPtr inlet) const
 }
 
 
-Pipeline::ListenerEvents Pipeline::p_Disconnect(OutletPtr outlet, InletPtr inlet)
+Events Pipeline::p_Disconnect(OutletPtr outlet, InletPtr inlet)
 {
-	ListenerEvents events;
+	Events events;
 	PatchCordPtr p = p_FindPatchCord(outlet, inlet);
 	if (p == nullptr)
 	{
 		hm_info("Unable to disconnect "+outlet->toString()+" from "+inlet->toString()+" as they are not connected.");
-		return ListenerEvents();
+		return Events();
 	}
 	return p_Disconnect(p);
 }
 
 
-Pipeline::ListenerEvents Pipeline::p_Disconnect(PatchCordPtr p)
+Events Pipeline::p_Disconnect(PatchCordPtr p, bool skipInvariant)
 {
-	assert(p_PatchCordInvariant());
+	if (!skipInvariant)
+	{
+		assert(p_PatchCordInvariant());
+	}
 	// check p is a known patch cord
 	assert(find(begin(mPatchCords), end(mPatchCords), p) != end(mPatchCords));
 	p->outlet()->removePatchCord(p);
 	p->inlet()->decrementNumConnections();
 	mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
-	assert(p_PatchCordInvariant());
+	if (!skipInvariant)
+	{
+		assert(p_PatchCordInvariant());
+	}
 	hm_debug("Disconnected "+p->outlet()->toString()+" and "+p->inlet()->toString());
-	ListenerEvents events;
-	events.push_back(ListenerEventPtr(new PatchCordRemovedEvent(p)));
+	Events events;
+	events.push_back(EventPtr(new PatchCordRemovedEvent(p)));
+	return events;
+}
+
+
+Events Pipeline::p_RemoveDeadPatchCords()
+{
+	Events events;
+	for (auto it=begin(mPatchCords); it!=end(mPatchCords); ++it)
+	{
+		PatchCordPtr p = *it;
+		if (p->inlet()->isDetached() || p->outlet()->isDetached())
+		{
+			Events e = p_Disconnect(p, true);
+			events.insert(end(events), begin(e), end(e));
+			// restart loop as mPatchCords is changed by p_Disconnect
+			it = begin(mPatchCords);
+		}
+	}
 	return events;
 }
 
@@ -637,7 +692,7 @@ void Pipeline::toJson(Json::Value& json) const
 
 void Pipeline::clear()
 {
-	ListenerEvents events;
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		events = p_Clear();
@@ -646,22 +701,22 @@ void Pipeline::clear()
 }
 
 
-Pipeline::ListenerEvents Pipeline::p_Clear()
+Events Pipeline::p_Clear()
 {
-	ListenerEvents events;
+	Events events;
 	hm_debug("Pipeline::clear(): Erasing all patchcords");
 	// Do not iterate over containers as usual as disconnect/remove
 	// will modify them.
 	auto patchcords = mPatchCords;
 	while (!mPatchCords.empty())
 	{
-		ListenerEvents e = p_Disconnect(mPatchCords.back());
+		Events e = p_Disconnect(mPatchCords.back());
 		events.insert(end(events), begin(e), end(e));
 	}
 	hm_debug("Pipeline::clear(): Erasing all nodes");
 	while (!mNodes.empty())
 	{
-		ListenerEvents e = p_RemoveNode(mNodes.back());
+		Events e = p_RemoveNode(mNodes.back());
 		events.insert(end(events), begin(e), end(e));
 	}
 	return events;
@@ -698,7 +753,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 		return false;
 	}
 	
-	ListenerEvents events;
+	Events events;
 	{
 		UniqueLock lock(mPipelineMutex);
 		
@@ -708,7 +763,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			stop();
 		}
 		{
-			ListenerEvents e = p_Clear();
+			Events e = p_Clear();
 			events.insert(end(events), begin(e), end(e));
 		}
 		FactoryNode& factory = *FactoryNode::instance();
@@ -735,7 +790,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			assert(node!=nullptr);
 			if (node!=nullptr)
 			{
-				ListenerEvents e = p_AddNode(node);
+				Events e = p_AddNode(node);
 				events.insert(end(events), begin(e), end(e));
 			}
 			else
@@ -768,7 +823,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			
 			if (inlet!=nullptr && outlet!=nullptr)
 			{
-				ListenerEvents e = p_Connect(outlet, inlet);
+				Events e = p_Connect(outlet, inlet);
 				events.insert(end(events), begin(e), end(e));
 				assert(!e.empty());
 			}
@@ -801,27 +856,6 @@ bool Pipeline::saveJson(string filePath) const
 		return false;
 	}
 	return true;
-}
-
-
-void Pipeline::NodeAddedEvent::notify(Listener* listener)
-{
-	listener->nodeAdded(node);
-}
-
-void Pipeline::NodeRemovedEvent::notify(Listener* listener)
-{
-	listener->nodeRemoved(node);
-}
-
-void Pipeline::PatchCordAddedEvent::notify(Listener* listener)
-{
-	listener->patchCordAdded(patchCord->outlet(), patchCord->inlet());
-}
-
-void Pipeline::PatchCordRemovedEvent::notify(Listener* listener)
-{
-	listener->patchCordRemoved(patchCord->outlet(), patchCord->inlet());
 }
 
 

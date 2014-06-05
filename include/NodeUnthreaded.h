@@ -10,7 +10,7 @@ namespace hm
 		NodeUnthreaded(Node::Params params, std::string className);
 		
 		virtual void startProcessing() override final;
-		virtual void stepProcessing() override final;
+		virtual bool stepProcessing() override final;
 		virtual void stopProcessing() override final;
 		
 	protected:

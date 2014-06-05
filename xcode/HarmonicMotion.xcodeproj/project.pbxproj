@@ -163,6 +163,10 @@
 		3442AFD818C0AF2E0015B240 /* Let.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD618C0AF2E0015B240 /* Let.h */; };
 		3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD718C0AF2E0015B240 /* PatchCord.h */; };
 		3445431219363F8600E90E13 /* Type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3445431119363F8600E90E13 /* Type.cpp */; };
+		347662EB19409A4600539238 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 347662E919409A4600539238 /* Event.cpp */; };
+		347662EF19409B9400539238 /* Listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 347662ED19409B9400539238 /* Listener.cpp */; };
+		347662F31940A00100539238 /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 347662F11940A00100539238 /* Event.h */; };
+		347662F41940A00100539238 /* Listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 347662F21940A00100539238 /* Listener.h */; };
 		34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A8542D1934AE1A00D0E378 /* NodeExpression.h */; };
 		34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A8542F1934AE2400D0E378 /* NodeExpression.cpp */; };
 		34DBA74B193F3A9600D24456 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34DBA729193F3A9600D24456 /* IpEndpointName.cpp */; };
@@ -366,6 +370,10 @@
 		3442AFD618C0AF2E0015B240 /* Let.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Let.h; path = ../include/Let.h; sourceTree = "<group>"; };
 		3442AFD718C0AF2E0015B240 /* PatchCord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatchCord.h; path = ../include/PatchCord.h; sourceTree = "<group>"; };
 		3445431119363F8600E90E13 /* Type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Type.cpp; path = ../src/Type.cpp; sourceTree = "<group>"; };
+		347662E919409A4600539238 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		347662ED19409B9400539238 /* Listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Listener.cpp; sourceTree = "<group>"; };
+		347662F11940A00100539238 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../include/Event.h; sourceTree = "<group>"; };
+		347662F21940A00100539238 /* Listener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Listener.h; path = ../include/Listener.h; sourceTree = "<group>"; };
 		34A8542D1934AE1A00D0E378 /* NodeExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeExpression.h; sourceTree = "<group>"; };
 		34A8542F1934AE2400D0E378 /* NodeExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeExpression.cpp; path = ../../src/nodes/NodeExpression.cpp; sourceTree = "<group>"; };
 		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -437,11 +445,17 @@
 				226A9656189BECF60056DCD1 /* nodes */,
 				22261AA6181574AC00DBA3F8 /* Common.cpp */,
 				22197F8517F4996F003B1883 /* Common.h */,
+				347662E919409A4600539238 /* Event.cpp */,
+				347662F11940A00100539238 /* Event.h */,
 				22C5DF6118A25BC200920089 /* FactoryNode.cpp */,
 				22C5DF6418A25BCA00920089 /* FactoryNode.h */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
 				22197EFF17F44B76003B1883 /* Inlet.h */,
+				3442AFD218C0ABE10015B240 /* Let.cpp */,
+				3442AFD618C0AF2E0015B240 /* Let.h */,
+				347662ED19409B9400539238 /* Listener.cpp */,
+				347662F21940A00100539238 /* Listener.h */,
 				22197ECE17F44B1B003B1883 /* Node.cpp */,
 				22197F0017F44B76003B1883 /* Node.h */,
 				22941209189AA33D009550EF /* NodeThreaded.cpp */,
@@ -452,13 +466,11 @@
 				22197F0117F44B76003B1883 /* Outlet.h */,
 				2262C5B11899703F006CCA1A /* Parameter.cpp */,
 				2262C5AF18997035006CCA1A /* Parameter.h */,
-				3442AFD618C0AF2E0015B240 /* Let.h */,
 				34E2062318B76FAF00729934 /* PatchCord.cpp */,
 				3442AFD718C0AF2E0015B240 /* PatchCord.h */,
 				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
 				22197F0317F44B76003B1883 /* Pipeline.h */,
 				22197F0417F44B76003B1883 /* Resources.h */,
-				3442AFD218C0ABE10015B240 /* Let.cpp */,
 			);
 			name = Source;
 			path = ../src;
@@ -930,6 +942,7 @@
 				34DBA751193F3A9600D24456 /* TimerListener.h in Headers */,
 				222936F6181677BD008CAA09 /* XnNodeAllocator.h in Headers */,
 				222936F7181677BD008CAA09 /* XnOpenNI.h in Headers */,
+				347662F31940A00100539238 /* Event.h in Headers */,
 				222936F8181677BD008CAA09 /* XnOS.h in Headers */,
 				34DBA763193F3A9600D24456 /* OscBundle.h in Headers */,
 				222936F9181677BD008CAA09 /* XnOSCpp.h in Headers */,
@@ -990,6 +1003,7 @@
 				22483AC0189F9EFE002DE5C4 /* NodeUnthreaded.h in Headers */,
 				221E90441817273C0028EAFD /* Point3d.h in Headers */,
 				221E90451817273C0028EAFD /* Value.h in Headers */,
+				347662F41940A00100539238 /* Listener.h in Headers */,
 				226A965E189BECF60056DCD1 /* NodeAccumulator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1057,12 +1071,14 @@
 				2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */,
 				34DBA75F193F3A9600D24456 /* OscTypes.cpp in Sources */,
 				22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */,
+				347662EB19409A4600539238 /* Event.cpp in Sources */,
 				34DBA75D193F3A9600D24456 /* OscReceivedElements.cpp in Sources */,
 				2223EC611817EEA400B900CF /* DataNull.cpp in Sources */,
 				3442AFD418C0ABE10015B240 /* Let.cpp in Sources */,
 				34E2062518B76FAF00729934 /* PatchCord.cpp in Sources */,
 				34DBA758193F3A9600D24456 /* OscOutboundPacketStream.cpp in Sources */,
 				226A9671189BED140056DCD1 /* NodeKinect.cpp in Sources */,
+				347662EF19409B9400539238 /* Listener.cpp in Sources */,
 				226A9675189BED140056DCD1 /* NodePrinter.cpp in Sources */,
 				34DBA768193F3A9600D24456 /* OscSender.cpp in Sources */,
 				2223EC681818027300B900CF /* SceneMeta.cpp in Sources */,

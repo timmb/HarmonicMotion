@@ -29,7 +29,7 @@ namespace hm
 		/// Starts the thread
 		virtual void startProcessing() override final;
 		/// Calls to step are ignored
-		virtual void stepProcessing() override final {}
+		virtual bool stepProcessing() override final { return Node::stepProcessing(); }
 		/// Requests that the thread end. NB there may be a delay until
 		/// isRunning returns false (this function does not block).
 		virtual void stopProcessing() override final;
