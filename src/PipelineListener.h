@@ -1,10 +1,12 @@
 #pragma once
 #include <QObject>
-#include "Pipeline.h"
+#include "Listener.h"
+#include "Common.h"
+
 
 namespace hm
 {
-	class PipelineListener : public QObject, public Pipeline::Listener
+	class PipelineListener : public QObject, public Listener
 	{
 		Q_OBJECT
 		
@@ -16,12 +18,14 @@ namespace hm
 		/// referenced by active patchcords (equivalently if they still
 		/// hold reference to any patchcords).
 		virtual void nodeRemoved(NodePtr node) override;
+		virtual void nodeCharacteristicsChanged(NodePtr node) override;
 		virtual void patchCordAdded(OutletPtr outlet, InletPtr inlet) override;
 		virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet) override;
 		
 	Q_SIGNALS:
 		void sigNodeAdded(NodePtr node);
 		void sigNodeRemoved(NodePtr node);
+		void sigNodeCharacteristicsChanged(NodePtr node);
 		void sigPatchCordAdded(OutletPtr outlet, InletPtr inlet);
 		void sigPatchCordRemoved(OutletPtr outlet, InletPtr inlet);
 	};

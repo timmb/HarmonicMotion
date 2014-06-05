@@ -48,6 +48,8 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	assert(success);
 	success = connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(nodeRemoved(NodePtr)));
 	assert(success);
+	success = connect(mPipelineListener, SIGNAL(sigNodeCharacteristicsChanged(NodePtr)), this, SLOT(nodeCharacteristicsChanged(NodePtr)));
+	assert(success);
 	success = connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr)));
 	assert(success);
 	success = connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr)));
@@ -467,6 +469,96 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 	}));
 }
 
+void WidgetPatchArea::nodeCharacteristicsChanged(NodePtr node)
+{
+	// we destroy and recreate the node widget. Note that when we are
+	// in this callback, any obsolete patch cords will already have been
+	// removed, and there can't yet be any new patch cords attached to any
+	// new inlets/outlets. So we just need to destroy and recreate patch
+	// cords that are currently attached. Recreating them we can do by querying
+	// the pipeline.
+	int numPatchCordsDeleted = 0; // for debugging
+	for (auto it=mWidgetPatchCords.begin(); it!=mWidgetPatchCords.end(); )
+	{
+		WidgetPatchCord* p = *it;
+		assert(p != nullptr);
+		InletPtr inlet = p->inlet()->inlet();
+		for (InletPtr i: node->inlets())
+		{
+			if (inlet == i)
+			{
+				delete p;
+				p = nullptr;
+				numPatchCordsDeleted++;
+				it = mWidgetPatchCords.erase(it);
+				break;
+			}
+		}
+		if (p!=nullptr)
+		{
+			OutletPtr outlet = p->outlet()->outlet();
+			for (OutletPtr o: node->outlets())
+			{
+				if (outlet == o)
+				{
+					delete p;
+					p = nullptr;
+					numPatchCordsDeleted++;
+					it = mWidgetPatchCords.erase(it);
+					break;
+				}
+			}
+		}
+		if (p!=nullptr)
+		{
+			// p was not deleted
+			++it;
+		}
+	}
+	
+	// now delete the widget node. First find it to remember if it has
+	// focus
+	WidgetNode* w = findWidgetFor(node);
+	if (w == nullptr)
+	{
+		// something has gone wrong
+		hm_error("Node characteristics changed on a node with no corresponding"
+				 " WidgetNode.");
+		assert(false);
+		return;
+	}
+	bool hadFocus = w->hasFocus();
+	w = nullptr;
+	
+	// now destroy and recreate the node widget
+	nodeRemoved(node);
+	nodeAdded(node);
+
+	w = findWidgetFor(node);
+	assert(w != nullptr);
+	if (hadFocus)
+	{
+		w->setFocus();
+	}
+	
+	// now recreate patchcords
+	int numPatchCordsCreated = 0;
+	std::vector<PatchCordPtr> patchCords = mPipeline->patchCords();
+	for (PatchCordPtr p: patchCords)
+	{
+		// if we don't have a widget for p...
+		if (std::find_if(mWidgetPatchCords.begin(), mWidgetPatchCords.end(), [&](WidgetPatchCord* w) {
+			return w->inlet()->inlet() == p->inlet()
+			&& w->outlet()->outlet() == p->outlet();
+		}) == mWidgetPatchCords.end())
+		{
+			patchCordAdded(p->outlet(), p->inlet());
+			numPatchCordsCreated++;
+		}
+	}
+	assert(numPatchCordsDeleted == numPatchCordsCreated);
+}
+
 void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 {
 	// If we don't already have a reference to this connection then
@@ -661,3 +753,19 @@ void WidgetPatchArea::printWidgets() const
 							  <<str(w->inlet()->inlet()->toString());
 	}
 }
+
+
+WidgetNode* WidgetPatchArea::findWidgetFor(NodePtr node) const
+{
+	auto it = std::find_if(mWidgetNodes.begin(), mWidgetNodes.end(), [&](WidgetNode* w) {
+		return w->node() == node;
+	});
+	if (it == mWidgetNodes.end())
+	{
+		return nullptr;
+	}
+	return *it;
+	
+}
+
+

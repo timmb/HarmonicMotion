@@ -15,6 +15,11 @@ void PipelineListener::nodeRemoved(NodePtr node)
 	Q_EMIT sigNodeRemoved(node);
 }
 
+void PipelineListener::nodeCharacteristicsChanged(NodePtr node)
+{
+	Q_EMIT sigNodeCharacteristicsChanged(node);
+}
+
 void PipelineListener::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 {
 	Q_EMIT sigPatchCordAdded(outlet, inlet);

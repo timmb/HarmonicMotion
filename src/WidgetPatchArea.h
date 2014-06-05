@@ -114,6 +114,7 @@ namespace hm
 		// These allow the widget to stay updated when the pipeline changes
 		void nodeAdded(NodePtr node);
 		void nodeRemoved(NodePtr node);
+		void nodeCharacteristicsChanged(NodePtr node);
 		void patchCordAdded(OutletPtr outlet, InletPtr inlet);
 		void patchCordRemoved(OutletPtr outlet, InletPtr inlet);
 
@@ -157,6 +158,9 @@ namespace hm
 //		/// T should be a pointer type, e.g. WidgetInlet*.
 //		template <typename T>
 //		T findUnderMouse() const;
+		
+		/// \return nullptr if \p node has no corresponding widget
+		WidgetNode* findWidgetFor(NodePtr node) const;
 
 		PipelinePtr mPipeline;
 		PipelineListener* mPipelineListener;
