@@ -17,12 +17,14 @@
 #include <boost/tokenizer.hpp>
 #include <fstream>
 #include "json/writer.h"
-#include <boost/thread/lock_guard.hpp>
 
 
 using namespace hm;
 using namespace std;
-typedef boost::lock_guard<boost::mutex> Lock;
+typedef boost::unique_lock<boost::shared_mutex> UniqueLock;
+typedef boost::shared_lock<boost::shared_mutex> SharedLock;
+//typedef boost::upgrade_to_unique_lock<boost::shared_mutex> UpgradedLock;
+//typedef boost::lock_guard<boost::mutex> Lock;
 
 Pipeline::Pipeline()
 : mIsRunning(false)
@@ -36,6 +38,7 @@ Pipeline::~Pipeline()
 
 std::string Pipeline::toString() const
 {
+	SharedLock lock(mPipelineMutex);
 	stringstream ss;
 	ss << *this;
 	return ss.str();
@@ -43,37 +46,69 @@ std::string Pipeline::toString() const
 
 std::vector<NodePtr> Pipeline::nodes() const
 {
-	Lock lock(mMutex);
+	SharedLock lock(mPipelineMutex);
 	return mNodes;
 }
 
 std::vector<PatchCordPtr> Pipeline::patchCords() const
 {
-	Lock lock(mMutex);
+	SharedLock lock(mPipelineMutex);
 	return vector<PatchCordPtr>(begin(mPatchCords), end(mPatchCords));
 }
 
 void Pipeline::addNode(NodePtr node)
 {
+	ListenerEvents events;
 	{
-		Lock lock(mMutex);
-		mNodes.push_back(node);
-		node->setPipeline(this);
-		hm_info("Added node "+node->toString()+" to pipeline.");
-		if (isRunning() && !node->isProcessing())
+		UniqueLock lock(mPipelineMutex);
+		events = p_AddNode(node);
+	}
+	p_Process(events);
+}
+
+void Pipeline::p_Process(ListenerEvents const& events) const
+{
+	SharedLock listenerLock(mListenersMutex);
+	for (ListenerEventPtr event: events)
+	{
+		for (Listener* listener: mListeners)
 		{
-			node->startProcessing();
+			event->notify(listener);
 		}
 	}
-	for (Listener* listener: mListeners)
+}
+
+Pipeline::ListenerEvents Pipeline::p_AddNode(NodePtr node)
+{
+	ListenerEvents events;
+	// todo: assert mutex is locked
+	mNodes.push_back(node);
+	node->setPipeline(this);
+	hm_info("Added node "+node->toString()+" to pipeline.");
+	if (isRunning() && !node->isProcessing())
 	{
-		listener->nodeAdded(node);
+		node->startProcessing();
 	}
+	events.push_back(ListenerEventPtr(new NodeAddedEvent(node)));
+	return events;
 }
 
 void Pipeline::removeNode(NodePtr node)
 {
+	ListenerEvents events;
+	{
+		UniqueLock lock(mPipelineMutex);
+		events = p_RemoveNode(node);
+	}
+	p_Process(events);
+}
+
+Pipeline::ListenerEvents Pipeline::p_RemoveNode(NodePtr node)
+{
+	ListenerEvents events;
+	// todo: assert mutex is locked
 	assert(node != nullptr);
+	assert(p_PatchCordInvariant());
 	// disconnect any patchcords. disconnect(PatchCordPtr) modifies
 	// mPatchcords, so we make a copy of it before iterating over it.
 	list<PatchCordPtr> patchcords = mPatchCords;
@@ -83,44 +118,45 @@ void Pipeline::removeNode(NodePtr node)
 		{
 			if (p->inlet() == i)
 			{
-				disconnect(p);
+				ListenerEvents e = p_Disconnect(p);
+				events.insert(end(events), begin(e), end(e));
 			}
 		}
 		for (OutletPtr o: node->outlets())
 		{
 			if (p->outlet() == o)
 			{
-				disconnect(p);
+				ListenerEvents e = p_Disconnect(p);
+				events.insert(end(events), begin(e), end(e));
 			}
 		}
 	}
 	cerr << "Stop and remove" << endl;
 	// Stop and remove node
-	auto it = std::find(mNodes.begin(), mNodes.end(), node);
-	if (it != mNodes.end())
 	{
-		Lock lock(mMutex);
-		mNodes.erase(it);
-		if (isRunning())
+		auto it = std::find(mNodes.begin(), mNodes.end(), node);
+		if (it != mNodes.end())
 		{
-			assert(node->isProcessing());
+			if (isRunning())
 			{
-				node->stopProcessing();
+				assert(node->isProcessing());
+				{
+					node->stopProcessing();
+				}
 			}
+			node->setPipeline(nullptr);
+			mNodes.erase(it);
 		}
-		node->setPipeline(nullptr);
+		events.push_back(ListenerEventPtr(new NodeRemovedEvent(node)));
+		/// Check invariants
+		for (OutletPtr outlet: node->outlets())
+		{
+			assert(outlet->numInlets()==0);
+		}
+		assert(p_PatchCordInvariant());
 	}
-	/// Check invariants
-	for (OutletPtr outlet: node->outlets())
-	{
-		assert(outlet->numInlets()==0);
-	}
-	assert(patchCordInvariant());
 	hm_info("Removed node "+node->toString()+" from pipeline.");
-	for (Listener* listener: mListeners)
-	{
-		listener->nodeRemoved(node);
-	}
+	return events;
 }
 
 void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
@@ -128,50 +164,63 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 	assert(oldNode != nullptr);
 	assert(newNode != nullptr);
 	
-	// Remember what patch cords were attached
-	vector<pair<OutletPtr, int>> cordsGoingIn;
-	vector<pair<int, InletPtr>> cordsGoingOut;
+	ListenerEvents events;
 	{
-		auto inlets = oldNode->inlets();
-		auto outlets = oldNode->outlets();
+		UniqueLock lock(mPipelineMutex);
+		
+		// Remember what patch cords were attached
+		vector<pair<OutletPtr, int>> cordsGoingIn;
+		vector<pair<int, InletPtr>> cordsGoingOut;
+		auto oldInlets = oldNode->inlets();
+		auto oldOutlets = oldNode->outlets();
 		for (PatchCordPtr p: mPatchCords)
 		{
-			for (int i=0; i<inlets.size(); i++)
+			for (int i=0; i<oldInlets.size(); i++)
 			{
-				if (p->inlet() == inlets[i])
+				if (p->inlet() == oldInlets[i])
 				{
 					cordsGoingIn.push_back(pair<OutletPtr, int>(p->outlet(), i));
 				}
 			}
-			for (int i=0; i<outlets.size(); i++)
+			for (int i=0; i<oldOutlets.size(); i++)
 			{
-				if (p->outlet() == outlets[i])
+				if (p->outlet() == oldOutlets[i])
 				{
 					cordsGoingOut.push_back(pair<int, InletPtr>(i, p->inlet()));
 				}
 			}
 		}
-	}
-	
-	removeNode(oldNode);
-	addNode(newNode);
-	auto inlets = newNode->inlets();
-	for (auto const& p: cordsGoingIn)
-	{
-		if (p.second < inlets.size())
+		
 		{
-			connect(p.first, inlets[p.second]);
+			ListenerEvents e = p_RemoveNode(oldNode);
+			events.insert(end(events), begin(e), end(e));
 		}
-	}
-	auto outlets = newNode->outlets();
-	for (auto const& p: cordsGoingOut)
-	{
-		if (p.first < outlets.size())
 		{
-			connect(outlets[p.first], p.second);
+			
+			ListenerEvents e = p_AddNode(newNode);
+			events.insert(end(events), begin(e), end(e));
 		}
-	}
-	
+		
+		auto newInlets = newNode->inlets();
+		for (auto const& p: cordsGoingIn)
+		{
+			if (p.second < newInlets.size())
+			{
+				ListenerEvents e = p_Connect(p.first, newInlets[p.second]);
+				events.insert(end(events), begin(e), end(e));
+			}
+		}
+		auto newOutlets = newNode->outlets();
+		for (auto const& p: cordsGoingOut)
+		{
+			if (p.first < newOutlets.size())
+			{
+				ListenerEvents e = p_Connect(newOutlets[p.first], p.second);
+				events.insert(end(events), begin(e), end(e));
+			}
+		}
+	} // end of unique lock
+	p_Process(events);
 }
 
 void Pipeline::start()
@@ -190,11 +239,10 @@ void Pipeline::start()
 		while (mIsRunning)
 		{
 			{
-				// todo: replace this with a recursive mutex
-//				Lock lock(mMutex);
+				SharedLock lock(mPipelineMutex);
 				for (NodePtr node: mNodes)
 				{
-						node->stepProcessing();
+					node->stepProcessing();
 				}
 			}
 			double delta = elapsedTime() - timeOfLastUpdate;
@@ -219,7 +267,7 @@ void Pipeline::stop()
 }
 
 
-bool Pipeline::patchCordInvariant() const
+bool Pipeline::p_PatchCordInvariant() const
 {
 	// check inlets referred to in patch cords belong to nodes in this
 	// pipelines
@@ -297,13 +345,39 @@ bool Pipeline::patchCordInvariant() const
 	return true;
 }
 
-
 bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 {
-	assert(patchCordInvariant());
+	ListenerEvents events;
+	{
+		UniqueLock lock(mPipelineMutex);
+		events = p_Connect(outlet, inlet);
+	}
+	p_Process(events);
+	
+	// assert that if events is not empty then connection was a success
+	assert([&]() {
+		if (!events.empty())
+		{
+			shared_ptr<PatchCordAddedEvent> e = dynamic_pointer_cast<PatchCordAddedEvent>(events[0]);
+			if (e)
+			{
+				return e->patchCord->inlet()==inlet && e->patchCord->outlet()==outlet;
+			}
+		}
+		return false;
+	}());
+
+	return !events.empty();
+}
+
+
+Pipeline::ListenerEvents Pipeline::p_Connect(OutletPtr outlet, InletPtr inlet)
+{
+	ListenerEvents events;
+	assert(p_PatchCordInvariant());
 	bool connectionFail(false);
 	std::string failReason;
-	if (isConnected(outlet, inlet))
+	if (p_IsConnected(outlet, inlet))
 	{
 		connectionFail = true;
 		failReason = "they are already connected";
@@ -316,83 +390,115 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 	if (connectionFail)
 	{
 		hm_info("Unable to connect "+outlet->toString()+" to "+inlet->toString()+" because "+failReason+'.');
-		return false;
+		return events;
 	}
 	
 	PatchCordPtr p(new PatchCord(outlet, inlet));
-	{
-		Lock lock(mMutex);
-		outlet->addPatchCord(p);
-		inlet->incrementNumConnections();
-		mPatchCords.push_back(p);
-	}
-	assert(patchCordInvariant());
+	outlet->addPatchCord(p);
+	inlet->incrementNumConnections();
+	mPatchCords.push_back(p);
+	assert(p_PatchCordInvariant());
 	hm_debug("Connected "+outlet->toString()+" and "+inlet->toString());
-	for (Listener* listener: mListeners)
-	{
-		listener->patchCordAdded(outlet, inlet);
-	}
-	return true;
+	events.push_back(ListenerEventPtr(new PatchCordAddedEvent(p)));
+	return events;
 }
 
 
 bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 {
-	auto it=find_if(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
-		return p->outlet() == outlet && p->inlet() == inlet;
-	});
-	if (it==mPatchCords.end())
+	ListenerEvents events;
 	{
-		hm_info("Unable to disconnect "+outlet->toString()+" from "+inlet->toString()+" as they are not connected.");
-		return false;
+		UniqueLock lock(mPipelineMutex);
+		events = p_Disconnect(outlet, inlet);
 	}
-	disconnect(*it);
-	return true;
+	p_Process(events);
+	
+	// assert that if events is not empty then connection was a success
+	assert([&]() {
+		if (!events.empty())
+		{
+			shared_ptr<PatchCordAddedEvent> e = dynamic_pointer_cast<PatchCordAddedEvent>(events[0]);
+			if (e)
+			{
+				return e->patchCord->inlet()==inlet && e->patchCord->outlet()==outlet;
+			}
+		}
+		return false;
+	}());
+	
+	return !events.empty();
 }
 
 
-void Pipeline::disconnect(PatchCordPtr p)
+PatchCordPtr Pipeline::p_FindPatchCord(OutletPtr outlet, InletPtr inlet) const
 {
-	assert(patchCordInvariant());
+	auto it=find_if(begin(mPatchCords), end(mPatchCords), [&](PatchCordPtr p) {
+		return p->outlet() == outlet && p->inlet() == inlet;
+	});
+	if (it==end(mPatchCords))
 	{
-//		Lock lock(mMutex);
-		mMutex.lock();
-		p->outlet()->removePatchCord(p);
-		p->inlet()->decrementNumConnections();
-		mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
-		mMutex.unlock();
+		return nullptr;
 	}
-	assert(patchCordInvariant());
-	hm_debug("Disconnected "+p->outlet()->toString()+" and "+p->inlet()->toString());
-	for (Listener* listener: mListeners)
+	else
 	{
-		listener->patchCordRemoved(p->outlet(), p->inlet());
+		return *it;
 	}
+}
 
+
+Pipeline::ListenerEvents Pipeline::p_Disconnect(OutletPtr outlet, InletPtr inlet)
+{
+	ListenerEvents events;
+	PatchCordPtr p = p_FindPatchCord(outlet, inlet);
+	if (p == nullptr)
+	{
+		hm_info("Unable to disconnect "+outlet->toString()+" from "+inlet->toString()+" as they are not connected.");
+		return ListenerEvents();
+	}
+	return p_Disconnect(p);
+}
+
+
+Pipeline::ListenerEvents Pipeline::p_Disconnect(PatchCordPtr p)
+{
+	assert(p_PatchCordInvariant());
+	// check p is a known patch cord
+	assert(find(begin(mPatchCords), end(mPatchCords), p) != end(mPatchCords));
+	p->outlet()->removePatchCord(p);
+	p->inlet()->decrementNumConnections();
+	mPatchCords.erase(find(mPatchCords.begin(), mPatchCords.end(), p));
+	assert(p_PatchCordInvariant());
+	hm_debug("Disconnected "+p->outlet()->toString()+" and "+p->inlet()->toString());
+	ListenerEvents events;
+	events.push_back(ListenerEventPtr(new PatchCordRemovedEvent(p)));
+	return events;
 }
 
 
 bool Pipeline::isConnected(OutletPtr outlet, InletPtr inlet) const
 {
+	SharedLock lock(mPipelineMutex);
+	return p_IsConnected(outlet, inlet);
+}
+
+
+bool Pipeline::p_IsConnected(OutletPtr outlet, InletPtr inlet) const
+{
 	// outlet is connected to inlet if there exists a patch cord containing
 	// them both.
-	return find_if(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
-		return p->outlet() == outlet && p->inlet() == inlet;
-	}) != mPatchCords.end();
+	return p_FindPatchCord(outlet, inlet) != nullptr;
 }
 
 
 void Pipeline::addListener(Listener* listener)
 {
-	Lock lock(mMutex);
-	
+	UniqueLock lock(mListenersMutex);
 	mListeners.push_back(listener);
 }
 
 bool Pipeline::removeListener(Listener* listener)
 {
-	Lock lock(mMutex);
-	
+	UniqueLock lock(mListenersMutex);
 	auto it = std::find(mListeners.begin(), mListeners.end(), listener);
 	if (it==mListeners.end())
 	{
@@ -406,7 +512,7 @@ bool Pipeline::removeListener(Listener* listener)
 }
 
 
-NodePtr Pipeline::nodeFromPath(string path)
+NodePtr Pipeline::nodeFromPath(string path) const
 {
 	if (!path.empty() && path[0]=='/')
 	{
@@ -424,11 +530,14 @@ NodePtr Pipeline::nodeFromPath(string path)
 		hm_info("Unable to find node for empty path");
 		return nullptr;
 	}
-	for (NodePtr n: mNodes)
 	{
-		if (n->name() == path)
+		SharedLock lock(mPipelineMutex);
+		for (NodePtr n: mNodes)
 		{
-			return n;
+			if (n->name() == path)
+			{
+				return n;
+			}
 		}
 	}
 	hm_info("No node found with name "+path);
@@ -436,7 +545,7 @@ NodePtr Pipeline::nodeFromPath(string path)
 }
 
 
-vector<string> tokenizePath(string path)
+vector<string> tokenizePath(string const& path)
 {
 	using namespace boost;
 	tokenizer<char_separator<char>> tokens(path, char_separator<char>("/"));
@@ -446,7 +555,7 @@ vector<string> tokenizePath(string path)
 }
 
 
-OutletPtr Pipeline::outletFromPath(std::string path)
+OutletPtr Pipeline::outletFromPath(std::string const& path) const
 {
 	std::vector<std::string> splitPath = tokenizePath(path);
 	if (splitPath.size() < 2)
@@ -476,7 +585,7 @@ OutletPtr Pipeline::outletFromPath(std::string path)
 }
 
 
-InletPtr Pipeline::inletFromPath(std::string path)
+InletPtr Pipeline::inletFromPath(std::string const& path) const
 {
 	std::vector<std::string> splitPath = tokenizePath(path);
 	if (splitPath.size() < 2)
@@ -508,7 +617,7 @@ InletPtr Pipeline::inletFromPath(std::string path)
 
 void Pipeline::toJson(Json::Value& json) const
 {
-	Lock lock(mMutex);
+	SharedLock lock(mPipelineMutex);
 	
 	json = Json::Value();
 	json["nodes"] = Json::Value(Json::arrayValue);
@@ -528,16 +637,34 @@ void Pipeline::toJson(Json::Value& json) const
 
 void Pipeline::clear()
 {
+	ListenerEvents events;
+	{
+		UniqueLock lock(mPipelineMutex);
+		events = p_Clear();
+	}
+	p_Process(events);
+}
+
+
+Pipeline::ListenerEvents Pipeline::p_Clear()
+{
+	ListenerEvents events;
 	hm_debug("Pipeline::clear(): Erasing all patchcords");
+	// Do not iterate over containers as usual as disconnect/remove
+	// will modify them.
+	auto patchcords = mPatchCords;
 	while (!mPatchCords.empty())
 	{
-		disconnect(mPatchCords.back());
+		ListenerEvents e = p_Disconnect(mPatchCords.back());
+		events.insert(end(events), begin(e), end(e));
 	}
 	hm_debug("Pipeline::clear(): Erasing all nodes");
 	while (!mNodes.empty())
 	{
-		removeNode(mNodes.back());
+		ListenerEvents e = p_RemoveNode(mNodes.back());
+		events.insert(end(events), begin(e), end(e));
 	}
+	return events;
 }
 
 
@@ -571,13 +698,20 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 		return false;
 	}
 	
-	bool wasRunning = isRunning();
-	if (wasRunning)
+	ListenerEvents events;
 	{
-		stop();
-	}
-	clear();
-	FactoryNode& factory = *FactoryNode::instance();
+		UniqueLock lock(mPipelineMutex);
+		
+		bool wasRunning = isRunning();
+		if (wasRunning)
+		{
+			stop();
+		}
+		{
+			ListenerEvents e = p_Clear();
+			events.insert(end(events), begin(e), end(e));
+		}
+		FactoryNode& factory = *FactoryNode::instance();
 		for (auto& jNode: json["nodes"])
 		{
 			string type = jNode["type"].asString();
@@ -601,7 +735,8 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			assert(node!=nullptr);
 			if (node!=nullptr)
 			{
-				addNode(node);
+				ListenerEvents e = p_AddNode(node);
+				events.insert(end(events), begin(e), end(e));
 			}
 			else
 			{
@@ -631,17 +766,19 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 				errors.push_back("patchcord element found with an inlet that could not be found: '"+jInlet+"'. Skipping this patchcord.");
 			}
 			
-			bool connectSuccess = false;
 			if (inlet!=nullptr && outlet!=nullptr)
 			{
-				connectSuccess = connect(outlet, inlet);
+				ListenerEvents e = p_Connect(outlet, inlet);
+				events.insert(end(events), begin(e), end(e));
+				assert(!e.empty());
 			}
-			assert(connectSuccess);
 		}
-	if (wasRunning)
-	{
-		start();
+		if (wasRunning)
+		{
+			start();
+		}
 	}
+	p_Process(events);
 	return errors.empty();
 }
 
@@ -667,10 +804,32 @@ bool Pipeline::saveJson(string filePath) const
 }
 
 
+void Pipeline::NodeAddedEvent::notify(Listener* listener)
+{
+	listener->nodeAdded(node);
+}
+
+void Pipeline::NodeRemovedEvent::notify(Listener* listener)
+{
+	listener->nodeRemoved(node);
+}
+
+void Pipeline::PatchCordAddedEvent::notify(Listener* listener)
+{
+	listener->patchCordAdded(patchCord->outlet(), patchCord->inlet());
+}
+
+void Pipeline::PatchCordRemovedEvent::notify(Listener* listener)
+{
+	listener->patchCordRemoved(patchCord->outlet(), patchCord->inlet());
+}
+
+
 namespace hm
 {
 	std::ostream& operator<<(std::ostream& out, Pipeline const& rhs)
 	{
+		SharedLock lock(rhs.mPipelineMutex);
 		out << "[Pipeline: "
 		<< (rhs.mIsRunning? "running" : "stopped")
 		<< "\nThread running: "<<!rhs.mThread->get_thread_info()->done
