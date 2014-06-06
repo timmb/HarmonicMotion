@@ -8,34 +8,35 @@
 
 #pragma once
 #include "NodeUnthreaded.h"
-#include "cinder/Color.h"
+#include "Common.h"
 
 namespace hm
 {
 	/// Node that collects received data and renders it on request.
 	class NodeRenderer : public NodeUnthreaded
 	{
-	public:
-		typedef std::shared_ptr<NodeRenderer> Ptr;
-		
-		/// Settings applied to drawing of data to a specific outlet
-		struct DrawSettings
-		{
-			ci::ColorA color;
-		};
-		
+	public:		
 		NodeRenderer(Params const& params=Params(), std::string const& className="NodeRenderer");
 		
 		bool isRedrawRequired() const;
-		/// This will clear the render buffer and set the matrices/camera
+		/// This will clear the render buffer and render the most recent
+		/// data to have arrived
 		void draw(int viewportWidth, int viewportHeight);
 		
 	protected:
 		virtual void step() override {}
+		virtual NodePtr create(Params params) const override;
 		
 	private:
 		InletPtr mInlet;
 		std::atomic<double> mTimestampOfData;
 		double mTimestampOfLastDraw;
+		
+		std::vector<RendererPtr> mRenderers;
+		int mRenderer;
 	};
 }
+
+#include "FactoryNode.h"
+hm_register_node(NodeRenderer, "Renderer", "Renders data received to an Open GL context.")
+

@@ -169,6 +169,8 @@
 		347662F41940A00100539238 /* Listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 347662F21940A00100539238 /* Listener.h */; };
 		34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A8542D1934AE1A00D0E378 /* NodeExpression.h */; };
 		34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A8542F1934AE2400D0E378 /* NodeExpression.cpp */; };
+		34C83216194209D100953F09 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C83215194209D100953F09 /* Renderer.cpp */; };
+		34C83218194209D800953F09 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C83217194209D800953F09 /* Renderer.h */; };
 		34DBA74B193F3A9600D24456 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34DBA729193F3A9600D24456 /* IpEndpointName.cpp */; };
 		34DBA74C193F3A9600D24456 /* IpEndpointName.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DBA72A193F3A9600D24456 /* IpEndpointName.h */; };
 		34DBA74D193F3A9600D24456 /* NetworkingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DBA72B193F3A9600D24456 /* NetworkingUtils.h */; };
@@ -377,6 +379,8 @@
 		34A8542D1934AE1A00D0E378 /* NodeExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeExpression.h; sourceTree = "<group>"; };
 		34A8542F1934AE2400D0E378 /* NodeExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeExpression.cpp; path = ../../src/nodes/NodeExpression.cpp; sourceTree = "<group>"; };
 		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
+		34C83215194209D100953F09 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
+		34C83217194209D800953F09 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = ../include/Renderer.h; sourceTree = "<group>"; };
 		34DBA729193F3A9600D24456 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IpEndpointName.cpp; sourceTree = "<group>"; };
 		34DBA72A193F3A9600D24456 /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpEndpointName.h; sourceTree = "<group>"; };
 		34DBA72B193F3A9600D24456 /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingUtils.h; sourceTree = "<group>"; };
@@ -470,6 +474,8 @@
 				3442AFD718C0AF2E0015B240 /* PatchCord.h */,
 				22197ED117F44B1B003B1883 /* Pipeline.cpp */,
 				22197F0317F44B76003B1883 /* Pipeline.h */,
+				34C83215194209D100953F09 /* Renderer.cpp */,
+				34C83217194209D800953F09 /* Renderer.h */,
 				22197F0417F44B76003B1883 /* Resources.h */,
 			);
 			name = Source;
@@ -887,6 +893,7 @@
 				222936CC181677BD008CAA09 /* IXnNodeAllocator.h in Headers */,
 				222936CD181677BD008CAA09 /* XnPlatformLinux-Arm.h in Headers */,
 				222936CE181677BD008CAA09 /* XnOSLinux-x86.h in Headers */,
+				34C83218194209D800953F09 /* Renderer.h in Headers */,
 				222936CF181677BD008CAA09 /* XnPlatformLinux-x86.h in Headers */,
 				2294120D189AA35D009550EF /* NodeThreaded.h in Headers */,
 				222936D0181677BD008CAA09 /* XnPlatformMacOSX.h in Headers */,
@@ -1093,6 +1100,7 @@
 				226A9673189BED140056DCD1 /* NodeOscOut.cpp in Sources */,
 				2229372C181677C8008CAA09 /* VKinect.cpp in Sources */,
 				22293731181677C8008CAA09 /* VOpenNIDevice.cpp in Sources */,
+				34C83216194209D100953F09 /* Renderer.cpp in Sources */,
 				22293734181677C8008CAA09 /* VOpenNIDeviceManager.cpp in Sources */,
 				226A966F189BED140056DCD1 /* NodeFilter.cpp in Sources */,
 				22293738181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */,

@@ -15,35 +15,35 @@ using namespace std;
 
 Data::Data()
 : mType(UNDEFINED)
-, mData(DataNull())
+, data(DataNull())
 {}
 
 
 Data::Data(double x)
 : mType(VALUE)
-, mData(Value(x))
+, data(Value(x))
 {}
 
 
 Data::Data(Value const& x)
 : mType(VALUE)
-, mData(x)
+, data(x)
 {}
 
 
 Data::Data(Point3d const& x)
 : mType(POINT3D)
-, mData(x)
+, data(x)
 {}
 
 Data::Data(Skeleton3d const& x)
 : mType(SKELETON3D)
-, mData(x)
+, data(x)
 {}
 
 Data::Data(Scene3d const& x)
 : mType(SCENE3D)
-, mData(x)
+, data(x)
 {}
 
 BaseData* Data::asBaseData()
@@ -51,15 +51,15 @@ BaseData* Data::asBaseData()
 	switch (mType)
 	{
 		case UNDEFINED:
-			return &boost::get<DataNull&>(mData);
+			return &boost::get<DataNull&>(data);
 		case VALUE:
-			return &boost::get<Value&>(mData);
+			return &boost::get<Value&>(data);
 		case POINT3D:
-			return &boost::get<Point3d&>(mData);
+			return &boost::get<Point3d&>(data);
 		case SKELETON3D:
-			return &boost::get<Skeleton3d&>(mData);
+			return &boost::get<Skeleton3d&>(data);
 		case SCENE3D:
-			return &boost::get<Scene3d&>(mData);
+			return &boost::get<Scene3d&>(data);
 		default:
 			assert(false);
 			return nullptr;
@@ -72,15 +72,15 @@ BaseData const* Data::asBaseData() const
 	switch (mType)
 	{
 		case UNDEFINED:
-			return &boost::get<DataNull const&>(mData);;
+			return &boost::get<DataNull const&>(data);;
 		case VALUE:
-			return &boost::get<Value const&>(mData);
+			return &boost::get<Value const&>(data);
 		case POINT3D:
-			return &boost::get<Point3d const&>(mData);
+			return &boost::get<Point3d const&>(data);
 		case SKELETON3D:
-			return &boost::get<Skeleton3d const&>(mData);
+			return &boost::get<Skeleton3d const&>(data);
 		case SCENE3D:
-			return &boost::get<Scene3d const&>(mData);
+			return &boost::get<Scene3d const&>(data);
 		default:
 			assert(false);
 			return nullptr;
@@ -94,12 +94,12 @@ bool Data::isNull() const
 
 DataNull& Data::asNull()
 {
-	return boost::get<DataNull&>(mData);
+	return boost::get<DataNull&>(data);
 }
 
 DataNull const& Data::asNull() const
 {
-	return boost::get<DataNull const&>(mData);
+	return boost::get<DataNull const&>(data);
 }
 
 bool Data::isValue() const
@@ -110,13 +110,13 @@ bool Data::isValue() const
 Value const& Data::asValue() const
 {
 	assert(isValue());
-	return boost::get<Value const&>(mData);
+	return boost::get<Value const&>(data);
 }
 
 Value& Data::asValue()
 {
 	assert(isValue());
-	return boost::get<Value&>(mData);
+	return boost::get<Value&>(data);
 }
 
 bool Data::isPoint3d() const
@@ -127,13 +127,13 @@ bool Data::isPoint3d() const
 Point3d const& Data::asPoint3d() const
 {
 	assert(isPoint3d());
-	return boost::get<Point3d const&>(mData);
+	return boost::get<Point3d const&>(data);
 }
 
 Point3d& Data::asPoint3d()
 {
 	assert(isPoint3d());
-	return boost::get<Point3d&>(mData);
+	return boost::get<Point3d&>(data);
 }
 
 
@@ -145,13 +145,13 @@ bool Data::isSkeleton3d() const
 Skeleton3d const& Data::asSkeleton3d() const
 {
 	assert(isSkeleton3d());
-	return boost::get<Skeleton3d const&>(mData);
+	return boost::get<Skeleton3d const&>(data);
 }
 
 Skeleton3d& Data::asSkeleton3d()
 {
 	assert(isSkeleton3d());
-	return boost::get<Skeleton3d&>(mData);
+	return boost::get<Skeleton3d&>(data);
 }
 
 
@@ -163,13 +163,13 @@ bool Data::isScene3d() const
 Scene3d const& Data::asScene3d() const
 {
 	assert(isScene3d());
-	return boost::get<Scene3d const&>(mData);
+	return boost::get<Scene3d const&>(data);
 }
 
 Scene3d& Data::asScene3d()
 {
 	assert(isScene3d());
-	return boost::get<Scene3d&>(mData);
+	return boost::get<Scene3d&>(data);
 }
 
 namespace hm {
@@ -386,32 +386,32 @@ namespace
 
 Data Data::operator+(Data const& rhs) const
 {
-	return boost::apply_visitor(visitorAdd, this->mData, rhs.mData);
+	return boost::apply_visitor(visitorAdd, this->data, rhs.data);
 }
 
 Data Data::operator-(Data const& rhs) const
 {
-	return boost::apply_visitor(visitorSub, this->mData, rhs.mData);
+	return boost::apply_visitor(visitorSub, this->data, rhs.data);
 }
 
 Data Data::operator*(Data const& rhs) const
 {
-	return boost::apply_visitor(visitorMul, this->mData, rhs.mData);
+	return boost::apply_visitor(visitorMul, this->data, rhs.data);
 }
 
 Data Data::operator/(Data const& rhs) const
 {
-	return boost::apply_visitor(visitorDiv, this->mData, rhs.mData);
+	return boost::apply_visitor(visitorDiv, this->data, rhs.data);
 }
 
 Data Data::operator-() const
 {
-	return boost::apply_visitor(visitorNeg, this->mData);
+	return boost::apply_visitor(visitorNeg, this->data);
 }
 
 Data Data::operator+() const
 {
-	return boost::apply_visitor(visitorPos, this->mData);
+	return boost::apply_visitor(visitorPos, this->data);
 }
 
 bool Data::canAdd(Data const& rhs) const

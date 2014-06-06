@@ -23,6 +23,7 @@ namespace hm
 	class PatchCord;
 	class Pipeline;
 	class Listener;
+	class Renderer;
 	
 	// forward declare data types
 	class DataNull;
@@ -39,6 +40,8 @@ namespace hm
 	typedef std::shared_ptr<const BaseParameter> ParameterConstPtr;
 	typedef std::shared_ptr<PatchCord> PatchCordPtr;
 	typedef std::shared_ptr<Pipeline> PipelinePtr;
+	typedef std::shared_ptr<Listener> ListenerPtr;
+	typedef std::shared_ptr<Renderer> RendererPtr;
 	
 	/// \return number of seconds since the program began
 	double elapsedTime();

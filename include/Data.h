@@ -21,6 +21,8 @@ namespace hm
 	class Data
 	{
 	public:
+		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;
+
 		/// Creates a null (i.e. undefined) Data object
 		Data();
 		/// Convenience function to create a Value object with timestamp 0.
@@ -79,11 +81,10 @@ namespace hm
 		bool canMultiply(Data const& rhs) const;
 		bool canDivide(Data const& rhs) const;
 
+		Variant data;
 		
 	private:
-		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;
 		Type mType;
-		Variant mData;
 	};
 	
 	std::ostream& operator<<(std::ostream& out, Data const& rhs);
