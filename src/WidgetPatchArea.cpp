@@ -25,6 +25,7 @@
 #include "WidgetNewPatchCord.h"
 #include "PatchAreaMousePressFilter.h"
 #include "PatchCord.h"
+#include "nodes/NodeRenderer.h"
 
 using namespace hm;
 
@@ -364,6 +365,21 @@ void WidgetPatchArea::focusInEvent(QFocusEvent* event)
 
 
 
+WidgetNode* WidgetPatchArea::createWidgetFor(NodePtr node)
+{
+//	if (node->type() == "NodeRenderer")
+//	{
+//		std::shared_ptr<NodeRenderer> n = std::dynamic_pointer_cast<NodeRenderer>(node);
+//		assert(n);
+//		if (n)
+//		{
+//			return new WidgetNodeRenderer(n, this);
+//		}
+//	}
+	return new WidgetNode(node, this);
+}
+
+
 
 void WidgetPatchArea::nodeAdded(NodePtr node)
 {
@@ -379,7 +395,7 @@ void WidgetPatchArea::nodeAdded(NodePtr node)
 		}
 	}
 //	addNode(node);
-	WidgetNode* w = new WidgetNode(node, this);
+	WidgetNode* w = createWidgetFor(node);
 	mWidgetNodes << w;
 	for (WidgetOutlet* outlet: w->outlets())
 	{
@@ -395,6 +411,17 @@ void WidgetPatchArea::nodeAdded(NodePtr node)
 		child->installEventFilter(mMousePressFilter);
 	}
 	w->show();
+
+	// custom node actions
+	if (node->type() == "NodeRenderer")
+	{
+		std::shared_ptr<NodeRenderer> n = std::dynamic_pointer_cast<NodeRenderer>(node);
+		assert(n);
+		if (n)
+		{
+			Q_EMIT nodeRendererAdded(n);
+		}
+	}
 
 }
 
@@ -467,6 +494,17 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 	assert(std::all_of(mWidgetNodes.begin(), mWidgetNodes.end(), [&](WidgetNode* w) {
 		return w->node() != node;
 	}));
+	
+	// custom node actions
+	if (node->type() == "NodeRenderer")
+	{
+		std::shared_ptr<NodeRenderer> n = std::dynamic_pointer_cast<NodeRenderer>(node);
+		assert(n);
+		if (n)
+		{
+			Q_EMIT nodeRendererRemoved(n);
+		}
+	}
 }
 
 void WidgetPatchArea::nodeCharacteristicsChanged(NodePtr node)

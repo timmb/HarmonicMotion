@@ -11,14 +11,17 @@
 #include <QLayout>
 #include "Common.h"
 #include <QSaveFile>
+#include "Utilities.h"
+#include <QMap>
 
 class QPlainTextEdit;
 class QScrollArea;
 
 namespace hm
 {
-	class NodeRendererGlWidget;
 	class WidgetPatchArea;
+	class NodeRenderer;
+	class WidgetRenderView;
 	
 	class MainWindow : public QMainWindow
 	{
@@ -27,10 +30,10 @@ namespace hm
 	public:
 		/// \param pipeline will be created if null.
 		MainWindow(PipelinePtr pipeline=nullptr);
-		NodeRendererGlWidget* createRendererWidget();
+//		NodeRendererGlWidget* createRendererWidget();
 		
-		template <typename WidgetType>
-		void addWidget(WidgetType* widget);
+//		template <typename WidgetType>
+//		void addWidget(WidgetType* widget);
 		
 		WidgetPatchArea* patchArea() const { return mPatchArea; }
 		QScrollArea* patchScrollArea() const { return mPatchScrollArea; }
@@ -43,6 +46,9 @@ namespace hm
 		void actionSave();
 		void actionSaveAs();
 		void actionOpen();
+		
+		void addRenderView(NodeRendererPtr node);
+		void removeRenderView(NodeRendererPtr node);
 		
 		// Debug actions
 		void actionPrintNodeNames();
@@ -70,16 +76,18 @@ namespace hm
 		
 		QPlainTextEdit* mConsole;
 		QLayout* mLayout;
-		QVector<NodeRendererGlWidget*> mScenes;
+//		QVector<NodeRendererGlWidget*> mScenes;
 		WidgetPatchArea* mPatchArea;
 		QScrollArea* mPatchScrollArea;
 		QString mOpenedFile;
+		
+		QList<WidgetRenderView*> mRenderViews;
 	};
 	
 	
-	template <typename WidgetType>
-	void MainWindow::addWidget(WidgetType* widget)
-	{
-		mLayout->addWidget(widget);
-	}
+//	template <typename WidgetType>
+//	void MainWindow::addWidget(WidgetType* widget)
+//	{
+//		mLayout->addWidget(widget);
+//	}
 }

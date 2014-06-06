@@ -10,6 +10,7 @@
 #include <QWidget>
 #include "Common.h"
 #include <QPaintEvent>
+#include <QGridLayout>
 
 namespace hm
 {
@@ -21,7 +22,7 @@ namespace hm
 	{
 		Q_OBJECT;
 	public:
-		WidgetNode(NodePtr node, WidgetPatchArea* patchArea=nullptr);
+		WidgetNode(NodePtr node, WidgetPatchArea* patchArea);
 		/// WidgetNode should only be destroyed by WidgetPatchArea.
 		virtual ~WidgetNode();
 		
@@ -57,6 +58,9 @@ namespace hm
 		virtual void focusOutEvent(QFocusEvent* event) override;
         virtual QSize sizeHint() const override;
 		
+		/// Add a widget to the inner layout of this widget.
+		void addWidget(QWidget* widget);
+		
 	Q_SIGNALS:
 		void geometryChanged();
 		/// Emitted when this node has gained focus and so the info panel
@@ -65,7 +69,7 @@ namespace hm
 		
 	protected Q_SLOTS:
 		void loadStyleSheet();
-		void layout();
+//		void layout();
 		/// Requests that the pipeline deletes the node corresponding to this WidgetNode.
 		void deleteFromModel();
 
@@ -83,5 +87,6 @@ namespace hm
         QWidget* mMainArea;
         WidgetPatchArea* mPatchArea;
 //		bool mHasBeenErased;
+		QGridLayout* mMainLayout;
 	};
 }

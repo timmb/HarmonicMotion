@@ -28,6 +28,9 @@ namespace hm
 	
 	/// \return true if \p potentialAncestor is an ancestor (direct/indirect parent) of /p potentialChild
 	bool isAncestor(QObject* potentialAncestor, QObject* potentialChild);
+	
+	class NodeRenderer;
+	typedef std::shared_ptr<NodeRenderer> NodeRendererPtr;
 }
 
 #define hm_print(variable) qDebug() << #variable<<": "<<variable;

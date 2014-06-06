@@ -7,7 +7,6 @@
 //
 
 #include "WidgetNode.h"
-#include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include "Node.h"
@@ -62,25 +61,25 @@ namespace hm
 
 		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		
-		QGridLayout* mainLayout = new QGridLayout;
+		mMainLayout = new QGridLayout;
         QVBoxLayout* inletsLayout = new QVBoxLayout;
         QVBoxLayout* outletsLayout = new QVBoxLayout;
         
         inletsLayout->setAlignment(Qt::AlignTop);
         outletsLayout->setAlignment(Qt::AlignTop);
         
-		mainLayout->addWidget(type, 0, 0);
-		mainLayout->addWidget(name, 0, 1);
+		mMainLayout->addWidget(type, 0, 0);
+		mMainLayout->addWidget(name, 0, 1);
 		
 		int row = 1;
 		for (ParameterPtr p : node->parameters())
 		{
 			QWidget* widget = WidgetBaseParameter::create(p);
-			mainLayout->addWidget(new QLabel(str(p->name())), row, 0, Qt::AlignRight);
-			mainLayout->addWidget(widget, row, 1, Qt::AlignLeft);
+			mMainLayout->addWidget(new QLabel(str(p->name())), row, 0, Qt::AlignRight);
+			mMainLayout->addWidget(widget, row, 1, Qt::AlignLeft);
 			row++;
 		}
-		mainLayout->setRowStretch(row, 1);
+		mMainLayout->setRowStretch(row, 1);
 		
 		assert(parentWidget() != nullptr);
 		for (InletPtr inlet: mNode->inlets())
@@ -100,7 +99,7 @@ namespace hm
         
         mMainArea = new QWidget;
         mMainArea->setObjectName("mMainArea");
-        mMainArea->setLayout(mainLayout);
+        mMainArea->setLayout(mMainLayout);
 		
         QHBoxLayout* layout = new QHBoxLayout;
         layout->addLayout(inletsLayout);
@@ -114,8 +113,8 @@ namespace hm
 		
 		bool success(true);
 		
-		success = connect(this, SIGNAL(geometryChanged()), this, SLOT(layout()));
-		assert(success);
+//		success = connect(this, SIGNAL(geometryChanged()), this, SLOT(layout()));
+//		assert(success);
 		success = connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
 		assert(success);
 		success = connect(this, SIGNAL(newInfoPanelText(QString)), patchArea, SLOT(provideInfoPanelText(QString)));
@@ -284,42 +283,49 @@ namespace hm
 		}
 	}
 	
-	void WidgetNode::layout()
+	void WidgetNode::addWidget(QWidget* widget)
 	{
-//        QPoint p(0,0);
-//        for (auto w: mWidgetInlets)
-//        {
-//            w->move(p);
-//            p += QPoint(0, w->height());
-//        }
-//        if (!mWidgetInlets.empty())
-//        {
-//            p = QPoint(0, mWidgetInlets[0]->width());
-//        }
-//        mInnerBox->move(p);
-//        p += QPoint(0, mInnerBox->width());
-//        for (auto w: mWidgetInlets)
-//        {
-//            w->move(p);
-//            p += QPoint(0, w->height());
-//        }
-//        
-//		QPoint p;
-//		if (mWidgetInlets.size() > 0)
-//		{
-//			p = mapToParent(QPoint(- mWidgetInlets[0]->width(), 0));
-//			for (auto w: mWidgetInlets)
-//			{
-//				w->move(p);
-//				p += QPoint(0, w->height());
-//			}
-//		}
-//		
-//		p = mapToParent(QPoint(width(), 0));
-//		for (auto w: mWidgetOutlets)
-//		{
-//			w->move(p);
-//			p += QPoint(0, w->height());
-//		}
+		mMainLayout->addWidget(widget, mMainLayout->rowCount(), 0, 1, mMainLayout->columnCount());
 	}
+	
+//	void WidgetNode::layout()
+//	{
+////        QPoint p(0,0);
+////        for (auto w: mWidgetInlets)
+////        {
+////            w->move(p);
+////            p += QPoint(0, w->height());
+////        }
+////        if (!mWidgetInlets.empty())
+////        {
+////            p = QPoint(0, mWidgetInlets[0]->width());
+////        }
+////        mInnerBox->move(p);
+////        p += QPoint(0, mInnerBox->width());
+////        for (auto w: mWidgetInlets)
+////        {
+////            w->move(p);
+////            p += QPoint(0, w->height());
+////        }
+////        
+////		QPoint p;
+////		if (mWidgetInlets.size() > 0)
+////		{
+////			p = mapToParent(QPoint(- mWidgetInlets[0]->width(), 0));
+////			for (auto w: mWidgetInlets)
+////			{
+////				w->move(p);
+////				p += QPoint(0, w->height());
+////			}
+////		}
+////		
+////		p = mapToParent(QPoint(width(), 0));
+////		for (auto w: mWidgetOutlets)
+////		{
+////			w->move(p);
+////			p += QPoint(0, w->height());
+////		}
+//	}
 }
+
+

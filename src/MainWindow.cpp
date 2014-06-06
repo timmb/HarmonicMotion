@@ -22,6 +22,8 @@
 #include <QVector>
 #include <set>
 #include "Node.h"
+#include "nodes/NodeRenderer.h"
+#include "WidgetRenderView.h"
 
 using namespace hm;
 
@@ -99,6 +101,10 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	
 	success = connect(this, SIGNAL(newInfoPanelText(QString)), infoPanel, SLOT(setPlainText(QString)));
 	assert(success);
+	BOOST_VERIFY(connect(mPatchArea, SIGNAL(nodeRendererAdded(NodeRendererPtr)), this, SLOT(addRenderView(NodeRendererPtr))));
+	BOOST_VERIFY(connect(mPatchArea, SIGNAL(nodeRendererRemoved(NodeRendererPtr)), this, SLOT(removeRenderView(NodeRendererPtr))));
+	
+	
 	success = connect(actionNew, SIGNAL(triggered()), this, SLOT(actionNew()));
 	assert(success);
 	success = connect(actionSave, SIGNAL(triggered()), this, SLOT(actionSave()));
@@ -124,14 +130,14 @@ void MainWindow::provideInfoPanelText(QString text)
 }
 
 
-NodeRendererGlWidget* MainWindow::createRendererWidget()
-{
-	auto w = new NodeRendererGlWidget(this);
-	mScenes.push_back(w);
-	mLayout->addWidget(w);
-	return w;
-}
-
+//NodeRendererGlWidget* MainWindow::createRendererWidget()
+//{
+//	auto w = new NodeRendererGlWidget(this);
+//	mScenes.push_back(w);
+//	mLayout->addWidget(w);
+//	return w;
+//}
+//
 
 void MainWindow::newConsoleMessage(QString message)
 {
@@ -279,4 +285,28 @@ void MainWindow::actionPrintWidgets()
 {
 	mPatchArea->printWidgets();
 }
+
+void MainWindow::addRenderView(NodeRendererPtr node)
+{
+	QDockWidget* dock = new QDockWidget(str(node->name()), this);
+	WidgetRenderView* view = new WidgetRenderView(node, dock);
+	dock->setWidget(view);
+	addDockWidget(Qt::BottomDockWidgetArea, dock);
+
+}
+
+void MainWindow::removeRenderView(NodeRendererPtr node)
+{
+	for (WidgetRenderView* view: mRenderViews)
+	{
+		if (view->node() == node)
+		{
+			// view's parent is its containing dock widget
+			delete view->parent();
+			return;
+		}
+	}
+	assert(false);
+}
+
 

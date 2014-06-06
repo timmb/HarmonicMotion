@@ -14,6 +14,7 @@
 #include <QList>
 #include "Pipeline.h"
 #include "PipelineListener.h"
+#include "Utilities.h"
 
 namespace hm
 {
@@ -122,6 +123,9 @@ namespace hm
 	Q_SIGNALS:
 		/// New text to be sent to the info panel
 		void newInfoPanelText(QString);
+		
+		void nodeRendererAdded(NodeRendererPtr node);
+		void nodeRendererRemoved(NodeRendererPtr node);
 	
 	protected:
 		virtual QSize sizeHint() const override;
@@ -132,35 +136,12 @@ namespace hm
 		virtual void resizeEvent(QResizeEvent* event) override;
         
     private:
-//		// MARK: Functions that do not affect the underlying Pipeline model
-//        /// Create a widget for an existing node
-//        WidgetNode* addNode(NodePtr node);
-//        /// Add an already-connected patch cord. \p inlet and \p outlet
-//        /// must belong to a node that has already been added to this patch
-//        /// area. The connection between inlet and outlet must already
-//        /// exist before calling this function.
-//        WidgetPatchCord* addPatchCord(WidgetOutlet* outlet, WidgetInlet* inlet);
-		
-        
-//		/// Create a disconnected patch cord with the given \p outlet.
-//		/// \pre outlet != nullptr
-//        WidgetPatchCord* createPatchCord(WidgetOutlet* outlet);
-//		/// Create a disconnected patch cord with the given \p inlet.
-//		/// \pre inlet != nullptr
-//        WidgetPatchCord* createPatchCord(WidgetInlet* inlet);
-//		/// Called when we stop creating a patch cord, either because
-//		/// it was cancelled or because it was successfully completed
-//		void endCreationOfPatchCord();
-		
-//		/// Find topmost child widget of type *T under the mouse. Returns
-//		/// nullptr
-//		/// if no widget of type *T is under mouse.
-//		/// T should be a pointer type, e.g. WidgetInlet*.
-//		template <typename T>
-//		T findUnderMouse() const;
-		
 		/// \return nullptr if \p node has no corresponding widget
 		WidgetNode* findWidgetFor(NodePtr node) const;
+		/// Creates and returns a new WidgetNode instance (or derived
+		/// type) for the given node. Does not register it with
+		/// mWidgetNodes, etc.
+		WidgetNode* createWidgetFor(NodePtr node);
 
 		PipelinePtr mPipeline;
 		PipelineListener* mPipelineListener;
