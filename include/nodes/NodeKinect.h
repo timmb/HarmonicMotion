@@ -15,31 +15,17 @@ namespace hm
 	class NodeKinect : public NodeThreaded
 	{
 	public:
-		struct Params : public Node::Params
-		{
-			/// Will force enableDepth
-			bool enableScene;
-			bool enableDepth;
-			
-			Params(bool enableScene_=true, bool enableDepth_=true, std::string const& name_="")
-			: Node::Params(name_)
-			, enableScene(true)
-			, enableDepth(true)
-			{}
-		};
-		
-		NodeKinect(Params const& params = Params(), std::string const& className="NodeKinect");
+		NodeKinect(Params const& params, std::string const& className="NodeKinect");
 		virtual ~NodeKinect();
 		
 		SceneMetaPtr sceneMeta() const { return mMetadata; }
 		
 	protected:
 		virtual void run() override;
+		virtual NodePtr create(Node::Params params) const override { return NodePtr(new NodeKinect(params)); }
 		
 	private:
 		void openKinect();
-		
-		Params mParams;
 		
 		OutletPtr mSceneOutlet;
 		
@@ -47,5 +33,15 @@ namespace hm
 		V::OpenNIDeviceManager* mOpenNi;
 		
 		SceneMetaPtr mMetadata;
+		
+		/// Will force mEnableDepth
+		bool mEnableScene;
+		bool mEnableDepth;
 	};
 }
+
+#include "FactoryNode.h"
+hm_register_node(NodeKinect, "NodeKinect", "Receive skeleton data from a Kinect.")
+
+
+

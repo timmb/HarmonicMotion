@@ -50,11 +50,12 @@ int jointToVBone(Joint jointId)
 
 NodeKinect::NodeKinect(Params const& params, std::string const& className)
 : NodeThreaded(params, className)
-, mParams(params)
 , mSceneOutlet(nullptr)
 , mDevice(nullptr)
 , mOpenNi(nullptr)
 , mMetadata(nullptr)
+, mEnableScene(true)
+, mEnableDepth(true)
 {
 	OpenNIDeviceManager::USE_THREAD = false;
 	mOpenNi = OpenNIDeviceManager::InstancePtr();
@@ -78,9 +79,9 @@ NodeKinect::~NodeKinect()
 void NodeKinect::openKinect()
 {
 	int flags = NODE_TYPE_NONE;
-	if (mParams.enableDepth)
+	if (mEnableDepth)
 		flags |= NODE_TYPE_DEPTH;
-	if (mParams.enableScene)
+	if (mEnableScene)
 		flags |= NODE_TYPE_DEPTH | NODE_TYPE_USER;
 	
 	mOpenNi->createDevices(1, NODE_TYPE_DEPTH | NODE_TYPE_USER);
@@ -104,7 +105,7 @@ void NodeKinect::run()
 	{
 		mOpenNi->update();
 		assert(mDevice->_isUserOn);
-		if (mParams.enableScene && mDevice->isUserDataNew())
+		if (mEnableScene && mDevice->isUserDataNew())
 		{
 			double timestamp = elapsedTime();
 			OpenNIUserList users = mOpenNi->getUserList();
