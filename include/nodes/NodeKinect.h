@@ -25,12 +25,25 @@ namespace hm
 		virtual NodePtr create(Node::Params params) const override { return NodePtr(new NodeKinect(params)); }
 		
 	private:
+		class FailedToOpenKinectException : public std::exception
+		{
+			
+		};
+		
 		void openKinect();
+		/// \pre This function must only be called when mDeviceMutex
+		/// is locked by the calling thread. If the Kinect opens/is opened
+		/// OK then this function will not return until isRequestedToStop()
+		/// returns true.
+		/// \throw FailedToOpenKinectException
+		void processDevice();
 		
 		OutletPtr mSceneOutlet;
 		
-		boost::shared_ptr<V::OpenNIDevice> mDevice;
-		V::OpenNIDeviceManager* mOpenNi;
+		static boost::shared_ptr<V::OpenNIDevice> mDevice;
+		/// Only allow one instance of this node to use mDevice at once
+		boost::try_mutex mDeviceMutex;
+//		std::atomic<V::OpenNIDeviceManager*> mOpenNi;
 		
 		SceneMetaPtr mMetadata;
 		
