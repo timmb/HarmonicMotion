@@ -62,8 +62,19 @@ namespace hm
 	};
 	typedef int Joint;
 	
-	const char* jointName(Joint jointId);
-	const char* jointNameAbbr(Joint jointId);
+	enum Side_
+	{
+		LEFT,
+		MIDDLE,
+		RIGHT
+	};
+	typedef int Side;
+	char const* sideName(Side side);
+	bool isValidSide(Side side);
+	
+	char const* jointName(Joint jointId);
+	char const* jointNameAbbr(Joint jointId);
+	Side jointSide(Joint jointId);
 	
 	inline bool isValidJoint(Joint jointId)
 	{
@@ -96,13 +107,16 @@ namespace hm
 	/// from the torso outwards
 	std::pair<Joint, Joint> limbJoints(Limb limb);
 	
-	const char* limbName(Limb limbId);
-	const char* limbNameAbbr(Limb limbId);
+	char const* limbName(Limb limbId);
+	char const* limbNameAbbr(Limb limbId);
+	Side limbSide(Limb limbId);
 	
 	inline bool isValidLimb(Limb limbId)
 	{
 		return 0 <= limbId && limbId < NUM_LIMBS;
 	}
+	
+	
 	
 	
 	// --------------------------------------------------------------

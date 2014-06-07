@@ -55,7 +55,7 @@ BlobRenderer::BlobRenderer()
 	
 }
 
-void BlobRenderer::operator()(Point3d const& x)
+void BlobRenderer::operator()(Point3d const& x, ci::ColorA const& color)
 {
 	if (needsRefresh())
 	{
@@ -63,7 +63,7 @@ void BlobRenderer::operator()(Point3d const& x)
 	}
 	// TODO: Use a VBO to speed this up
 	// TODO: better colour
-	color(Color(0.9f, 0.4f, 0.4f));
+	gl::color(color);
 	drawSphere(x.value, 0.05, 12);
 }
 
@@ -71,7 +71,13 @@ void BlobRenderer::operator()(Skeleton3d const& x)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		(*this)(x.joint(i));
+		float brightness = x.jointConfidence(i) * 0.5f + 0.5f;
+		bool isRight = jointSide(i);
+		ColorA color(0.5f+0.5f*int(isRight)*brightness,
+					 0.5f * brightness,
+					 0.5f+0.5f*int(!isRight)*brightness,
+					 1.0f);
+		(*this)(x.joint(i), color);
 	}
 }
 
