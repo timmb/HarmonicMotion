@@ -136,7 +136,7 @@ LINK_DIRECTORIES(
 	${HarmonicMotionDir}/bin
 	${HarmonicMotionDir}/lib
 	${HarmonicMotionDir}/lib/macosx
-	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/lib/macosx
+#	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/lib/macosx
 )
 
 ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE WIN32 ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
@@ -170,13 +170,23 @@ debug libHarmonicMotiond.${STATIC_LIBRARY_EXTENSION}
 optimized libcinder.${STATIC_LIBRARY_EXTENSION}
 debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
 ${CINDER_DEPENDENCIES}
-# # OpenNI
-# libltdl.7.${DYNAMIC_LIBRARY_EXTENSION}
-# libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}
-# libnimCodecs.${DYNAMIC_LIBRARY_EXTENSION}
-# libnimMockNodes.${DYNAMIC_LIBRARY_EXTENSION}
-# libnimRecorder.${DYNAMIC_LIBRARY_EXTENSION}
-# libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
+# OpenNI
+libltdl.7.${DYNAMIC_LIBRARY_EXTENSION}
+libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}
+libnimCodecs.${DYNAMIC_LIBRARY_EXTENSION}
+libnimMockNodes.${DYNAMIC_LIBRARY_EXTENSION}
+libnimRecorder.${DYNAMIC_LIBRARY_EXTENSION}
+libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
+
+libXnCore.${DYNAMIC_LIBRARY_EXTENSION}
+libXnDDK.${DYNAMIC_LIBRARY_EXTENSION}
+libXnDeviceFile.${DYNAMIC_LIBRARY_EXTENSION}
+libXnDeviceSensorV2KM.${DYNAMIC_LIBRARY_EXTENSION}
+libXnFormats.${DYNAMIC_LIBRARY_EXTENSION}
+libXnVCNITE_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
+libXnVFeatures_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
+libXnVHandGenerator_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
+libXnVNite_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
 )
 
 # Custom script to copy in dylibs in Xcode
