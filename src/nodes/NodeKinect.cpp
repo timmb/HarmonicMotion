@@ -7,6 +7,17 @@
 
 using namespace hm;
 using namespace V;
+using namespace boost;
+
+namespace
+{
+	bool unused = [](){
+		OpenNIDeviceManager::USE_THREAD = false;
+		return false;
+	}();
+}
+
+boost::shared_ptr<V::OpenNIDevice> NodeKinect::mDevice((nullptr));
 
 int jointToVBone(Joint jointId)
 {
@@ -51,14 +62,10 @@ int jointToVBone(Joint jointId)
 NodeKinect::NodeKinect(Params const& params, std::string const& className)
 : NodeThreaded(params, className)
 , mSceneOutlet(nullptr)
-, mDevice(nullptr)
-, mOpenNi(nullptr)
 , mMetadata(nullptr)
 , mEnableScene(true)
 , mEnableDepth(true)
 {
-	OpenNIDeviceManager::USE_THREAD = false;
-	mOpenNi = OpenNIDeviceManager::InstancePtr();
 	mSceneOutlet = createOutlet(SCENE3D, "3D Scene", "All user skeletons in 3D space");
 	SceneMeta* metadata = new SceneMeta;
 	metadata->cameraPos = ci::Vec3f(0,0,0);
@@ -66,7 +73,6 @@ NodeKinect::NodeKinect(Params const& params, std::string const& className)
 	metadata->cameraFov = 57;
 	mMetadata = SceneMetaPtr(metadata);
 	
-	openKinect();
 }
 
 NodeKinect::~NodeKinect()
@@ -78,37 +84,70 @@ NodeKinect::~NodeKinect()
 
 void NodeKinect::openKinect()
 {
-	int flags = NODE_TYPE_NONE;
-	if (mEnableDepth)
-		flags |= NODE_TYPE_DEPTH;
-	if (mEnableScene)
-		flags |= NODE_TYPE_DEPTH | NODE_TYPE_USER;
+//	int flags = NODE_TYPE_NONE;
+//	if (mEnableDepth)
+//		flags |= NODE_TYPE_DEPTH;
+//	if (mEnableScene)
+//		flags |= NODE_TYPE_DEPTH | NODE_TYPE_USER;
 	
-	mOpenNi->createDevices(1, NODE_TYPE_DEPTH | NODE_TYPE_USER);
-//	mOpenNi->SetPrimaryBuffer(0, NODE_TYPE_USER);
-	mDevice = mOpenNi->getDevice(0);
-	if (mDevice)
-	{
-		hm_debug("Opened Kinect.");
-		mDevice->setDepthShiftMul(3);
-	}
-	else
-	{
-		hm_debug("Failed to open kinect");
-	}
+
 }
 
 void NodeKinect::run()
 {
-	assert(mDevice != nullptr);
+	// Only one nodekinect can work with the device at once.
+	// while this thread is running we attempt to grab a lock
+	// on the mutex to allow us to be working with the device.
+	
+	// the device is only ever initialised once as reinitialising
+	// it after releasing it doesn't appear to work with openni
+	
 	while (!isRequestedToStop())
 	{
-		mOpenNi->update();
+		mutex::scoped_try_lock tryLock(mDeviceMutex);
+		if (tryLock.owns_lock())
+		{
+			try
+			{
+				processDevice();
+			}
+			catch (FailedToOpenKinectException const& e)
+			{
+				hm_error("Failed to open kinect.");
+				break;
+			}
+		}
+		else
+		{
+			this_thread::sleep_for(chrono::milliseconds(200));
+		}
+	}
+}
+
+
+void NodeKinect::processDevice()
+{
+	OpenNIDeviceManager& deviceManager = OpenNIDeviceManager::Instance();
+	if (mDevice == nullptr)
+	{
+		deviceManager.createDevices(1, NODE_TYPE_DEPTH | NODE_TYPE_USER);
+		mDevice = deviceManager.getDevice(0);
+		if (!mDevice)
+		{
+			throw FailedToOpenKinectException();
+		}
+		hm_info("Opened Kinect.");
+		mDevice->setDepthShiftMul(3);
+	}
+		
+	while (!isRequestedToStop())
+	{
+		deviceManager.update();
 		assert(mDevice->_isUserOn);
 		if (mEnableScene && mDevice->isUserDataNew())
 		{
 			double timestamp = elapsedTime();
-			OpenNIUserList users = mOpenNi->getUserList();
+			OpenNIUserList users = deviceManager.getUserList();
 			Scene3d scene = Scene3d(timestamp, sceneMeta());
 			for (OpenNIUserRef user: users)
 			{
@@ -136,7 +175,6 @@ void NodeKinect::run()
 			boost::this_thread::sleep_for(boost::chrono::microseconds(250));
 		}
 	}
-	// TODO: Close kinect properly
 }
 
 
