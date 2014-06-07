@@ -34,7 +34,6 @@ namespace hm
 		std::vector<NodePtr> nodes() const;
 		std::vector<PatchCordPtr> patchCords() const;
 		/// \param path e.g. "My node" or "/My node/
-		///
 		NodePtr nodeFromPath(std::string path) const;
 		/// \param path e.g. "/My node/My outlet"
 		OutletPtr outletFromPath(std::string const& path) const;
@@ -90,6 +89,8 @@ namespace hm
 		/// Starts processing nodes
 		void start();
 		bool isRunning() const { return mIsRunning; }
+		/// \warning Do not call stop() from a thread that has locked mPipelineMutex
+		/// as the main process may require a unique lock before it can stop.
 		void stop();
 		
 		// MARK: Save/load from json
@@ -168,6 +169,14 @@ namespace hm
 		/// \return The \c PatchCordPtr instance that connectes \p outlet
 		/// and \p inlet, or \c nullptr if none exists
 		PatchCordPtr p_FindPatchCord(OutletPtr outlet, InletPtr inlet) const;
+		/// \pre Requires a shared lock to be active
+		/// \param path e.g. "My node" or "/My node/
+		NodePtr p_NodeFromPath(std::string path) const;
+		/// \pre Requires a shared lock to be active
+		/// \param path e.g. "/My node/My outlet"
+		OutletPtr p_OutletFromPath(std::string const& path) const;
+		/// \pre Requires a shared lock to be active
+		InletPtr p_InletFromPath(std::string const& path) const;
 		
 		/// \return Whether the invariant for patch cords holds
 		/// \pre Requires a shared lock to be active

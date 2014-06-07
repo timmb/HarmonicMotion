@@ -26,6 +26,11 @@ namespace hm
 	{
 	}
 	
+	PatchCord::~PatchCord()
+	{
+		
+	}
+	
 	bool PatchCord::isValid() const
 	{
 		return mOutlet && mInlet;
