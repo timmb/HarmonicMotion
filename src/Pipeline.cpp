@@ -34,6 +34,10 @@ Pipeline::Pipeline()
 
 Pipeline::~Pipeline()
 {
+	hm_debug("Pipeline destructor.");
+	stop();
+	mThread->join();
+	clear();
 }
 
 std::string Pipeline::toString() const
@@ -549,6 +553,7 @@ void Pipeline::addListener(Listener* listener)
 {
 	UniqueLock lock(mListenersMutex);
 	mListeners.push_back(listener);
+	hm_debug("Added listener "<<listener);
 }
 
 bool Pipeline::removeListener(Listener* listener)
@@ -557,17 +562,25 @@ bool Pipeline::removeListener(Listener* listener)
 	auto it = std::find(mListeners.begin(), mListeners.end(), listener);
 	if (it==mListeners.end())
 	{
+		hm_warning("Failed to remove listener "<<listener<<" as it was not recognised.");
 		return false;
 	}
 	else
 	{
 		mListeners.erase(it);
+		hm_debug("Removed listener "<<listener);
 		return true;
 	}
 }
 
 
 NodePtr Pipeline::nodeFromPath(string path) const
+{
+	SharedLock lock(mPipelineMutex);
+	return p_NodeFromPath(path);
+}
+
+NodePtr Pipeline::p_NodeFromPath(string path) const
 {
 	if (!path.empty() && path[0]=='/')
 	{
@@ -585,14 +598,11 @@ NodePtr Pipeline::nodeFromPath(string path) const
 		hm_info("Unable to find node for empty path");
 		return nullptr;
 	}
+	for (NodePtr n: mNodes)
 	{
-		SharedLock lock(mPipelineMutex);
-		for (NodePtr n: mNodes)
+		if (n->name() == path)
 		{
-			if (n->name() == path)
-			{
-				return n;
-			}
+			return n;
 		}
 	}
 	hm_info("No node found with name "+path);
@@ -612,13 +622,19 @@ vector<string> tokenizePath(string const& path)
 
 OutletPtr Pipeline::outletFromPath(std::string const& path) const
 {
+	SharedLock lock(mPipelineMutex);
+	return p_OutletFromPath(path);
+}
+
+OutletPtr Pipeline::p_OutletFromPath(std::string const& path) const
+{
 	std::vector<std::string> splitPath = tokenizePath(path);
 	if (splitPath.size() < 2)
 	{
 		hm_info("Path '"+path+"' does not contain both a node name and outlet name.");
 		return nullptr;
 	}
-	NodePtr node = nodeFromPath(splitPath[0]);
+	NodePtr node = p_NodeFromPath(splitPath[0]);
 	if (node)
 	{
 		for (OutletPtr outlet: node->outlets())
@@ -628,19 +644,19 @@ OutletPtr Pipeline::outletFromPath(std::string const& path) const
 				return outlet;
 			}
 		}
-		hm_info("Node "+node->name()+" of type "+node->type()+" does not have "
-				"an outlet named "+splitPath[1]);
-		return nullptr;
+		hm_info("Node "+node->name()+" of type "+node->type()+" does not " "have an outlet named "+splitPath[1]);
 	}
-	else
-	{
-		hm_info("No Node found with name "+path);
-		return nullptr;
-	}
+	return nullptr;
+}
+
+InletPtr Pipeline::inletFromPath(std::string const& path) const
+{
+	SharedLock lock(mPipelineMutex);
+	return p_InletFromPath(path);
 }
 
 
-InletPtr Pipeline::inletFromPath(std::string const& path) const
+InletPtr Pipeline::p_InletFromPath(std::string const& path) const
 {
 	std::vector<std::string> splitPath = tokenizePath(path);
 	if (splitPath.size() < 2)
@@ -648,7 +664,7 @@ InletPtr Pipeline::inletFromPath(std::string const& path) const
 		hm_info("Path '"+path+"' does not contain both a node name and inlet name.");
 		return nullptr;
 	}
-	NodePtr node = nodeFromPath(splitPath[0]);
+	NodePtr node = p_NodeFromPath(splitPath[0]);
 	if (node)
 	{
 		for (InletPtr inlet: node->inlets())
@@ -658,15 +674,9 @@ InletPtr Pipeline::inletFromPath(std::string const& path) const
 				return inlet;
 			}
 		}
-		hm_info("Node "+node->name()+" of type "+node->type()+" does not have "
-				"an inlet named "+splitPath[1]);
-		return nullptr;
+		hm_info("Node "+node->name()+" of type "+node->type()+" does not " "have an inlet named "+splitPath[1]);
 	}
-	else
-	{
-		hm_info("No Node found with name "+path);
-		return nullptr;
-	}
+	return nullptr;
 }
 
 
@@ -753,19 +763,23 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 		return false;
 	}
 	
-	Events events;
+	// Note - we do not lock the pipeline when loading json - just
+	// use the public interface.
+	
+//	Events events;
 	{
-		UniqueLock lock(mPipelineMutex);
+//		UniqueLock lock(mPipelineMutex);
 		
-		bool wasRunning = isRunning();
-		if (wasRunning)
-		{
-			stop();
-		}
-		{
-			Events e = p_Clear();
-			events.insert(end(events), begin(e), end(e));
-		}
+//		bool wasRunning = isRunning();
+//		if (wasRunning)
+//		{
+//			stop();
+//		}
+//		{
+//			Events e = p_Clear();
+		clear();
+//			events.insert(end(events), begin(e), end(e));
+//		}
 		FactoryNode& factory = *FactoryNode::instance();
 		for (auto& jNode: json["nodes"])
 		{
@@ -790,8 +804,9 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			assert(node!=nullptr);
 			if (node!=nullptr)
 			{
-				Events e = p_AddNode(node);
-				events.insert(end(events), begin(e), end(e));
+//				Events e = p_AddNode(node);
+//				events.insert(end(events), begin(e), end(e));
+				addNode(node);
 			}
 			else
 			{
@@ -823,17 +838,18 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			
 			if (inlet!=nullptr && outlet!=nullptr)
 			{
-				Events e = p_Connect(outlet, inlet);
-				events.insert(end(events), begin(e), end(e));
-				assert(!e.empty());
+//				Events e = p_Connect(outlet, inlet);
+//				events.insert(end(events), begin(e), end(e));
+//				assert(!e.empty());
+				connect(outlet, inlet);
 			}
 		}
-		if (wasRunning)
-		{
-			start();
-		}
+//		if (wasRunning)
+//		{
+//			start();
+//		}
 	}
-	p_Process(events);
+//	p_Process(events);
 	return errors.empty();
 }
 

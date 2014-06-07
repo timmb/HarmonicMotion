@@ -17,6 +17,8 @@ namespace hm
 	class PatchCord
 	{
 	public:
+		virtual ~PatchCord();
+		
 		OutletPtr outlet() const { return mOutlet; }
 		InletPtr inlet() const { return mInlet; }
 		
