@@ -43,6 +43,7 @@ void Renderer::render(Data const& data, ci::Area const& viewport)
 		mNeedsRefresh = true;
 	}
 	boost::apply_visitor(*this, data.data);
+	mNeedsRefresh = false;
 }
 
 
@@ -63,7 +64,7 @@ void BlobRenderer::operator()(Point3d const& x)
 	// TODO: Use a VBO to speed this up
 	// TODO: better colour
 	color(Color(0.9f, 0.4f, 0.4f));
-	drawSphere(x.value, 5);
+	drawSphere(x.value, 0.05, 12);
 }
 
 void BlobRenderer::operator()(Skeleton3d const& x)

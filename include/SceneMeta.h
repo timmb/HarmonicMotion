@@ -29,7 +29,7 @@ namespace hm
 		
 		SceneMeta()
 		: cameraPos(0,0,0)
-		, cameraDir(0,0,0)
+		, cameraDir(0,0,1)
 		, cameraFov(57)
 		{}
 		
