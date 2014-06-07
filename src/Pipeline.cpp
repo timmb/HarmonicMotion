@@ -444,11 +444,11 @@ bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 	}
 	p_Process(events);
 	
-	// assert that if events is not empty then connection was a success
+	// assert that if events is not empty then disconnection was a success
 	assert([&]() {
 		if (!events.empty())
 		{
-			shared_ptr<PatchCordAddedEvent> e = dynamic_pointer_cast<PatchCordAddedEvent>(events[0]);
+			shared_ptr<PatchCordRemovedEvent> e = dynamic_pointer_cast<PatchCordRemovedEvent>(events[0]);
 			if (e)
 			{
 				return e->patchCord->inlet()==inlet && e->patchCord->outlet()==outlet;
