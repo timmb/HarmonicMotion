@@ -55,6 +55,11 @@ Controller::Controller(QObject* parent)
 	mPipeline->start();
 }
 
+Controller::~Controller()
+{
+	delete mMainWindow;
+}
+
 void Controller::checkPipeline()
 {
 

@@ -21,6 +21,7 @@ namespace hm
 		
 	public:
 		Controller(QObject* parent=nullptr);
+		virtual ~Controller();
 		
 	public Q_SLOTS:
 		void checkPipeline();

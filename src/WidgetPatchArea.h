@@ -36,6 +36,7 @@ namespace hm
 		/// \param pipeline The pipeline that this patch area will represent.
 		/// Will be created if null.
 		WidgetPatchArea(PipelinePtr pipeline, QWidget* parent=nullptr);
+		virtual ~WidgetPatchArea();
 		
 		/// \return A shared pointer to the pipeline represented by this patch
 		/// area

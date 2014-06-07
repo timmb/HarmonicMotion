@@ -30,6 +30,7 @@ namespace hm
 	public:
 		/// \param pipeline will be created if null.
 		MainWindow(PipelinePtr pipeline=nullptr);
+		virtual ~MainWindow();
 //		NodeRendererGlWidget* createRendererWidget();
 		
 //		template <typename WidgetType>

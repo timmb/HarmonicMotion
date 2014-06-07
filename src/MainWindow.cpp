@@ -124,6 +124,12 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 }
 
 
+MainWindow::~MainWindow()
+{
+	hm_debug("MainWindow destructor.");
+}
+
+
 void MainWindow::provideInfoPanelText(QString text)
 {
 	Q_EMIT newInfoPanelText(text);

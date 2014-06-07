@@ -63,6 +63,11 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	installEventFilter(mMousePressFilter);
 }
 
+WidgetPatchArea::~WidgetPatchArea()
+{
+	mPipeline->removeListener(mPipelineListener);
+}
+
 QSize WidgetPatchArea::sizeHint() const
 {
 	return QSize(500, 300);
