@@ -70,7 +70,7 @@ void BlobRenderer::operator()(Skeleton3d const& x)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		(*this)(x);
+		(*this)(x.joint(i));
 	}
 }
 
