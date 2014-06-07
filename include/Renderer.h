@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Data.h"
 #include "cinder/Area.h"
+#include "cinder/Color.h"
 
 namespace hm
 {
@@ -66,7 +67,7 @@ namespace hm
 	public:
 		BlobRenderer();
 		
-		virtual void operator()(Point3d const& x) override;
+		virtual void operator()(Point3d const& x, ci::ColorA const& color=ci::ColorA::white());
 		virtual void operator()(Skeleton3d const& x) override;
 		virtual void operator()(Scene3d const& x) override;
 		
