@@ -300,8 +300,12 @@ void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint positi
 {
 	hm_debug("mousePressEventFromWidgetLet::mousePressEvent");
 	// if we're already creating a new patch cord then that should have
-	// receied the mouse event.
-	assert(mNewPatchCord == nullptr);
+	// receied the mouse event. On rare conditions this doesn't happen
+	if (mNewPatchCord != nullptr)
+	{
+		delete mNewPatchCord;
+		mNewPatchCord = nullptr;
+	}
 	if (let->objectName() == "WidgetOutlet")
 	{
 		WidgetOutlet* outlet = dynamic_cast<WidgetOutlet*>(let);

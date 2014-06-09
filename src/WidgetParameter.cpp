@@ -121,10 +121,9 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 	assert(success);
 	
 	// widget -> param
-	success = connect(mSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), [this](double value)
-					  {
-						  mParameter->set(value);
-					  });
+	success = connect(mSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), [this](double value) {
+		mParameter->set(value);
+	});
 	assert(success);
 	
 //	auto layout = new QHBoxLayout;

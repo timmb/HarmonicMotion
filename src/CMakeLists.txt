@@ -9,6 +9,8 @@ set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${QT5_MODULE_PATH})
 SET(STATIC_LIBRARY_EXTENSION a)
 SET(DYNAMIC_LIBRARY_EXTENSION dylib)
 
+set(OS macosx)
+
 
 # Setup only debug and release
 if(CMAKE_CONFIGURATION_TYPES)
@@ -129,14 +131,16 @@ INCLUDE_DIRECTORIES(
 	${CinderDir}/boost
 	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/include/Include
 	${HarmonicMotionDir}/lib/CinderBlocks/OSC/src
+	${CinderDir}/blocks/Cinder-OpenCV/include
 )
 
 # Link directories - one per line
 LINK_DIRECTORIES(
 	${HarmonicMotionDir}/bin
 	${HarmonicMotionDir}/lib
-	${HarmonicMotionDir}/lib/macosx
+	${HarmonicMotionDir}/lib/${OS}
 #	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/lib/macosx
+	${CinderDir}/blocks/Cinder-OpenCV/lib/${OS}
 )
 
 ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE WIN32 ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
@@ -170,6 +174,7 @@ debug libHarmonicMotiond.${STATIC_LIBRARY_EXTENSION}
 optimized libcinder.${STATIC_LIBRARY_EXTENSION}
 debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
 ${CINDER_DEPENDENCIES}
+
 # OpenNI
 #libltdl.7.${DYNAMIC_LIBRARY_EXTENSION}
 libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}
@@ -187,6 +192,9 @@ libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
 #libXnVFeatures_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
 #libXnVHandGenerator_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
 #libXnVNite_1_3_1.${DYNAMIC_LIBRARY_EXTENSION}
+
+# OpenCV
+libopencv_core.${DYNAMIC_LIBRARY_EXTENSION}
 )
 
 # Custom script to copy in dylibs in Xcode
