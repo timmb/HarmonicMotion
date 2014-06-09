@@ -42,7 +42,7 @@ namespace hm
 		
 		static boost::shared_ptr<V::OpenNIDevice> mDevice;
 		/// Only allow one instance of this node to use mDevice at once
-		boost::try_mutex mDeviceMutex;
+		static boost::try_mutex mDeviceMutex;
 //		std::atomic<V::OpenNIDeviceManager*> mOpenNi;
 		
 		SceneMetaPtr mMetadata;

@@ -11,6 +11,8 @@ using namespace boost;
 
 namespace
 {
+	// small closure to set a static variable before anything else is
+	// instantiated.
 	bool unused = [](){
 		OpenNIDeviceManager::USE_THREAD = false;
 		return false;
@@ -18,6 +20,7 @@ namespace
 }
 
 boost::shared_ptr<V::OpenNIDevice> NodeKinect::mDevice((nullptr));
+boost::try_mutex NodeKinect::mDeviceMutex;
 
 int jointToVBone(Joint jointId)
 {
