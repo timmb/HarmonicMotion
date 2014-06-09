@@ -217,10 +217,8 @@ namespace hm
 		
 		virtual ParameterValueContainer toContainer() const override
 		{
-			std::cout << "toContainer: external: "<<mExternalValue<<std::endl;
 			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
 			ParameterValueContainer v(mExternalValue);
-			std::cout << "toContainer: v: "<<v<<std::endl;
 			return v;
 		}
 		
