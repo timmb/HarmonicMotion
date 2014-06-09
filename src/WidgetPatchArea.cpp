@@ -59,7 +59,6 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setFocusPolicy(Qt::ClickFocus);
 	setAutoFillBackground(true);
-	//	mPatchArea->setColor(QPalette::Window, QColor("gray"));
 	installEventFilter(mMousePressFilter);
 }
 
