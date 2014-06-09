@@ -128,6 +128,9 @@ namespace hm
 		success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(deleteFromModel()));
 		assert(success);
 		
+		Node::Params params = node->exportParams();
+		move(params.guiLocationX, params.guiLocationY);
+		
 		
 		Q_EMIT geometryChanged();
 
@@ -252,6 +255,25 @@ namespace hm
 	void WidgetNode::moveEvent(QMoveEvent* event)
 	{
 		preventNegativePosition();
+		// update values in model and allow it to change those values.
+		QPoint pos = event->pos();
+		Node::Params params = node()->exportParams();
+		params.guiLocationX = pos.x();
+		params.guiLocationY = pos.y();
+		// this function may modify `params`
+		node()->setNodeParams(params);
+		if (params.guiLocationX != pos.x() || params.guiLocationY != pos.y())
+		{
+			assert(params.guiLocationX >= 0 && params.guiLocationY >= 0);
+			// there's no reason why node will have set x or y to be negative
+			// but it's essential they're non-negative as otherwise we
+			// may enter an infinite recursion where this class and Node
+			// continually adjust each other's position.
+			pos.setX(qMax(0, pos.x()));
+			pos.setY(qMax(0, pos.y()));
+			move(pos);
+			return;
+		}
 		Q_EMIT geometryChanged();
 	}
 	
