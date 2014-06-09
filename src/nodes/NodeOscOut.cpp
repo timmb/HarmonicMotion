@@ -51,8 +51,7 @@ NodeOscOut::NodeOscOut(Params params, std::string className)
 						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
 	addParameter("Destination hostname", &mDestinationHost)->addNewExternalValueCallback([=](){ callbackDestinationChanged(); });
 	auto p = addParameter("Destination port", &mDestinationPort);
-	p->hardMin = p->softMin = 0;
-	p->hardMax = p->softMax = 65535;
+	p->setBounds(0, 65535, 0, 65535);
 	p->addNewExternalValueCallback([=](){ callbackDestinationChanged(); });
 	addParameter("OSC address prefix", &mPrefix)->addNewExternalValueCallback([=](){ callbackOscAddressChanged(); });
 }
