@@ -49,5 +49,7 @@ void WidgetLet::mousePressEvent(QMouseEvent* event)
         // forward to the patch area to potentially start new patchcord
 		QPoint posRelativeToPatchArea = mapTo(node()->patchArea(), event->pos());
 		node()->patchArea()->mousePressEventFromWidgetLet(this, posRelativeToPatchArea);
+		event->accept();
     }
 }
+

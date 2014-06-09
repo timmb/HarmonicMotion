@@ -102,13 +102,21 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 	mSpinBox->setRange(parameter->hardMin, parameter->hardMax);
 	mSpinBox->move(0,0);
 	
+	ParameterValueContainer valueContainer = parameter->toContainer();
+	double* value = nullptr;
+	value = boost::get<double>(&valueContainer);
+	assert(value);
+	if (value)
+	{
+		mSpinBox->setValue(*value);
+	}
+	
 	// param -> widget
-	mParameter->addNewInternalValueCallback([this](double value)
-											{
-												mSpinBox->blockSignals(true);
-												Q_EMIT newInternalValue(value);
-												mSpinBox->blockSignals(false);
-											});
+	mParameter->addNewInternalValueCallback([this](double value) {
+		mSpinBox->blockSignals(true);
+		Q_EMIT newInternalValue(value);
+		mSpinBox->blockSignals(false);
+	});
 	bool success = connect(this, SIGNAL(newInternalValue(double)), mSpinBox, SLOT(setValue(double)));
 	assert(success);
 	
@@ -134,6 +142,7 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 , mSpinBox(new QSpinBox(this))
 {
 	assert(parameter != nullptr);
+	mSpinBox->setRange(parameter->softMin, parameter->softMax);
 	ParameterValueContainer valueContainer = parameter->toContainer();
 	int* value = nullptr;
 	value = boost::get<int>(&valueContainer);
@@ -142,7 +151,6 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 	{
 		mSpinBox->setValue(*value);
 	}
-	mSpinBox->setRange(parameter->softMin, parameter->softMax);
 	mSpinBox->move(0, 0);
 	
 	// param -> widget

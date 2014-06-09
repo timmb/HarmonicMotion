@@ -245,6 +245,7 @@ namespace hm
         {
             event->accept(); // do not propagate
             mDragOffset = QPoint();
+			mIsDragging = false;
         }
 	}
 	
