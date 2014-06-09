@@ -377,7 +377,7 @@ bool Pipeline::p_PatchCordInvariant() const
 
 bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 {
-	if (outlet==nullptr || inlet==nullptr)
+	if (outlet==nullptr || inlet==nullptr || isConnected(outlet, inlet))
 	{
 		return false;
 	}
