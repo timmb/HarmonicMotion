@@ -14,6 +14,7 @@
 #include <QTimer>
 #include <QDebug>
 #include "Utilities.h"
+#include <QComboBox>
 
 using namespace hm;
 
@@ -99,7 +100,7 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 , mSpinBox(new QDoubleSpinBox(this))
 {
 	mSpinBox->setMaximumWidth(100);
-	mSpinBox->setRange(parameter->hardMin, parameter->hardMax);
+	mSpinBox->setRange(parameter->hardMin(), parameter->hardMax());
 	mSpinBox->move(0,0);
 	
 	ParameterValueContainer valueContainer = parameter->toContainer();
@@ -126,11 +127,11 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 	});
 	assert(success);
 	
-//	auto layout = new QHBoxLayout;
-//	layout->setAlignment(Qt::AlignLeft);
-//	setLayout(layout);
-//	
-//	layout->addWidget(mSpinBox);
+	//	auto layout = new QHBoxLayout;
+	//	layout->setAlignment(Qt::AlignLeft);
+	//	setLayout(layout);
+	//
+	//	layout->addWidget(mSpinBox);
 }
 
 
@@ -138,46 +139,71 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 
 WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter)
 : WidgetParameter<int>(parameter)
-, mSpinBox(new QSpinBox(this))
+, mWidget(nullptr)
 {
 	assert(parameter != nullptr);
-	mSpinBox->setRange(parameter->softMin, parameter->softMax);
-	ParameterValueContainer valueContainer = parameter->toContainer();
-	int* value = nullptr;
-	value = boost::get<int>(&valueContainer);
-	assert(value);
-	if (value)
-	{
-		mSpinBox->setValue(*value);
-	}
-	mSpinBox->move(0, 0);
 	
-	// param -> widget
-	mParameter->addNewInternalValueCallback([this](int value)
+	if (parameter->hasEnumerationLabels())
 	{
-		mSpinBox->blockSignals(true);
-		Q_EMIT newInternalValue(value);
-		mSpinBox->blockSignals(false);
-	});
-	bool success = connect(this, SIGNAL(newInternalValue(int)), mSpinBox, SLOT(setValue(int)));
-	assert(success);
-
-	// widget -> param
-	success = connect(mSpinBox, SELECT<int>::OVERLOAD_OF(&QSpinBox::valueChanged), [this](int value)
+		QComboBox* w = new QComboBox(this);
+		w->setEditable(false);
+		std::vector<std::string> labels = parameter->enumerationLabels();
+		for (int i=0; i<labels.size(); i++)
+		{
+			w->insertItem(i, str(labels[i]));
+		}
+		// param -> widget
+		mInternalValueCallbackHandle = mParameter->addNewInternalValueCallback([w, this](int value) {
+			w->blockSignals(true);
+			Q_EMIT newInternalValue(value);
+			w->blockSignals(false);
+		});
+		bool success = connect(this, SIGNAL(newInternalValue(int)), w, SLOT(setCurrentIndex(int)));
+		assert(success);
+		// widget -> param
+		success = connect(w, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this](int value) {
+			mParameter->set(value);
+		});
+		assert(success);
+		mWidget = w;
+	}
+	else
 	{
-		mParameter->set(value);
-	});
-	assert(success);
+		QSpinBox* spinBox = new QSpinBox(this);
+		spinBox->setRange(parameter->softMin(), parameter->softMax());
+		ParameterValueContainer valueContainer = parameter->toContainer();
+		int* value = nullptr;
+		value = boost::get<int>(&valueContainer);
+		assert(value);
+		if (value)
+		{
+			spinBox->setValue(*value);
+		}
+		spinBox->move(0, 0);
 		
-//	auto t = new QTimer(this);
-//	t->setInterval(1000);
-//	t->start();
-//	connect(t, &QTimer::timeout, [this]() {
-//		qDebug() << "pos" << mSpinBox->pos() << "geom"<<mSpinBox->geometry();
-//		
-//	});
+		// param -> widget
+		mInternalValueCallbackHandle = mParameter->addNewInternalValueCallback([spinBox, this](int value)
+		{
+			spinBox->blockSignals(true);
+			Q_EMIT newInternalValue(value);
+			spinBox->blockSignals(false);
+		});
+		bool success = connect(this, SIGNAL(newInternalValue(int)), spinBox, SLOT(setValue(int)));
+		assert(success);
+		
+		// widget -> param
+		success = connect(spinBox, SELECT<int>::OVERLOAD_OF(&QSpinBox::valueChanged), [this](int value) {
+			mParameter->set(value);
+		});
+		assert(success);
+		mWidget = spinBox;
+	}
 }
 
+WidgetParameterInt::~WidgetParameterInt()
+{
+	mParameter->removeNewInternalValueCallback(mInternalValueCallbackHandle);
+}
 
 // ----------------------------
 
@@ -191,20 +217,20 @@ WidgetParameterString::WidgetParameterString(std::shared_ptr<Parameter<std::stri
 	
 	// param -> widget
 	mParameter->addNewInternalValueCallback([this](std::string value)
-	{
-		mWidget->blockSignals(true);
-		Q_EMIT newInternalValue(str(value));
-		mWidget->blockSignals(false);
-	});
+											{
+												mWidget->blockSignals(true);
+												Q_EMIT newInternalValue(str(value));
+												mWidget->blockSignals(false);
+											});
 	bool success = connect(this, SIGNAL(newInternalValue(QString const&)), mWidget, SLOT(setText(QString const&)));
 	assert(success);
 	
 	success = connect(mWidget, &QLineEdit::textChanged, [this](QString const& value)
-	{
-		mParameter->set(std::string(value.toUtf8()));
-	});
+					  {
+						  mParameter->set(std::string(value.toUtf8()));
+					  });
 	assert(success);
-		
+	
 }
 
 

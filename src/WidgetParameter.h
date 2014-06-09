@@ -83,15 +83,17 @@ namespace hm
 
 	public:
 		WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter);
+		virtual ~WidgetParameterInt();
 		
 	Q_SIGNALS:
 		void newInternalValue(int value);
 		
 	protected:
-		QSize sizeHint() const { return mSpinBox->sizeHint(); }
+		QSize sizeHint() const { return mWidget->sizeHint(); }
 		
 	private:
-		QSpinBox* mSpinBox;
+		QWidget* mWidget;
+		int mInternalValueCallbackHandle;
 	};
 	
 	// ---------------------------------------
