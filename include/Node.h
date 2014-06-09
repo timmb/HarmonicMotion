@@ -162,10 +162,9 @@ namespace hm
 		/// \param The name of the parameter. This needs to be unique relative to
 		/// this node.
 		/// \param A pointer to the value that the parameter will be controlling.
-		/// \return A pointer to the parameter. This will remain valid for
-		/// the lifetime of this node.
+		/// \return A shared pointer to the parameter.
 		template <typename T>
-		Parameter<T>* addParameter(std::string name, T* value);
+		ParameterPtrT<T> addParameter(std::string name, T* value);
 		/// Updates all parameters, activating callbacks where applicable. Callbacks
 		/// run in the same thread as this function. This function is called
 		/// before step() within NodeUnthreaded. Within NodeThreaded you
@@ -230,7 +229,7 @@ namespace hm
 	
 	
 	template <typename T>
-	Parameter<T>* Node::addParameter(std::string name, T* value)
+	ParameterPtrT<T> Node::addParameter(std::string name, T* value)
 	{
 		// Check if we have a custom initial value
 		T* initialValue = nullptr;
@@ -257,7 +256,7 @@ namespace hm
 		}
 		boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
 		mParameters.push_back(parameter);
-		return parameter.get();
+		return parameter;
 	}
 }
 

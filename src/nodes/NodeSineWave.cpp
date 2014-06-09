@@ -9,6 +9,7 @@
 #include "NodeSineWave.h"
 #include "Outlet.h"
 #include "FactoryNode.h"
+#include "Common.h"
 
 using namespace hm;
 

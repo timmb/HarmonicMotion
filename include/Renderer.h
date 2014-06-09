@@ -36,6 +36,7 @@ namespace hm
 		virtual void operator()(Point3d const& x) {}
 		virtual void operator()(Skeleton3d const& x) {}
 		virtual void operator()(Scene3d const& x) {}
+		virtual void operator()(Image2d const& x) {}
 		
 		typedef void result_type;
 		
@@ -63,10 +64,10 @@ namespace hm
 	};
 	
 	/// Renderer for 3D points as circles
-	class BlobRenderer : public Renderer
+	class RendererBlob : public Renderer
 	{
 	public:
-		BlobRenderer();
+		RendererBlob();
 		
 		virtual void operator()(Point3d const& x, ci::ColorA const& color=ci::ColorA::white());
 		virtual void operator()(Skeleton3d const& x) override;
@@ -74,4 +75,15 @@ namespace hm
 		
 	private:
 	};
+	
+	/// Renderer for 2D images
+	class Renderer2D : public Renderer
+	{
+	public:
+		Renderer2D();
+		
+		virtual void operator()(Image2d const& x);
+	};
 }
+
+

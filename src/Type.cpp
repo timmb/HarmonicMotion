@@ -18,14 +18,22 @@ namespace std
 				return "Skeleton3d";
 			case hm::SCENE3D:
 				return "Scene3d";
-			case hm::IMAGE3D:
-				return "Image3d";
+			case hm::IMAGE2D:
+				return "Image2d";
 			case hm::ALL_TYPES:
 				return "All types";
 			case hm::VECTOR3D_TYPES:
 				return "3D Vector types";
 			default:
-				assert(false && "Case missing for type value.");
+				if (type<0 || type>hm::ALL_TYPES)
+				{
+					assert(false && "Case missing for type value.");
+					return "Invalid type";
+				}
+				else
+				{
+					return "Multiple types";
+				}
 		}
 	}
 }

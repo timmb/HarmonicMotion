@@ -11,7 +11,6 @@
 		22197ED717F44B1B003B1883 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECE17F44B1B003B1883 /* Node.cpp */; };
 		22197ED917F44B1B003B1883 /* Outlet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ECF17F44B1B003B1883 /* Outlet.cpp */; };
 		22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22197ED117F44B1B003B1883 /* Pipeline.cpp */; };
-		22197EDE17F44B4F003B1883 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */; };
 		22197EFC17F44B54003B1883 /* Resources.h in Headers */ = {isa = PBXBuildFile; fileRef = E18406B5E23F4FE6B09BCDA7 /* Resources.h */; };
 		22197F0617F44B76003B1883 /* Inlet.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197EFF17F44B76003B1883 /* Inlet.h */; };
 		22197F0717F44B76003B1883 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 22197F0017F44B76003B1883 /* Node.h */; };
@@ -159,6 +158,11 @@
 		3442AFD818C0AF2E0015B240 /* Let.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD618C0AF2E0015B240 /* Let.h */; };
 		3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD718C0AF2E0015B240 /* PatchCord.h */; };
 		3445431219363F8600E90E13 /* Type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3445431119363F8600E90E13 /* Type.cpp */; };
+		345F5D5E1945FF6B003BC862 /* Image2d.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F5D5D1945FF6B003BC862 /* Image2d.h */; };
+		345F5D601945FF71003BC862 /* Image2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345F5D5F1945FF71003BC862 /* Image2d.cpp */; };
+		345F5D621946007B003BC862 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F5D611946007B003BC862 /* CinderOpenCV.h */; };
+		345F967B1945F51F001AD393 /* NodeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345F967A1945F51F001AD393 /* NodeCamera.cpp */; };
+		345F967D1945F534001AD393 /* NodeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F967C1945F534001AD393 /* NodeCamera.h */; };
 		347662EB19409A4600539238 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 347662E919409A4600539238 /* Event.cpp */; };
 		347662EF19409B9400539238 /* Listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 347662ED19409B9400539238 /* Listener.cpp */; };
 		347662F31940A00100539238 /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 347662F11940A00100539238 /* Event.h */; };
@@ -362,6 +366,11 @@
 		3442AFD618C0AF2E0015B240 /* Let.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Let.h; path = ../include/Let.h; sourceTree = "<group>"; };
 		3442AFD718C0AF2E0015B240 /* PatchCord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatchCord.h; path = ../include/PatchCord.h; sourceTree = "<group>"; };
 		3445431119363F8600E90E13 /* Type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Type.cpp; path = ../src/Type.cpp; sourceTree = "<group>"; };
+		345F5D5D1945FF6B003BC862 /* Image2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image2d.h; path = ../include/Image2d.h; sourceTree = "<group>"; };
+		345F5D5F1945FF71003BC862 /* Image2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image2d.cpp; path = ../src/Image2d.cpp; sourceTree = "<group>"; };
+		345F5D611946007B003BC862 /* CinderOpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderOpenCV.h; path = "../../../Cinder/blocks/Cinder-OpenCV/include/CinderOpenCV.h"; sourceTree = "<group>"; };
+		345F967A1945F51F001AD393 /* NodeCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeCamera.cpp; path = ../../src/nodes/NodeCamera.cpp; sourceTree = "<group>"; };
+		345F967C1945F534001AD393 /* NodeCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeCamera.h; sourceTree = "<group>"; };
 		347662E919409A4600539238 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		347662ED19409B9400539238 /* Listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Listener.cpp; sourceTree = "<group>"; };
 		347662F11940A00100539238 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../include/Event.h; sourceTree = "<group>"; };
@@ -403,7 +412,6 @@
 		34E2062318B76FAF00729934 /* PatchCord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchCord.cpp; sourceTree = "<group>"; };
 		3D4E9ABC9ACD428BBF3DDEA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		567058A301B142BDBF7A2AEE /* HarmonicMotion_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = HarmonicMotion_Prefix.pch; sourceTree = "<group>"; };
-		A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CinderOpenCV.h; path = "../../Cinder/blocks/Cinder-OpenCV/include/CinderOpenCV.h"; sourceTree = "<group>"; };
 		E18406B5E23F4FE6B09BCDA7 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -674,6 +682,8 @@
 				2223EC7718196C2500B900CF /* Filter.h */,
 				226A9665189BED140056DCD1 /* NodeAccumulator.cpp */,
 				226A9657189BECF60056DCD1 /* NodeAccumulator.h */,
+				345F967A1945F51F001AD393 /* NodeCamera.cpp */,
+				345F967C1945F534001AD393 /* NodeCamera.h */,
 				226A9666189BED140056DCD1 /* NodeFilter.cpp */,
 				226A9658189BECF60056DCD1 /* NodeFilter.h */,
 				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
@@ -701,6 +711,8 @@
 				22197F8717F4A4F3003B1883 /* Data.h */,
 				2223EC5E1817EEA400B900CF /* DataNull.cpp */,
 				2223EC631817EEAF00B900CF /* DataNull.h */,
+				345F5D5F1945FF71003BC862 /* Image2d.cpp */,
+				345F5D5D1945FF6B003BC862 /* Image2d.h */,
 				221E90381817270C0028EAFD /* Point3d.cpp */,
 				221E90421817273B0028EAFD /* Point3d.h */,
 				2229375218168E5F008CAA09 /* Scene3d.cpp */,
@@ -831,7 +843,7 @@
 		42E71FC3D5664AD78E3E0481 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				A3BB0F5550B8469EB7C819ED /* CinderOpenCV.h */,
+				345F5D611946007B003BC862 /* CinderOpenCV.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -852,7 +864,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				34DBA752193F3A9600D24456 /* UdpSocket.h in Headers */,
-				22197EDE17F44B4F003B1883 /* CinderOpenCV.h in Headers */,
 				226A9663189BECF60056DCD1 /* NodeRenderer.h in Headers */,
 				226A9664189BECF60056DCD1 /* NodeSineWave.h in Headers */,
 				226A965F189BECF60056DCD1 /* NodeFilter.h in Headers */,
@@ -938,6 +949,7 @@
 				222936FB181677BD008CAA09 /* XnOSStrings.h in Headers */,
 				222936FC181677BD008CAA09 /* XnPlatform.h in Headers */,
 				226A9662189BECF60056DCD1 /* NodePrinter.h in Headers */,
+				345F5D621946007B003BC862 /* CinderOpenCV.h in Headers */,
 				222936FD181677BD008CAA09 /* XnPrdNode.h in Headers */,
 				222936FE181677BD008CAA09 /* XnPrdNodeInfo.h in Headers */,
 				222936FF181677BD008CAA09 /* XnPrdNodeInfoList.h in Headers */,
@@ -958,6 +970,7 @@
 				22293709181677BD008CAA09 /* XnStatusCodes.h in Headers */,
 				2229370A181677BD008CAA09 /* XnStatusRegister.h in Headers */,
 				34DBA74C193F3A9600D24456 /* IpEndpointName.h in Headers */,
+				345F967D1945F534001AD393 /* NodeCamera.h in Headers */,
 				2229370B181677BD008CAA09 /* XnStringsHash.h in Headers */,
 				226A9661189BECF60056DCD1 /* NodeOscOut.h in Headers */,
 				2229370C181677BD008CAA09 /* XnStringsHashT.h in Headers */,
@@ -968,6 +981,7 @@
 				22293711181677BD008CAA09 /* XnUtils.h in Headers */,
 				22293712181677BD008CAA09 /* XnVersion.h in Headers */,
 				22293727181677C8008CAA09 /* SkeletonPoseDetector.h in Headers */,
+				345F5D5E1945FF6B003BC862 /* Image2d.h in Headers */,
 				2229372A181677C8008CAA09 /* VFakeKinect.h in Headers */,
 				22C5DF6518A25BCA00920089 /* FactoryNode.h in Headers */,
 				2229372D181677C8008CAA09 /* VKinect.h in Headers */,
@@ -1056,11 +1070,13 @@
 				22197EDD17F44B1B003B1883 /* Pipeline.cpp in Sources */,
 				34DBA750193F3A9600D24456 /* UdpSocket.cpp in Sources */,
 				2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */,
+				345F967B1945F51F001AD393 /* NodeCamera.cpp in Sources */,
 				34DBA75F193F3A9600D24456 /* OscTypes.cpp in Sources */,
 				22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */,
 				347662EB19409A4600539238 /* Event.cpp in Sources */,
 				34DBA75D193F3A9600D24456 /* OscReceivedElements.cpp in Sources */,
 				2223EC611817EEA400B900CF /* DataNull.cpp in Sources */,
+				345F5D601945FF71003BC862 /* Image2d.cpp in Sources */,
 				3442AFD418C0ABE10015B240 /* Let.cpp in Sources */,
 				34E2062518B76FAF00729934 /* PatchCord.cpp in Sources */,
 				34DBA758193F3A9600D24456 /* OscOutboundPacketStream.cpp in Sources */,

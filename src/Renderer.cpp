@@ -4,6 +4,7 @@
 #include "Point3d.h"
 #include "Skeleton3d.h"
 #include "Scene3d.h"
+#include "cinder/gl/Texture.h"
 
 using namespace hm;
 using namespace ci;
@@ -48,13 +49,13 @@ void Renderer::render(Data const& data, ci::Area const& viewport)
 
 // BlobRenderer
 
-BlobRenderer::BlobRenderer()
+RendererBlob::RendererBlob()
 : Renderer("Blob", "Renders 3D points as blobs.")
 {
 	
 }
 
-void BlobRenderer::operator()(Point3d const& x, ci::ColorA const& color)
+void RendererBlob::operator()(Point3d const& x, ci::ColorA const& color)
 {
 	if (mNeedsRefresh)
 	{
@@ -66,7 +67,7 @@ void BlobRenderer::operator()(Point3d const& x, ci::ColorA const& color)
 	drawSphere(x.value, 0.05, 12);
 }
 
-void BlobRenderer::operator()(Skeleton3d const& x)
+void RendererBlob::operator()(Skeleton3d const& x)
 {
 	if (mNeedsRefresh)
 	{
@@ -86,7 +87,7 @@ void BlobRenderer::operator()(Skeleton3d const& x)
 	}
 }
 
-void BlobRenderer::operator()(Scene3d const& x)
+void RendererBlob::operator()(Scene3d const& x)
 {
 	if (mNeedsRefresh)
 	{
@@ -100,7 +101,38 @@ void BlobRenderer::operator()(Scene3d const& x)
 }
 
 
+// Renderer2D
 
+Renderer2D::Renderer2D()
+: Renderer("2D image", "Renders 2D images")
+{
+	
+}
+
+void Renderer2D::operator()(Image2d const& v)
+{
+	if (mNeedsRefresh)
+	{
+		setupMatricesWindow();
+	}
+	Vec2f offset;
+	float scale(1);
+	float vAspect = float(v.value.cols)/v.value.rows;
+	float aspect = float(mViewport.getWidth()) / mViewport.getHeight();
+	if (vAspect > aspect)
+	{
+		// requires letterboxes on top and bottom
+		scale = float(v.value.cols) / mViewport.getWidth();
+		offset.y = int((mViewport.getHeight() - scale * v.value.rows) / 2);
+	}
+	else if (vAspect < aspect)
+	{
+		// requires letterboxes on left and right
+		scale = float(v.value.rows) / mViewport.getHeight();
+		offset.x = int((mViewport.getWidth() - scale * v.value.cols) / 2);
+	}
+	gl::draw(gl::Texture(v.toSurface()), offset);
+}
 
 
 

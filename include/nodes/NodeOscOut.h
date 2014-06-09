@@ -44,6 +44,8 @@ namespace hm
 			typedef void result_type;
 			
 			void operator()(DataNull const& x);
+			/// Not currently supported
+			void operator()(Image2d const& x);
 			void operator()(Value const& x);
 			void operator()(Point3d const& x);
 			void operator()(Skeleton3d const& x);

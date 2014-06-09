@@ -92,6 +92,12 @@ void NodeOscOut::DataSender::operator()(DataNull const& x)
 }
 
 
+void NodeOscOut::DataSender::operator()(Image2d const& x)
+{
+	
+}
+
+
 
 void NodeOscOut::DataSender::operator()(Value const& value)
 {

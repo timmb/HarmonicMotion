@@ -13,6 +13,7 @@
 #include "Point3d.h"
 #include "Value.h"
 #include "DataNull.h"
+#include "Image2d.h"
 #include <boost/variant.hpp>
 
 namespace hm
@@ -21,7 +22,7 @@ namespace hm
 	class Data
 	{
 	public:
-		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d> Variant;
+		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d, Image2d> Variant;
 
 		/// Creates a null (i.e. undefined) Data object
 		Data();
@@ -31,6 +32,7 @@ namespace hm
 		Data(Point3d const& x);
 		Data(Skeleton3d const& x);
 		Data(Scene3d const& x);
+		Data(Image2d const& x);
 
 		Type type() const { return mType; }
 		double timestamp() const { return asBaseData()->timestamp; }
@@ -63,6 +65,10 @@ namespace hm
 		bool isScene3d() const;
 		Scene3d const& asScene3d() const;
 		Scene3d& asScene3d();
+		
+		bool isImage2d() const;
+		Image2d const& asImage2d() const;
+		Image2d& asImage2d();
 		
 		std::string toString() const;
 		

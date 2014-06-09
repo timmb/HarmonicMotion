@@ -9,6 +9,7 @@ namespace hm
 	class Scene3d : public Base3dData
 	{
 	public:
+		explicit
 		Scene3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 		std::vector<Skeleton3d> skeletons;

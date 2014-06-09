@@ -20,6 +20,8 @@ namespace hm
 	class Outlet;
 	class Node;
 	class BaseParameter;
+	template <typename T>
+	class Parameter;
 	class PatchCord;
 	class Pipeline;
 	class Listener;
@@ -31,12 +33,15 @@ namespace hm
 	class Point3d;
 	class Skeleton3d;
 	class Scene3d;
+	class Image2d;
 	
 	// typedefs
 	typedef std::shared_ptr<Inlet> InletPtr;
 	typedef std::shared_ptr<Outlet> OutletPtr;
 	typedef std::shared_ptr<Node> NodePtr;
 	typedef std::shared_ptr<BaseParameter> ParameterPtr;
+	template <typename T>
+	using ParameterPtrT = std::shared_ptr<Parameter<T>>;
 	typedef std::shared_ptr<const BaseParameter> ParameterConstPtr;
 	typedef std::shared_ptr<PatchCord> PatchCordPtr;
 	typedef std::shared_ptr<Pipeline> PipelinePtr;
