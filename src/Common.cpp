@@ -28,7 +28,7 @@ namespace hm
 			POINT3D,
 			SKELETON3D,
 			SCENE3D,
-			IMAGE3D
+			IMAGE2D
 		};
 		return types;
 	}

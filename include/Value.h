@@ -40,6 +40,11 @@ namespace hm
 		Scene3d operator*(Scene3d const& rhs) const;
 		Scene3d operator/(Scene3d const& rhs) const;
 		
+		Image2d operator+(Image2d const& rhs) const;
+		Image2d operator-(Image2d const& rhs) const;
+		Image2d operator*(Image2d const& rhs) const;
+		Image2d operator/(Image2d const& rhs) const;
+		
 		
 		Value operator*(double rhs) const;
 		Value operator/(double rhs) const;

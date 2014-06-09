@@ -11,6 +11,7 @@
 #include <sstream>
 #include "Skeleton3d.h"
 #include "Scene3d.h"
+#include "Image2d.h"
 
 
 using namespace hm;
@@ -110,6 +111,26 @@ Scene3d Value::operator*(Scene3d const& rhs) const
 Scene3d Value::operator/(Scene3d const& rhs) const
 {
 	return rhs * (1. / *this);
+}
+
+Image2d Value::operator+(Image2d const& rhs) const
+{
+	return rhs + *this;
+}
+
+Image2d Value::operator-(Image2d const& rhs) const
+{
+	return rhs - *this;
+}
+
+Image2d Value::operator*(Image2d const& rhs) const
+{
+	return rhs * *this;
+}
+
+Image2d Value::operator/(Image2d const& rhs) const
+{
+	return rhs / *this;
 }
 
 

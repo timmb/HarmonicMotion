@@ -15,6 +15,7 @@
 
 using namespace hm;
 using namespace ci;
+using namespace std;
 
 NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
 : NodeUnthreaded(params, className)
@@ -27,7 +28,9 @@ NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
 						 " a request is received to render");
 	mInlet->setNotifyCallback([this](double d){ mTimestampOfData = d; });
 	
-	mRenderers.push_back(RendererPtr(new BlobRenderer()));
+	mRenderers.push_back(RendererPtr(new RendererBlob()));
+	mRenderers.push_back(RendererPtr(new Renderer2D()));
+	
 
 	assert(!mRenderers.empty());
 	
@@ -61,7 +64,9 @@ void NodeRenderer::draw(int viewportWidth, int viewportHeight)
 //		datatype->sceneMeta->setupCamera(viewportWidth, viewportHeight);
 //	}
 	mTimestampOfLastDraw = data.timestamp();
-	assert(mRenderer<= 0 && mRenderer < mRenderers.size());
+	assert(0 <= mRenderer && mRenderer < mRenderers.size());
 	mRenderers[mRenderer]->render(data, Area(0, 0, viewportWidth, viewportHeight));
 //	datatype->draw();
 }
+
+

@@ -15,3 +15,4 @@
 #include "nodes/NodeFilter.h"
 #include "nodes/NodeExpression.h"
 #include "nodes/NodeRenderer.h"
+#include "nodes/NodeCamera.h"

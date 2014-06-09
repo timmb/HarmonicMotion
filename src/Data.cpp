@@ -46,6 +46,11 @@ Data::Data(Scene3d const& x)
 , data(x)
 {}
 
+Data::Data(Image2d const& x)
+: mType(IMAGE2D)
+, data(x)
+{}
+
 BaseData* Data::asBaseData()
 {
 	switch (mType)
@@ -60,6 +65,8 @@ BaseData* Data::asBaseData()
 			return &boost::get<Skeleton3d&>(data);
 		case SCENE3D:
 			return &boost::get<Scene3d&>(data);
+		case IMAGE2D:
+			return &boost::get<Image2d&>(data);
 		default:
 			assert(false);
 			return nullptr;
@@ -81,6 +88,8 @@ BaseData const* Data::asBaseData() const
 			return &boost::get<Skeleton3d const&>(data);
 		case SCENE3D:
 			return &boost::get<Scene3d const&>(data);
+		case IMAGE2D:
+			return &boost::get<Image2d const&>(data);
 		default:
 			assert(false);
 			return nullptr;
@@ -172,6 +181,25 @@ Scene3d& Data::asScene3d()
 	return boost::get<Scene3d&>(data);
 }
 
+bool Data::isImage2d() const
+{
+	return mType == IMAGE2D;
+}
+
+Image2d const& Data::asImage2d() const
+{
+	assert(isImage2d());
+	return boost::get<Image2d const&>(data);
+}
+
+Image2d& Data::asImage2d()
+{
+	assert(isImage2d());
+	return boost::get<Image2d&>(data);
+}
+
+
+
 namespace hm {
 	std::ostream& operator<<(std::ostream& out, Data const& rhs)
 	{
@@ -205,6 +233,12 @@ namespace
 		BAD_OPERATION(addition, Point3d, Value)
 		BAD_OPERATION(addition, Skeleton3d, Value)
 		BAD_OPERATION(addition, Scene3d, Value)
+		BAD_OPERATION(addition, Point3d, Image2d)
+		BAD_OPERATION(addition, Skeleton3d, Image2d)
+		BAD_OPERATION(addition, Scene3d, Image2d)
+		BAD_OPERATION(addition, Image2d, Point3d)
+		BAD_OPERATION(addition, Image2d, Skeleton3d)
+		BAD_OPERATION(addition, Image2d, Scene3d)
 
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
@@ -246,6 +280,12 @@ namespace
 		BAD_OPERATION(subtraction, Point3d, Value)
 		BAD_OPERATION(subtraction, Skeleton3d, Value)
 		BAD_OPERATION(subtraction, Scene3d, Value)
+		BAD_OPERATION(subtraction, Point3d, Image2d)
+		BAD_OPERATION(subtraction, Skeleton3d, Image2d)
+		BAD_OPERATION(subtraction, Scene3d, Image2d)
+		BAD_OPERATION(subtraction, Image2d, Point3d)
+		BAD_OPERATION(subtraction, Image2d, Skeleton3d)
+		BAD_OPERATION(subtraction, Image2d, Scene3d)
 		
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
@@ -280,6 +320,13 @@ namespace
 	
 	struct VisitorMul : public static_visitor<Data>
 	{
+		BAD_OPERATION(multiplication, Point3d, Image2d)
+		BAD_OPERATION(multiplication, Skeleton3d, Image2d)
+		BAD_OPERATION(multiplication, Scene3d, Image2d)
+		BAD_OPERATION(multiplication, Image2d, Point3d)
+		BAD_OPERATION(multiplication, Image2d, Skeleton3d)
+		BAD_OPERATION(multiplication, Image2d, Scene3d)
+
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -313,6 +360,13 @@ namespace
 	
 	struct VisitorDiv : public static_visitor<Data>
 	{
+		BAD_OPERATION(division, Point3d, Image2d)
+		BAD_OPERATION(division, Skeleton3d, Image2d)
+		BAD_OPERATION(division, Scene3d, Image2d)
+		BAD_OPERATION(division, Image2d, Point3d)
+		BAD_OPERATION(division, Image2d, Skeleton3d)
+		BAD_OPERATION(division, Image2d, Scene3d)
+
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -420,7 +474,9 @@ bool Data::canAdd(Data const& rhs) const
 	Type const& u = rhs.type();
 	return (t==VALUE && u==VALUE)
 	|| (t&VECTOR3D_TYPES && u&VECTOR3D_TYPES)
-	|| (t==IMAGE3D && u==IMAGE3D);
+	|| (t==IMAGE2D && u==IMAGE2D)
+	|| (t==IMAGE2D && u==VALUE)
+	|| (t==VALUE && u==IMAGE2D);
 }
 
 bool Data::canSubtract(Data const& rhs) const
@@ -429,7 +485,9 @@ bool Data::canSubtract(Data const& rhs) const
 	Type const& u = rhs.type();
 	return (t==VALUE && u==VALUE)
 	|| (t&VECTOR3D_TYPES && u&VECTOR3D_TYPES)
-	|| (t==IMAGE3D && u==IMAGE3D);
+	|| (t==IMAGE2D && u==IMAGE2D)
+	|| (t==IMAGE2D && u==VALUE)
+	|| (t==VALUE && u==IMAGE2D);
 }
 
 bool Data::canMultiply(Data const& rhs) const
@@ -439,7 +497,9 @@ bool Data::canMultiply(Data const& rhs) const
 	return (t & VALUE && u & SCALABLE_TYPES)
 	|| (t & SCALABLE_TYPES && u & VALUE)
 	|| (t & VECTOR3D_TYPES && u & VECTOR3D_TYPES)
-	|| (t & IMAGE3D && u & IMAGE3D);
+	|| (t==IMAGE2D && u==IMAGE2D)
+	|| (t==IMAGE2D && u==VALUE)
+	|| (t==VALUE && u==IMAGE2D);
 }
 
 bool Data::canDivide(Data const& rhs) const
@@ -449,7 +509,9 @@ bool Data::canDivide(Data const& rhs) const
 	return (t & VALUE && u & SCALABLE_TYPES)
 	|| (t & SCALABLE_TYPES && u & VALUE)
 	|| (t & VECTOR3D_TYPES && u & VECTOR3D_TYPES)
-	|| (t & IMAGE3D && u & IMAGE3D);
+	|| (t==IMAGE2D && u==IMAGE2D)
+	|| (t==IMAGE2D && u==VALUE)
+	|| (t==VALUE && u==IMAGE2D);
 
 }
 

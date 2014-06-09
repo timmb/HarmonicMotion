@@ -123,6 +123,7 @@ namespace hm
 	class Skeleton3d : public Base3dData
 	{
 	public:
+		explicit
 		Skeleton3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 //		std::vector<Point3d> const& joints() const { return mJoints; }
