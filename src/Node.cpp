@@ -391,11 +391,23 @@ namespace hm
 	Json::Value& operator<<(Json::Value& value, Node::Params const& params)
 	{
 		value["name"] = params.name;
+		value["guiLocationX"] = params.guiLocationX;
+		value["guiLocationY"] = params.guiLocationY;
 		return value;
 	}
 
 	bool operator>>(Json::Value const& value, Node::Params& params)
 	{
+		if (!(value["name"].isConvertibleTo(Json::stringValue)
+			  && value["guiLocationX"].isConvertibleTo(Json::intValue)
+			  && value["guiLocationY"].isConvertibleTo(Json::intValue)
+			  ))
+		{
+			hm_debug("Error when loading \"params\" object from JSON.");
+			return false;
+		}
+		params.guiLocationX = value["guiLocationX"].asInt();
+		params.guiLocationY = value["guiLocationY"].asInt();
 		// TODO: Check name is unique
 		string name = value["name"].asString();
 		if (!name.empty())

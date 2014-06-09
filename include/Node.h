@@ -39,11 +39,16 @@ namespace hm
 			/// registered under the name then it will be ignored and an
 			/// error printed.
 			std::map<std::string, ParameterValueContainer> parameterInitialValues;
+			/// Location of this node in the GUI
+			int guiLocationX;
+			int guiLocationY;
 			
 			Params(std::string const& name_="",
 				   std::map<std::string, ParameterValueContainer> const& parameterInitialValues_=std::map<std::string, ParameterValueContainer>())
 			: name(name_)
 			, parameterInitialValues(parameterInitialValues_)
+			, guiLocationX(0)
+			, guiLocationY(0)
 			{}
 			
 			virtual ~Params() {}
@@ -60,8 +65,13 @@ namespace hm
 		void setName(std::string name);
 		std::string toString() const;
 		/// Export a Params instance that may be used to reproduce this
-		/// object in its current state.
+		/// object in its current state. This will copy all of the current
+		/// parameter values into the initial values of the Params object.
 		Params exportParams() const;
+		/// \param params may be modified by this function to ensure it has
+		/// valid values.
+		void setNodeParams(Params& params);
+
 		
 		int numInlets() const;
 		/// \warning If this node changes its characteristics during runtime
@@ -167,12 +177,10 @@ namespace hm
 		
 		
 		
-		
 		// MARK: Accessors
+		/// Return this node's Params object in its current state.
 		Params nodeParams() const;
-		/// \param params may be modified by this function to ensure it has
-		/// valid values
-		void setNodeParams(Params& params);
+		
 //		/// The pipeline this node is contained within. This may be nullptr
 //		/// and should be checked each time it is called.
 //		Pipeline* pipeline() const { return mPipeline; }
