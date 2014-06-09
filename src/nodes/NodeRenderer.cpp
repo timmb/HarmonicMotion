@@ -36,8 +36,12 @@ NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
 	
 	
 	auto param = addParameter("Renderer", &mRenderer);
-	param->softMin = param->hardMin = 0;
-	param->softMax = param->hardMax = mRenderers.size() - 1;
+	vector<string> rendererNames;
+	for (RendererPtr r: mRenderers)
+	{
+		rendererNames.push_back(r->name());
+	}
+	param->setEnumerationLabels(rendererNames);
 }
 
 NodePtr NodeRenderer::create(Params params) const

@@ -42,25 +42,53 @@ namespace hm {
 	BaseParameter::BaseParameter(Node& parent, std::string name)
 	: mName(name)
 	, mParent(parent)
-	, hardMin(-999999999)
-	, hardMax(999999999)
-	, softMin(0)
-	, softMax(100)
+	, mHardMin(-999999999)
+	, mHardMax(999999999)
+	, mSoftMin(0)
+	, mSoftMax(100)
 //	, mType(type)
+	, mIsDetached(false)
+	, mHasEnumerationLabels(false)
 	{
 		// TODO: Verify path is well formed
 		// TODO: Check path is unique
 	}
 	
+	BaseParameter::~BaseParameter()
+	{
+		assert(isDetached());
+	}
+	
+	void BaseParameter::detach()
+	{
+		mIsDetached = true;
+	}
+	
 	
 	std::string BaseParameter::path() const
 	{
-		return mParent.path() + '/' + name();
+		return (isDetached()? string("(detached)") : mParent.path()) + '/' + name();
 	}
 	
 	std::string BaseParameter::typeString() const
 	{
 		return to_string(type());
+	}
+	
+	void BaseParameter::setEnumerationLabels(vector<string> const& labels)
+	{
+		mHasEnumerationLabels = true;
+		mEnumerationLabels = labels;
+		mHardMin = mSoftMin = 0;
+		mHardMax = mSoftMax = labels.size() - 1;
+	}
+	
+	void BaseParameter::setBounds(double hardMin, double hardMax, double softMin, double softMax)
+	{
+		mHardMin = hardMin;
+		mHardMax = hardMax;
+		mSoftMin = softMin;
+		mSoftMax = softMax;
 	}
 
 	
@@ -85,12 +113,15 @@ namespace hm {
 	
 	void BaseParameter::update()
 	{
-		if (checkExternalValue())
+		if (!isDetached())
 		{
-			boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
-			for (auto callback: mNewExternalValueCallbacks)
+			if (checkExternalValue())
 			{
-				callback();
+				boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
+				for (auto callback: mNewExternalValueCallbacks)
+				{
+					callback();
+				}
 			}
 		}
 	}
@@ -116,13 +147,13 @@ namespace hm {
 	template<>
 	void Parameter<int>::validateExternalValue(int& value) const
 	{
-		value = max<int>(hardMin, min<int>(hardMax, value));
+		value = max<int>(hardMin(), min<int>(hardMax(), value));
 	}
 	
 	template<>
 	void Parameter<double>::validateExternalValue(double& value) const
 	{
-		value = max<double>(hardMin, min<double>(hardMax, value));
+		value = max<double>(hardMin(), min<double>(hardMax(), value));
 	}
 	
 }

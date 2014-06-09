@@ -195,15 +195,13 @@ namespace hm
 		numInletsParam->addNewExternalValueCallback([this](){
 			this->letCountsChangedCallback();
 		});
-		numInletsParam->hardMin = numInletsParam->softMin = 0;
-		numInletsParam->hardMax = numInletsParam->softMax = 100;
+		numInletsParam->setBounds(0, 100, 0, 100);
 		
 		auto numOutletsParam = addParameter("Number of outlets", &mRequestedNumOutlets);
 		numOutletsParam->addNewExternalValueCallback([this](){
 			this->letCountsChangedCallback();
 		});
-		numOutletsParam->hardMin = numOutletsParam->softMin = 0;
-		numOutletsParam->hardMax = numOutletsParam->softMax = 100;
+		numOutletsParam->setBounds(0, 100, 0, 100);
 
 		addParameter("Expression", &mExpression)->addNewExternalValueCallback([this](){
 			this->expressionChangedCallback();

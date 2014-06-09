@@ -79,6 +79,13 @@ Node::~Node()
 		boost::unique_lock<boost::shared_mutex> lock2(mNodeParamsMutex);
 		sNamesInUse.erase(mNodeParams.name);
 	}
+	{
+		boost::unique_lock<boost::shared_mutex> lock(mParametersMutex);
+		for (ParameterPtr parameter: mParameters)
+		{
+			parameter->detach();
+		}
+	}
 }
 
 std::string Node::path() const

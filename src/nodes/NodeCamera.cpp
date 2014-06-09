@@ -17,10 +17,10 @@ NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
 {
 	mRequestedDeviceParameter = addParameter("Source", &mRequestedDevice);
 	assert(mRequestedDeviceParameter);
-	addParameter("Requested width", &mRequestedWidth)->softMax = 40960;
-	addParameter("Requested height", &mRequestedHeight)->softMax = 40960;
-	addParameter("Actual width", &mActualWidth)->softMax = 40960;
-	addParameter("Actual height", &mActualHeight)->softMax = 40960;
+	addParameter("Requested width", &mRequestedWidth)->setBounds(0, 999999, 0, 40960);
+	addParameter("Requested height", &mRequestedHeight)->setBounds(0, 999999, 0, 40960);
+	addParameter("Actual width", &mActualWidth)->setBounds(0, 999999, 0, 40960);
+	addParameter("Actual height", &mActualHeight)->setBounds(0, 999999, 0, 40960);
 	updateCurrentDevice();
 	
 	mOutlet = createOutlet(IMAGE2D, "Camera images", "2D images will be outputted here as they are received from the camera");
@@ -29,8 +29,15 @@ NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
 void NodeCamera::updateCurrentDevice()
 {
 	vector<Capture::DeviceRef> devices = Capture::getDevices(true);
-	mRequestedDeviceParameter->softMin = mRequestedDeviceParameter->hardMin = 0;
-	mRequestedDeviceParameter->softMax = mRequestedDeviceParameter->hardMax	= devices.size(); // max is one more than number of devices as we also have device 0 as None
+	// max is equal to the number of devices as we also have device 0 as None
+	vector<string> deviceNames;
+	deviceNames.push_back("None");
+	for (auto x: devices)
+	{
+		deviceNames.push_back(x->getName());
+	}
+	mRequestedDeviceParameter->setEnumerationLabels(deviceNames);
+	
 	mRequestedDevice = max(0, min<int>(devices.size(), mRequestedDevice));
 	
 	if (mRequestedDevice > devices.size() || mRequestedDevice == 0)

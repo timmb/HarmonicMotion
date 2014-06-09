@@ -37,7 +37,7 @@ namespace hm {
 			NUM_TYPES
 		};
 		
-		virtual ~BaseParameter() {}
+		virtual ~BaseParameter();
 		
 		/// Set \p value to the value of this parameter
 		virtual void toJson(Json::Value& value) const = 0;
@@ -73,18 +73,32 @@ namespace hm {
 		/// \note This function should only be called by Node::updateParameters().
 		void update();
 		
+		void setBounds(double hardMin, double hardMax, double softMin, double softMax);
 		// These members may or may not be applicable depending on the type
 		// of parameter
-		/// The minimum value that may be received externally (enforced)
-		double hardMin;
-		/// The maximum value that may be received extenrally (enforced)
-		double hardMax;
+		/// The minimum value that may be received externally (enforced where applicable)
+		double hardMin() const { return mHardMin; }
+		/// The maximum value that may be received extenrally (enforced where applicable)
+		double hardMax() const { return mHardMax; }
 		/// The minimum value suggested by the user interface (not enforced)
-		double softMin;
+		double softMin() const { return mSoftMin; }
 		/// The maximum value suggested by the user interface (not enforced)
-		double softMax;
+		double softMax() const { return mSoftMax; }
+		
+		/// Only applicable for integer parameters: provide a set of labels
+		/// describing each possible value. This will update soft/hard min/
+		/// max to the range [0..labels.size())
+		void setEnumerationLabels(std::vector<std::string> const& labels);
+		bool hasEnumerationLabels() const { return mHasEnumerationLabels; }
+		std::vector<std::string> enumerationLabels() const { return mEnumerationLabels; }
 		
 		// TODO: Add function for Node to detach itself when it is destroyed
+		/// Node calls this on its destruction. This will prevent the
+		/// parameter from attempting to read/write to the value pointer
+		/// or activate any callbacks. It's pretty much useless and
+		/// (safely) waiting to be destroyed.
+		virtual void detach();
+		bool isDetached() const { return mIsDetached; }
 		
 	protected:
 		/// \param path Slash separated with the final element being the
@@ -101,15 +115,19 @@ namespace hm {
 		virtual bool checkExternalValue() = 0;
 
 	private:
-//		/// \return the JSON element corresponding to the given path
-//		template <typename JsonOrConstJson>
-//		static JsonOrConstJson& getChild(JsonOrConstJson& root, std::string const& path);
+		double mHardMin;
+		double mHardMax;
+		double mSoftMin;
+		double mSoftMax;
 		
 		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
 		boost::mutex mNewExternalValueCallbacksMutex;
 		Node& mParent;
 		const std::string mName;
+		bool mIsDetached;
 //		const Type mType;
+		bool mHasEnumerationLabels;
+		std::vector<std::string> mEnumerationLabels;
 	};
 	
 }
@@ -176,20 +194,45 @@ namespace hm
 		/// Thread-safe
 		void set(T newValue)
 		{
-			std::cout << "new external value: " << newValue << std::endl;
+//			std::cout << "new external value: " << newValue << std::endl;
 			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
 			mExternalValue = newValue;
-			std::cout << "new mExternalValue: " << mExternalValue << std::endl;
+//			std::cout << "new mExternalValue: " << mExternalValue << std::endl;
 			mHasNewExternalValue = true;
 		}
 		/// Register a callback that is called when the internal value corresponding
 		/// to the pointer changes but no new external value has arrived. The
 		/// new value is provided as argument to the callback.
-		void addNewInternalValueCallback(std::function<void(T)> callbackFunction)
+		/// \return A handle that can be used to remove the function
+		int addNewInternalValueCallback(std::function<void(T)> callbackFunction)
 		{
 			boost::lock_guard<boost::mutex> lock(mNewInternalValueCallbacksMutex);
-			mNewInternalValueCallbacks.push_back(callbackFunction);
+			int handle = mNextNewInternalValueCallbackHandle++;
+			mNewInternalValueCallbacks.push_back(std::pair<std::function<void(T)>,int>(callbackFunction, handle));
 			mNewInternalValueCallbacksIsNotEmpty = true;
+			return handle;
+		}
+		
+		bool removeNewInternalValueCallback(int functionHandle)
+		{
+			boost::lock_guard<boost::mutex> lock(mNewInternalValueCallbacksMutex);
+			for (auto it=mNewInternalValueCallbacks.begin(); it != mNewInternalValueCallbacks.end(); )
+			{
+				if (it->second == functionHandle)
+				{
+					mNewInternalValueCallbacks.erase(it);
+					if (mNewInternalValueCallbacks.empty())
+					{
+						mNewInternalValueCallbacksIsNotEmpty = false;
+					}
+					return true;
+				}
+				else
+				{
+					++it;
+				}
+			}
+			return false;
 		}
 		
 		virtual void toJson(Json::Value& value) const override
@@ -222,10 +265,17 @@ namespace hm
 			return v;
 		}
 		
+		virtual void detach()
+		{
+			BaseParameter::detach();
+			mValue = nullptr;
+		}
+		
 	protected:
 		
 		virtual bool checkExternalValue()
 		{
+			assert(!isDetached());
 			// If we have a new external value, write it to mValue
 			if (mHasNewExternalValue)
 			{
@@ -250,7 +300,7 @@ namespace hm
 					boost::lock_guard<boost::mutex> lock2(mNewInternalValueCallbacksMutex);
 					for (auto callback: mNewInternalValueCallbacks)
 					{
-						callback(*mValue);
+						callback.first(*mValue);
 					}
 				}
 			}
@@ -266,7 +316,9 @@ namespace hm
 		T mExternalValue;
 		mutable boost::mutex mExternalValueMutex;
 		std::atomic<bool> mHasNewExternalValue;
-		std::vector<std::function<void(T)>> mNewInternalValueCallbacks;
+		// functions stored with their removal handle
+		std::vector<std::pair<std::function<void(T)>, int>> mNewInternalValueCallbacks;
+		int mNextNewInternalValueCallbackHandle;
 		mutable boost::mutex mNewInternalValueCallbacksMutex;
 		std::atomic<bool> mNewInternalValueCallbacksIsNotEmpty;
 		

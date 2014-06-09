@@ -27,13 +27,10 @@ NodeSineWave::NodeSineWave(Node::Params params, std::string className)
 	// TODO: temp
 	createOutlet(VALUE, "Test outlet", "temp test outlet");
 	createOutlet(VALUE, "Test outlet 2", "temp test outlet");
-	addParameter("Frequency", &mFrequency)->softMin = 0.;
-	auto p = addParameter("Phase (0-1)", &mPhase);
-	p->softMin = 0.;
-	p->softMax = 1.;
-	addParameter("Amplitude", &mAmplitude)->softMin = 0.;
-	addParameter("Time between outputs (s)", &mOutputDelta)->hardMin = 0.;
-	
+	addParameter("Frequency", &mFrequency)->setBounds(0, 999999, 0, 999999);
+	addParameter("Phase (0-1)", &mPhase)->setBounds(0, 1, 0, 1);
+	addParameter("Amplitude", &mAmplitude)->setBounds(-999999, 999999, -9, +9);
+	addParameter("Time between outputs (s)", &mOutputDelta)->setBounds(0, 999999, 0, 999);
 }
 
 NodeSineWave::~NodeSineWave()
