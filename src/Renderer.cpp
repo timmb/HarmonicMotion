@@ -117,21 +117,24 @@ void Renderer2D::operator()(Image2d const& v)
 	}
 	Vec2f offset;
 	float scale(1);
-	float vAspect = float(v.value.cols)/v.value.rows;
-	float aspect = float(mViewport.getWidth()) / mViewport.getHeight();
-	if (vAspect > aspect)
+	// input data aspect
+	float dataAspect = float(v.value.cols)/v.value.rows;
+	// viewport aspect
+	float vAspect = float(mViewport.getWidth()) / mViewport.getHeight();
+	if (dataAspect > vAspect)
 	{
 		// requires letterboxes on top and bottom
-		scale = float(v.value.cols) / mViewport.getWidth();
+		scale = float(mViewport.getWidth()) / v.value.cols;
 		offset.y = int((mViewport.getHeight() - scale * v.value.rows) / 2);
 	}
-	else if (vAspect < aspect)
+	else if (dataAspect < vAspect)
 	{
 		// requires letterboxes on left and right
-		scale = float(v.value.rows) / mViewport.getHeight();
+		scale = float(mViewport.getHeight()) / v.value.rows;
 		offset.x = int((mViewport.getWidth() - scale * v.value.cols) / 2);
 	}
-	gl::draw(gl::Texture(v.toSurface()), offset);
+	Area drawArea(offset, mViewport.getSize() - offset);
+	gl::draw(gl::Texture(v.toSurface()), drawArea);
 }
 
 
