@@ -93,6 +93,10 @@ namespace hm
 		/// This is called by WidgetNewPatchCord when it has completed its
 		/// purpose and would like to be deleted.
 		void clearNewPatchCord(WidgetNewPatchCord* toBeCleared);
+		/// This is called by a WidgetNode that would like to be raised
+		/// to the top of the z-order stack. It will raise the widget
+		/// and then re-raise all the patch cords to be above it.
+		void raise(WidgetNode* w);
 		
 		
 		// MARK: For debugging

@@ -43,9 +43,6 @@ namespace hm
 		QLabel* type = new QLabel(str(mNode->type()));
 		type->setObjectName("LabelNodeType");
 		
-		setFocusPolicy(Qt::ClickFocus);
-		setContextMenuPolicy(Qt::ActionsContextMenu);
-		
 		// TODO: wait for Qt5
 		//	bool success = connect(name, &QLineEdit::textChanged, [this](QString const& str)
 		//			{
@@ -100,7 +97,11 @@ namespace hm
         mMainArea = new QWidget;
         mMainArea->setObjectName("mMainArea");
         mMainArea->setLayout(mMainLayout);
+		//mMainArea->setFocusPolicy(Qt::ClickFocus);
+		setFocusPolicy(Qt::ClickFocus);
+		setContextMenuPolicy(Qt::ActionsContextMenu);
 		
+
         QHBoxLayout* layout = new QHBoxLayout;
         layout->addLayout(inletsLayout);
         layout->addWidget(mMainArea);
@@ -279,6 +280,7 @@ namespace hm
 	
 	void WidgetNode::focusInEvent(QFocusEvent* event)
 	{
+		mPatchArea->raise(this);
 		/// this property adds the black border around the widget
 		mMainArea->setProperty("hasFocus", true);
 		// force update of appearance

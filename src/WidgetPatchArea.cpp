@@ -812,3 +812,11 @@ WidgetNode* WidgetPatchArea::findWidgetFor(NodePtr node) const
 }
 
 
+void WidgetPatchArea::raise(WidgetNode* w)
+{
+	w->raise();
+	for (WidgetPatchCord* p: mWidgetPatchCords)
+	{
+		p->raise();
+	}
+}
