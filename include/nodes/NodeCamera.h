@@ -20,7 +20,9 @@ namespace hm
 		
 	private:
 		void updateCurrentDevice();
-//		void updateAvailableDevices();
+		
+		// Device 0 is no device
+		// Devices 1+ map to the devices reported by the operating system
 		
 		int mCurrentDevice;
 		int mRequestedDevice;
