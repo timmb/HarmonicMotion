@@ -40,10 +40,6 @@ namespace hm
 		typedef void result_type;
 		
 	protected:
-		/// Derived types should call this to test if they need to
-		/// setup the projection/modelview matrices before the current
-		/// render
-		bool needsRefresh() const { return mNeedsRefresh; }
 		/// Set up the camera for the scene described in the \p sceneMeta
 		/// of the most recent Data to have arrived. y axis goes up.
 		void setupMatrices3d();
@@ -55,10 +51,15 @@ namespace hm
 		/// For derived types in a render function this will always point to
 		/// the current SceneMeta
 		SceneMetaPtr mLastSceneMeta;
+		
+		/// Derived types should call this to test if they need to
+		/// setup the projection/modelview matrices before the current
+		/// render, and set it to false once they have set them up.
+		bool mNeedsRefresh;
+
 	private:
 		std::string mName;
 		std::string mDescription;
-		bool mNeedsRefresh;
 	};
 	
 	/// Renderer for 3D points as circles

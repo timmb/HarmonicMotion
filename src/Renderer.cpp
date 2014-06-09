@@ -40,10 +40,9 @@ void Renderer::render(Data const& data, ci::Area const& viewport)
 	{
 		mViewport = viewport;
 		setViewport(mViewport);
-		mNeedsRefresh = true;
 	}
+	mNeedsRefresh = true;
 	boost::apply_visitor(*this, data.data);
-	mNeedsRefresh = false;
 }
 
 
@@ -57,25 +56,31 @@ BlobRenderer::BlobRenderer()
 
 void BlobRenderer::operator()(Point3d const& x, ci::ColorA const& color)
 {
-	if (needsRefresh())
+	if (mNeedsRefresh)
 	{
 		setupMatrices3d();
+		mNeedsRefresh = false;
 	}
 	// TODO: Use a VBO to speed this up
-	// TODO: better colour
 	gl::color(color);
 	drawSphere(x.value, 0.05, 12);
 }
 
 void BlobRenderer::operator()(Skeleton3d const& x)
 {
+	if (mNeedsRefresh)
+	{
+		setupMatrices3d();
+		mNeedsRefresh = false;
+	}
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		float brightness = x.jointConfidence(i) * 0.5f + 0.5f;
-		bool isRight = jointSide(i);
-		ColorA color(0.5f+0.5f*int(isRight)*brightness,
+		bool isRight = jointSide(i)==RIGHT;
+		bool isLeft = jointSide(i)==LEFT;
+		ColorA color(0.2f+0.8f*int(isRight)*brightness,
 					 0.5f * brightness,
-					 0.5f+0.5f*int(!isRight)*brightness,
+					 0.2f+0.8f*int(isLeft)*brightness,
 					 1.0f);
 		(*this)(x.joint(i), color);
 	}
@@ -83,6 +88,11 @@ void BlobRenderer::operator()(Skeleton3d const& x)
 
 void BlobRenderer::operator()(Scene3d const& x)
 {
+	if (mNeedsRefresh)
+	{
+		setupMatrices3d();
+		mNeedsRefresh = false;
+	}
 	for (Skeleton3d const& s: x.skeletons)
 	{
 		(*this)(s);
