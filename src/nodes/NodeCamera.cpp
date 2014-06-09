@@ -28,11 +28,12 @@ NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
 
 void NodeCamera::updateCurrentDevice()
 {
-	vector<Capture::DeviceRef> devices = Capture::getDevices();
+	vector<Capture::DeviceRef> devices = Capture::getDevices(true);
 	mRequestedDeviceParameter->softMin = mRequestedDeviceParameter->hardMin = 0;
-	mRequestedDeviceParameter->softMax = mRequestedDeviceParameter->hardMax	= std::max<int>(0, devices.size() -1);
-	mRequestedDevice = max(0, min<int>(devices.size()-1, mRequestedDevice));
-	if (mRequestedDevice >= devices.size())
+	mRequestedDeviceParameter->softMax = mRequestedDeviceParameter->hardMax	= devices.size(); // max is one more than number of devices as we also have device 0 as None
+	mRequestedDevice = max(0, min<int>(devices.size(), mRequestedDevice));
+	
+	if (mRequestedDevice > devices.size() || mRequestedDevice == 0)
 	{
 		if (mCapture)
 		{
@@ -40,10 +41,11 @@ void NodeCamera::updateCurrentDevice()
 			mActualWidth = mActualHeight = 0;
 		}
 		mCapture = nullptr;
+		mCurrentDevice = 0;
 	}
 	else
 	{
-		mCapture = Capture::create(mRequestedWidth, mRequestedHeight, devices[mRequestedDevice]);
+		mCapture = Capture::create(mRequestedWidth, mRequestedHeight, devices[mRequestedDevice-1]);
 		if (mCapture)
 		{
 			mCurrentDevice = mRequestedDevice;
@@ -70,11 +72,13 @@ void NodeCamera::step()
 	{
 		updateCurrentDevice();
 	}
-	if (mCapture && mCapture->isCapturing())
+	if (mCapture && mCapture->isCapturing() && mCapture->checkNewFrame())
 	{
 		Surface8u surface = mCapture->getSurface();
 		if (surface)
 		{
+			mActualWidth = surface.getWidth();
+			mActualHeight = surface.getHeight();
 			Data data(Image2d(surface, elapsedTime()));
 			mOutlet->outputNewData(data);
 		}
