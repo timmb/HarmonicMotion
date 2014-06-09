@@ -9,6 +9,7 @@
 #pragma once
 #include "NodeUnthreaded.h"
 #include "OscSender.h"
+#include "Common.h"
 #include <boost/thread/shared_mutex.hpp>
 
 namespace cinder
@@ -33,9 +34,25 @@ namespace hm
 		virtual void step() override;
 
 	private:
-		void send(Value const& value);
-		void send(Skeleton3d const& skeleton);
-		void send(Scene3d const& scene);
+		/// Visitor for boost::variant
+		/// Sends data formatted according to the Harmonic Motion protocol
+		class DataSender
+		{
+		public:
+			DataSender(NodeOscOut& nodeOscOut);
+			
+			typedef void result_type;
+			
+			void operator()(DataNull const& x);
+			void operator()(Value const& x);
+			void operator()(Point3d const& x);
+			void operator()(Skeleton3d const& x);
+			void operator()(Scene3d const& x);
+			
+		private:
+			NodeOscOut& mNode;
+		};
+		
 		
 		void callbackOscAddressChanged();
 		void callbackDestinationChanged();

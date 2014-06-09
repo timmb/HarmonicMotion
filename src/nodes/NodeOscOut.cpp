@@ -81,33 +81,56 @@ void NodeOscOut::callbackDestinationChanged()
 }
 
 
-void NodeOscOut::send(Value const& value)
+NodeOscOut::DataSender::DataSender(NodeOscOut& node)
+: mNode(node)
+{}
+
+
+void NodeOscOut::DataSender::operator()(DataNull const& x)
 {
-	Message m;
-	m.setAddress(mPrefixWithSlash);
-	m.addFloatArg(value.value);
-	//	m.setRemoteEndpoint(mParams.destinationHost, mParams.destinationPort);
-	mOsc.sendMessage(m);
+	
 }
 
-void NodeOscOut::send(Skeleton3d const& skel)
+
+
+void NodeOscOut::DataSender::operator()(Value const& value)
+{
+	Message m;
+	m.setAddress(mNode.mPrefixWithSlash);
+	m.addFloatArg(value.value);
+	//	m.setRemoteEndpoint(mParams.destinationHost, mParams.destinationPort);
+	mNode.mOsc.sendMessage(m);
+}
+
+
+void NodeOscOut::DataSender::operator()(Point3d const& value)
+{
+	Message m;
+	m.setAddress(mNode.mPrefixWithSlash);
+	m.addFloatArg(value.value.x);
+	m.addFloatArg(value.value.y);
+	m.addFloatArg(value.value.z);
+	mNode.mOsc.sendMessage(m);
+}
+
+void NodeOscOut::DataSender::operator()(Skeleton3d const& skel)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		Message m = JointMessage(mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i).value);
-		mOsc.sendMessage(m);
+		Message m = JointMessage(mNode.mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i).value);
+		mNode.mOsc.sendMessage(m);
 	}
 }
 
-void NodeOscOut::send(Scene3d const& scene)
+void NodeOscOut::DataSender::operator()(Scene3d const& scene)
 {
 	Message m;
-	m.setAddress(mPrefixWithSlash+"num_users");
+	m.setAddress(mNode.mPrefixWithSlash+"num_users");
 	m.addIntArg(scene.skeletons.size());
-	mOsc.sendMessage(m);
+	mNode.mOsc.sendMessage(m);
 	for (Skeleton3d const& skel: scene.skeletons)
 	{
-		send(skel);
+		(*this)(skel);
 	}
 }
 
@@ -133,18 +156,13 @@ void NodeOscOut::step()
 		Data data = mInlet->dataIfNewerThan(mLastSentTimestamp);
 		if (!data.isNull())
 		{
-			if (data.isSkeleton3d())
-			{
-				send(data.asSkeleton3d());
-			}
-			else if (data.isScene3d())
-			{
-				send(data.asScene3d());
-			}
-			else if (data.isValue())
-			{
-				send(data.asValue());
-			}
+			DataSender sender(*this);
+			boost::apply_visitor(sender, data.data);
+			mLastSentTimestamp = data.timestamp();
+			std::cout << "Sent data with timestamp "<<mLastSentTimestamp << std::endl;
 		}
 	}
 }
+
+
+
