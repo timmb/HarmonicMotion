@@ -12,9 +12,11 @@
 namespace hm
 {
 	/// Class representing double values
-	class Value : public BaseData
+	class Value : public Base1dData
 	{
 	public:
+		typedef BaseData BaseType;
+		
 		Value(double value = 0., double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		Value(float value, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		

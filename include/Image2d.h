@@ -10,6 +10,8 @@ namespace hm
 	class Image2d : public BaseData
 	{
 	public:
+		typedef BaseData BaseType;
+		
 		/// Construct a black 640x480 RGB image
 		explicit
 		Image2d(double timestamp = 0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);

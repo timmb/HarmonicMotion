@@ -23,12 +23,12 @@ std::ostream& Value::printTo(std::ostream& out) const
 }
 
 Value::Value(double value_, double timestamp, SceneMetaPtr sceneMeta)
-: BaseData(timestamp, sceneMeta)
+: Base1dData(timestamp, sceneMeta)
 , value(value_)
 {}
 
 Value::Value(float value_, double timestamp, SceneMetaPtr sceneMeta)
-: BaseData(timestamp, sceneMeta)
+: Base1dData(timestamp, sceneMeta)
 , value(value_)
 {}
 

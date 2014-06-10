@@ -9,6 +9,8 @@ namespace hm
 	class Scene3d : public Base3dData
 	{
 	public:
+		typedef Base3dData BaseType;
+		
 		explicit
 		Scene3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		

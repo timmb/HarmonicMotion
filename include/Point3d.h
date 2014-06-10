@@ -15,6 +15,8 @@ namespace hm
 	class Point3d : public Base3dData
 	{
 	public:
+		typedef Base3dData BaseType;
+		
 		Point3d(ci::Vec3f const& v, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		Point3d(float x, float y, float z, double timestamp=0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		explicit
@@ -28,14 +30,6 @@ namespace hm
 		
 		ci::Vec3f value;
 		
-//		/// Undefined: will result in an assertion error in debug mode
-//		DataNull operator+(DataNull const& rhs) const;
-//		/// \copydoc operator+()
-//		DataNull operator-(DataNull const& rhs) const;
-//		/// \copydoc operator+()
-//		DataNull operator*(DataNull const& rhs) const;
-//		/// \copydoc operator+()
-//		DataNull operator/(DataNull const& rhs) const;
 		
 		Point3d operator+(Point3d const& rhs) const;
 		Point3d operator-(Point3d const& rhs) const;
@@ -52,6 +46,7 @@ namespace hm
 		
 		Point3d operator*(Value const& rhs) const;
 		Point3d operator/(Value const& rhs) const;
+		
 		
 		// Point3d <op> Skeleton3d applies op to each joint in skeleton
 		Skeleton3d operator+(Skeleton3d const& rhs) const;
