@@ -21,17 +21,34 @@ namespace hm
 	/// Common base class of all widget parameters
 	class WidgetBaseParameter : public QWidget
 	{
+		Q_OBJECT
+		
 	public:
-		WidgetBaseParameter();
+		virtual ~WidgetBaseParameter();
 		
 		/// Factory function to create a widget of the correct type for the
 		/// parameter.
 		static WidgetBaseParameter* create(ParameterPtr parameter);
 		
+		/// \return Whether the underlying ParameterPtr belives it should be
+		/// visible in the interface at the moment
+		bool isParameterVisible() const { return mParameter->isVisible(); }
+		
 	protected:
+		WidgetBaseParameter(ParameterPtr parameter);
+		
 		/// Necessary to reimplement to make stylesheet work
 		/// see http://stackoverflow.com/questions/7276330/qt-stylesheet-for-custom-widget
 		void paintEvent(QPaintEvent*);
+		
+	Q_SIGNALS:
+		void parameterVisibilityChanged(WidgetBaseParameter* owningWidget, bool isVisible);
+		
+	private:
+		void characteristicsCallback_();
+		ParameterPtr mParameter;
+		int mCallbackHandle;
+		bool mWasVisible;
 	};
 	
 	
@@ -43,13 +60,12 @@ namespace hm
 	{
 	public:
 		WidgetParameter(std::shared_ptr<Parameter<T>> parameter)
-		: mParameter(parameter)
+		: WidgetBaseParameter(parameter)
+		, mParameter(parameter)
 		, mWidget(nullptr)
 		{}
 
 	protected:
-		virtual void parameterCharacteristicsChangedCallback();
-
 		std::shared_ptr<Parameter<T>> mParameter;
 		/// Derived types should provide a pointer to the widget
 		/// that is being used to control this parameter.
@@ -58,21 +74,6 @@ namespace hm
 	private:
 	};
 	
-	template <typename T>
-	void WidgetParameter<T>::parameterCharacteristicsChangedCallback()
-	{
-		if (mWidget != nullptr)
-		{
-			if (mParameter->isVisible())
-			{
-				mWidget->show();
-			}
-			else
-			{
-				mWidget->hide();
-			}
-		}
-	}
 	
 	
 	// ---------------------------------------

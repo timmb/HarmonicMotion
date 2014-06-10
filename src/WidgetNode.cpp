@@ -40,33 +40,27 @@ namespace hm
 		
 		loadStyleSheet();
 		setObjectName("WidgetNode");
+		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         
-		QLabel* type = new QLabel(str(mNode->type()));
-		type->setObjectName("LabelNodeType");
+		QLabel* typeLabel = new QLabel(str(mNode->type()));
+		typeLabel->setObjectName("LabelNodeType");
 		
 		mNameWidget = new QLineEdit(str(mNode->name()));
 
-		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		
-		mMainLayout = new QGridLayout;
         QVBoxLayout* inletsLayout = new QVBoxLayout;
         QVBoxLayout* outletsLayout = new QVBoxLayout;
         
         inletsLayout->setAlignment(Qt::AlignTop);
         outletsLayout->setAlignment(Qt::AlignTop);
         
-		mMainLayout->addWidget(type, 0, 0);
-		mMainLayout->addWidget(mNameWidget, 0, 1);
-		
-		int row = 1;
 		for (ParameterPtr p : node->parameters())
 		{
-			QWidget* widget = WidgetBaseParameter::create(p);
-			mMainLayout->addWidget(new QLabel(str(p->name())), row, 0, Qt::AlignRight);
-			mMainLayout->addWidget(widget, row, 1, Qt::AlignLeft);
-			row++;
+			WidgetBaseParameter* widget = WidgetBaseParameter::create(p);
+			QLabel* label = new QLabel(str(p->name()));
+			mWidgetParameters.push_back(QPair<QLabel*, WidgetBaseParameter*>(label, widget));
+			BOOST_VERIFY(connect(widget, SIGNAL(parameterVisibilityChanged(WidgetBaseParameter*, bool)), this, SLOT(parameterVisibilityChanged(WidgetBaseParameter*, bool))));
 		}
-		mMainLayout->setRowStretch(row, 1);
 		
 		assert(parentWidget() != nullptr);
 		for (InletPtr inlet: mNode->inlets())
@@ -84,21 +78,43 @@ namespace hm
 		
 		preventNegativePosition();
         
+		// Setup main area
         mMainArea = new QWidget;
+		mMainLayout = new QGridLayout;
+		mMainArea->setLayout(mMainLayout);
+		repaint();
+		
+		mMainLayout->addWidget(typeLabel, 0, 0);
+		mMainLayout->addWidget(mNameWidget, 0, 1);
+		for (QPair<QLabel*, WidgetBaseParameter*> p: mWidgetParameters)
+		{
+			int row = mMainLayout->rowCount();
+			mMainLayout->addWidget(p.first, row, 0, Qt::AlignRight);
+			mMainLayout->addWidget(p.second, row, 1, Qt::AlignLeft);
+			if (p.second->isParameterVisible())
+			{
+				p.first->show();
+				p.second->show();
+			}
+			else
+			{
+				p.first->hide();
+				p.second->hide();
+			}
+		}
+		mMainLayout->setRowStretch(mMainLayout->rowCount(), 1);
+		update();
         mMainArea->setObjectName("mMainArea");
-        mMainArea->setLayout(mMainLayout);
-		//mMainArea->setFocusPolicy(Qt::ClickFocus);
 		setFocusPolicy(Qt::ClickFocus);
 		setContextMenuPolicy(Qt::ActionsContextMenu);
 		
-
-        QHBoxLayout* layout = new QHBoxLayout;
+		QHBoxLayout* layout = new QHBoxLayout(this);
         layout->addLayout(inletsLayout);
         layout->addWidget(mMainArea);
         layout->addLayout(outletsLayout);
         layout->setSpacing(0);
         layout->setSizeConstraint(QLayout::SetFixedSize);
-        setLayout(layout);
+//        setLayout(mLayout);
         
 		// CONNECTIONS
 		
@@ -129,6 +145,24 @@ namespace hm
 //		t->setInterval(500);
 //		connect(t, SIGNAL(timeout()), this, SLOT(loadStyleSheet()));
 //		t->start();
+	}
+
+	
+	void WidgetNode::parameterVisibilityChanged(WidgetBaseParameter* widget, bool isVisible)
+	{
+		for (QPair<QLabel*, WidgetBaseParameter*> p: mWidgetParameters)
+		{
+			if (p.second->isParameterVisible())
+			{
+				p.first->show();
+				p.second->show();
+			}
+			else
+			{
+				p.first->hide();
+				p.second->hide();
+			}
+		}
 	}
 	
 	WidgetNode::~WidgetNode()

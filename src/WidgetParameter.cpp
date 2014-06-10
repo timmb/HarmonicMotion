@@ -32,10 +32,29 @@ template<typename... Args> struct SELECT {
 
 
 // ----------------------------
-WidgetBaseParameter::WidgetBaseParameter()
+WidgetBaseParameter::WidgetBaseParameter(ParameterPtr parameter)
+: mParameter(parameter)
+, mCallbackHandle(-42)
+, mWasVisible(parameter->isVisible())
 {
 	setContentsMargins(0, 0, 0, 0);
 	setObjectName("WidgetParameter");
+	mCallbackHandle = mParameter->addChangeOfCharacteristicsCallback(std::bind(&WidgetBaseParameter::characteristicsCallback_, this));
+}
+
+WidgetBaseParameter::~WidgetBaseParameter()
+{
+	BOOST_VERIFY(mParameter->removeChangeOfCharacteristicsCallback(mCallbackHandle));
+}
+
+void WidgetBaseParameter::characteristicsCallback_()
+{
+	bool vis = mParameter->isVisible();
+	if (mWasVisible != vis)
+	{
+		mWasVisible = vis;
+		Q_EMIT parameterVisibilityChanged(this, vis);
+	}
 }
 
 void WidgetBaseParameter::paintEvent(QPaintEvent *)
@@ -78,7 +97,7 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 		case BaseParameter::NUM_TYPES:
 		default:
 			assert(false && "Unrecognised parameter type when creating widget.");
-			return new WidgetBaseParameter();
+			return new WidgetBaseParameter(parameter);
 	}
 }
 

@@ -12,12 +12,15 @@
 #include <QPaintEvent>
 #include <QGridLayout>
 #include <QLineEdit>
+#include <QLabel>
+#include <QBoxLayout>
 
 namespace hm
 {
 	class WidgetPatchArea;
 	class WidgetInlet;
     class WidgetOutlet;
+	class WidgetBaseParameter;
     
 	class WidgetNode : public QWidget
 	{
@@ -77,6 +80,9 @@ namespace hm
 		/// triggered by name widget
 		void nameChangedInGui();
 		
+		/// For parameters to notify when their visibility changes
+		void parameterVisibilityChanged(WidgetBaseParameter* widget, bool isVisible);
+		
 	private:
 		void preventNegativePosition();
 		
@@ -89,8 +95,9 @@ namespace hm
 		NodePtr mNode;
         QWidget* mMainArea;
         WidgetPatchArea* mPatchArea;
-//		bool mHasBeenErased;
+		// central area layout
 		QGridLayout* mMainLayout;
 		QLineEdit* mNameWidget;
+		QVector<QPair<QLabel*, WidgetBaseParameter*>> mWidgetParameters;
 	};
 }
