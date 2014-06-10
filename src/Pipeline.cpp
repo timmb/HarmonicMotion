@@ -37,6 +37,8 @@ Pipeline::~Pipeline()
 	hm_debug("Pipeline destructor.");
 	stop();
 	mThread->join();
+	// Clear the pipeline on destruction. This ensures any lingering
+	// nodes have their reference to this pipeline removed.
 	clear();
 }
 
@@ -52,6 +54,18 @@ std::vector<NodePtr> Pipeline::nodes() const
 {
 	SharedLock lock(mPipelineMutex);
 	return mNodes;
+}
+
+std::vector<std::string> Pipeline::nodeNames() const
+{
+	SharedLock lock(mPipelineMutex);
+	vector<string> names;
+	names.reserve(mNodes.size());
+	for (NodePtr node: mNodes)
+	{
+		names.push_back(node->name());
+	}
+	return names;
 }
 
 std::vector<PatchCordPtr> Pipeline::patchCords() const
@@ -84,10 +98,9 @@ void Pipeline::p_Process(Events const& events) const
 
 Events Pipeline::p_AddNode(NodePtr node)
 {
-	Events events;
-	// todo: assert mutex is locked
+	Events events = p_EnsureNameIsUnique(node);
 	mNodes.push_back(node);
-//	node->setPipeline(this);
+	node->setPipeline(this);
 	hm_info("Added node "+node->toString()+" to pipeline.");
 	if (isRunning() && !node->isProcessing())
 	{
@@ -110,7 +123,6 @@ void Pipeline::removeNode(NodePtr node)
 Events Pipeline::p_RemoveNode(NodePtr node)
 {
 	Events events;
-	// todo: assert mutex is locked
 	assert(node != nullptr);
 	assert(p_PatchCordInvariant());
 	// disconnect any patchcords. disconnect(PatchCordPtr) modifies
@@ -148,7 +160,7 @@ Events Pipeline::p_RemoveNode(NodePtr node)
 					node->stopProcessing();
 				}
 			}
-//			node->setPipeline(nullptr);
+			node->setPipeline(nullptr);
 			mNodes.erase(it);
 		}
 		events.push_back(EventPtr(new NodeRemovedEvent(node)));
@@ -225,6 +237,40 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 		}
 	} // end of unique lock
 	p_Process(events);
+}
+
+void Pipeline::ensureNameIsUnique(NodePtr node)
+{
+	Events events;
+	{
+		SharedLock lock(mPipelineMutex);
+		events = p_EnsureNameIsUnique(node);
+	}
+	{
+		SharedLock lock(mListenersMutex);
+		p_Process(events);
+	}
+}
+
+Events Pipeline::p_EnsureNameIsUnique(NodePtr node)
+{
+	string originalName = node->name();
+	string name = originalName;
+	int count = 2;
+	auto duplicateNameChecker = [&](NodePtr n) {
+		return n!=node && n->name() == name;
+	};
+	// while a node exists with a duplicate name...
+	while (find_if(begin(mNodes), end(mNodes), duplicateNameChecker) != end(mNodes))
+	{
+		name = originalName + " " + to_string(count++);
+	}
+	if (name != originalName)
+	{
+		node->setName(name);
+		return Events(1, EventPtr(new NodeParamsChangedEvent(node)));
+	}
+	return Events();
 }
 
 void Pipeline::start()
@@ -766,20 +812,8 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 	// Note - we do not lock the pipeline when loading json - just
 	// use the public interface.
 	
-//	Events events;
 	{
-//		UniqueLock lock(mPipelineMutex);
-		
-//		bool wasRunning = isRunning();
-//		if (wasRunning)
-//		{
-//			stop();
-//		}
-//		{
-//			Events e = p_Clear();
 		clear();
-//			events.insert(end(events), begin(e), end(e));
-//		}
 		FactoryNode& factory = *FactoryNode::instance();
 		for (auto& jNode: json["nodes"])
 		{
@@ -804,8 +838,6 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			assert(node!=nullptr);
 			if (node!=nullptr)
 			{
-//				Events e = p_AddNode(node);
-//				events.insert(end(events), begin(e), end(e));
 				addNode(node);
 			}
 			else
@@ -838,18 +870,10 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			
 			if (inlet!=nullptr && outlet!=nullptr)
 			{
-//				Events e = p_Connect(outlet, inlet);
-//				events.insert(end(events), begin(e), end(e));
-//				assert(!e.empty());
 				connect(outlet, inlet);
 			}
 		}
-//		if (wasRunning)
-//		{
-//			start();
-//		}
 	}
-//	p_Process(events);
 	return errors.empty();
 }
 
