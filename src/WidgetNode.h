@@ -11,6 +11,7 @@
 #include "Common.h"
 #include <QPaintEvent>
 #include <QGridLayout>
+#include <QLineEdit>
 
 namespace hm
 {
@@ -23,27 +24,26 @@ namespace hm
 		Q_OBJECT;
 	public:
 		WidgetNode(NodePtr node, WidgetPatchArea* patchArea);
+		
 		/// WidgetNode should only be destroyed by WidgetPatchArea.
 		virtual ~WidgetNode();
 		
-//		/// Request that this node is deleted (from both view and model).
-//		/// This instance will be deleted on the next cycle of the event
-//		/// loop.
-//		void erase();
-//		/// Request that this node is deleted without making the
-//		/// corresponding change to the underlying model. Used if the
-//		/// model has been updated externally.
-//		void eraseWithoutUpdatingModel();
-        
         /// The widgets for the inlets or outlets to this class. These are
         /// guaranteed not to change over the course of the widget's life.
         QVector<WidgetInlet*> inlets() const { return mWidgetInlets; }
+		
         QVector<WidgetOutlet*> outlets() const { return mWidgetOutlets; }
+		
         NodePtr node() const { return mNode; }
+		
         /// \return A pointer to the WidgetPatchArea that contains this
         /// WidgetNode
         WidgetPatchArea* patchArea() const { return mPatchArea; }
 		
+		/// This is called by the pipeline when it is notified that
+		/// this node's Params have changed
+		void updateFromNodeParams();
+
 	protected:
 		/// Necessary to reimplement to make stylesheet work
 		/// see http://stackoverflow.com/questions/7276330/qt-stylesheet-for-custom-widget
@@ -63,16 +63,19 @@ namespace hm
 		
 	Q_SIGNALS:
 		void geometryChanged();
+		
 		/// Emitted when this node has gained focus and so the info panel
 		/// needs updating
 		void newInfoPanelText(QString);
 		
 	protected Q_SLOTS:
 		void loadStyleSheet();
-//		void layout();
+
 		/// Requests that the pipeline deletes the node corresponding to this WidgetNode.
 		void deleteFromModel();
 
+		/// triggered by name widget
+		void nameChangedInGui();
 		
 	private:
 		void preventNegativePosition();
@@ -88,5 +91,6 @@ namespace hm
         WidgetPatchArea* mPatchArea;
 //		bool mHasBeenErased;
 		QGridLayout* mMainLayout;
+		QLineEdit* mNameWidget;
 	};
 }

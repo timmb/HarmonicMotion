@@ -120,6 +120,7 @@ namespace hm
 		// These allow the widget to stay updated when the pipeline changes
 		void nodeAdded(NodePtr node);
 		void nodeRemoved(NodePtr node);
+		void nodeParamsChanged(NodePtr node);
 		void nodeCharacteristicsChanged(NodePtr node);
 		void patchCordAdded(OutletPtr outlet, InletPtr inlet);
 		void patchCordRemoved(OutletPtr outlet, InletPtr inlet);

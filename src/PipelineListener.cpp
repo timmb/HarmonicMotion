@@ -15,6 +15,11 @@ void PipelineListener::nodeRemoved(NodePtr node)
 	Q_EMIT sigNodeRemoved(node);
 }
 
+void PipelineListener::nodeParamsChanged(NodePtr node)
+{
+	Q_EMIT sigNodeParamsChanged(node);
+}
+
 void PipelineListener::nodeCharacteristicsChanged(NodePtr node)
 {
 	Q_EMIT sigNodeCharacteristicsChanged(node);

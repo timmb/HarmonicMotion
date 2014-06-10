@@ -272,7 +272,7 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
 void MainWindow::actionPrintNodeNames()
 {
-	std::set<std::string> names = Node::nodeNamesInUse();
+	std::vector<std::string> names = mPatchArea->pipeline()->nodeNames();
 	QList<QString> qNames;
 	for (std::string n: names)
 	{

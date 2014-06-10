@@ -83,7 +83,6 @@ namespace hm
 
 	public:
 		WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter);
-		virtual ~WidgetParameterInt();
 		
 	Q_SIGNALS:
 		void newInternalValue(int value);
@@ -93,7 +92,6 @@ namespace hm
 		
 	private:
 		QWidget* mWidget;
-		int mInternalValueCallbackHandle;
 	};
 	
 	// ---------------------------------------

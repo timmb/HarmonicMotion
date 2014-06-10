@@ -34,6 +34,7 @@ namespace hm
     , mMainArea(nullptr)
     , mPatchArea(patchArea)
 //	, mHasBeenErased(false)
+	, mNameWidget(nullptr)
 	{
 		assert(node != nullptr);
 		
@@ -43,18 +44,7 @@ namespace hm
 		QLabel* type = new QLabel(str(mNode->type()));
 		type->setObjectName("LabelNodeType");
 		
-		// TODO: wait for Qt5
-		//	bool success = connect(name, &QLineEdit::textChanged, [this](QString const& str)
-		//			{
-		//				mNode->setName(str->toUtf8());
-		//			});
-		//	assert(success);
-		
-//        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-		
-		// LAYOUT AND WIDGETS
-		
-		QLineEdit* name = new QLineEdit(str(mNode->name()));
+		mNameWidget = new QLineEdit(str(mNode->name()));
 
 		setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 		
@@ -66,7 +56,7 @@ namespace hm
         outletsLayout->setAlignment(Qt::AlignTop);
         
 		mMainLayout->addWidget(type, 0, 0);
-		mMainLayout->addWidget(name, 0, 1);
+		mMainLayout->addWidget(mNameWidget, 0, 1);
 		
 		int row = 1;
 		for (ParameterPtr p : node->parameters())
@@ -114,8 +104,8 @@ namespace hm
 		
 		bool success(true);
 		
-//		success = connect(this, SIGNAL(geometryChanged()), this, SLOT(layout()));
-//		assert(success);
+		success = connect(mNameWidget, SIGNAL(editingFinished()), this, SLOT(nameChangedInGui()));
+		assert(success);
 		success = connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
 		assert(success);
 		success = connect(this, SIGNAL(newInfoPanelText(QString)), patchArea, SLOT(provideInfoPanelText(QString)));
@@ -129,8 +119,7 @@ namespace hm
 		success = connect(eraseAction, SIGNAL(triggered()), this, SLOT(deleteFromModel()));
 		assert(success);
 		
-		Node::Params params = node->exportParams();
-		move(params.guiLocationX, params.guiLocationY);
+		updateFromNodeParams();
 		
 		
 		Q_EMIT geometryChanged();
@@ -144,36 +133,27 @@ namespace hm
 	
 	WidgetNode::~WidgetNode()
 	{
-//		if (!mHasBeenErased)
-//		{
-//			hm_error("WidgetNode destroyed before erase() was called.");
-//			assert(mHasBeenErased);
-//		}
 		hm_debug("WidgetNode destructor for node "+mNode->name());
+	}
+	
+	void WidgetNode::nameChangedInGui()
+	{
+		mNode->setName(mNameWidget->text().toStdString());
+	}
+	
+	void WidgetNode::updateFromNodeParams()
+	{
+		Node::Params params = mNode->exportParams();
+		move(params.guiLocationX, params.guiLocationY);
+		mNameWidget->blockSignals(true);
+		mNameWidget->setText(str(params.name));
+		mNameWidget->blockSignals(false);
 	}
 	
 	void WidgetNode::deleteFromModel()
 	{
-//		// NB it is important that the patch area is updated before the
-//		// underlying model to ensure that callbacks from the model do not
-//		// cause the patch area to attempt to start removing this widget
-//		// a second time.
-//		mPatchArea->eraseNode(this);
 		mPatchArea->pipeline()->removeNode(mNode);
-//		mHasBeenErased = true;
 	}
-//
-//	void WidgetNode::eraseWithoutUpdatingModel()
-//	{
-//		mHasBeenErased = true;
-//		mPatchArea->eraseNode(this);
-//	}
-//	
-//	void WidgetNode::eraseAndDelete()
-//	{
-//		erase();
-//		deleteLater();
-//	}
     
     QSize WidgetNode::sizeHint() const
     {

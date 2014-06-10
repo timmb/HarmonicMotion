@@ -153,7 +153,10 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 			w->insertItem(i, str(labels[i]));
 		}
 		// param -> widget
-		mInternalValueCallbackHandle = mParameter->addNewInternalValueCallback([w, this](int value) {
+		// note it's not necessary to remove this callback on destruction
+		// as the shared_ptr to the parameter will ensure its lifetime
+		// lasts that of this widget.
+		mParameter->addNewInternalValueCallback([w, this](int value) {
 			w->blockSignals(true);
 			Q_EMIT newInternalValue(value);
 			w->blockSignals(false);
@@ -182,7 +185,7 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 		spinBox->move(0, 0);
 		
 		// param -> widget
-		mInternalValueCallbackHandle = mParameter->addNewInternalValueCallback([spinBox, this](int value)
+		mParameter->addNewInternalValueCallback([spinBox, this](int value)
 		{
 			spinBox->blockSignals(true);
 			Q_EMIT newInternalValue(value);
@@ -200,10 +203,6 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 	}
 }
 
-WidgetParameterInt::~WidgetParameterInt()
-{
-	mParameter->removeNewInternalValueCallback(mInternalValueCallbackHandle);
-}
 
 // ----------------------------
 

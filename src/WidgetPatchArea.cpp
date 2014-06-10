@@ -44,17 +44,12 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 		mPipeline = PipelinePtr(new Pipeline);
 	}
 	mPipeline->addListener(mPipelineListener);
-	bool success(false);
-	success = connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(nodeAdded(NodePtr)));
-	assert(success);
-	success = connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(nodeRemoved(NodePtr)));
-	assert(success);
-	success = connect(mPipelineListener, SIGNAL(sigNodeCharacteristicsChanged(NodePtr)), this, SLOT(nodeCharacteristicsChanged(NodePtr)));
-	assert(success);
-	success = connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr)));
-	assert(success);
-	success = connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr)));
-	assert(success);
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(nodeAdded(NodePtr))));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(nodeRemoved(NodePtr))));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeParamsChanged(NodePtr)), this, SLOT(nodeParamsChanged(NodePtr))));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeCharacteristicsChanged(NodePtr)), this, SLOT(nodeCharacteristicsChanged(NodePtr))));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr))));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr))));
 	
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setFocusPolicy(Qt::ClickFocus);
@@ -512,6 +507,14 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 		{
 			Q_EMIT nodeRendererRemoved(n);
 		}
+	}
+}
+
+void WidgetPatchArea::nodeParamsChanged(NodePtr node)
+{
+	if (WidgetNode* w = findWidgetFor(node))
+	{
+		w->updateFromNodeParams();
 	}
 }
 
