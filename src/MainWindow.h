@@ -13,6 +13,7 @@
 #include <QSaveFile>
 #include "Utilities.h"
 #include <QMap>
+#include "MetatypeDeclarations.h"
 
 class QPlainTextEdit;
 class QScrollArea;

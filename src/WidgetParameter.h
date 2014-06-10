@@ -25,11 +25,8 @@ namespace hm
 		WidgetBaseParameter();
 		
 		/// Factory function to create a widget of the correct type for the
-		/// parameter. Delegates to createDelegate
+		/// parameter.
 		static WidgetBaseParameter* create(ParameterPtr parameter);
-		static WidgetBaseParameter* createDelegate(std::shared_ptr<Parameter<int>> parameter);
-		static WidgetBaseParameter* createDelegate(std::shared_ptr<Parameter<std::string>> parameter);
-		static WidgetBaseParameter* createDelegate(std::shared_ptr<Parameter<double>> parameter);
 		
 	protected:
 		/// Necessary to reimplement to make stylesheet work
@@ -47,14 +44,51 @@ namespace hm
 	public:
 		WidgetParameter(std::shared_ptr<Parameter<T>> parameter)
 		: mParameter(parameter)
+		, mWidget(nullptr)
 		{}
 
-
-		
 	protected:
+		virtual void parameterCharacteristicsChangedCallback();
+
 		std::shared_ptr<Parameter<T>> mParameter;
+		/// Derived types should provide a pointer to the widget
+		/// that is being used to control this parameter.
+		QWidget* mWidget;
+		
+	private:
 	};
 	
+	template <typename T>
+	void WidgetParameter<T>::parameterCharacteristicsChangedCallback()
+	{
+		if (mWidget != nullptr)
+		{
+			if (mParameter->isVisible())
+			{
+				mWidget->show();
+			}
+			else
+			{
+				mWidget->hide();
+			}
+		}
+	}
+	
+	
+	// ---------------------------------------
+	class WidgetParameterFloat : public WidgetParameter<float>
+	{
+		Q_OBJECT;
+		
+	public:
+		WidgetParameterFloat(std::shared_ptr<Parameter<float>> parameter);
+		
+	Q_SIGNALS:
+		void newInternalValue(double value);
+		
+	protected:
+		QSize sizeHint() const { return mWidget->sizeHint(); }
+	};
 
 	// ---------------------------------------
 	class WidgetParameterDouble : public WidgetParameter<double>
@@ -68,11 +102,7 @@ namespace hm
 		void newInternalValue(double value);
 		
 	protected:
-//		QSize sizeHint() const { return QSize(65, 20); }
-		QSize sizeHint() const { return mSpinBox->sizeHint(); }
-	
-	private:
-		QDoubleSpinBox* mSpinBox;
+		QSize sizeHint() const { return mWidget->sizeHint(); }
 	};
 	
 	
@@ -89,9 +119,6 @@ namespace hm
 		
 	protected:
 		QSize sizeHint() const { return mWidget->sizeHint(); }
-		
-	private:
-		QWidget* mWidget;
 	};
 	
 	// ---------------------------------------
@@ -107,9 +134,6 @@ namespace hm
 		
 	protected:
 		QSize sizeHint() const { return mWidget->sizeHint(); }
-		
-	private:
-		QLineEdit* mWidget;
 	};
 }
 

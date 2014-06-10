@@ -51,23 +51,29 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 	assert(parameter != nullptr);
 	switch (parameter->type())
 	{
+		case BaseParameter::FLOAT:
+		{
+			auto p = std::dynamic_pointer_cast<Parameter<float>>(parameter);
+			assert(p);
+			return new WidgetParameterFloat(p);
+		}
 		case BaseParameter::DOUBLE:
 		{
 			auto p = std::dynamic_pointer_cast<Parameter<double>>(parameter);
 			assert(p);
-			return createDelegate(p);
+			return new WidgetParameterDouble(p);
 		}
 		case BaseParameter::INT:
 		{
 			auto p = std::dynamic_pointer_cast<Parameter<int>>(parameter);
 			assert(p);
-			return createDelegate(p);
+			return new WidgetParameterInt(p);
 		}
 		case BaseParameter::STRING:
 		{
 			auto p = std::dynamic_pointer_cast<Parameter<std::string>>(parameter);
 			assert(p);
-			return createDelegate(p);
+			return new WidgetParameterString(p);
 		}
 		case BaseParameter::NUM_TYPES:
 		default:
@@ -76,19 +82,43 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 	}
 }
 
-WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Parameter<int>> parameter)
-{
-	return new WidgetParameterInt(parameter);
-}
 
-WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Parameter<std::string>> parameter)
-{
-	return new WidgetParameterString(parameter);
-}
 
-WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Parameter<double>> parameter)
+// ----------------------------
+
+WidgetParameterFloat::WidgetParameterFloat(std::shared_ptr<Parameter<float>> parameter)
+: WidgetParameter<float>(parameter)
 {
-	return new WidgetParameterDouble(parameter);
+	QDoubleSpinBox* spinBox = new QDoubleSpinBox(this);
+	spinBox->setMaximumWidth(100);
+	spinBox->setRange(parameter->hardMin(), parameter->hardMax());
+	spinBox->move(0,0);
+	
+	ParameterValueContainer valueContainer = parameter->toContainer();
+	float* value = nullptr;
+	value = boost::get<float>(&valueContainer);
+	assert(value);
+	if (value)
+	{
+		spinBox->setValue(*value);
+	}
+	
+	// param -> widget
+	mParameter->addNewInternalValueCallback([spinBox, this](float value) {
+		spinBox->blockSignals(true);
+		Q_EMIT newInternalValue(value);
+		spinBox->blockSignals(false);
+	});
+	bool success = connect(this, SIGNAL(newInternalValue(double)), spinBox, SLOT(setValue(double)));
+	assert(success);
+	
+	// widget -> param
+	success = connect(spinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), [this](double value) {
+		mParameter->set(float(value));
+	});
+	assert(success);
+	
+	mWidget = spinBox;
 }
 
 
@@ -97,11 +127,11 @@ WidgetBaseParameter* WidgetBaseParameter::createDelegate(std::shared_ptr<Paramet
 
 WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> parameter)
 : WidgetParameter<double>(parameter)
-, mSpinBox(new QDoubleSpinBox(this))
 {
-	mSpinBox->setMaximumWidth(100);
-	mSpinBox->setRange(parameter->hardMin(), parameter->hardMax());
-	mSpinBox->move(0,0);
+	QDoubleSpinBox* spinBox = new QDoubleSpinBox(this);
+	spinBox->setMaximumWidth(100);
+	spinBox->setRange(parameter->hardMin(), parameter->hardMax());
+	spinBox->move(0,0);
 	
 	ParameterValueContainer valueContainer = parameter->toContainer();
 	double* value = nullptr;
@@ -109,29 +139,25 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 	assert(value);
 	if (value)
 	{
-		mSpinBox->setValue(*value);
+		spinBox->setValue(*value);
 	}
 	
 	// param -> widget
-	mParameter->addNewInternalValueCallback([this](double value) {
-		mSpinBox->blockSignals(true);
+	mParameter->addNewInternalValueCallback([this, spinBox](double value) {
+		spinBox->blockSignals(true);
 		Q_EMIT newInternalValue(value);
-		mSpinBox->blockSignals(false);
+		spinBox->blockSignals(false);
 	});
-	bool success = connect(this, SIGNAL(newInternalValue(double)), mSpinBox, SLOT(setValue(double)));
+	bool success = connect(this, SIGNAL(newInternalValue(double)), spinBox, SLOT(setValue(double)));
 	assert(success);
 	
 	// widget -> param
-	success = connect(mSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), [this](double value) {
+	success = connect(spinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), [this](double value) {
 		mParameter->set(value);
 	});
 	assert(success);
 	
-	//	auto layout = new QHBoxLayout;
-	//	layout->setAlignment(Qt::AlignLeft);
-	//	setLayout(layout);
-	//
-	//	layout->addWidget(mSpinBox);
+	mWidget = spinBox;
 }
 
 
@@ -139,9 +165,12 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 
 WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter)
 : WidgetParameter<int>(parameter)
-, mWidget(nullptr)
 {
 	assert(parameter != nullptr);
+	int* value = nullptr;
+	ParameterValueContainer valueContainer = parameter->toContainer();
+	value = boost::get<int>(&valueContainer);
+	assert(value);
 	
 	if (parameter->hasEnumerationLabels())
 	{
@@ -151,6 +180,10 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 		for (int i=0; i<labels.size(); i++)
 		{
 			w->insertItem(i, str(labels[i]));
+		}
+		if (value)
+		{
+			w->setCurrentIndex(*value);
 		}
 		// param -> widget
 		// note it's not necessary to remove this callback on destruction
@@ -174,10 +207,6 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 	{
 		QSpinBox* spinBox = new QSpinBox(this);
 		spinBox->setRange(parameter->softMin(), parameter->softMax());
-		ParameterValueContainer valueContainer = parameter->toContainer();
-		int* value = nullptr;
-		value = boost::get<int>(&valueContainer);
-		assert(value);
 		if (value)
 		{
 			spinBox->setValue(*value);
@@ -204,32 +233,34 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 }
 
 
+
 // ----------------------------
 
 WidgetParameterString::WidgetParameterString(std::shared_ptr<Parameter<std::string>> parameter)
 : WidgetParameter<std::string>(parameter)
-, mWidget(new QLineEdit(this))
 {
-	mWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	mWidget->move(0,0);
+	QLineEdit* widget = new QLineEdit(this);
+	widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	widget->move(0,0);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 	
 	// param -> widget
-	mParameter->addNewInternalValueCallback([this](std::string value)
+	mParameter->addNewInternalValueCallback([this, widget](std::string value)
 											{
-												mWidget->blockSignals(true);
+												widget->blockSignals(true);
 												Q_EMIT newInternalValue(str(value));
-												mWidget->blockSignals(false);
+												widget->blockSignals(false);
 											});
-	bool success = connect(this, SIGNAL(newInternalValue(QString const&)), mWidget, SLOT(setText(QString const&)));
+	bool success = connect(this, SIGNAL(newInternalValue(QString const&)), widget, SLOT(setText(QString const&)));
 	assert(success);
 	
-	success = connect(mWidget, &QLineEdit::textChanged, [this](QString const& value)
+	success = connect(widget, &QLineEdit::textChanged, [this](QString const& value)
 					  {
 						  mParameter->set(std::string(value.toUtf8()));
 					  });
 	assert(success);
 	
+	mWidget = widget;
 }
 
 

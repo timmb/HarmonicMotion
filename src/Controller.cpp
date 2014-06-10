@@ -30,10 +30,12 @@ Controller::Controller(QObject* parent)
 	qRegisterMetaType<std::shared_ptr<hm::PatchCord>>();
 	qRegisterMetaType<std::shared_ptr<hm::Outlet>>();
 	qRegisterMetaType<std::shared_ptr<hm::Inlet>>();
+	qRegisterMetaType<std::shared_ptr<hm::NodeRenderer>>();
 	qRegisterMetaType<hm::NodePtr>("NodePtr");
 	qRegisterMetaType<hm::PatchCordPtr>("PatchCordPtr");
 	qRegisterMetaType<hm::OutletPtr>("OutletPtr");
 	qRegisterMetaType<hm::InletPtr>("InletPtr");
+	qRegisterMetaType<hm::NodeRendererPtr>("NodeRendererPtr");
 	
 	mPipeline = mMainWindow->patchArea()->pipeline();
 	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");

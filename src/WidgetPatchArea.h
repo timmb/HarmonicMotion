@@ -15,6 +15,7 @@
 #include "Pipeline.h"
 #include "PipelineListener.h"
 #include "Utilities.h"
+#include "MetatypeDeclarations.h"
 
 namespace hm
 {
