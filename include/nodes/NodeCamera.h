@@ -10,6 +10,7 @@ namespace hm
 	{
 	public:
 		NodeCamera(Node::Params const& params, std::string const& className="NodeCamera");
+		~NodeCamera();
 		
 	protected:
 		virtual NodePtr create(Node::Params param) const override;
