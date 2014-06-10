@@ -16,3 +16,4 @@
 #include "nodes/NodeExpression.h"
 #include "nodes/NodeRenderer.h"
 #include "nodes/NodeCamera.h"
+#include "nodes/NodeImageProcessor.h"

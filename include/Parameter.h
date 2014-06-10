@@ -22,7 +22,7 @@ namespace hm {
 	/// used in Node but not in the Parameter classes which use templates
 	/// and operator overloading.
 	/// Types here should match those in BaseParameter::Type
-	typedef boost::variant<double, int, std::string> ParameterValueContainer;
+	typedef boost::variant<float, double, int, std::string> ParameterValueContainer;
 
 	/// Base class of all parameters
 	class BaseParameter
@@ -31,6 +31,7 @@ namespace hm {
 		/// These types should match those in ParameterValueContainer.
 		enum Type
 		{
+			FLOAT,
 			DOUBLE,
 			INT,
 			STRING,
@@ -64,6 +65,7 @@ namespace hm {
 		/// externally (e.g. by a GUI). Callbacks are not called until update()
 		/// is called, and run in the same thread as that function.
 		void addNewExternalValueCallback(std::function<void(void)> callbackFunction);
+		
 		/// If an external value has been received, then this writes it to
 		/// this parameter's corresponding value pointer, and then calls
 		/// any registered callbacks.
@@ -84,6 +86,20 @@ namespace hm {
 		double softMin() const { return mSoftMin; }
 		/// The maximum value suggested by the user interface (not enforced)
 		double softMax() const { return mSoftMax; }
+		
+		/// Set this to suggest to the user interface whether this
+		/// parameter should be visible at present.
+		void setVisible(bool isVisible);
+		bool isVisible() const { return mIsVisible; }
+		
+		/// Use this to register a callback to receive notification of when this
+		/// parameters characteristics have changed. Characteristics include the
+		/// min, max, name, whether its visible, etc.
+		/// This callback will be called during update()
+		/// \return A handle that may be used to remove the callback.
+		int addChangeOfCharacteristicsCallback(std::function<void(void)> callbackFunction);
+		
+		bool removeChangeOfCharacteristicsCallback(int handle);
 		
 		/// Only applicable for integer parameters: provide a set of labels
 		/// describing each possible value. This will update soft/hard min/
@@ -119,15 +135,21 @@ namespace hm {
 		double mHardMax;
 		double mSoftMin;
 		double mSoftMax;
+		bool mIsVisible;
 		
-		std::vector<std::function<void(void)>> mNewExternalValueCallbacks;
+		std::vector<std::function<void()>> mNewExternalValueCallbacks;
 		boost::mutex mNewExternalValueCallbacksMutex;
+		
+		std::vector<std::pair<std::function<void()>, int>> mChangeOfCharateristicsCallbacks;
+		boost::mutex mChangeOfCharacteristicsCallbacksMutex;
+		int mChangeOfCharacteristicsCallbackNextHandle;
+		
 		Node& mParent;
 		const std::string mName;
 		bool mIsDetached;
-//		const Type mType;
 		bool mHasEnumerationLabels;
 		std::vector<std::string> mEnumerationLabels;
+		bool mHaveCharacteristicsChanged;
 	};
 	
 }
@@ -194,10 +216,8 @@ namespace hm
 		/// Thread-safe
 		void set(T newValue)
 		{
-//			std::cout << "new external value: " << newValue << std::endl;
 			boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
 			mExternalValue = newValue;
-//			std::cout << "new mExternalValue: " << mExternalValue << std::endl;
 			mHasNewExternalValue = true;
 		}
 		/// Register a callback that is called when the internal value corresponding
@@ -329,6 +349,9 @@ namespace hm
 	BaseParameter::Type Parameter<int>::type() const;
 	
 	template<>
+	BaseParameter::Type Parameter<float>::type() const;
+	
+	template<>
 	BaseParameter::Type Parameter<double>::type() const;
 	
 	template<>
@@ -355,6 +378,7 @@ namespace Json
 {
 	// To avoid having to specialise the Parameter class, we overload
 	// the streaming operator for all supported datatypes
+	bool operator>>(Json::Value const& child, float& value);
 	bool operator>>(Json::Value const& child, double& value);
 	bool operator>>(Json::Value const& child, int& value);
 	bool operator>>(Json::Value const& child, ci::Vec3f& value);

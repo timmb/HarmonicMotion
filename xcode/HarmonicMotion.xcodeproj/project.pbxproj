@@ -169,6 +169,8 @@
 		347662F41940A00100539238 /* Listener.h in Headers */ = {isa = PBXBuildFile; fileRef = 347662F21940A00100539238 /* Listener.h */; };
 		34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A8542D1934AE1A00D0E378 /* NodeExpression.h */; };
 		34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A8542F1934AE2400D0E378 /* NodeExpression.cpp */; };
+		34C5D01219471EBA00CC2AE8 /* NodeImageProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C5D01119471EBA00CC2AE8 /* NodeImageProcessor.cpp */; };
+		34C5D01419471EC500CC2AE8 /* NodeImageProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C5D01319471EC500CC2AE8 /* NodeImageProcessor.h */; };
 		34C83216194209D100953F09 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C83215194209D100953F09 /* Renderer.cpp */; };
 		34C83218194209D800953F09 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C83217194209D800953F09 /* Renderer.h */; };
 		34DBA74B193F3A9600D24456 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34DBA729193F3A9600D24456 /* IpEndpointName.cpp */; };
@@ -378,6 +380,8 @@
 		34A8542D1934AE1A00D0E378 /* NodeExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeExpression.h; sourceTree = "<group>"; };
 		34A8542F1934AE2400D0E378 /* NodeExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeExpression.cpp; path = ../../src/nodes/NodeExpression.cpp; sourceTree = "<group>"; };
 		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
+		34C5D01119471EBA00CC2AE8 /* NodeImageProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeImageProcessor.cpp; path = ../../src/nodes/NodeImageProcessor.cpp; sourceTree = "<group>"; };
+		34C5D01319471EC500CC2AE8 /* NodeImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeImageProcessor.h; sourceTree = "<group>"; };
 		34C83215194209D100953F09 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
 		34C83217194209D800953F09 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = ../include/Renderer.h; sourceTree = "<group>"; };
 		34DBA729193F3A9600D24456 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IpEndpointName.cpp; sourceTree = "<group>"; };
@@ -686,6 +690,8 @@
 				345F967C1945F534001AD393 /* NodeCamera.h */,
 				226A9666189BED140056DCD1 /* NodeFilter.cpp */,
 				226A9658189BECF60056DCD1 /* NodeFilter.h */,
+				34C5D01119471EBA00CC2AE8 /* NodeImageProcessor.cpp */,
+				34C5D01319471EC500CC2AE8 /* NodeImageProcessor.h */,
 				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
 				226A9659189BECF60056DCD1 /* NodeKinect.h */,
 				226A9668189BED140056DCD1 /* NodeOscOut.cpp */,
@@ -914,6 +920,7 @@
 				34DBA75C193F3A9600D24456 /* OscPrintReceivedElements.h in Headers */,
 				222936E1181677BD008CAA09 /* XnDumpWriters.h in Headers */,
 				222936E2181677BD008CAA09 /* XnEnumerationErrors.h in Headers */,
+				34C5D01419471EC500CC2AE8 /* NodeImageProcessor.h in Headers */,
 				222936E3181677BD008CAA09 /* XnEvent.h in Headers */,
 				222936E4181677BD008CAA09 /* XnEventT.h in Headers */,
 				34DBA756193F3A9600D24456 /* OscException.h in Headers */,
@@ -1108,6 +1115,7 @@
 				226A9677189BED140056DCD1 /* NodeRenderer.cpp in Sources */,
 				221E90321817242A0028EAFD /* BaseData.cpp in Sources */,
 				221E903B1817270D0028EAFD /* Point3d.cpp in Sources */,
+				34C5D01219471EBA00CC2AE8 /* NodeImageProcessor.cpp in Sources */,
 				34DBA74B193F3A9600D24456 /* IpEndpointName.cpp in Sources */,
 				221E9040181727240028EAFD /* Value.cpp in Sources */,
 				34DBA75B193F3A9600D24456 /* OscPrintReceivedElements.cpp in Sources */,
