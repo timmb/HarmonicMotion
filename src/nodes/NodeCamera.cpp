@@ -26,6 +26,10 @@ NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
 	mOutlet = createOutlet(IMAGE2D, "Camera images", "2D images will be outputted here as they are received from the camera");
 }
 
+NodeCamera::~NodeCamera()
+{
+}
+
 void NodeCamera::updateCurrentDevice()
 {
 	vector<Capture::DeviceRef> devices = Capture::getDevices(true);
@@ -95,7 +99,10 @@ void NodeCamera::step()
 
 void NodeCamera::stop()
 {
-	
+	if (mCapture)
+	{
+		mCapture->stop();
+	}
 }
 
 

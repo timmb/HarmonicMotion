@@ -291,14 +291,14 @@ void Pipeline::start()
 			// if characteristics have changed on a node, we need to act on
 			// it with a unique lock
 			std::list<NodePtr> nodesWithChangedCharacteristics;
+			// thread-safe access. make a copy so we don't have to lock
+			// the pipeline mutex while we iterate
+			std::vector<NodePtr> n = nodes();
+			for (NodePtr node: n)
 			{
-				SharedLock lock(mPipelineMutex);
-				for (NodePtr node: mNodes)
+				if (node->stepProcessing())
 				{
-					if (node->stepProcessing())
-					{
-						nodesWithChangedCharacteristics.push_back(node);
-					}
+					nodesWithChangedCharacteristics.push_back(node);
 				}
 			}
 			// if node characteristics have changed then we might have
