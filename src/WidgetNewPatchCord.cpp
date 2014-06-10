@@ -41,13 +41,13 @@ WidgetNewPatchCord::WidgetNewPatchCord(WidgetOutlet* outlet, WidgetPatchArea* pa
 
 WidgetNewPatchCord::~WidgetNewPatchCord()
 {
-	
+	setMouseTracking(false);
 }
 
 void WidgetNewPatchCord::init()
 {
 	setFocusPolicy(Qt::StrongFocus);
-	setGeometry(mPatchArea->geometry());
+	setGeometry(QRect(0, 0, mPatchArea->width(), mPatchArea->height()));
 	if (mInlet != nullptr)
 	{
 		mLine.setP1(mInlet->connectionPoint());
@@ -69,7 +69,8 @@ void WidgetNewPatchCord::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setPen(QPen(QColor(50,50,50)));
-	painter.drawLine(mLine);
+	QLine line(mLine.p1(), mLine.p2());
+	painter.drawLine(line);
 }
 
 void WidgetNewPatchCord::mouseMoveEvent(QMouseEvent* event)
@@ -86,6 +87,9 @@ void WidgetNewPatchCord::mousePressEvent(QMouseEvent* event)
 	}
 	else if (mOutlet == nullptr)
 	{
+		qDebug() << "findoutlet"<<event->pos()<<"my geometry"<<geometry()
+		<<"patch area"<<mPatchArea->geometry();
+
 		mOutlet = mPatchArea->findOutlet(event->pos());
 	}
 	if (mInlet != nullptr && mOutlet != nullptr)

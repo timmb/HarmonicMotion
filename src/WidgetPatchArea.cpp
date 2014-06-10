@@ -293,10 +293,11 @@ void WidgetPatchArea::updateSize()
 void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint position)
 {
 	hm_debug("mousePressEventFromWidgetLet::mousePressEvent");
-	// if we're already creating a new patch cord then that should have
-	// receied the mouse event. On rare conditions this doesn't happen
+	qDebug() << "position"<<position;
 	if (mNewPatchCord != nullptr)
 	{
+		// if we're already creating a new patch cord then that should have
+		// receied the mouse event. But on rare conditions this doesn't happen
 		delete mNewPatchCord;
 		mNewPatchCord = nullptr;
 	}
@@ -686,7 +687,13 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 
 void WidgetPatchArea::resizeEvent(QResizeEvent* event)
 {
+	if (mNewPatchCord != nullptr)
+	{
+		mNewPatchCord->resize(size());
+	}
 }
+
+
 
 
 
