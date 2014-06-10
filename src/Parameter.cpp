@@ -16,10 +16,12 @@ namespace std
 {
 	string to_string(hm::BaseParameter::Type type)
 	{
-		static_assert(hm::BaseParameter::NUM_TYPES==3, "to_string(hm::BaseParameter::Type type) needs to be updated to accommodate all the different types defined.");
+		static_assert(hm::BaseParameter::NUM_TYPES==4, "to_string(hm::BaseParameter::Type type) needs to be updated to accommodate all the different types defined.");
 
 		switch (type)
 		{
+			case hm::BaseParameter::FLOAT:
+				return "float";
 			case hm::BaseParameter::DOUBLE:
 				return "double";
 			case hm::BaseParameter::INT:
@@ -46,9 +48,11 @@ namespace hm {
 	, mHardMax(999999999)
 	, mSoftMin(0)
 	, mSoftMax(100)
-//	, mType(type)
+	, mIsVisible(true)
+	, mChangeOfCharacteristicsCallbackNextHandle(0)
 	, mIsDetached(false)
 	, mHasEnumerationLabels(false)
+	, mHaveCharacteristicsChanged(false)
 	{
 		// TODO: Verify path is well formed
 		// TODO: Check path is unique
@@ -81,6 +85,7 @@ namespace hm {
 		mEnumerationLabels = labels;
 		mHardMin = mSoftMin = 0;
 		mHardMax = mSoftMax = labels.size() - 1;
+		mHaveCharacteristicsChanged = true;
 	}
 	
 	void BaseParameter::setBounds(double hardMin, double hardMax, double softMin, double softMax)
@@ -89,26 +94,40 @@ namespace hm {
 		mHardMax = hardMax;
 		mSoftMin = softMin;
 		mSoftMax = softMax;
+		mHaveCharacteristicsChanged = true;
 	}
-
 	
-//	void BaseParameter::writeJson(Json::Value& root) const
-//	{
-//		Json::Value& child = getChild(root, path());
-//		toJson(child);
-//	}
-//	
-//	
-//	bool BaseParameter::readJson(Json::Value const& root)
-//	{
-//		Json::Value const& child = getChild(root, path());
-//		return fromJson(child);
-//	}
+	void BaseParameter::setVisible(bool isVisible)
+	{
+		mIsVisible = isVisible;
+		mHaveCharacteristicsChanged = true;
+	}
 	
 	void BaseParameter::addNewExternalValueCallback(std::function<void(void)> callbackFunction)
 	{
 		boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
 		mNewExternalValueCallbacks.push_back(callbackFunction);
+	}
+	
+	int BaseParameter::addChangeOfCharacteristicsCallback(std::function<void ()> callbackFunction)
+	{
+		boost::lock_guard<boost::mutex> lock(mChangeOfCharacteristicsCallbacksMutex);
+		mChangeOfCharateristicsCallbacks.push_back(pair<function<void()>,int>(callbackFunction, mChangeOfCharacteristicsCallbackNextHandle));
+		return mChangeOfCharacteristicsCallbackNextHandle++;
+	}
+	
+	bool BaseParameter::removeChangeOfCharacteristicsCallback(int handle)
+	{
+		boost::lock_guard<boost::mutex> lock(mChangeOfCharacteristicsCallbacksMutex);
+		for (auto it=mChangeOfCharateristicsCallbacks.begin(); it!=mChangeOfCharateristicsCallbacks.end(); ++it)
+		{
+			if (it->second == handle)
+			{
+				mChangeOfCharateristicsCallbacks.erase(it);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	void BaseParameter::update()
@@ -118,9 +137,18 @@ namespace hm {
 			if (checkExternalValue())
 			{
 				boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
-				for (auto callback: mNewExternalValueCallbacks)
+				for (auto & callback: mNewExternalValueCallbacks)
 				{
 					callback();
+				}
+			}
+			if (mHaveCharacteristicsChanged)
+			{
+				mHaveCharacteristicsChanged = false;
+				boost::lock_guard<boost::mutex> lock(mChangeOfCharacteristicsCallbacksMutex);
+				for (auto & p: mChangeOfCharateristicsCallbacks)
+				{
+					p.first();
 				}
 			}
 		}
@@ -130,6 +158,12 @@ namespace hm {
 	BaseParameter::Type Parameter<int>::type() const
 	{
 		return INT;
+	}
+	
+	template<>
+	BaseParameter::Type Parameter<float>::type() const
+	{
+		return FLOAT;
 	}
 	
 	template<>
@@ -156,6 +190,12 @@ namespace hm {
 		value = max<double>(hardMin(), min<double>(hardMax(), value));
 	}
 	
+	template<>
+	void Parameter<float>::validateExternalValue(float& value) const
+	{
+		value = max<float>(hardMin(), min<float>(hardMax(), value));
+	}
+
 }
 
 
@@ -171,6 +211,14 @@ namespace Json
 		if (!child.isConvertibleTo(Json::realValue))
 			return false;
 		value = child.asDouble();
+		return true;
+	}
+	
+	bool operator>>(Json::Value const& child, float& value)
+	{
+		if (!child.isConvertibleTo(Json::realValue))
+			return false;
+		value = child.asFloat();
 		return true;
 	}
 	
