@@ -838,6 +838,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			assert(node!=nullptr);
 			if (node!=nullptr)
 			{
+				jNode >> *node;
 				addNode(node);
 			}
 			else
