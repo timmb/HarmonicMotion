@@ -32,27 +32,41 @@ namespace hm
 		// MARK: Access pipeline elements
 		
 		std::vector<NodePtr> nodes() const;
+		
 		std::vector<PatchCordPtr> patchCords() const;
+		
 		/// \param path e.g. "My node" or "/My node/
 		NodePtr nodeFromPath(std::string path) const;
+		
 		/// \param path e.g. "/My node/My outlet"
 		OutletPtr outletFromPath(std::string const& path) const;
+		
 		InletPtr inletFromPath(std::string const& path) const;
+		
+		/// \return A list of the names of all nodes in this pipeline
+		std::vector<std::string> nodeNames() const;
 		
 		// MARK: Modify pipeline
 		
 		/// \warning This function must not be called by a node while it is
 		/// processing or the thread will deadlock.
 		void addNode(NodePtr node);
+		
 		/// \warning This function must not be called by a node while it is
 		/// processing or the thread will deadlock.
 		void removeNode(NodePtr node);
+		
 		/// Removes \p oldNode and adds \p newNode. This function will attempt
 		/// to recreate any patch cords that were on \p oldNode if possible.
 		/// \p newNode will be enabled/disabled based on the state of \p oldNode.
 		/// \warning This function must not be called by a node while it is
 		/// processing or the thread will deadlock.
 		void replaceNode(NodePtr oldNode, NodePtr newNode);
+		
+		/// Checks that the given node has a unique name, changing it to
+		/// be unique using Node::setName if necessary.
+		void ensureNameIsUnique(NodePtr node);
+		
 		/// Delete all patchcords and nodes
 		/// \warning This function must not be called by a node while it is
 		/// processing or the thread will deadlock.
@@ -63,12 +77,14 @@ namespace hm
 		/// \warning This function must not be called by a node while it is
 		/// processing or the thread will deadlock.
 		bool connect(OutletPtr outlet, InletPtr inlet);
+		
 		/// Disconnect an outlet from an inlet
 		/// \return true if a connection existed and was removed, or
 		/// false if no connection existed.
 		/// \warning This function must not be called by a node while it is
 		/// processing or the thread will deadlock.
 		bool disconnect(OutletPtr outlet, InletPtr inlet);
+		
 		/// \return true if \p outlet is connected to \p inlet
 		bool isConnected(OutletPtr outlet, InletPtr inlet) const;
 		
@@ -80,6 +96,7 @@ namespace hm
 		/// \param listener must remain valid for the duration of this
 		/// pipeline, or until it is removed.
 		void addListener(Listener* listener);
+		
 		/// \return true if \p listener was registered and has been
 		/// removed, false if \p listener was not registered.
 		bool removeListener(Listener* listener);
@@ -88,7 +105,9 @@ namespace hm
 		
 		/// Starts processing nodes
 		void start();
+		
 		bool isRunning() const { return mIsRunning; }
+		
 		/// \warning Do not call stop() from a thread that has locked mPipelineMutex
 		/// as the main process may require a unique lock before it can stop.
 		void stop();
@@ -97,16 +116,20 @@ namespace hm
 		// Json should be encoded UTF 8
 		/// \p json will be wiped and have this pipeline saved to it
 		void toJson(Json::Value& json) const;
+		
 		/// This will destroy all nodes and patchcords from this pipeline
 		/// and create new ones based on the data in \p json.
 		/// \return true if any errors were encountered. Messages for each
 		/// error will be added to \p errors.
 		bool fromJson(Json::Value const& json, std::vector<std::string>& errors);
+		
 		/// \copydoc fromJson(Json::Value const&, std::vector<std::string>&)
 		bool fromJsonString(std::string const& jsonString, std::vector<std::string> & errors);
+		
 		/// Write JSON to file
 		/// \return true if the file was saved OK.
 		bool saveJson(std::string filePath) const;
+		
 		/// Read JSON from file, overwriting the current state of this pipeline
 		/// with its values.
 		bool loadJson(std::string filePath);
@@ -133,12 +156,12 @@ namespace hm
 		// needs to process once the pipeline mutex is unlocked.
 		// *********
 		
+		/// Disconnect and delete a patchcord
 		/// \pre Requires a unique lock to be active.
 		/// \param skipInvariant Normally in debug mode this function
 		/// checks the patchcord invariant is true before and after it acts.
 		/// Set this to true if you want to skip this check (e.g. if you know
 		/// the invariant shouldn't be true before/after calling this function).
-		/// Disconnect and delete a patchcord
 		Events p_Disconnect(PatchCordPtr p, bool skipInvariant=false);
 		
 		/// \pre Requires an unique lock to be active
@@ -147,6 +170,11 @@ namespace hm
 		/// \pre Requires a unique lock to be active and node to be
 		/// a member of mNodes
 		Events p_RemoveNode(NodePtr node);
+		
+		/// Changes \p node's name if necessary to ensure all nodes
+		/// in the pipeline have a unique name
+		/// \pre Requires a shared lock to be active
+		Events p_EnsureNameIsUnique(NodePtr node);
 		
 		/// \pre Requires a unique lock to be active
 		Events p_Clear();

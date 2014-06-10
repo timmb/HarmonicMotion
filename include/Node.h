@@ -62,13 +62,15 @@ namespace hm
 		/// followed by the name of this node.
 		/// \note At present nodes do not have parents, so this is just "/<name>"
 		std::string path() const;
-		void setName(std::string name);
+		/// If this node is attached to a pipeline then \p name may be modified to
+		/// ensure it is unique
+		void setName(std::string const& name);
 		std::string toString() const;
 		/// Export a Params instance that may be used to reproduce this
 		/// object in its current state. This will copy all of the current
 		/// parameter values into the initial values of the Params object.
 		Params exportParams() const;
-		/// \param params may be modified by this function to ensure it has
+		/// \param This function may modify \p params to ensure it has
 		/// valid values.
 		void setNodeParams(Params& params);
 
@@ -121,9 +123,6 @@ namespace hm
 		/// \return true if we are between startProcessing and stopProcessing calls
 		/// (even if isEnabled is false)
 		bool isProcessing() const { return mIsProcessing; }
-		
-		/// \return A set of all node names currently in use
-		static std::set<std::string> nodeNamesInUse();
 		
 	protected:
 		/// Nodes cannot be directly constructed as they are always
@@ -180,18 +179,23 @@ namespace hm
 		/// Return this node's Params object in its current state.
 		Params nodeParams() const;
 		
-//		/// The pipeline this node is contained within. This may be nullptr
-//		/// and should be checked each time it is called.
-//		Pipeline* pipeline() const { return mPipeline; }
 		
 	private:
-//		friend Pipeline;
+		friend Pipeline;
 		/// FUNCTION TO BE ACCESSED BY PIPELINE ONLY.
-//		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
+		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
+
 		/////////////////////////////////////
 		
+		/// The pipeline this node is contained within. This may be nullptr
+		/// and should be checked each time it is called.
+		/// \warning Nodes must not call functions that modify the pipeline
+		/// from their \p stepProcessing() function or any Parameter callbacks
+		/// as that might create a deadlock with the pipeline mutex.
+		Pipeline* pipeline() const { return mPipeline; }
+
 		/// We retain a reference to the pipeline. This may be nullptr
-//		std::atomic<Pipeline*> mPipeline;
+		std::atomic<Pipeline*> mPipeline;
 		std::vector<InletPtr> mInlets;
 		std::vector<OutletPtr> mOutlets;
 		std::vector<ParameterPtr> mParameters;
@@ -210,11 +214,9 @@ namespace hm
 		std::atomic_flag mHaveAllCharacteristicChangesBeenReported;
 		const std::string mClassName;
 		
-		static std::set<std::string> sNamesInUse;
-		static boost::mutex sNamesInUseMutex;
-		
 		friend Json::Value& operator<<(Json::Value&, Node const&);
 		friend bool operator>>(Json::Value const&, Node&);
+		
 	};
 	
 	typedef std::function<NodePtr (Node::Params)> NodeCreationFunction;

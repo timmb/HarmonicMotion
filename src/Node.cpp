@@ -12,6 +12,8 @@
 #include "cinder/Utilities.h"
 #include "Parameter.h"
 #include "Common.h"
+#include "FactoryNode.h"
+#include "Pipeline.h"
 
 namespace hm
 {
@@ -43,17 +45,20 @@ using namespace std;
 typedef boost::shared_lock<boost::shared_mutex> SharedLock;
 typedef boost::unique_lock<boost::shared_mutex> UniqueLock;
 
-set<string> Node::sNamesInUse;
-boost::mutex Node::sNamesInUseMutex;
-
 Node::Node(Params params, string className)
 : mClassName(className)
 , mIsEnabled(true)
 , mIsProcessing(false)
 , mHasStartEverBeenCalled(false)
 , mHaveAllCharacteristicChangesBeenReported(true)
+, mPipeline(nullptr)
 {
 	assert(mClassName != "");
+	// if no node name has been set, default it to the class name
+	if (params.name == "")
+	{
+		params.name = mClassName;
+	}
 	setNodeParams(params);
 	hm_debug("Node constructed: "+className);
 }
@@ -73,11 +78,6 @@ Node::~Node()
 	{
 		assert(outlet->numInlets()==0);
 //		assert(outlet.use_count()==1);
-	}
-	{
-		boost::unique_lock<boost::mutex> lock1(sNamesInUseMutex);
-		boost::unique_lock<boost::shared_mutex> lock2(mNodeParamsMutex);
-		sNamesInUse.erase(mNodeParams.name);
 	}
 	{
 		boost::unique_lock<boost::shared_mutex> lock(mParametersMutex);
@@ -100,7 +100,7 @@ Node::Params Node::exportParams() const
 	for (ParameterConstPtr p: parameters())
 	{
 		ParameterValueContainer v = p->toContainer();
-		cout << "parameter "<<p->name()<<": "<<v<<endl;
+//		cout << "parameter "<<p->name()<<": "<<v<<endl;
 		params.parameterInitialValues[p->name()] = v;
 	}
 	return params;
@@ -206,7 +206,7 @@ std::string Node::toString() const
 	return (stringstream() << *this).str();
 }
 
-void Node::setName(std::string name)
+void Node::setName(std::string const& name)
 {
 	Params params = nodeParams();
 	params.name = name;
@@ -222,27 +222,22 @@ Node::Params Node::nodeParams() const
 
 void Node::setNodeParams(Params& params)
 {
-	SharedLock lock(mNodeParamsMutex);
-	{ // validate name
-		if (params.name=="")
-			params.name = mClassName;
-		// if we have a new name, ensure it is unique
-		if (params.name != mNodeParams.name)
+	{
+		UniqueLock lock(mNodeParamsMutex);
+		mNodeParams = params;
+	}
+	// NB it is important not to call Pipeline::ensureNameIsUnique while
+	// any lock is on mNodeParamsMutex as Pipeline::ensureNameIsUnique may
+	// subsequently call a function of this class that will attempt a unique
+	// lock on mNodeParamsMutex.
+	if (Pipeline* p = pipeline())
+	{
+		NodePtr me = FactoryNode::instance()->getNodePtr(this);
+		if (me)
 		{
-			boost::unique_lock<boost::mutex> lock(sNamesInUseMutex);
-			
-			std::string requestedName = params.name;
-			int count = 2;
-			while (sNamesInUse.count(params.name)>0)
-			{
-				params.name = requestedName+' '+ci::toString(count);
-				count++;
-			}
-			sNamesInUse.erase(mNodeParams.name);
-			sNamesInUse.insert(params.name);
+			p->ensureNameIsUnique(me);
 		}
 	}
-	mNodeParams = params;
 }
 
 
@@ -431,11 +426,6 @@ namespace hm
 
 }
 
-set<string> Node::nodeNamesInUse()
-{
-	boost::lock_guard<boost::mutex> lock(sNamesInUseMutex);
-	return sNamesInUse;
-}
 
 
 bool Node::removeInlet(InletPtr inlet)

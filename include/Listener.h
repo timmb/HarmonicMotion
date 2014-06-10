@@ -17,6 +17,9 @@ namespace hm
 		/// on a node. Any patch cords that need to be deleted as a
 		/// consequence will have aready been notified to this listener.
 		virtual void nodeCharacteristicsChanged(NodePtr node) {}
+		/// Node Params is the Node::Params struct that defines a node's
+		/// name, gui location, etc.
+		virtual void nodeParamsChanged(NodePtr node) {}
 		virtual void patchCordAdded(OutletPtr outlet, InletPtr inlet) {}
 		virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet) {}
 	};

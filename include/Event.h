@@ -19,7 +19,7 @@ namespace hm
 		NodePtr node;
 		
 		NodeAddedEvent(NodePtr node_) : node(node_) {}
-		virtual void notify(Listener* listener);
+		virtual void notify(Listener* listener) override;
 	};
 	
 	struct NodeRemovedEvent : public Event
@@ -27,7 +27,7 @@ namespace hm
 		NodePtr node;
 		
 		NodeRemovedEvent(NodePtr node_) : node(node_) {}
-		virtual void notify(Listener* listener);
+		virtual void notify(Listener* listener) override;
 	};
 	
 	struct NodeCharacteristicsChangedEvent : public Event
@@ -35,7 +35,15 @@ namespace hm
 		NodePtr node;
 		
 		NodeCharacteristicsChangedEvent(NodePtr node_) : node(node_) {}
-		virtual void notify(Listener* listener);
+		virtual void notify(Listener* listener) override;
+	};
+	
+	struct NodeParamsChangedEvent : public Event
+	{
+		NodePtr node;
+		
+		NodeParamsChangedEvent(NodePtr node_) : node(node_) {}
+		virtual void notify(Listener* listener) override;
 	};
 	
 	struct PatchCordAddedEvent : public Event
@@ -43,7 +51,7 @@ namespace hm
 		PatchCordPtr patchCord;
 		
 		PatchCordAddedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
-		virtual void notify(Listener* listener);
+		virtual void notify(Listener* listener) override;
 	};
 	
 	struct PatchCordRemovedEvent : public Event
@@ -51,6 +59,6 @@ namespace hm
 		PatchCordPtr patchCord;
 		
 		PatchCordRemovedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
-		virtual void notify(Listener* listener);
+		virtual void notify(Listener* listener) override;
 	};
 }

@@ -19,6 +19,11 @@ void NodeCharacteristicsChangedEvent::notify(Listener* listener)
 	listener->nodeCharacteristicsChanged(node);
 }
 
+void NodeParamsChangedEvent::notify(Listener* listener)
+{
+	listener->nodeParamsChanged(node);
+}
+
 void PatchCordAddedEvent::notify(Listener* listener)
 {
 	listener->patchCordAdded(patchCord->outlet(), patchCord->inlet());
