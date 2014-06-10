@@ -20,6 +20,10 @@ namespace std
 				return "Scene3d";
 			case hm::IMAGE2D:
 				return "Image2d";
+			case hm::LIST_VALUE:
+				return "ListValue";
+			case hm::LIST_POINT3D:
+				return "ListPoint3d";
 			case hm::ALL_TYPES:
 				return "All types";
 			case hm::VECTOR3D_TYPES:

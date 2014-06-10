@@ -123,6 +123,8 @@ namespace hm
 	class Skeleton3d : public Base3dData
 	{
 	public:
+		typedef Base3dData BaseType;
+		
 		explicit
 		Skeleton3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
