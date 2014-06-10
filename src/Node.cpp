@@ -356,7 +356,7 @@ namespace hm
 			for (string name: jsonParameterNames)
 			{
 				// find parameter
-				auto it = find_if(node.mParameters.begin(), node.mParameters.end(), [name](ParameterPtr p) {
+				auto it = find_if(parameters.begin(), parameters.end(), [name](ParameterPtr p) {
 					return p->name() == name;
 				});
 				// if we've found the parameter try to write in
