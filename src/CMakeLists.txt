@@ -195,6 +195,7 @@ libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
 
 # OpenCV
 libopencv_core.${DYNAMIC_LIBRARY_EXTENSION}
+libopencv_imgproc.${DYNAMIC_LIBRARY_EXTENSION}
 )
 
 # Custom script to copy in dylibs in Xcode
