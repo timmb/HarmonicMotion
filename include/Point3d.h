@@ -84,11 +84,11 @@ namespace hm
 		Skeleton3d operator*(Skeleton3d const& rhs) const;
 		Skeleton3d operator/(Skeleton3d const& rhs) const;
 		
-		// Point3d <op> Scene3d applies op to each skeleton in scene
-		Scene3d operator+(Scene3d const& rhs) const;
-		Scene3d operator-(Scene3d const& rhs) const;
-		Scene3d operator*(Scene3d const& rhs) const;
-		Scene3d operator/(Scene3d const& rhs) const;
+//		// Point3d <op> Scene3d applies op to each skeleton in scene
+//		Scene3d operator+(Scene3d const& rhs) const;
+//		Scene3d operator-(Scene3d const& rhs) const;
+//		Scene3d operator*(Scene3d const& rhs) const;
+//		Scene3d operator/(Scene3d const& rhs) const;
 		
 //		template <typename Scalar>
 //		Point3d operator*(Scalar const& rhs) const;
