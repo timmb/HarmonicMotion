@@ -87,64 +87,64 @@ void Point3d::draw()
 
 
 
-Point3d Point3d::Point3d::operator+(Point3d const& rhs) const
-{
-	return Point3d(value + rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Point3d Point3d::operator-(Point3d const& rhs) const
-{
-	return Point3d(value - rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Point3d Point3d::operator*(Point3d const& rhs) const
-{
-	return Point3d(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Point3d Point3d::operator/(Point3d const& rhs) const
-{
-	return Point3d(value / rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Point3d& Point3d::operator+=(Point3d const& rhs)
-{
-	timestamp = max(timestamp, rhs.timestamp);
-	value += rhs.value;
-	return *this;
-}
-
-Point3d& Point3d::operator-=(Point3d const& rhs)
-{
-	timestamp = max(timestamp, rhs.timestamp);
-	value += rhs.value;
-	return *this;
-}
-
-Point3d& Point3d::operator*=(Point3d const& rhs)
-{
-	timestamp = max(timestamp, rhs.timestamp);
-	value += rhs.value;
-	return *this;
-}
-
-Point3d& Point3d::operator/=(Point3d const& rhs)
-{
-	timestamp = max(timestamp, rhs.timestamp);
-	value += rhs.value;
-	return *this;
-}
-
-
-Point3d Point3d::operator*(Value const& rhs) const
-{
-	return Point3d(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Point3d Point3d::operator/(Value const& rhs) const
-{
-	return Point3d(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
+//Point3d Point3d::Point3d::operator+(Point3d const& rhs) const
+//{
+//	return Point3d(value + rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Point3d Point3d::operator-(Point3d const& rhs) const
+//{
+//	return Point3d(value - rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Point3d Point3d::operator*(Point3d const& rhs) const
+//{
+//	return Point3d(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Point3d Point3d::operator/(Point3d const& rhs) const
+//{
+//	return Point3d(value / rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Point3d& Point3d::operator+=(Point3d const& rhs)
+//{
+//	timestamp = max(timestamp, rhs.timestamp);
+//	value += rhs.value;
+//	return *this;
+//}
+//
+//Point3d& Point3d::operator-=(Point3d const& rhs)
+//{
+//	timestamp = max(timestamp, rhs.timestamp);
+//	value += rhs.value;
+//	return *this;
+//}
+//
+//Point3d& Point3d::operator*=(Point3d const& rhs)
+//{
+//	timestamp = max(timestamp, rhs.timestamp);
+//	value += rhs.value;
+//	return *this;
+//}
+//
+//Point3d& Point3d::operator/=(Point3d const& rhs)
+//{
+//	timestamp = max(timestamp, rhs.timestamp);
+//	value += rhs.value;
+//	return *this;
+//}
+//
+//
+//Point3d Point3d::operator*(Value const& rhs) const
+//{
+//	return Point3d(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Point3d Point3d::operator/(Value const& rhs) const
+//{
+//	return Point3d(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
 
 
 // Point3d <op> Skeleton3d applies op to each joint in skeleton

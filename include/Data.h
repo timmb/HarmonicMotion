@@ -10,10 +10,15 @@
 #include "Common.h"
 #include "Skeleton3d.h"
 #include "Scene3d.h"
+#include "Point2d.h"
 #include "Point3d.h"
 #include "Value.h"
 #include "DataNull.h"
 #include "Image2d.h"
+#include "List.h"
+#include "ListPoint2d.h"
+#include "ListValue.h"
+#include "ListPoint3d.h"
 #include <boost/variant.hpp>
 
 namespace hm
@@ -22,17 +27,21 @@ namespace hm
 	class Data
 	{
 	public:
-		typedef boost::variant<DataNull, Value, Point3d, Skeleton3d, Scene3d, Image2d> Variant;
+		typedef boost::variant<DataNull, Value, Point2d, Point3d, Skeleton3d, Scene3d, Image2d, ListValue, ListPoint2d, ListPoint3d> Variant;
 
 		/// Creates a null (i.e. undefined) Data object
 		Data();
 		/// Convenience function to create a Value object with timestamp 0.
 		Data(double x);
 		Data(Value const& x);
+		Data(Point2d const& x);
 		Data(Point3d const& x);
 		Data(Skeleton3d const& x);
 		Data(Scene3d const& x);
 		Data(Image2d const& x);
+		Data(ListValue const& x);
+		Data(ListPoint2d const& x);
+		Data(ListPoint3d const& x);
 
 		Type type() const { return mType; }
 		double timestamp() const { return asBaseData()->timestamp; }
@@ -54,6 +63,10 @@ namespace hm
 		Value const& asValue() const;
 		Value& asValue();
 		
+		bool isPoint2d() const;
+		Point2d const& asPoint2d() const;
+		Point2d& asPoint2d();
+		
 		bool isPoint3d() const;
 		Point3d const& asPoint3d() const;
 		Point3d& asPoint3d();
@@ -70,6 +83,18 @@ namespace hm
 		Image2d const& asImage2d() const;
 		Image2d& asImage2d();
 		
+		bool isListValue() const;
+		ListValue const& asListValue() const;
+		ListValue& asListValue();
+		
+		bool isListPoint2d() const;
+		ListPoint2d const& asListPoint2d() const;
+		ListPoint2d& asListPoint2d();
+
+		bool isListPoint3d() const;
+		ListPoint3d const& asListPoint3d() const;
+		ListPoint3d& asListPoint3d();
+
 		std::string toString() const;
 		
 		// Mathematical operators. See individual type definitions for notes

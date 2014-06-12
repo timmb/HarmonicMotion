@@ -8,9 +8,12 @@
 
 #include "Data.h"
 #include <sstream>
+#include <type_traits>
+#include <utility>
 
 using namespace hm;
 using namespace std;
+
 
 
 Data::Data()
@@ -24,76 +27,55 @@ Data::Data(double x)
 , data(Value(x))
 {}
 
-
-Data::Data(Value const& x)
-: mType(VALUE)
-, data(x)
+#define hm_data_define_constructor(Type) \
+Data::Data(Type const& x) \
+: mType(getType<Type>()) \
+, data(x) \
 {}
 
+hm_data_define_constructor(Value)
+hm_data_define_constructor(Point2d)
+hm_data_define_constructor(Point3d)
+hm_data_define_constructor(Skeleton3d)
+hm_data_define_constructor(Scene3d)
+hm_data_define_constructor(ListValue)
+hm_data_define_constructor(ListPoint2d)
+hm_data_define_constructor(ListPoint3d)
+hm_data_define_constructor(Image2d)
 
-Data::Data(Point3d const& x)
-: mType(POINT3D)
-, data(x)
-{}
 
-Data::Data(Skeleton3d const& x)
-: mType(SKELETON3D)
-, data(x)
-{}
+namespace {
+	struct GetBaseDataVisitor : public boost::static_visitor<BaseData*>
+	{
+		BaseData* operator()(BaseData & x) const
+		{
+			return &x;
+		}
+	};
+	GetBaseDataVisitor getBaseDataVisitor;
+	
+	struct GetConstBaseDataVisitor : public boost::static_visitor<BaseData const*>
+	{
+		BaseData const* operator()(BaseData const& x) const
+		{
+			return &x;
+		}
+	};
+	GetConstBaseDataVisitor getConstBaseDataVisitor;
 
-Data::Data(Scene3d const& x)
-: mType(SCENE3D)
-, data(x)
-{}
+}
 
-Data::Data(Image2d const& x)
-: mType(IMAGE2D)
-, data(x)
-{}
+
 
 BaseData* Data::asBaseData()
 {
-	switch (mType)
-	{
-		case UNDEFINED:
-			return &boost::get<DataNull&>(data);
-		case VALUE:
-			return &boost::get<Value&>(data);
-		case POINT3D:
-			return &boost::get<Point3d&>(data);
-		case SKELETON3D:
-			return &boost::get<Skeleton3d&>(data);
-		case SCENE3D:
-			return &boost::get<Scene3d&>(data);
-		case IMAGE2D:
-			return &boost::get<Image2d&>(data);
-		default:
-			assert(false);
-			return nullptr;
-	}
+	return boost::apply_visitor(getBaseDataVisitor, data);
 }
 
 
 BaseData const* Data::asBaseData() const
 {
-	switch (mType)
-	{
-		case UNDEFINED:
-			return &boost::get<DataNull const&>(data);;
-		case VALUE:
-			return &boost::get<Value const&>(data);
-		case POINT3D:
-			return &boost::get<Point3d const&>(data);
-		case SKELETON3D:
-			return &boost::get<Skeleton3d const&>(data);
-		case SCENE3D:
-			return &boost::get<Scene3d const&>(data);
-		case IMAGE2D:
-			return &boost::get<Image2d const&>(data);
-		default:
-			assert(false);
-			return nullptr;
-	}
+	return boost::apply_visitor(getConstBaseDataVisitor, data);
 }
 
 bool Data::isNull() const
@@ -111,94 +93,33 @@ DataNull const& Data::asNull() const
 	return boost::get<DataNull const&>(data);
 }
 
-bool Data::isValue() const
-{
-	return mType == VALUE;
+#define hm_data_is_and_as_functions(Type) \
+bool Data::is##Type() const \
+{ \
+	return mType == getType<Type>(); \
+} \
+ \
+Type const& Data::as##Type() const \
+{ \
+	assert(is##Type()); \
+	return boost::get<Type const&>(data); \
+} \
+ \
+Type& Data::as##Type() \
+{ \
+	assert(is##Type()); \
+	return boost::get<Type&>(data); \
 }
 
-Value const& Data::asValue() const
-{
-	assert(isValue());
-	return boost::get<Value const&>(data);
-}
-
-Value& Data::asValue()
-{
-	assert(isValue());
-	return boost::get<Value&>(data);
-}
-
-bool Data::isPoint3d() const
-{
-	return mType == POINT3D;
-}
-
-Point3d const& Data::asPoint3d() const
-{
-	assert(isPoint3d());
-	return boost::get<Point3d const&>(data);
-}
-
-Point3d& Data::asPoint3d()
-{
-	assert(isPoint3d());
-	return boost::get<Point3d&>(data);
-}
-
-
-bool Data::isSkeleton3d() const
-{
-	return mType == SKELETON3D;
-}
-
-Skeleton3d const& Data::asSkeleton3d() const
-{
-	assert(isSkeleton3d());
-	return boost::get<Skeleton3d const&>(data);
-}
-
-Skeleton3d& Data::asSkeleton3d()
-{
-	assert(isSkeleton3d());
-	return boost::get<Skeleton3d&>(data);
-}
-
-
-bool Data::isScene3d() const
-{
-	return mType == SCENE3D;
-}
-
-Scene3d const& Data::asScene3d() const
-{
-	assert(isScene3d());
-	return boost::get<Scene3d const&>(data);
-}
-
-Scene3d& Data::asScene3d()
-{
-	assert(isScene3d());
-	return boost::get<Scene3d&>(data);
-}
-
-bool Data::isImage2d() const
-{
-	return mType == IMAGE2D;
-}
-
-Image2d const& Data::asImage2d() const
-{
-	assert(isImage2d());
-	return boost::get<Image2d const&>(data);
-}
-
-Image2d& Data::asImage2d()
-{
-	assert(isImage2d());
-	return boost::get<Image2d&>(data);
-}
-
-
+hm_data_is_and_as_functions(Value)
+hm_data_is_and_as_functions(Point2d)
+hm_data_is_and_as_functions(Point3d)
+hm_data_is_and_as_functions(Skeleton3d)
+hm_data_is_and_as_functions(Scene3d)
+hm_data_is_and_as_functions(Image2d)
+hm_data_is_and_as_functions(ListValue)
+hm_data_is_and_as_functions(ListPoint2d)
+hm_data_is_and_as_functions(ListPoint3d)
 
 namespace hm {
 	std::ostream& operator<<(std::ostream& out, Data const& rhs)
@@ -219,26 +140,26 @@ namespace
 	using boost::static_visitor;
 	
 #define BAD_OPERATION(OperationName, LhsType, RhsType) \
-	Data operator()(LhsType const& lhs, RhsType const& Rhs) \
+	Data operator()(LhsType const& lhs, RhsType const& Rhs) const \
 	{ \
 		assert(false && "Error: Cannot apply operation \""#OperationName"\" with objects of type "#LhsType" and "#RhsType"."); \
 		return Data(); \
 	}
-
+	
 	struct VisitorAdd : public static_visitor<Data>
 	{
-		BAD_OPERATION(addition, Value, Point3d)
-		BAD_OPERATION(addition, Value, Skeleton3d)
-		BAD_OPERATION(addition, Value, Scene3d)
-		BAD_OPERATION(addition, Point3d, Value)
-		BAD_OPERATION(addition, Skeleton3d, Value)
-		BAD_OPERATION(addition, Scene3d, Value)
-		BAD_OPERATION(addition, Point3d, Image2d)
-		BAD_OPERATION(addition, Skeleton3d, Image2d)
-		BAD_OPERATION(addition, Scene3d, Image2d)
-		BAD_OPERATION(addition, Image2d, Point3d)
-		BAD_OPERATION(addition, Image2d, Skeleton3d)
-		BAD_OPERATION(addition, Image2d, Scene3d)
+		BAD_OPERATION(addition, Value, Base2dData)
+		BAD_OPERATION(addition, Base1dData, Base3dData)
+		BAD_OPERATION(addition, Base2dData, Base1dData)
+		BAD_OPERATION(addition, Base2dData, Base3dData)
+		BAD_OPERATION(addition, Base3dData, Base1dData)
+		BAD_OPERATION(addition, Base3dData, Base2dData)
+		BAD_OPERATION(addition, Image2d, Base2dData)
+		BAD_OPERATION(addition, Image2d, Base3dData)
+		BAD_OPERATION(addition, Base2dData, Image2d)
+		BAD_OPERATION(addition, Base3dData, Image2d)
+		BAD_OPERATION(addition, Skeleton3d, ListPoint3d)
+		BAD_OPERATION(addition, ListPoint3d, Skeleton3d)
 
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
@@ -262,8 +183,11 @@ namespace
 			return Data();
 		}
 		
+		// We use decltype(lhs+rhs) with auto here instead of an explicit
+		// return type to prevent this template function from being selected
+		// as a preferred candidate for the BAD_OPERATION types listed above.
 		template <typename T, typename U>
-		Data operator()(T const& lhs, U const& rhs) const
+		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
 		{
 			return lhs + rhs;
 		}
@@ -274,18 +198,19 @@ namespace
 	
 	struct VisitorSub : public static_visitor<Data>
 	{
-		BAD_OPERATION(subtraction, Value, Point3d)
-		BAD_OPERATION(subtraction, Value, Skeleton3d)
-		BAD_OPERATION(subtraction, Value, Scene3d)
-		BAD_OPERATION(subtraction, Point3d, Value)
-		BAD_OPERATION(subtraction, Skeleton3d, Value)
-		BAD_OPERATION(subtraction, Scene3d, Value)
-		BAD_OPERATION(subtraction, Point3d, Image2d)
-		BAD_OPERATION(subtraction, Skeleton3d, Image2d)
-		BAD_OPERATION(subtraction, Scene3d, Image2d)
-		BAD_OPERATION(subtraction, Image2d, Point3d)
-		BAD_OPERATION(subtraction, Image2d, Skeleton3d)
-		BAD_OPERATION(subtraction, Image2d, Scene3d)
+		BAD_OPERATION(subtraction, Base1dData, Base2dData)
+		BAD_OPERATION(subtraction, Base1dData, Base3dData)
+		BAD_OPERATION(subtraction, Base2dData, Base1dData)
+		BAD_OPERATION(subtraction, Base2dData, Base3dData)
+		BAD_OPERATION(subtraction, Base3dData, Base1dData)
+		BAD_OPERATION(subtraction, Base3dData, Base2dData)
+		BAD_OPERATION(subtraction, Image2d, Base2dData)
+		BAD_OPERATION(subtraction, Image2d, Base3dData)
+		BAD_OPERATION(subtraction, Base2dData, Image2d)
+		BAD_OPERATION(subtraction, Base3dData, Image2d)
+		BAD_OPERATION(subtraction, Skeleton3d, ListPoint3d)
+		BAD_OPERATION(subtraction, ListPoint3d, Skeleton3d)
+
 		
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
@@ -309,8 +234,9 @@ namespace
 			return Data();
 		}
 		
+		// see comment in VisitorAdd
 		template <typename T, typename U>
-		Data operator()(T const& lhs, U const& rhs) const
+		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
 		{
 			return lhs - rhs;
 		}
@@ -320,12 +246,12 @@ namespace
 	
 	struct VisitorMul : public static_visitor<Data>
 	{
-		BAD_OPERATION(multiplication, Point3d, Image2d)
-		BAD_OPERATION(multiplication, Skeleton3d, Image2d)
-		BAD_OPERATION(multiplication, Scene3d, Image2d)
-		BAD_OPERATION(multiplication, Image2d, Point3d)
-		BAD_OPERATION(multiplication, Image2d, Skeleton3d)
-		BAD_OPERATION(multiplication, Image2d, Scene3d)
+		BAD_OPERATION(multiplication, Base2dData, Image2d)
+		BAD_OPERATION(multiplication, Base2dData, Base3dData)
+		BAD_OPERATION(multiplication, Base3dData, Image2d)
+		BAD_OPERATION(multiplication, Base3dData, Base2dData)
+		BAD_OPERATION(multiplication, Skeleton3d, ListPoint3d)
+		BAD_OPERATION(multiplication, ListPoint3d, Skeleton3d)
 
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
@@ -349,8 +275,9 @@ namespace
 			return Data();
 		}
 		
+		// see comment in VisitorAdd
 		template <typename T, typename U>
-		Data operator()(T const& lhs, U const& rhs) const
+		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
 		{
 			return lhs * rhs;
 		}
@@ -360,12 +287,12 @@ namespace
 	
 	struct VisitorDiv : public static_visitor<Data>
 	{
-		BAD_OPERATION(division, Point3d, Image2d)
-		BAD_OPERATION(division, Skeleton3d, Image2d)
-		BAD_OPERATION(division, Scene3d, Image2d)
-		BAD_OPERATION(division, Image2d, Point3d)
-		BAD_OPERATION(division, Image2d, Skeleton3d)
-		BAD_OPERATION(division, Image2d, Scene3d)
+		BAD_OPERATION(division, Base2dData, Image2d)
+		BAD_OPERATION(division, Base2dData, Base3dData)
+		BAD_OPERATION(division, Base3dData, Image2d)
+		BAD_OPERATION(division, Base3dData, Base2dData)
+		BAD_OPERATION(division, Skeleton3d, ListPoint3d)
+		BAD_OPERATION(division, ListPoint3d, Skeleton3d)
 
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
@@ -390,7 +317,7 @@ namespace
 		}
 		
 		template <typename T, typename U>
-		Data operator()(T const& lhs, U const& rhs) const
+		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
 		{
 			return lhs / rhs;
 		}
@@ -411,7 +338,7 @@ namespace
 		template <typename T>
 		Data operator()(T const& x) const
 		{
-			return +x;
+			return x;
 		}
 	};
 	VisitorPos visitorPos;

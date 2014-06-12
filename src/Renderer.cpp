@@ -18,20 +18,26 @@ Renderer::Renderer(std::string const& name, std::string const& description)
 {
 }
 
-void Renderer::refresh()
-{
-	mNeedsRefresh = true;
-}
+//void Renderer::refresh()
+//{
+//	mNeedsRefresh = true;
+//}
 
 
 void Renderer::setupMatrices3d()
 {
-	mLastSceneMeta->setupCamera(mViewport.getWidth(), mViewport.getHeight());
+	if (mNeedsRefresh)
+	{
+		mLastSceneMeta->setupCamera(mViewport.getWidth(), mViewport.getHeight());
+	}
 }
 
 void Renderer::setupMatricesWindow()
 {
-	gl::setMatricesWindow(mViewport.getWidth(), mViewport.getHeight());
+	if (mNeedsRefresh)
+	{
+		gl::setMatricesWindow(mViewport.getWidth(), mViewport.getHeight());
+	}
 }
 
 
@@ -47,6 +53,7 @@ void Renderer::render(Data const& data, ci::Area const& viewport)
 }
 
 
+// ------------
 // BlobRenderer
 
 RendererBlob::RendererBlob()
@@ -57,11 +64,7 @@ RendererBlob::RendererBlob()
 
 void RendererBlob::operator()(Point3d const& x, ci::ColorA const& color)
 {
-	if (mNeedsRefresh)
-	{
-		setupMatrices3d();
-		mNeedsRefresh = false;
-	}
+	setupMatrices3d();
 	// TODO: Use a VBO to speed this up
 	gl::color(color);
 	drawSphere(x.value, 0.05, 12);
@@ -69,11 +72,7 @@ void RendererBlob::operator()(Point3d const& x, ci::ColorA const& color)
 
 void RendererBlob::operator()(Skeleton3d const& x)
 {
-	if (mNeedsRefresh)
-	{
-		setupMatrices3d();
-		mNeedsRefresh = false;
-	}
+	setupMatrices3d();
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		float brightness = x.jointConfidence(i) * 0.5f + 0.5f;
@@ -89,14 +88,19 @@ void RendererBlob::operator()(Skeleton3d const& x)
 
 void RendererBlob::operator()(Scene3d const& x)
 {
-	if (mNeedsRefresh)
-	{
-		setupMatrices3d();
-		mNeedsRefresh = false;
-	}
-	for (Skeleton3d const& s: x.skeletons)
+	setupMatrices3d();
+	for (Skeleton3d const& s: x.value)
 	{
 		(*this)(s);
+	}
+}
+
+void RendererBlob::operator()(ListPoint3d const& x)
+{
+	setupMatrices3d();
+	for (Point3d const& p: x.value)
+	{
+		(*this)(p);
 	}
 }
 
@@ -111,10 +115,10 @@ Renderer2D::Renderer2D()
 
 void Renderer2D::operator()(Image2d const& v)
 {
-	if (mNeedsRefresh)
-	{
-		setupMatricesWindow();
-	}
+	setupMatricesWindow();
+	
+	// Letterbox the image to ensure it is not distorted by the viewport shape
+	
 	Vec2f offset;
 	float scale(1);
 	// input data aspect
@@ -134,7 +138,27 @@ void Renderer2D::operator()(Image2d const& v)
 		offset.x = int((mViewport.getWidth() - scale * v.value.cols) / 2);
 	}
 	Area drawArea(offset, mViewport.getSize() - offset);
-	gl::draw(gl::Texture(v.toSurface()), drawArea);
+	gl::translate(offset);
+	gl::scale(scale, scale);
+//	gl::draw(gl::Texture(v.toSurface()), drawArea);
+	gl::draw(gl::Texture(v.toSurface()));
+}
+
+void Renderer2D::operator()(Point2d const& p)
+{
+	setupMatricesWindow();
+	// TODO: Ensure this matches any transformations created by a Image2d
+	gl::color(ColorA(1.f, 1.f, 1.f, 0.9f));
+	gl::drawSolidCircle(p.value, 2.5f);
+}
+
+
+void Renderer2D::operator()(ListPoint2d const& x)
+{
+	for (Point2d const& p: x.value)
+	{
+		(*this)(p);
+	}
 }
 
 

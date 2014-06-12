@@ -139,7 +139,7 @@ namespace hm
 				switch (x.sign)
 				{
 					case '-': return -rhs;
-					case '+': return +rhs;
+					case '+': return rhs;
 				}
 				BOOST_ASSERT_MSG(false, ("Invalid unary operator character "+to_string(x.sign)).c_str());
 				return Data();

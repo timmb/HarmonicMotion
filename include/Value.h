@@ -8,6 +8,8 @@
 
 #pragma once
 #include "BaseData.h"
+#include "cinder/Vector.h"
+#include <type_traits>
 
 namespace hm
 {
@@ -15,7 +17,7 @@ namespace hm
 	class Value : public Base1dData
 	{
 	public:
-		typedef BaseData BaseType;
+		typedef Base1dData BaseType;
 		
 		Value(double value = 0., double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		Value(float value, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
@@ -35,8 +37,8 @@ namespace hm
 		Value& operator*=(Value const& rhs);
 		Value& operator/=(Value const& rhs);
 		
-		Point3d operator*(Point3d const& rhs) const;
-		Point3d operator/(Point3d const& rhs) const;
+//		Point3d operator*(Point3d const& rhs) const;
+//		Point3d operator/(Point3d const& rhs) const;
 		Skeleton3d operator*(Skeleton3d const& rhs) const;
 		Skeleton3d operator/(Skeleton3d const& rhs) const;
 		Scene3d operator*(Scene3d const& rhs) const;
@@ -54,6 +56,9 @@ namespace hm
 		Value operator+() const { return *this; }
 		Value operator-() const { return Value(-value, timestamp, sceneMeta); }
 		
+//		operator double&() { return value; }
+//		operator double() const { return value; }
+//		operator float() const { return value; }
 		
 //		Value& operator+=(Value const& rhs)
 //		{
@@ -112,3 +117,20 @@ namespace hm
 	
 
 }
+
+namespace cinder
+{
+	inline Vec3f operator*=(Vec3f const& x, hm::Value const& y)
+	{
+		return x *= y.value;
+	}
+	
+	inline Vec3f operator/=(Vec3f const& x, hm::Value const& y)
+	{
+		return x *= y.value;
+	}
+	
+}
+
+
+

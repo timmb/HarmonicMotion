@@ -11,6 +11,7 @@
 #include "Inlet.h"
 #include <boost/thread/locks.hpp>
 #include "FactoryNode.h"
+#include "Point2d.h"
 
 using namespace hm;
 using namespace ci;
@@ -103,7 +104,16 @@ void NodeOscOut::DataSender::operator()(Value const& value)
 	Message m;
 	m.setAddress(mNode.mPrefixWithSlash);
 	m.addFloatArg(value.value);
-	//	m.setRemoteEndpoint(mParams.destinationHost, mParams.destinationPort);
+	mNode.mOsc.sendMessage(m);
+}
+
+
+void NodeOscOut::DataSender::operator()(Point2d const& value)
+{
+	Message m;
+	m.setAddress(mNode.mPrefixWithSlash);
+	m.addFloatArg(value.value.x);
+	m.addFloatArg(value.value.y);
 	mNode.mOsc.sendMessage(m);
 }
 
@@ -131,13 +141,51 @@ void NodeOscOut::DataSender::operator()(Scene3d const& scene)
 {
 	Message m;
 	m.setAddress(mNode.mPrefixWithSlash+"num_users");
-	m.addIntArg(scene.skeletons.size());
+	m.addIntArg(scene.value.size());
 	mNode.mOsc.sendMessage(m);
-	for (Skeleton3d const& skel: scene.skeletons)
+	for (Skeleton3d const& skel: scene.value)
 	{
 		(*this)(skel);
 	}
 }
+
+void NodeOscOut::DataSender::operator()(ListValue const& x)
+{
+	Message m;
+	m.setAddress(mNode.mPrefixWithSlash);
+	for (Value const& y: x.value)
+	{
+		m.addFloatArg(y.value);
+	}
+	mNode.mOsc.sendMessage(m);
+}
+
+void NodeOscOut::DataSender::operator()(ListPoint2d const& x)
+{
+	Message m;
+	m.setAddress(mNode.mPrefixWithSlash);
+	for (Point2d const& y: x.value)
+	{
+		m.addFloatArg(y.value.x);
+		m.addFloatArg(y.value.y);
+	}
+	mNode.mOsc.sendMessage(m);
+}
+
+void NodeOscOut::DataSender::operator()(ListPoint3d const& x)
+{
+	Message m;
+	m.setAddress(mNode.mPrefixWithSlash);
+	for (Point3d const& y: x.value)
+	{
+		m.addFloatArg(y.value.x);
+		m.addFloatArg(y.value.y);
+		m.addFloatArg(y.value.z);
+	}
+	mNode.mOsc.sendMessage(m);
+}
+
+
 
 void NodeOscOut::step()
 {
