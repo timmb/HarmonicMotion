@@ -36,6 +36,7 @@ namespace hm
 	/// Can be an OR combination of types.
 	typedef int Types;
 	
+	
 }
 
 namespace std

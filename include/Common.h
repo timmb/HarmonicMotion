@@ -12,6 +12,7 @@
 #include <ostream>
 #include <iostream>
 #include "Type.h"
+#include <type_traits>
 
 namespace hm
 {
@@ -28,6 +29,11 @@ namespace hm
 	class Renderer;
 	
 	// forward declare data types
+	class BaseData;
+	class Base1dData;
+	class Base2dData;
+	class Base3dData;
+	
 	class DataNull;
 	class Value;
 	class Point2d;
@@ -91,8 +97,98 @@ namespace hm
 	
 	
 	
-}
+	// Traits to indicate at compile-time whether addition/subtraction is supported between
+	// two types.
+	template <typename LHS, typename RHS>
+	struct supports_addition {
+		std::false_type value;
+	};
 	
+	// Likewise for multiplication
+	
+	template <typename LHS, typename RHS>
+	struct supports_multiplication {
+		std::false_type value;
+	};
+	
+	// define a type trait indicating T and U can be added/subtracted
+#define hm_enable_supports_addition(T, U) \
+	template<> \
+	struct supports_addition<T, U> \
+	{ \
+		static std::true_type value; \
+	}; \
+
+	
+#define hm_enable_supports_commutative_addition(T, U) \
+	template<> \
+	struct supports_addition<T, U> \
+	{ \
+		static std::true_type value; \
+	}; \
+	template<> \
+	struct supports_addition<U, T> \
+	{ \
+		static std::true_type value; \
+	};
+	
+	hm_enable_supports_addition(Base1dData, Base1dData)
+	hm_enable_supports_addition(Base2dData, Base2dData)
+	hm_enable_supports_addition(Image2d, Image2d)
+
+	hm_enable_supports_commutative_addition(Point3d, Base3dData)
+	hm_enable_supports_commutative_addition(Skeleton3d, Scene3d)
+
+	hm_enable_supports_commutative_addition(float, Base1dData)
+	hm_enable_supports_commutative_addition(double, Base1dData)
+	hm_enable_supports_commutative_addition(float, Image2d)
+	hm_enable_supports_commutative_addition(double, Image2d)
+	hm_enable_supports_commutative_addition(Value, Image2d)
+	
+
+	// define a type trait indicating T and U can be added/subtracted
+	#define hm_enable_supports_multiplication(T, U) \
+	template<> \
+	struct supports_multiplication<T, U> \
+	{ \
+	static std::true_type value; \
+	}; \
+
+		
+	#define hm_enable_supports_commutative_multiplication(T, U) \
+	template<> \
+	struct supports_multiplication<T, U> \
+	{ \
+	static std::true_type value; \
+	}; \
+	template<> \
+	struct supports_multiplication<U, T> \
+	{ \
+	static std::true_type value; \
+	};
+	
+	hm_enable_supports_multiplication(Base1dData, Base1dData)
+	hm_enable_supports_multiplication(Base2dData, Base2dData)
+	hm_enable_supports_multiplication(Image2d, Image2d)
+	
+	hm_enable_supports_commutative_multiplication(Point3d, Base3dData)
+	hm_enable_supports_commutative_multiplication(Skeleton3d, Scene3d)
+	
+	hm_enable_supports_commutative_multiplication(float, Base1dData)
+	hm_enable_supports_commutative_multiplication(double, Base1dData)
+	hm_enable_supports_commutative_multiplication(float, Image2d)
+	hm_enable_supports_commutative_multiplication(double, Image2d)
+	hm_enable_supports_commutative_multiplication(Value, Image2d)
+	hm_enable_supports_commutative_multiplication(float, Base2dData)
+	hm_enable_supports_commutative_multiplication(double, Base2dData)
+	hm_enable_supports_commutative_multiplication(Value, Base2dData)
+	hm_enable_supports_commutative_multiplication(float, Base3dData)
+	hm_enable_supports_commutative_multiplication(double, Base3dData)
+	hm_enable_supports_commutative_multiplication(Value, Base3dData)
+
+	
+}
+
 	// For printing verbose debugging info
 #if defined(DEBUG) || defined(_DEBUG)
 	#ifndef HM_LOG_DEBUG

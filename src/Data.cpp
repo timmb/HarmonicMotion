@@ -187,7 +187,8 @@ namespace
 		// return type to prevent this template function from being selected
 		// as a preferred candidate for the BAD_OPERATION types listed above.
 		template <typename T, typename U>
-		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
+		typename enable_if<supports_addition<T, U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
 		{
 			return lhs + rhs;
 		}
@@ -236,7 +237,8 @@ namespace
 		
 		// see comment in VisitorAdd
 		template <typename T, typename U>
-		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
+		typename enable_if<supports_addition<T, U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
 		{
 			return lhs - rhs;
 		}
@@ -277,7 +279,8 @@ namespace
 		
 		// see comment in VisitorAdd
 		template <typename T, typename U>
-		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
+		typename enable_if<supports_multiplication<T, U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
 		{
 			return lhs * rhs;
 		}
@@ -317,7 +320,8 @@ namespace
 		}
 		
 		template <typename T, typename U>
-		auto operator()(T const& lhs, U const& rhs) const -> decltype(lhs + rhs)
+		typename enable_if<supports_multiplication<T, U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
 		{
 			return lhs / rhs;
 		}

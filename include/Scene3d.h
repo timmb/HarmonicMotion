@@ -10,6 +10,51 @@ namespace hm
 	// information about the scene as well as the skeletons within it.
 	typedef List<Skeleton3d> Scene3d;
 	
+	// We additionally define operators +,-,*,/,+=,etc for Scene3d against Point3d
+	
+#define hm_scene3d_define_free_right_point3d_op_assign(op_assign) \
+	inline Scene3d& operator op_assign(Scene3d & lhs, Point3d const& rhs) \
+	{ \
+		for (Skeleton3d & x: lhs.value) \
+		{ \
+			x op_assign rhs; \
+		} \
+		return lhs; \
+	}
+	
+#define hm_scene3d_define_free_right_point3d_op(op) \
+	inline Scene3d operator op(Scene3d lhs, Point3d const& rhs) \
+	{ \
+		return lhs op##= rhs; \
+	}
+	
+	hm_scene3d_define_free_right_point3d_op_assign(+=)
+	hm_scene3d_define_free_right_point3d_op_assign(-=)
+	hm_scene3d_define_free_right_point3d_op_assign(*=)
+	hm_scene3d_define_free_right_point3d_op_assign(/=)
+	hm_scene3d_define_free_right_point3d_op(+)
+	hm_scene3d_define_free_right_point3d_op(-)
+	hm_scene3d_define_free_right_point3d_op(*)
+	hm_scene3d_define_free_right_point3d_op(/)
+	
+	
+#define hm_scene3d_define_free_left_point3d_op(op) \
+inline Scene3d operator op(Point3d const& lhs, Scene3d rhs) \
+{ \
+	for (Skeleton3d & x: rhs.value) \
+	{ \
+		x op lhs; \
+	} \
+	return rhs; \
+}
+	
+	hm_scene3d_define_free_left_point3d_op(+)
+	hm_scene3d_define_free_left_point3d_op(-)
+	hm_scene3d_define_free_left_point3d_op(*)
+	hm_scene3d_define_free_left_point3d_op(/)
+	
+	
+	
 //	/// Class that stores a set of Skeleton3d's
 //	class Scene3d : public Base3dData
 //	{

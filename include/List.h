@@ -306,20 +306,17 @@ return rhs op lhs; \
 
 	// MARK: Operators for scalars
 	
-	// This horrendous looking return type:
-	// typename std::enable_if<std::is_same<decltype(DataType() op_assign Value()),decltype(DataType() op_assign Value())>::value, List<DataType>&>::type
-	// is equivalent to
-	// List<DataType>&
-	// but disables the template if DataType
-	// does not support assignment by Value.
+	// The return types on these use type_traits to make the compiler ignore the definitions
+	// for certain DataTypes. This is to prevent addition/subtraction operators being defined
+	// when the underlying DataType does not support them.
 
 	
 	// Non-assigning operators on the right hand side:
 	
 	// Helper:
-#define _hm_list_define_free_op_value(op) \
+#define _hm_list_define_free_op_value(op, is_op_valid_for_type) \
 	template <typename DataType> \
-	typename std::enable_if<std::is_same<decltype(DataType() op Value()),decltype(DataType() op Value())>::value, List<DataType>>::type \
+	typename std::enable_if<is_op_valid_for_type, List<DataType>>::type \
 	operator op (List<DataType> lhs, Value const& rhs) \
 	{ \
 		for (DataType & x: lhs.value) \
@@ -330,9 +327,9 @@ return rhs op lhs; \
 	}
 
 	// Helper:
-#define _hm_list_define_free_op_single_scalar(op, ScalarType) \
+#define _hm_list_define_free_op_single_scalar(op, ScalarType, is_op_valid_for_type) \
 	template <typename DataType> \
-	typename std::enable_if<std::is_same<decltype(DataType() op ScalarType()),decltype(DataType() op ScalarType())>::value, List<DataType>>::type \
+	typename std::enable_if<is_op_valid_for_type, List<DataType>>::type \
 	operator op (List<DataType> lhs, ScalarType rhs) \
 	{ \
 		for (DataType & x: lhs.value) \
@@ -342,24 +339,24 @@ return rhs op lhs; \
 		return lhs; \
 	}
 	
-#define hm_list_define_free_op_scalars(op) \
-	_hm_list_define_free_op_value(op) \
-	_hm_list_define_free_op_single_scalar(op, float) \
-	_hm_list_define_free_op_single_scalar(op, double) \
+#define hm_list_define_free_op_scalars(op, is_op_valid_for_type) \
+	_hm_list_define_free_op_value(op, is_op_valid_for_type) \
+	_hm_list_define_free_op_single_scalar(op, float, is_op_valid_for_type) \
+	_hm_list_define_free_op_single_scalar(op, double, is_op_valid_for_type) \
 	
 	// Now the actual definitions
-	hm_list_define_free_op_scalars(+)
-	hm_list_define_free_op_scalars(-)
-	hm_list_define_free_op_scalars(*)
-	hm_list_define_free_op_scalars(/)
+	hm_list_define_free_op_scalars(+, DataType::supports_scalar_addition)
+	hm_list_define_free_op_scalars(-, DataType::supports_scalar_addition)
+	hm_list_define_free_op_scalars(*, true)
+	hm_list_define_free_op_scalars(/, true)
 	
 	// Assignment operators on the right hand side:
 	
 	
 	// Helper:
-#define _hm_list_define_free_op_assign_value(op_assign) \
+#define _hm_list_define_free_op_assign_value(op_assign, is_op_valid_for_type) \
 template <typename DataType> \
-typename std::enable_if<std::is_same<decltype(DataType() op_assign Value()),decltype(DataType() op_assign Value())>::value, List<DataType>&>::type \
+typename std::enable_if<is_op_valid_for_type, List<DataType>&>::type \
 operator op_assign(List<DataType> & lhs, Value rhs) \
 { \
 for (DataType & x: lhs.value) \
@@ -370,9 +367,9 @@ return lhs; \
 }
 
 	
-#define _hm_list_define_free_op_assign_single_scalar(op_assign, ScalarType) \
+#define _hm_list_define_free_op_assign_single_scalar(op_assign, ScalarType, is_op_valid_for_type) \
 	template <typename DataType> \
-	typename std::enable_if<std::is_same<decltype(DataType() op_assign ScalarType()),decltype(DataType() op_assign ScalarType())>::value, List<DataType>&>::type \
+	typename std::enable_if<is_op_valid_for_type, List<DataType>&>::type \
 	operator op_assign(List<DataType> & lhs, ScalarType rhs) \
 	{ \
 		for (DataType& x: lhs.value) \
@@ -382,22 +379,22 @@ return lhs; \
 		return lhs; \
 	}
 	
-#define hm_list_define_free_op_assign_scalars(op_assign) \
-_hm_list_define_free_op_assign_value(op_assign) \
-_hm_list_define_free_op_assign_single_scalar(op_assign, float) \
-_hm_list_define_free_op_assign_single_scalar(op_assign, double) \
+#define hm_list_define_free_op_assign_scalars(op_assign, is_op_valid_for_type) \
+_hm_list_define_free_op_assign_value(op_assign, is_op_valid_for_type) \
+_hm_list_define_free_op_assign_single_scalar(op_assign, float, is_op_valid_for_type) \
+_hm_list_define_free_op_assign_single_scalar(op_assign, double, is_op_valid_for_type) \
 
 	// Now the actual definitions
-	hm_list_define_free_op_assign_scalars(+=)
-	hm_list_define_free_op_assign_scalars(-=)
-	hm_list_define_free_op_assign_scalars(*=)
-	hm_list_define_free_op_assign_scalars(/=)
+	hm_list_define_free_op_assign_scalars(+=, DataType::supports_scalar_addition)
+	hm_list_define_free_op_assign_scalars(-=, DataType::supports_scalar_addition)
+	hm_list_define_free_op_assign_scalars(*=, true)
+	hm_list_define_free_op_assign_scalars(/=, true)
 	
 	
 	// Non-assigning operators on the left hand side
-#define _hm_list_define_free_left_op_value(op) \
+#define _hm_list_define_free_left_op_value(op, is_op_valid_for_type) \
 template <typename DataType> \
-typename std::enable_if<std::is_same<decltype(DataType() op Value()),decltype(DataType() op Value())>::value, List<DataType>>::type \
+typename std::enable_if<is_op_valid_for_type, List<DataType>>::type \
 operator op(Value const& lhs, List<DataType> rhs) \
 { \
 for (DataType & x: rhs.value) \
@@ -407,9 +404,9 @@ x = lhs.value op x; \
 return rhs; \
 }
 	
-#define _hm_list_define_free_left_op_single_scalar(op, ScalarType) \
+#define _hm_list_define_free_left_op_single_scalar(op, ScalarType, is_op_valid_for_type) \
 template <typename DataType> \
-typename std::enable_if<std::is_same<decltype(DataType() op ScalarType()),decltype(DataType() op ScalarType())>::value, List<DataType>>::type \
+typename std::enable_if<is_op_valid_for_type, List<DataType>>::type \
 operator op(ScalarType lhs, List<DataType> rhs) \
 { \
 for (DataType & x: rhs.value) \
@@ -419,16 +416,16 @@ x = lhs op x; \
 return rhs; \
 }
 	
-#define hm_list_define_free_left_op_scalars(op) \
-	_hm_list_define_free_left_op_value(op) \
-	_hm_list_define_free_left_op_single_scalar(op, float) \
-	_hm_list_define_free_left_op_single_scalar(op, double)
+#define hm_list_define_free_left_op_scalars(op, is_op_valid_for_type) \
+	_hm_list_define_free_left_op_value(op, is_op_valid_for_type) \
+	_hm_list_define_free_left_op_single_scalar(op, float, is_op_valid_for_type) \
+	_hm_list_define_free_left_op_single_scalar(op, double, is_op_valid_for_type)
 	
 	// Now the actual definitions
-	hm_list_define_free_left_op_scalars(*)
-	hm_list_define_free_left_op_scalars(/)
-	hm_list_define_free_left_op_scalars(+)
-	hm_list_define_free_left_op_scalars(-)
+	hm_list_define_free_left_op_scalars(*, true)
+	hm_list_define_free_left_op_scalars(/, true)
+	hm_list_define_free_left_op_scalars(+, DataType::supports_scalar_addition)
+	hm_list_define_free_left_op_scalars(-, DataType::supports_scalar_addition)
 }
 
 

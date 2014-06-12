@@ -169,26 +169,26 @@ Skeleton3d Point3d::operator/(Skeleton3d const& rhs) const
 }
 
 
-// Point3d <op> Scene3d applies op to each skeleton in scene
-Scene3d Point3d::operator+(Scene3d const& rhs) const
-{
-	return rhs + *this;
-}
-
-Scene3d Point3d::operator-(Scene3d const& rhs) const
-{
-	return rhs - *this;
-}
-
-Scene3d Point3d::operator*(Scene3d const& rhs) const
-{
-	return rhs * *this;
-}
-
-Scene3d Point3d::operator/(Scene3d const& rhs) const
-{
-	return rhs / *this;
-}
+//// Point3d <op> Scene3d applies op to each skeleton in scene
+//Scene3d Point3d::operator+(Scene3d const& rhs) const
+//{
+//	return rhs + *this;
+//}
+//
+//Scene3d Point3d::operator-(Scene3d const& rhs) const
+//{
+//	return rhs - *this;
+//}
+//
+//Scene3d Point3d::operator*(Scene3d const& rhs) const
+//{
+//	return rhs * *this;
+//}
+//
+//Scene3d Point3d::operator/(Scene3d const& rhs) const
+//{
+//	return rhs / *this;
+//}
 
 
 bool Point3d::operator==(Point3d const& rhs) const
