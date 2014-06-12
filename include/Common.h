@@ -30,10 +30,17 @@ namespace hm
 	// forward declare data types
 	class DataNull;
 	class Value;
+	class Point2d;
 	class Point3d;
 	class Skeleton3d;
-	class Scene3d;
+//	class Scene3d;
 	class Image2d;
+	template <typename DataType>
+	class List;
+	typedef List<Value> ListValue;
+	typedef List<Point2d> ListPoint2d;
+	typedef List<Point3d> ListPoint3d;
+	typedef List<Skeleton3d> Scene3d;
 	
 	// typedefs
 	typedef std::shared_ptr<Inlet> InletPtr;
@@ -64,6 +71,28 @@ namespace hm
 	std::string indent(std::string const& s, int indentAmount=2);
 	
 	
+	/// You can use getType<T>() to return the type of T
+	template <typename T>
+	Type getType();
+	
+#define hm_define_get_type(T, typeEnumValue) \
+	template<> Type getType<T>() { return typeEnumValue; }
+	
+	hm_define_get_type(Value, VALUE)
+	hm_define_get_type(Point2d, POINT2D)
+	hm_define_get_type(Point3d, POINT3D)
+	hm_define_get_type(Skeleton3d, SKELETON3D)
+	hm_define_get_type(Scene3d, SCENE3D)
+	hm_define_get_type(Image2d, IMAGE2D)
+	hm_define_get_type(List<Value>, LIST_VALUE)
+	hm_define_get_type(List<Point2d>, LIST_POINT2D)
+	hm_define_get_type(List<Point3d>, LIST_POINT3D)
+	
+	
+	
+	
+}
+	
 	// For printing verbose debugging info
 #if defined(DEBUG) || defined(_DEBUG)
 	#ifndef HM_LOG_DEBUG
@@ -83,6 +112,3 @@ namespace hm
 #define hm_warning(message) std::cerr << "*Warning: "<<message<<std::endl;
 	
 #define hm_error(message) std::cerr << "* Error:" << HM__FILE_NO_DIR__ << ' ' << __LINE__<<'\n'<<message<<std::endl;
-	
-
-}

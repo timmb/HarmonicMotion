@@ -40,4 +40,11 @@ namespace hm
 		static const SceneMetaPtr sDefaultSceneMeta;
 		
 	};
+	
+	// Chooses a SceneMetaPtr, opting for the non-default one if present,
+	// prioritising \p x if both are non-default
+	inline SceneMetaPtr choose(SceneMetaPtr const& x, SceneMetaPtr const& y)
+	{
+		return x==SceneMeta::sDefaultSceneMeta? y : x;
+	}
 }

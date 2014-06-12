@@ -83,15 +83,15 @@ Value& Value::operator/=(Value const& rhs)
 }
 
 
-Point3d Value::operator*(Point3d const& rhs) const
-{
-	return rhs * *this;
-}
-
-Point3d Value::operator/(Point3d const& rhs) const
-{
-	return rhs * (1. / *this);
-}
+//Point3d Value::operator*(Point3d const& rhs) const
+//{
+//	return rhs * *this;
+//}
+//
+//Point3d Value::operator/(Point3d const& rhs) const
+//{
+//	return rhs * (1. / *this);
+//}
 
 Skeleton3d Value::operator*(Skeleton3d const& rhs) const
 {

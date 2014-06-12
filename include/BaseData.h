@@ -67,14 +67,21 @@ namespace hm
 	class Base1dData : public BaseData
 	{
 	public:
+		/// The presence of this constant indicates that this class supports
+		/// addition/subtraction with scalars (i.e. other Base1dData)
+		std::true_type supports_scalar_addition;
+
 		Base1dData(double timestamp, SceneMetaPtr sceneMeta)
 		: BaseData(timestamp, sceneMeta)
 		{}
 	};
 	
 	
-	// Helper macro to declare basic operators on classes of the same type
+	// Macros to declare basic operators (*,/,+,-,*=,/=,+=,-=)
+	// on classes of the same type
 	// use hm_data_define_self_operators_and_assigns(Type) to do everything
+	// requires `value` member of Type to support the operators
+	
 	
 //#define hm_data_declare_self_operators_and_assigns(Type) \
 //		Type& operator+=(Type const& rhs); \
@@ -88,84 +95,154 @@ namespace hm
 //		Type operator+() const; \
 //		Type operator-() const;
 
-	// requires `value` to support the operators
-#define hm_data_define_self_op_assign(Type, op_assign) \
-	inline Type& Type:: op_assign (Type const& rhs) \
+	// Helper:
+#define _hm_data_define_self_op_assign(Type, op_assign) \
+	inline Type& op_assign (Type const& rhs) \
 	{ \
-		timestamp = max(timestamp, rhs.timestamp); \
-		value.operator+=(rhs.value); \
+		timestamp = std::max<double>(timestamp, rhs.timestamp); \
+		value.op_assign(rhs.value); \
 		return *this; \
 	}
 	
-#define hm_data_define_self_op(Type, op_func, op_assign) \
-	inline Type Type:: op_func (Type const& rhs) const \
+	// Helper:
+#define _hm_data_define_self_op(Type, op_func, op_assign) \
+	inline Type op_func (Type const& rhs) const \
 	{ \
 		Type out = *this; \
-		return out op_assign rhs; \
+		return out.op_assign(rhs); \
 	}
 	
-#define hm_data_define_self_unary(Type, op_func) \
-	inline Type Type:: op_func () const \
+	// Helper:
+#define _hm_data_define_self_unary(Type, op_func, op) \
+	inline Type op_func () const \
 	{ \
-		return Type(value.op_func(), timestamp, sceneMeta); \
+		return Type(op value, timestamp, sceneMeta); \
 	}
 	
 #define hm_data_define_self_operators_and_assigns(Type) \
-	hm_data_define_self_op_assign(Type, operator+=) \
-	hm_data_define_self_op_assign(Type, operator-=) \
-	hm_data_define_self_op_assign(Type, operator*=) \
-	hm_data_define_self_op_assign(Type, operator/=) \
-	hm_data_define_self_op(Type, operator+, +=) \
-	hm_data_define_self_op(Type, operator-, -=) \
-	hm_data_define_self_op(Type, operator*, *=) \
-	hm_data_define_self_op(Type, operator/, /=) \
-	hm_data_define_self_unary(Type, operator+) \
-	hm_data_define_self_unary(Type, operator-)
+	_hm_data_define_self_op_assign(Type, operator+=) \
+	_hm_data_define_self_op_assign(Type, operator-=) \
+	_hm_data_define_self_op_assign(Type, operator*=) \
+	_hm_data_define_self_op_assign(Type, operator/=) \
+	_hm_data_define_self_op(Type, operator+, operator+=) \
+	_hm_data_define_self_op(Type, operator-, operator-=) \
+	_hm_data_define_self_op(Type, operator*, operator*=) \
+	_hm_data_define_self_op(Type, operator/, operator/=) \
+	/*hm_data_define_self_unary(Type, operator+, +)*/ \
+	_hm_data_define_self_unary(Type, operator-, -)
 	
 	// Macros to help define operations of a type against a scalar
 	// type (Value, double or float)
 	// Use hm_data_define_scalar_operators_and_assigns(Type)
-	// to do everything
-	
-#define hm_data_define_single_scalar_op_assign(Type, op_assign, Scalar) \
-	inline Type& Type:: op_assign (Scalar const& rhs) \
+	// to do everything (+-*/ and assigns) or
+	// hm_data_define_scalar_mult_operators_and_assigns(Type)
+	// to just do */ (and *=, /=)
+
+	// Helper:
+#define _hm_data_define_single_scalar_op_assign(Type, op_assign, Scalar) \
+	inline Type& operator op_assign (Scalar rhs) \
 	{ \
-		value.op_assign(rhs); \
+		value op_assign rhs; \
 		return *this; \
 	}
 	
-#define hm_data_define_scalar_op_assign(Type, op_assign) \
-	hm_data_define_single_scalar_op_assign(Type, op_assign, Value) \
-	hm_data_define_single_scalar_op_assign(Type, op_assign, float) \
-	hm_data_define_single_scalar_op_assign(Type, op_assign, double) \
+	// Helper:
+#define _hm_data_define_scalar_op_assign(Type, op_assign) \
+	_hm_data_define_single_scalar_op_assign(Type, op_assign, float) \
+	_hm_data_define_single_scalar_op_assign(Type, op_assign, double) \
+	inline Type& operator op_assign (Value const& rhs) \
+	{ \
+		value op_assign rhs.value; \
+		timestamp = std::max(timestamp, rhs.timestamp); \
+		return *this; \
+	}
 
 	
-#define hm_data_define_single_scalar_op(Type, op, op_assign, Scalar) \
-	inline Type Type:: op (Scalar const& rhs) const \
+	// Helper:
+#define _hm_data_define_single_scalar_op(Type, op, op_assign, Scalar) \
+	inline Type operator op (Scalar rhs) const \
 	{ \
-		return Type(*this).op_assign(rhs); \
+		return Type(*this) op_assign rhs; \
 	}
 
-#define hm_data_define_scalar_op(Type, op, op_assign) \
-hm_data_define_single_scalar_op(Type, op, op_assign, Value) \
-hm_data_define_scalar_op(Type, op, op_assign, float) \
-hm_data_define_scalar_op(Type, op, op_assign, double) \
+	// Helper:
+#define _hm_data_define_scalar_op(Type, op, op_assign) \
+_hm_data_define_single_scalar_op(Type, op, op_assign, float) \
+_hm_data_define_single_scalar_op(Type, op, op_assign, double) \
+inline Type operator op (Value const& rhs) const \
+{ \
+	Type out(*this); \
+	out op_assign rhs; \
+	out.timestamp = std::max(timestamp, rhs.timestamp); \
+	out.sceneMeta = choose(sceneMeta, rhs.sceneMeta); \
+	return out; \
+}
 
-#define hm_data_define_scalar_op_and_assign(Type, op, op_assign) \
-	hm_data_define_scalar_op_assign(Type, op_assign) \
-	hm_data_define_scalar_op(Type, op, op_assign) \
+	// Helper:
+#define _hm_data_define_scalar_op_and_assign(Type, op, op_assign) \
+	_hm_data_define_scalar_op_assign(Type, op_assign) \
+	_hm_data_define_scalar_op(Type, op, op_assign)
 
+	// Member operators against scalars: just * and /
+#define hm_data_define_scalar_mult_operators_and_assigns(Type) \
+_hm_data_define_scalar_op_and_assign(Type, *, *=) \
+_hm_data_define_scalar_op_and_assign(Type, /, /=)
+
+	// Member operators against scalars: * / + -
 #define hm_data_define_scalar_operators_and_assigns(Type) \
-hm_data_define_scalar_op_and_assign(Type, operator+, operator+=) \
-hm_data_define_scalar_op_and_assign(Type, operator-, operator-=) \
-hm_data_define_scalar_op_and_assign(Type, operator*, operator*=) \
-hm_data_define_scalar_op_and_assign(Type, operator/, operator/=) \
+_hm_data_define_scalar_op_and_assign(Type, +, +=) \
+_hm_data_define_scalar_op_and_assign(Type, -, -=) \
+_hm_data_define_scalar_op_and_assign(Type, *, *=) \
+_hm_data_define_scalar_op_and_assign(Type, /, /=)
 
-	inline Type op (Scalar const& lhs, Type rhs)
-	{
-		rhs.value = op(lhs, rhs.value);
-		return rhs;
+	
+	// Free scalar operators: e.g. operator+(Value lhs, Type rhs)
+	// Use hm_data_define_free_scalar_operators(Type) to define them all
+	// (+-*/) or
+
+	// Helper:
+#define _hm_data_define_free_single_scalar_op(Type, op, Scalar) \
+	inline Type operator op (Scalar lhs, Type rhs) \
+	{ \
+		rhs.value = lhs op rhs.value; \
+		return rhs; \
 	}
+	
+	// Helper:
+#define _hm_data_define_free_scalar_op(Type, op) \
+	_hm_data_define_free_single_scalar_op(Type, op, float) \
+	_hm_data_define_free_single_scalar_op(Type, op, double) \
+	inline Type operator op (Value const& lhs, Type rhs) \
+	{ \
+		rhs.value = lhs.value op rhs.value; \
+		rhs.timestamp = std::max(lhs.timestamp, rhs.timestamp); \
+		return rhs; \
+	}
+	
+#define hm_data_define_free_mult_scalar_operators(Type) \
+	_hm_data_define_free_scalar_op(Type, *) \
+	_hm_data_define_free_scalar_op(Type, /)
+
+#define hm_data_define_free_scalar_operators(Type) \
+	_hm_data_define_free_scalar_op(Type, +) \
+	_hm_data_define_free_scalar_op(Type, -) \
+	_hm_data_define_free_scalar_op(Type, *) \
+	_hm_data_define_free_scalar_op(Type, /)
+	
+
+	// Equality and inequality operators. Checks that value, timestamp and
+	// sceneMeta are equal. Use this in the class body.
+	
+	// Helper:
+#define _hm_data_define_equality_op(Type, op) \
+	bool operator op(Type const& rhs) const \
+	{ \
+		return BaseData::timestamp op rhs.timestamp && value op rhs.value && BaseData::sceneMeta op rhs.sceneMeta; \
+	}
+	
+#define hm_data_define_equality_ops(Type) \
+	_hm_data_define_equality_op(Type, ==) \
+	_hm_data_define_equality_op(Type, !=)
 	
 }
 

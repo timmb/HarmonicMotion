@@ -61,12 +61,7 @@ ci::Surface8u Image2d::toSurface() const
 }
 
 
-// Chooses a SceneMetaPtr, opting for the non-default one if present,
-// prioritising \p x if both are non-default
-SceneMetaPtr choose(SceneMetaPtr x, SceneMetaPtr y)
-{
-	return x==SceneMeta::sDefaultSceneMeta? y : x;
-}
+
 
 
 

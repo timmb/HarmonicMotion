@@ -168,7 +168,7 @@ void NodeKinect::processDevice()
 					skeleton.jointProjective(i) = Point3d(ci::Vec3f(bone.positionProjective), timestamp, sceneMeta());
 					skeleton.jointConfidence(i) = bone.positionConfidence;
 				}
-				scene.skeletons.push_back(skeleton);
+				scene.value.push_back(skeleton);
 			}
 			Data data(scene);
 			mSceneOutlet->outputNewData(data);

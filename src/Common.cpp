@@ -25,10 +25,14 @@ namespace hm
 		static const std::vector<Type> types =
 		{
 			VALUE,
+			POINT2D,
 			POINT3D,
 			SKELETON3D,
 			SCENE3D,
-			IMAGE2D
+			IMAGE2D,
+			LIST_VALUE,
+			LIST_POINT2D,
+			LIST_POINT3D
 		};
 		return types;
 	}

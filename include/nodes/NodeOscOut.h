@@ -47,9 +47,13 @@ namespace hm
 			/// Not currently supported
 			void operator()(Image2d const& x);
 			void operator()(Value const& x);
+			void operator()(Point2d const& x);
 			void operator()(Point3d const& x);
 			void operator()(Skeleton3d const& x);
 			void operator()(Scene3d const& x);
+			void operator()(ListValue const& x);
+			void operator()(ListPoint2d const& x);
+			void operator()(ListPoint3d const& x);
 			
 		private:
 			NodeOscOut& mNode;
@@ -75,7 +79,7 @@ namespace hm
 		/// Prefix used to form OSC addresses
 		std::string mPrefix;
 		
-		// MARK: Cached values
+		// MARK: Cached values - has a slash at the front and back
 		std::string mPrefixWithSlash;
 	};
 }
