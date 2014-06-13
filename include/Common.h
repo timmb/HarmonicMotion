@@ -96,54 +96,49 @@ namespace hm
 	
 	
 	
-	
-	// Traits to indicate at compile-time whether addition/subtraction is supported between
-	// two types.
 	template <typename LHS, typename RHS>
-	struct supports_addition {
-		std::false_type value;
-	};
-	
-	// Likewise for multiplication
+	struct supports_addition : public std::false_type {};
 	
 	template <typename LHS, typename RHS>
-	struct supports_multiplication {
-		std::false_type value;
-	};
-	
-	// define a type trait indicating T and U can be added/subtracted
+	struct supports_multiplication : public std::false_type {};
+//
+//	// define a type trait indicating T and U can be added/subtracted
 #define hm_enable_supports_addition(T, U) \
 	template<> \
-	struct supports_addition<T, U> \
-	{ \
-		static std::true_type value; \
-	}; \
+	struct supports_addition<T, U> : public std::true_type {};
 
 	
 #define hm_enable_supports_commutative_addition(T, U) \
 	template<> \
-	struct supports_addition<T, U> \
-	{ \
-		static std::true_type value; \
-	}; \
+	struct supports_addition<T, U> : public std::true_type {}; \
 	template<> \
-	struct supports_addition<U, T> \
-	{ \
-		static std::true_type value; \
-	};
-	
-	hm_enable_supports_addition(Base1dData, Base1dData)
-	hm_enable_supports_addition(Base2dData, Base2dData)
+	struct supports_addition<U, T> : public std::true_type {};
+
+	hm_enable_supports_addition(double, double)
+	hm_enable_supports_addition(float, float)
+	hm_enable_supports_addition(Value, Value)
+	hm_enable_supports_addition(Point2d, Point2d)
 	hm_enable_supports_addition(Image2d, Image2d)
+	hm_enable_supports_addition(Point3d, Point3d)
+	hm_enable_supports_addition(Skeleton3d, Skeleton3d)
+	hm_enable_supports_addition(Scene3d, Scene3d)
+	hm_enable_supports_addition(ListValue, ListValue)
+	hm_enable_supports_addition(ListPoint2d, ListPoint2d)
+	hm_enable_supports_addition(ListPoint3d, ListPoint3d)
 
-	hm_enable_supports_commutative_addition(Point3d, Base3dData)
-	hm_enable_supports_commutative_addition(Skeleton3d, Scene3d)
-
-	hm_enable_supports_commutative_addition(float, Base1dData)
-	hm_enable_supports_commutative_addition(double, Base1dData)
-	hm_enable_supports_commutative_addition(float, Image2d)
-	hm_enable_supports_commutative_addition(double, Image2d)
 	hm_enable_supports_commutative_addition(Value, Image2d)
+	hm_enable_supports_commutative_addition(Value, ListValue)
+	hm_enable_supports_commutative_addition(double, Image2d)
+	hm_enable_supports_commutative_addition(double, ListValue)
+	hm_enable_supports_commutative_addition(float, Image2d)
+	hm_enable_supports_commutative_addition(float, ListValue)
+	
+	hm_enable_supports_commutative_addition(Point2d, ListPoint2d)
+	hm_enable_supports_commutative_addition(Point3d, Skeleton3d)
+	hm_enable_supports_commutative_addition(Point3d, Scene3d)
+	hm_enable_supports_commutative_addition(Point3d, ListPoint3d)
+	
+	hm_enable_supports_commutative_addition(Skeleton3d, Scene3d)
 	
 
 	// define a type trait indicating T and U can be added/subtracted
@@ -167,24 +162,50 @@ namespace hm
 	static std::true_type value; \
 	};
 	
-	hm_enable_supports_multiplication(Base1dData, Base1dData)
-	hm_enable_supports_multiplication(Base2dData, Base2dData)
+	hm_enable_supports_multiplication(double, double)
+	hm_enable_supports_multiplication(float, float)
+	hm_enable_supports_multiplication(Value, Value)
+	hm_enable_supports_multiplication(Point2d, Point2d)
 	hm_enable_supports_multiplication(Image2d, Image2d)
+	hm_enable_supports_multiplication(Point3d, Point3d)
+	hm_enable_supports_multiplication(Skeleton3d, Skeleton3d)
+	hm_enable_supports_multiplication(Scene3d, Scene3d)
+	hm_enable_supports_multiplication(ListValue, ListValue)
+	hm_enable_supports_multiplication(ListPoint2d, ListPoint2d)
+	hm_enable_supports_multiplication(ListPoint3d, ListPoint3d)
 	
-	hm_enable_supports_commutative_multiplication(Point3d, Base3dData)
-	hm_enable_supports_commutative_multiplication(Skeleton3d, Scene3d)
-	
-	hm_enable_supports_commutative_multiplication(float, Base1dData)
-	hm_enable_supports_commutative_multiplication(double, Base1dData)
-	hm_enable_supports_commutative_multiplication(float, Image2d)
-	hm_enable_supports_commutative_multiplication(double, Image2d)
 	hm_enable_supports_commutative_multiplication(Value, Image2d)
-	hm_enable_supports_commutative_multiplication(float, Base2dData)
-	hm_enable_supports_commutative_multiplication(double, Base2dData)
-	hm_enable_supports_commutative_multiplication(Value, Base2dData)
-	hm_enable_supports_commutative_multiplication(float, Base3dData)
-	hm_enable_supports_commutative_multiplication(double, Base3dData)
-	hm_enable_supports_commutative_multiplication(Value, Base3dData)
+	hm_enable_supports_commutative_multiplication(Value, ListValue)
+	hm_enable_supports_commutative_multiplication(Value, Point2d)
+	hm_enable_supports_commutative_multiplication(Value, ListPoint2d)
+	hm_enable_supports_commutative_multiplication(Value, Point3d)
+	hm_enable_supports_commutative_multiplication(Value, ListPoint3d)
+	hm_enable_supports_commutative_multiplication(Value, Skeleton3d)
+	hm_enable_supports_commutative_multiplication(Value, Scene3d)
+	hm_enable_supports_commutative_multiplication(double, Image2d)
+	hm_enable_supports_commutative_multiplication(double, ListValue)
+	hm_enable_supports_commutative_multiplication(double, Point2d)
+	hm_enable_supports_commutative_multiplication(double, ListPoint2d)
+	hm_enable_supports_commutative_multiplication(double, Point3d)
+	hm_enable_supports_commutative_multiplication(double, ListPoint3d)
+	hm_enable_supports_commutative_multiplication(double, Skeleton3d)
+	hm_enable_supports_commutative_multiplication(double, Scene3d)
+	hm_enable_supports_commutative_multiplication(float, Image2d)
+	hm_enable_supports_commutative_multiplication(float, ListValue)
+	hm_enable_supports_commutative_multiplication(float, Point2d)
+	hm_enable_supports_commutative_multiplication(float, ListPoint2d)
+	hm_enable_supports_commutative_multiplication(float, Point3d)
+	hm_enable_supports_commutative_multiplication(float, ListPoint3d)
+	hm_enable_supports_commutative_multiplication(float, Skeleton3d)
+	hm_enable_supports_commutative_multiplication(float, Scene3d)
+	
+	
+	hm_enable_supports_commutative_multiplication(Point2d, ListPoint2d)
+	hm_enable_supports_commutative_multiplication(Point3d, ListPoint3d)
+	hm_enable_supports_commutative_multiplication(Point3d, Skeleton3d)
+	hm_enable_supports_commutative_multiplication(Point3d, Scene3d)
+	
+	hm_enable_supports_commutative_multiplication(Skeleton3d, Scene3d)
 
 	
 }

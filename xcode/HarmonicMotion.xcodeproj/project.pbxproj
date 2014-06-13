@@ -213,6 +213,7 @@
 		34DBA768193F3A9600D24456 /* OscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34DBA749193F3A9600D24456 /* OscSender.cpp */; };
 		34DBA769193F3A9600D24456 /* OscSender.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DBA74A193F3A9600D24456 /* OscSender.h */; };
 		34E2062518B76FAF00729934 /* PatchCord.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34E2062318B76FAF00729934 /* PatchCord.cpp */; };
+		34FD8D44194AF94000374ECC /* TypeTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FD8D43194AF94000374ECC /* TypeTraits.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -434,6 +435,7 @@
 		34DBA749193F3A9600D24456 /* OscSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OscSender.cpp; sourceTree = "<group>"; };
 		34DBA74A193F3A9600D24456 /* OscSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OscSender.h; sourceTree = "<group>"; };
 		34E2062318B76FAF00729934 /* PatchCord.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchCord.cpp; sourceTree = "<group>"; };
+		34FD8D43194AF94000374ECC /* TypeTraits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TypeTraits.h; path = ../include/TypeTraits.h; sourceTree = "<group>"; };
 		3D4E9ABC9ACD428BBF3DDEA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		567058A301B142BDBF7A2AEE /* HarmonicMotion_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = HarmonicMotion_Prefix.pch; sourceTree = "<group>"; };
 		E18406B5E23F4FE6B09BCDA7 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
@@ -759,6 +761,7 @@
 				22293671181591A2008CAA09 /* Skeleton3d.h */,
 				3445431119363F8600E90E13 /* Type.cpp */,
 				221E9036181725A10028EAFD /* Type.h */,
+				34FD8D43194AF94000374ECC /* TypeTraits.h */,
 				221E903D181727220028EAFD /* Value.cpp */,
 				221E90431817273C0028EAFD /* Value.h */,
 			);
@@ -966,6 +969,7 @@
 				3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */,
 				222936EB181677BD008CAA09 /* XnList.h in Headers */,
 				34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */,
+				34FD8D44194AF94000374ECC /* TypeTraits.h in Headers */,
 				222936EC181677BD008CAA09 /* XnListT.h in Headers */,
 				222936ED181677BD008CAA09 /* XnLog.h in Headers */,
 				222936EE181677BD008CAA09 /* XnLogTypes.h in Headers */,
