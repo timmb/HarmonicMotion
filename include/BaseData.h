@@ -13,6 +13,7 @@
 #include "SceneMeta.h"
 #include "Common.h"
 #include <deque>
+#include "TypeTraits.h"
 
 namespace hm
 {
@@ -53,7 +54,6 @@ namespace hm
 		Base3dData(double timestamp, SceneMetaPtr sceneMeta)
 		: BaseData(timestamp, sceneMeta)
 		{}
-		
 	};
 	
 	class Base2dData : public BaseData
