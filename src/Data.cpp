@@ -148,19 +148,20 @@ namespace
 	
 	struct VisitorAdd : public static_visitor<Data>
 	{
-		BAD_OPERATION(addition, Value, Base2dData)
-		BAD_OPERATION(addition, Base1dData, Base3dData)
-		BAD_OPERATION(addition, Base2dData, Base1dData)
-		BAD_OPERATION(addition, Base2dData, Base3dData)
-		BAD_OPERATION(addition, Base3dData, Base1dData)
-		BAD_OPERATION(addition, Base3dData, Base2dData)
-		BAD_OPERATION(addition, Image2d, Base2dData)
-		BAD_OPERATION(addition, Image2d, Base3dData)
-		BAD_OPERATION(addition, Base2dData, Image2d)
-		BAD_OPERATION(addition, Base3dData, Image2d)
-		BAD_OPERATION(addition, Skeleton3d, ListPoint3d)
-		BAD_OPERATION(addition, ListPoint3d, Skeleton3d)
-
+//		BAD_OPERATION(addition, Value, Base2dData)
+//		BAD_OPERATION(addition, Base1dData, Base3dData)
+//		BAD_OPERATION(addition, Base2dData, Base1dData)
+//		BAD_OPERATION(addition, Base2dData, Base3dData)
+//		BAD_OPERATION(addition, Base3dData, Base1dData)
+//		BAD_OPERATION(addition, Base3dData, Base2dData)
+//		BAD_OPERATION(addition, Image2d, Base2dData)
+//		BAD_OPERATION(addition, Image2d, Base3dData)
+//		BAD_OPERATION(addition, Base2dData, Image2d)
+//		BAD_OPERATION(addition, Base3dData, Image2d)
+//		BAD_OPERATION(addition, Skeleton3d, ListPoint3d)
+//		BAD_OPERATION(addition, ListPoint3d, Skeleton3d)
+//		BAD_OPERATION(addition, ListPoint3d, Skeleton3d)
+		
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -183,14 +184,19 @@ namespace
 			return Data();
 		}
 		
-		// We use decltype(lhs+rhs) with auto here instead of an explicit
-		// return type to prevent this template function from being selected
-		// as a preferred candidate for the BAD_OPERATION types listed above.
 		template <typename T, typename U>
 		typename enable_if<supports_addition<T, U>::value, Data>::type
 		operator()(T const& lhs, U const& rhs) const
 		{
 			return lhs + rhs;
+		}
+		
+		template <typename T, typename U>
+		typename enable_if<!supports_addition<T,U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
+		{
+			BOOST_ASSERT_MSG(false, ("Error: Cannot add objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
+			return Data(); \
 		}
 		
 

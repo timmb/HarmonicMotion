@@ -154,6 +154,7 @@
 		2294120D189AA35D009550EF /* NodeThreaded.h in Headers */ = {isa = PBXBuildFile; fileRef = 2294120C189AA35D009550EF /* NodeThreaded.h */; };
 		22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22C5DF6118A25BC200920089 /* FactoryNode.cpp */; };
 		22C5DF6518A25BCA00920089 /* FactoryNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 22C5DF6418A25BCA00920089 /* FactoryNode.h */; };
+		340982C119508DDA006C13DC /* Operators.h in Headers */ = {isa = PBXBuildFile; fileRef = 340982C019508DDA006C13DC /* Operators.h */; };
 		343ACE01194775E60094E08B /* ListPoint3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 343ACDFF194775E60094E08B /* ListPoint3d.cpp */; };
 		343ACE02194775E60094E08B /* ListValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 343ACE00194775E60094E08B /* ListValue.cpp */; };
 		343ACE04194775FB0094E08B /* ListValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 343ACE03194775FB0094E08B /* ListValue.h */; };
@@ -375,6 +376,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		30C86A9766774100B26992D5 /* CinderApp.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = CinderApp.icns; path = ../resources/CinderApp.icns; sourceTree = "<group>"; };
+		340982C019508DDA006C13DC /* Operators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Operators.h; path = ../include/Operators.h; sourceTree = "<group>"; };
 		343ACDFF194775E60094E08B /* ListPoint3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ListPoint3d.cpp; path = ../src/ListPoint3d.cpp; sourceTree = "<group>"; };
 		343ACE00194775E60094E08B /* ListValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ListValue.cpp; path = ../src/ListValue.cpp; sourceTree = "<group>"; };
 		343ACE03194775FB0094E08B /* ListValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ListValue.h; path = ../include/ListValue.h; sourceTree = "<group>"; };
@@ -764,6 +766,7 @@
 				34FD8D43194AF94000374ECC /* TypeTraits.h */,
 				221E903D181727220028EAFD /* Value.cpp */,
 				221E90431817273C0028EAFD /* Value.h */,
+				340982C019508DDA006C13DC /* Operators.h */,
 			);
 			name = Data;
 			path = ../xcode;
@@ -974,6 +977,7 @@
 				222936ED181677BD008CAA09 /* XnLog.h in Headers */,
 				222936EE181677BD008CAA09 /* XnLogTypes.h in Headers */,
 				222936EF181677BD008CAA09 /* XnLogWriterBase.h in Headers */,
+				340982C119508DDA006C13DC /* Operators.h in Headers */,
 				222936F0181677BD008CAA09 /* XnMacros.h in Headers */,
 				222936F1181677BD008CAA09 /* XnModuleCFunctions.h in Headers */,
 				222936F2181677BD008CAA09 /* XnModuleCppInterface.h in Headers */,
