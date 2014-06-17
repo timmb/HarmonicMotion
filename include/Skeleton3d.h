@@ -186,6 +186,8 @@ namespace hm
 		
 		Skeleton3d operator*(Value const& rhs) const;
 		Skeleton3d operator/(Value const& rhs) const;
+		Skeleton3d& operator*=(Value const& rhs);
+		Skeleton3d& operator/=(Value const& rhs);
 		
 		
 		Skeleton3d operator*(double rhs) const;

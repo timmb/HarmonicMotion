@@ -8,6 +8,7 @@
 
 #pragma once
 #include <string>
+#include <type_traits>
 
 namespace hm
 {
@@ -35,6 +36,27 @@ namespace hm
 	static_assert(VALUE | POINT3D | SKELETON3D | SCENE3D | IMAGE2D | LIST_VALUE | LIST_POINT2D | LIST_POINT3D == ALL_TYPES, "Types have not been properly defined");
 	/// Can be an OR combination of types.
 	typedef int Types;
+	
+	
+	// forward declare data types
+	class BaseData;
+	class Base1dData;
+	class Base2dData;
+	class Base3dData;
+	
+	class DataNull;
+	class Value;
+	class Point2d;
+	class Point3d;
+	class Skeleton3d;
+	//	class Scene3d;
+	class Image2d;
+	template <typename DataType>
+	class List;
+	typedef List<Value> ListValue;
+	typedef List<Point2d> ListPoint2d;
+	typedef List<Point3d> ListPoint3d;
+	typedef List<Skeleton3d> Scene3d;
 	
 	
 }

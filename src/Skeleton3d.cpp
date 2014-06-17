@@ -570,6 +570,28 @@ Scene3d Skeleton3d::operator/(Scene3d const& rhs) const
 }
 
 
+Skeleton3d& Skeleton3d::operator*=(Value const& rhs)
+{
+	timestamp = max(timestamp, rhs.timestamp);
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		joint(i) *= rhs;
+		jointProjective(i) *= rhs;
+	}
+	return *this;
+}
+
+Skeleton3d& Skeleton3d::operator/=(Value const& rhs)
+{
+	timestamp = max(timestamp, rhs.timestamp);
+	for (int i=0; i<NUM_JOINTS; i++)
+	{
+		joint(i) /= rhs;
+		jointProjective(i) /= rhs;
+	}
+	return *this;
+}
+
 
 Skeleton3d Skeleton3d::operator*(Value const& rhs) const
 {
