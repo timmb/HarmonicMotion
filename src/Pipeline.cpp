@@ -329,16 +329,16 @@ void Pipeline::start()
 				boost::this_thread::sleep_for(boost::chrono::microseconds(us));
 			}
 		}
-		for (NodePtr node: mNodes)
-		{
-			node->stopProcessing();
-		}
 	}));
 }
 
 void Pipeline::stop()
 {
 	mIsRunning = false;
+	for (NodePtr node: mNodes)
+	{
+		node->stopProcessing();
+	}
 }
 
 
