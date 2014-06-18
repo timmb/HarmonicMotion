@@ -33,25 +33,25 @@ Value::Value(float value_, double timestamp, SceneMetaPtr sceneMeta)
 {}
 
 
-Value Value::operator+(Value const& rhs) const
-{
-	return Value(value + rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Value Value::operator-(Value const& rhs) const
-{
-	return Value(value - rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Value Value::operator*(Value const& rhs) const
-{
-	return Value(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
-
-Value Value::operator/(Value const& rhs) const
-{
-	return Value(value / rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
-}
+//Value Value::operator+(Value const& rhs) const
+//{
+//	return Value(value + rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Value Value::operator-(Value const& rhs) const
+//{
+//	return Value(value - rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Value Value::operator*(Value const& rhs) const
+//{
+//	return Value(value * rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
+//
+//Value Value::operator/(Value const& rhs) const
+//{
+//	return Value(value / rhs.value, max(timestamp, rhs.timestamp), sceneMeta);
+//}
 
 
 Value& Value::operator+=(Value const& rhs)

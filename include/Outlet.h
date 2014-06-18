@@ -33,6 +33,10 @@ namespace hm
 		
 		virtual std::string toString() const override;
 		
+		/// \return a shared pointer to this instance. This needs to be checked
+		/// against nullptr in case this outlet is in the process of being destroyed.
+		OutletPtr ptr() const { return mSelf.lock(); }
+		
 	private:
 		/// Outlets are constructed with a reference to their owning node
 		/// The Node will automatically have this outlet registered with
@@ -67,6 +71,10 @@ namespace hm
 //		std::string mNodeName;
 //		std::vector<std::weak_ptr<Inlet>> mOutputs;
 		std::vector<PatchCordPtr> mPatchCords;
+		
+		/// Outlet maintains a weak pointer to itself. This is set by Node when
+		///	Outlet is created.
+		std::weak_ptr<Outlet> mSelf;
 		
 		friend class Node;
 		friend class Pipeline;

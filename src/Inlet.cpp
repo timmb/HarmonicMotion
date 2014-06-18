@@ -90,6 +90,12 @@ namespace hm
 		return mData.timestamp();
 	}
 	
+	OutletPtr Inlet::dataSource() const
+	{
+		boost::shared_lock<boost::shared_mutex> lock(mMutex);
+		return mOutletThatProvidedData;
+	}
+	
 	void Inlet::setNotifyCallback(std::function<void (double)> function)
 	{
 		UniqueLock lock(mNotifyCallbackMutex);
@@ -112,13 +118,18 @@ namespace hm
 		}
 	}
 	
-	void Inlet::provideNewData(Data const& data)
+	void Inlet::provideNewData(Data const& data, OutletPtr outlet)
 	{
+		if (!(data.type() & types()))
+		{
+			return;
+		}
 		{
 			UniqueLock lock(mMutex);
 			if (node().lock() != nullptr)
 			{
 				mData = data;
+				mOutletThatProvidedData = outlet;
 				mDataTimestamp = data.timestamp();
 			}
 			//	hm_debug("New data at inlet ("+mNodeName+"): "+data.toString());

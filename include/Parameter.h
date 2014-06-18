@@ -18,11 +18,12 @@
 namespace hm {
 	
 	/// On occasion it's useful to have a container that can contain any
-	/// value that may be represented by a parameter. At the moment this is
-	/// used in Node but not in the Parameter classes which use templates
-	/// and operator overloading.
+	/// value that may be represented by a parameter.
 	/// Types here should match those in BaseParameter::Type
 	typedef boost::variant<bool, float, double, int, std::string> ParameterValueContainer;
+	/// On rare occasions it's useful to have a container that can contain
+	/// a pointer to any value.
+	typedef boost::variant<bool*, float*, double*, int*, std::string*> ParameterValuePointerContainer;
 
 	/// Base class of all parameters
 	class BaseParameter

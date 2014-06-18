@@ -26,11 +26,12 @@ namespace hm
 		virtual Type type() const override { return VALUE; }
 		
 		double value;
-		
-		Value operator+(Value const& rhs) const;
-		Value operator-(Value const& rhs) const;
-		Value operator*(Value const& rhs) const;
-		Value operator/(Value const& rhs) const;
+
+		// defined below as free operators
+//		Value operator+(Value const& rhs) const;
+//		Value operator-(Value const& rhs) const;
+//		Value operator*(Value const& rhs) const;
+//		Value operator/(Value const& rhs) const;
 		
 		Value& operator+=(Value const& rhs);
 		Value& operator-=(Value const& rhs);
@@ -79,42 +80,60 @@ namespace hm
 
 	};
 	
-	inline
-	Value Value::operator*(double rhs) const
-	{
-		return Value(value * rhs, timestamp, sceneMeta);
+//	inline
+//	Value Value::operator*(double rhs) const
+//	{
+//		return Value(value * rhs, timestamp, sceneMeta);
+//	}
+//	
+//	inline
+//	Value Value::operator/(double rhs) const
+//	{
+//		return Value(value / rhs, timestamp, sceneMeta);
+//	}
+//		
+//	inline
+//	Value operator*(double lhs, Value const& rhs)
+//	{
+//		return rhs * lhs;
+//	}
+//
+//	inline
+//	Value operator/(double lhs, Value const& rhs)
+//	{
+//		return Value(lhs / rhs.value, rhs.timestamp, rhs.sceneMeta);
+//	}
+//	
+//	inline
+//	Value operator+(double lhs, Value const& rhs)
+//	{
+//		return rhs + lhs;
+//	}
+//	
+//	inline
+//	Value operator-(double lhs, Value const& rhs)
+//	{
+//		return Value(lhs - rhs.value, rhs.timestamp, rhs.sceneMeta);
+//	}
+	
+	hm_data_define_free_scalar_operators(Value)
+	
+	// Given that Value's are effectively scalars, we also define
+	// assignment operators onto scalars, e.g. float *= Value -> float
+#define hm_value_define_free_left_scalar_op_assign(op_assign, Type) \
+	inline Type operator op_assign(Type lhs, Value const& rhs) \
+	{ \
+		return lhs op_assign rhs.value; \
 	}
 	
-	inline
-	Value Value::operator/(double rhs) const
-	{
-		return Value(value / rhs, timestamp, sceneMeta);
-	}
-		
-	inline
-	Value operator*(double lhs, Value const& rhs)
-	{
-		return rhs * lhs;
-	}
-
-	inline
-	Value operator/(double lhs, Value const& rhs)
-	{
-		return Value(lhs / rhs.value, rhs.timestamp, rhs.sceneMeta);
-	}
-	
-	inline
-	Value operator+(double lhs, Value const& rhs)
-	{
-		return rhs + lhs;
-	}
-	
-	inline
-	Value operator-(double lhs, Value const& rhs)
-	{
-		return Value(lhs - rhs.value, rhs.timestamp, rhs.sceneMeta);
-	}
-	
+	hm_value_define_free_left_scalar_op_assign(+=, float)
+	hm_value_define_free_left_scalar_op_assign(-=, float)
+	hm_value_define_free_left_scalar_op_assign(*=, float)
+	hm_value_define_free_left_scalar_op_assign(/=, float)
+	hm_value_define_free_left_scalar_op_assign(+=, double)
+	hm_value_define_free_left_scalar_op_assign(-=, double)
+	hm_value_define_free_left_scalar_op_assign(*=, double)
+	hm_value_define_free_left_scalar_op_assign(/=, double)
 
 }
 

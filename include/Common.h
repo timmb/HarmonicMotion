@@ -13,6 +13,7 @@
 #include <iostream>
 #include "Type.h"
 #include "TypeTraits.h"
+#include "SceneMeta.h"
 
 namespace hm
 {
@@ -83,8 +84,71 @@ namespace hm
 		return std::to_string(getType<T>());
 	}
 	
+	/// Chooses the highest timestamp providing at least one of T or U
+	/// derives from BaseData
+	template<typename T, typename U>
+	typename
+	std::enable_if<std::is_base_of<BaseData, T>::value,
+	std::enable_if<std::is_base_of<BaseData, U>::value,
+	double>>::type
+	chooseTimestamp(T const& lhs, U const& rhs)
+	{
+		return std::max(lhs.timestamp, rhs.timestamp);
+	}
 	
+	template <typename T, typename U>
+	typename
+	std::enable_if<std::is_base_of<BaseData, T>::value,
+	std::enable_if<!std::is_base_of<BaseData, U>::value,
+	double>>::type
+	chooseTimestamp(T const& lhs, U const& rhs)
+	{
+		return lhs.timestamp;
+	}
+
+	template <typename T, typename U>
+	typename
+	std::enable_if<!std::is_base_of<BaseData, T>::value,
+	std::enable_if<std::is_base_of<BaseData, U>::value,
+	double>>::type
+	chooseTimestamp(T const& lhs, U const& rhs)
+	{
+		return rhs.timestamp;
+	}
 	
+	/// Chooses a sceneMeta providing at least one of T or U
+	/// derives from BaseData. Priority is to non-default sceneMeta
+	template<typename T, typename U>
+	typename
+	std::enable_if<std::is_base_of<BaseData, T>::value,
+	std::enable_if<std::is_base_of<BaseData, U>::value,
+	double>>::type
+	chooseSceneMeta(T const& lhs, U const& rhs)
+	{
+		return lhs.sceneMeta==SceneMeta::sDefaultSceneMeta? rhs.sceneMeta : lhs.sceneMeta;
+	}
+	
+	template <typename T, typename U>
+	typename
+	std::enable_if<std::is_base_of<BaseData, T>::value,
+	std::enable_if<!std::is_base_of<BaseData, U>::value,
+	double>>::type
+	chooseSceneMeta(T const& lhs, U const& rhs)
+	{
+		return lhs.sceneMeta;
+	}
+	
+	template <typename T, typename U>
+	typename
+	std::enable_if<!std::is_base_of<BaseData, T>::value,
+	std::enable_if<std::is_base_of<BaseData, U>::value,
+	double>>::type
+	chooseSceneMeta(T const& lhs, U const& rhs)
+	{
+		return rhs.sceneMeta;
+	}
+
+
 }
 
 	// For printing verbose debugging info

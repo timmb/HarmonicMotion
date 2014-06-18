@@ -164,6 +164,10 @@ namespace hm
 		/// \return A shared pointer to the parameter.
 		template <typename T>
 		ParameterPtrT<T> addParameter(std::string name, T* value);
+		/// Create a parameter that has already been created. Note that this
+		/// will not automatically set the initial value.
+		template <typename T>
+		ParameterPtrT<T> addParameter(ParameterPtrT<T> parameter);
 		/// Updates all parameters, activating callbacks where applicable. Callbacks
 		/// run in the same thread as this function. This function is called
 		/// before step() within NodeUnthreaded. Within NodeThreaded you
@@ -250,7 +254,7 @@ namespace hm
 				}
 			}
 		}
-		std::shared_ptr<Parameter<T>> parameter;
+		ParameterPtrT<T> parameter;
 		if (initialValue)
 		{
 			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, value, *initialValue));
@@ -259,6 +263,12 @@ namespace hm
 		{
 			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, value));
 		}
+		return addParameter(parameter);
+	}
+	
+	template <typename T>
+	ParameterPtrT<T> Node::addParameter(ParameterPtrT<T> parameter)
+	{
 		boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
 		mParameters.push_back(parameter);
 		return parameter;
