@@ -45,10 +45,12 @@ void NodeBlobTracker::addFilterParams(bool& filterOnOff, float& filterMin, float
 	pMin->setBounds(0, 99999999, softMin, softMax);
 	auto pMax = addParameter("Max "+name, &filterMax);
 	pMax->setBounds(0, 99999999, softMin, softMax);
-	pOnOff->addNewExternalValueCallback([=]() {
+	function<void()> adjustVisibilityCallback = [=]() {
 		pMin->setVisible(pOnOff->lastValue());
 		pMax->setVisible(pOnOff->lastValue());
-	});
+	};
+	pOnOff->addNewExternalValueCallback(adjustVisibilityCallback);
+	adjustVisibilityCallback();
 }
 
 

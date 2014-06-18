@@ -25,6 +25,9 @@ namespace hm
 		
 		Data data() const;
 		double dataTimestamp() const;
+		/// Returns a pointer to the outlet that provided the current data held
+		/// in this inlet. If data().isNull() then dataSource() may be nullptr.
+		OutletPtr dataSource() const;
 		/// Returns data if it is newer than \p timestamp, or a null data object
 		/// if it is not. Use this to avoid race conditions between dataTimestamp() and data() calls
 		Data dataIfNewerThan(double timestamp) const;
@@ -43,6 +46,7 @@ namespace hm
 //        /// std::weak_ptr<Node>()
 //        std::weak_ptr<Node> node() const;
 		virtual std::string toString() const override;
+		
 	private:
 		/// Type may be a combination of Type flags.
 		Inlet(Types types, Node& node, std::string const& name, std::string const& helpText);
@@ -59,7 +63,7 @@ namespace hm
 		// -------------------------------
 		
 		// Accessed by Outlet ------------
-		void provideNewData(Data const& data);
+		void provideNewData(Data const& data, OutletPtr fromOutlet);
 		// -------------------------------
 
 		// Accessed by Pipeline ----------
@@ -73,6 +77,7 @@ namespace hm
 //		std::string mNodeName;
 		/// Guarded by mMutex
 		Data mData;
+		OutletPtr mOutletThatProvidedData;
 		/// Guarded by mMutex
 		double mDataTimestamp;
 		std::atomic<int> mNumConnections;

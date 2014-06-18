@@ -312,4 +312,28 @@ namespace hm
 		}
 		return out;
 	}
+	
+#define hm_skeleton_define_free_operator(op, trait) \
+	template <typename T> \
+	typename trait<T, Skeleton3d>::result_type \
+	operator op (T const& lhs, Skeleton3d const& rhs) \
+	{ \
+		Skeleton3d out(chooseTimestamp(lhs, rhs), chooseSceneMeta(lhs, rhs)); \
+		for (int i=0; i<NUM_JOINTS; i++) \
+		{ \
+			out.joint(i) = lhs op rhs.joint(i); \
+			out.jointProjective(i) = lhs op rhs.jointProjective(i); \
+			out.jointConfidence(i) = rhs.jointConfidence(i); \
+			out.id() = rhs.id(); \
+		} \
+		return out; \
+	}
+	
+	hm_skeleton_define_free_operator(+, supports_addition)
+	hm_skeleton_define_free_operator(-, supports_addition)
+	hm_skeleton_define_free_operator(*, supports_multiplication)
+	hm_skeleton_define_free_operator(/, supports_multiplication)
 }
+
+
+

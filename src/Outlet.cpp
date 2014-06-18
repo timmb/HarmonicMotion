@@ -75,6 +75,13 @@ namespace hm
 	
 	void Outlet::outputNewData(Data& data)
 	{
+		OutletPtr self = mSelf.lock();
+		if (self==nullptr)
+		{
+			/// If we are in the process of destruction then don't send
+			/// any new data.
+			return;
+		}
 		bool isDataTypeValid = types() & data.type();
 		assert(isDataTypeValid);
 		if (isDataTypeValid)
@@ -95,7 +102,7 @@ namespace hm
 			for (PatchCordPtr cord: mPatchCords)
 			{
 				assert(data.type() & cord->inlet()->types());
-				cord->inlet()->provideNewData(data);
+				cord->inlet()->provideNewData(data, self);
 			}
 		}
 		//	for (auto outRefIt=mOutputs.begin(); outRefIt!=mOutputs.end(); )

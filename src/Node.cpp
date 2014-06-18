@@ -296,6 +296,7 @@ OutletPtr Node::createOutlet(Types types, std::string const& name, std::string c
 	}
 	
 	OutletPtr outlet(new Outlet(types, *this, name, helpText));
+	outlet->mSelf = outlet;
 	mOutlets.push_back(outlet);
 	if (mHasStartEverBeenCalled)
 	{
@@ -443,12 +444,10 @@ bool Node::removeInlet(InletPtr inlet)
 	{
 		mInlets.erase(it);
 		(**it).detachOwnerNode();
-	}
-	if (mHasStartEverBeenCalled)
-	{
 		mHaveAllCharacteristicChangesBeenReported.clear();
+		return true;
 	}
-	return it!=end(mInlets);
+	return false;
 }
 
 bool Node::removeOutlet(OutletPtr outlet)

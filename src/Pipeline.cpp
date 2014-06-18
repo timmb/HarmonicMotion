@@ -443,8 +443,9 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 			{
 				return e->patchCord->inlet()==inlet && e->patchCord->outlet()==outlet;
 			}
+			return false;
 		}
-		return false;
+		return true;
 	}());
 
 	return !events.empty();
@@ -463,11 +464,13 @@ Events Pipeline::p_Connect(OutletPtr outlet, InletPtr inlet)
 		connectionFail = true;
 		failReason = "they are already connected";
 	}
-	else if (!(outlet->types() & inlet->types()))
-	{
-		connectionFail = true;
-		failReason = "they do not have any common data types";
-	}
+	// Actually allow the connection but the data won't be passed through.
+	// We'll find a different way to communicate the problem.
+//	else if (!(outlet->types() & inlet->types()))
+//	{
+//		connectionFail = true;
+//		failReason = "they do not have any common data types";
+//	}
 	if (connectionFail)
 	{
 		hm_info("Unable to connect "+outlet->toString()+" to "+inlet->toString()+" because "+failReason+'.');
