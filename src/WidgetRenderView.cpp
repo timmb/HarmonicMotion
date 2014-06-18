@@ -56,7 +56,7 @@ void WidgetRenderViewGl::paintGL()
 
 QSize WidgetRenderViewGl::sizeHint() const
 {
-	return QSize(400, 300);
+	return QSize(400, 250);
 }
 
 

@@ -272,10 +272,11 @@ bool WidgetPatchArea::isConnectionValid(WidgetOutlet* outlet, WidgetInlet* inlet
     return (outlet != nullptr)
     && (inlet != nullptr)
 	// check connection doesn't already exist
-    && (getPatchCord(outlet, inlet) == nullptr)
-	// check there is at least one datatype from the outlet acceptable to the
-	// inlet
-	&& (outlet->outlet()->types() & inlet->inlet()->types());
+    && (getPatchCord(outlet, inlet) == nullptr);
+	// (no longer enforced:)
+//	// check there is at least one datatype from the outlet acceptable to the
+//	// inlet
+//	&& (outlet->outlet()->types() & inlet->inlet()->types());
 }
 
 
