@@ -22,7 +22,7 @@ namespace hm {
 	/// used in Node but not in the Parameter classes which use templates
 	/// and operator overloading.
 	/// Types here should match those in BaseParameter::Type
-	typedef boost::variant<float, double, int, std::string> ParameterValueContainer;
+	typedef boost::variant<bool, float, double, int, std::string> ParameterValueContainer;
 
 	/// Base class of all parameters
 	class BaseParameter
@@ -31,6 +31,7 @@ namespace hm {
 		/// These types should match those in ParameterValueContainer.
 		enum Type
 		{
+			BOOL,
 			FLOAT,
 			DOUBLE,
 			INT,
@@ -285,6 +286,11 @@ namespace hm
 			return v;
 		}
 		
+		T lastValue() const
+		{
+			return boost::get<T>(toContainer());
+		}
+		
 		virtual void detach()
 		{
 			BaseParameter::detach();
@@ -357,6 +363,9 @@ namespace hm
 	template<>
 	BaseParameter::Type Parameter<std::string>::type() const;
 	
+	template<> inline
+	BaseParameter::Type Parameter<bool>::type() const { return BOOL; }
+	
 	template<>
 	void Parameter<int>::validateExternalValue(int& value) const;
 	
@@ -378,6 +387,7 @@ namespace Json
 {
 	// To avoid having to specialise the Parameter class, we overload
 	// the streaming operator for all supported datatypes
+	bool operator>>(Json::Value const& child, bool& value);
 	bool operator>>(Json::Value const& child, float& value);
 	bool operator>>(Json::Value const& child, double& value);
 	bool operator>>(Json::Value const& child, int& value);

@@ -183,6 +183,7 @@ namespace hm
 		while (it!=end(value))
 		{
 			out << ", "<<*it;
+			++it;
 		}
 		return out << ']';
 	}

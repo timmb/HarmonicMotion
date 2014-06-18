@@ -16,10 +16,12 @@ namespace std
 {
 	string to_string(hm::BaseParameter::Type type)
 	{
-		static_assert(hm::BaseParameter::NUM_TYPES==4, "to_string(hm::BaseParameter::Type type) needs to be updated to accommodate all the different types defined.");
+		static_assert(hm::BaseParameter::NUM_TYPES==5, "to_string(hm::BaseParameter::Type type) needs to be updated to accommodate all the different types defined.");
 
 		switch (type)
 		{
+			case hm::BaseParameter::BOOL:
+				return "bool";
 			case hm::BaseParameter::FLOAT:
 				return "float";
 			case hm::BaseParameter::DOUBLE:
@@ -204,8 +206,20 @@ namespace hm {
 namespace Json
 {
 	
+	
 	// To avoid having to specialise the Parameter class, we overload
 	// the streaming operator for all supported datatypes
+	bool operator>>(Json::Value const& child, bool& value)
+	{
+		if (!child.isConvertibleTo(Json::booleanValue))
+		{
+			return false;
+		}
+		value = child.asBool();
+		return true;
+	}
+
+	
 	bool operator>>(Json::Value const& child, double& value)
 	{
 		if (!child.isConvertibleTo(Json::realValue))
