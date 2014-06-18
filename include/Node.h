@@ -205,6 +205,9 @@ namespace hm
 		/// Guards changes to the characteristics of the node (i.e.
 		/// how many inlets and outlets it has)
 		mutable boost::shared_mutex mCharacteristicsMutex;
+		/// Guards against stopProcessing and destruction during a
+		/// step()
+		mutable boost::mutex mProcessMutex;
 		std::atomic<bool> mIsEnabled;
 		std::atomic<bool> mIsProcessing;
 		std::atomic<bool> mHasStartEverBeenCalled;

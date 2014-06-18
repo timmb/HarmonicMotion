@@ -66,6 +66,10 @@ Node::Node(Params params, string className)
 Node::~Node()
 {
 	hm_debug("Destroying node "+toString());
+	if (isProcessing())
+	{
+		stopProcessing();
+	}
 	for (InletPtr inlet: mInlets)
 	{
 		inlet->detachOwnerNode();
@@ -113,6 +117,7 @@ void Node::setEnabled(bool isEnabled)
 
 void Node::startProcessing()
 {
+	boost::lock_guard<boost::mutex> lock(mProcessMutex);
 	assert(!mIsProcessing);
 	mIsProcessing = true;
 	mHasStartEverBeenCalled = true;
@@ -122,6 +127,7 @@ void Node::startProcessing()
 
 bool Node::stepProcessing()
 {
+	boost::lock_guard<boost::mutex> lock(mProcessMutex);
 	/// notify the pipeline if our characteristics have changed.
 	return !mHaveAllCharacteristicChangesBeenReported.test_and_set();
 }
@@ -129,6 +135,7 @@ bool Node::stepProcessing()
 
 void Node::stopProcessing()
 {
+	boost::lock_guard<boost::mutex> lock(mProcessMutex);
 	assert(mIsProcessing);
 	mIsProcessing = false;
 	hm_debug("Processing stopped on Node "+name());
