@@ -63,7 +63,7 @@ namespace hm
 	Type getType();
 	
 #define hm_define_get_type(T, typeEnumValue) \
-	template<> Type getType<T>() { return typeEnumValue; }
+	template<> inline Type getType<T>() { return typeEnumValue; }
 	
 	hm_define_get_type(Value, VALUE)
 	hm_define_get_type(Point2d, POINT2D)
