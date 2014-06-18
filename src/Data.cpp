@@ -139,29 +139,8 @@ namespace
 {
 	using boost::static_visitor;
 	
-#define BAD_OPERATION(OperationName, LhsType, RhsType) \
-	Data operator()(LhsType const& lhs, RhsType const& Rhs) const \
-	{ \
-		assert(false && "Error: Cannot apply operation \""#OperationName"\" with objects of type "#LhsType" and "#RhsType"."); \
-		return Data(); \
-	}
-	
 	struct VisitorAdd : public static_visitor<Data>
 	{
-//		BAD_OPERATION(addition, Value, Base2dData)
-//		BAD_OPERATION(addition, Base1dData, Base3dData)
-//		BAD_OPERATION(addition, Base2dData, Base1dData)
-//		BAD_OPERATION(addition, Base2dData, Base3dData)
-//		BAD_OPERATION(addition, Base3dData, Base1dData)
-//		BAD_OPERATION(addition, Base3dData, Base2dData)
-//		BAD_OPERATION(addition, Image2d, Base2dData)
-//		BAD_OPERATION(addition, Image2d, Base3dData)
-//		BAD_OPERATION(addition, Base2dData, Image2d)
-//		BAD_OPERATION(addition, Base3dData, Image2d)
-//		BAD_OPERATION(addition, Skeleton3d, ListPoint3d)
-//		BAD_OPERATION(addition, ListPoint3d, Skeleton3d)
-//		BAD_OPERATION(addition, ListPoint3d, Skeleton3d)
-		
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -205,20 +184,6 @@ namespace
 	
 	struct VisitorSub : public static_visitor<Data>
 	{
-		BAD_OPERATION(subtraction, Base1dData, Base2dData)
-		BAD_OPERATION(subtraction, Base1dData, Base3dData)
-		BAD_OPERATION(subtraction, Base2dData, Base1dData)
-		BAD_OPERATION(subtraction, Base2dData, Base3dData)
-		BAD_OPERATION(subtraction, Base3dData, Base1dData)
-		BAD_OPERATION(subtraction, Base3dData, Base2dData)
-		BAD_OPERATION(subtraction, Image2d, Base2dData)
-		BAD_OPERATION(subtraction, Image2d, Base3dData)
-		BAD_OPERATION(subtraction, Base2dData, Image2d)
-		BAD_OPERATION(subtraction, Base3dData, Image2d)
-		BAD_OPERATION(subtraction, Skeleton3d, ListPoint3d)
-		BAD_OPERATION(subtraction, ListPoint3d, Skeleton3d)
-
-		
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -248,19 +213,20 @@ namespace
 		{
 			return lhs - rhs;
 		}
+
+		template <typename T, typename U>
+		typename enable_if<!supports_addition<T,U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
+		{
+			BOOST_ASSERT_MSG(false, ("Error: Cannot subtract objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
+			return Data(); \
+		}
 	};
 	VisitorSub visitorSub;
 	
 	
 	struct VisitorMul : public static_visitor<Data>
 	{
-		BAD_OPERATION(multiplication, Base2dData, Image2d)
-		BAD_OPERATION(multiplication, Base2dData, Base3dData)
-		BAD_OPERATION(multiplication, Base3dData, Image2d)
-		BAD_OPERATION(multiplication, Base3dData, Base2dData)
-		BAD_OPERATION(multiplication, Skeleton3d, ListPoint3d)
-		BAD_OPERATION(multiplication, ListPoint3d, Skeleton3d)
-
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -290,19 +256,20 @@ namespace
 		{
 			return lhs * rhs;
 		}
+
+		template <typename T, typename U>
+		typename enable_if<!supports_multiplication<T,U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
+		{
+			BOOST_ASSERT_MSG(false, ("Error: Cannot multiply objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
+			return Data(); \
+		}
 	};
 	VisitorMul visitorMul;
 	
 	
 	struct VisitorDiv : public static_visitor<Data>
 	{
-		BAD_OPERATION(division, Base2dData, Image2d)
-		BAD_OPERATION(division, Base2dData, Base3dData)
-		BAD_OPERATION(division, Base3dData, Image2d)
-		BAD_OPERATION(division, Base3dData, Base2dData)
-		BAD_OPERATION(division, Skeleton3d, ListPoint3d)
-		BAD_OPERATION(division, ListPoint3d, Skeleton3d)
-
 		template <typename T>
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
@@ -330,6 +297,14 @@ namespace
 		operator()(T const& lhs, U const& rhs) const
 		{
 			return lhs / rhs;
+		}
+		
+		template <typename T, typename U>
+		typename enable_if<!supports_multiplication<T,U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
+		{
+			BOOST_ASSERT_MSG(false, ("Error: Cannot divide objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
+			return Data(); \
 		}
 	};
 	VisitorDiv visitorDiv;
@@ -405,51 +380,49 @@ Data Data::operator+() const
 	return boost::apply_visitor(visitorPos, this->data);
 }
 
+
+namespace
+{
+	struct SupportsAdditionVisitor : public boost::static_visitor<bool>
+	{
+		template <typename T, typename U>
+		bool operator()(T const& lhs, U const& rhs) const
+		{
+			return supports_addition<T, U>::value;
+		}
+	};
+	SupportsAdditionVisitor supportsAdditionVisitor;
+	
+	struct SupportsMultiplicationVisitor : public boost::static_visitor<bool>
+	{
+		template <typename T, typename U>
+		bool operator()(T const& lhs, U const& rhs) const
+		{
+			return supports_multiplication<T, U>::value;
+		}
+	};
+	SupportsMultiplicationVisitor supportsMultiplicationVisitor;
+}
+
+
 bool Data::canAdd(Data const& rhs) const
 {
-	Type const& t = type();
-	Type const& u = rhs.type();
-	return (t==VALUE && u==VALUE)
-	|| (t&VECTOR3D_TYPES && u&VECTOR3D_TYPES)
-	|| (t==IMAGE2D && u==IMAGE2D)
-	|| (t==IMAGE2D && u==VALUE)
-	|| (t==VALUE && u==IMAGE2D);
+	return boost::apply_visitor(supportsAdditionVisitor, this->data, rhs.data);
 }
 
 bool Data::canSubtract(Data const& rhs) const
 {
-	Type const& t = type();
-	Type const& u = rhs.type();
-	return (t==VALUE && u==VALUE)
-	|| (t&VECTOR3D_TYPES && u&VECTOR3D_TYPES)
-	|| (t==IMAGE2D && u==IMAGE2D)
-	|| (t==IMAGE2D && u==VALUE)
-	|| (t==VALUE && u==IMAGE2D);
+	return boost::apply_visitor(supportsAdditionVisitor, this->data, rhs.data);
 }
 
 bool Data::canMultiply(Data const& rhs) const
 {
-	Type const& t = type();
-	Type const& u = rhs.type();
-	return (t & VALUE && u & SCALABLE_TYPES)
-	|| (t & SCALABLE_TYPES && u & VALUE)
-	|| (t & VECTOR3D_TYPES && u & VECTOR3D_TYPES)
-	|| (t==IMAGE2D && u==IMAGE2D)
-	|| (t==IMAGE2D && u==VALUE)
-	|| (t==VALUE && u==IMAGE2D);
+	return boost::apply_visitor(supportsMultiplicationVisitor, this->data, rhs.data);
 }
 
 bool Data::canDivide(Data const& rhs) const
 {
-	Type const& t = type();
-	Type const& u = rhs.type();
-	return (t & VALUE && u & SCALABLE_TYPES)
-	|| (t & SCALABLE_TYPES && u & VALUE)
-	|| (t & VECTOR3D_TYPES && u & VECTOR3D_TYPES)
-	|| (t==IMAGE2D && u==IMAGE2D)
-	|| (t==IMAGE2D && u==VALUE)
-	|| (t==VALUE && u==IMAGE2D);
-
+	return boost::apply_visitor(supportsMultiplicationVisitor, this->data, rhs.data);
 }
 
 
