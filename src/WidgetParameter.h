@@ -66,12 +66,26 @@ namespace hm
 		{}
 
 	protected:
+		QSize sizeHint() const override { return mWidget->sizeHint(); }
+
 		std::shared_ptr<Parameter<T>> mParameter;
 		/// Derived types should provide a pointer to the widget
 		/// that is being used to control this parameter.
 		QWidget* mWidget;
 		
 	private:
+	};
+	
+	
+	class WidgetParameterBool : public WidgetParameter<bool>
+	{
+		Q_OBJECT;
+		
+	public:
+		WidgetParameterBool(ParameterPtrT<bool> parameter);
+		
+	Q_SIGNALS:
+		void newInternalValue(bool value);
 	};
 	
 	
@@ -86,9 +100,6 @@ namespace hm
 		
 	Q_SIGNALS:
 		void newInternalValue(double value);
-		
-	protected:
-		QSize sizeHint() const { return mWidget->sizeHint(); }
 	};
 
 	// ---------------------------------------
@@ -101,9 +112,6 @@ namespace hm
 		
 	Q_SIGNALS:
 		void newInternalValue(double value);
-		
-	protected:
-		QSize sizeHint() const { return mWidget->sizeHint(); }
 	};
 	
 	
@@ -117,9 +125,6 @@ namespace hm
 		
 	Q_SIGNALS:
 		void newInternalValue(int value);
-		
-	protected:
-		QSize sizeHint() const { return mWidget->sizeHint(); }
 	};
 	
 	// ---------------------------------------
@@ -132,9 +137,6 @@ namespace hm
 		
 	Q_SIGNALS:
 		void newInternalValue(QString const& value);
-		
-	protected:
-		QSize sizeHint() const { return mWidget->sizeHint(); }
 	};
 }
 

@@ -15,6 +15,7 @@
 #include <QDebug>
 #include "Utilities.h"
 #include <QComboBox>
+#include <QCheckBox>
 
 using namespace hm;
 
@@ -70,6 +71,12 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 	assert(parameter != nullptr);
 	switch (parameter->type())
 	{
+		case BaseParameter::BOOL:
+		{
+			auto p = std::dynamic_pointer_cast<Parameter<bool>>(parameter);
+			assert(p);
+			return new WidgetParameterBool(p);
+		}
 		case BaseParameter::FLOAT:
 		{
 			auto p = std::dynamic_pointer_cast<Parameter<float>>(parameter);
@@ -101,6 +108,26 @@ WidgetBaseParameter* WidgetBaseParameter::create(ParameterPtr parameter)
 	}
 }
 
+// ----------------------------
+
+WidgetParameterBool::WidgetParameterBool(ParameterPtrT<bool> parameter)
+: WidgetParameter<bool>(parameter)
+{
+	QCheckBox* checkBox = new QCheckBox(this);
+	checkBox->setChecked(parameter->lastValue());
+	checkBox->move(0,0);
+	
+	parameter->addNewInternalValueCallback([checkBox, this](bool value){
+		checkBox->blockSignals(true);
+		checkBox->setChecked(value);
+		checkBox->blockSignals(false);
+	});
+	BOOST_VERIFY(connect(checkBox, SELECT<bool>::OVERLOAD_OF(&QCheckBox::clicked), [this](bool b) {
+		mParameter->set(b);
+	}));
+	
+	mWidget = checkBox;
+}
 
 
 // ----------------------------
