@@ -9,7 +9,7 @@ namespace hm
 	
 	template <typename LHS, typename RHS>
 	struct supports_multiplication : public std::false_type {};
-
+	
 	// define a type trait indicating T and U can be added/subtracted
 	// with return type R
 	
@@ -128,4 +128,21 @@ typedef R return_type; \
 	hm_enable_supports_commutative_multiplication(ListPoint3d, Skeleton3d, Scene3d)
 	hm_enable_supports_commutative_multiplication(ListPoint3d, Scene3d, Scene3d)
 
+	
+	template <typename T>
+	struct is_list : public std::false_type {};
+	
+	template <typename T>
+	struct is_list<List<T>> : public std::true_type {};
+	
+	static_assert(is_list<ListValue>::value && is_list<ListPoint2d>::value && is_list<ListPoint3d>::value && is_list<Scene3d>::value, "is_list type trait is incorrectly defined");
+	static_assert(!(is_list<float>::value || is_list<Value>::value || is_list<Skeleton3d>::value), "is_list type trait is incorrectly defined");
 }
+
+
+				  
+				  
+				  
+				  
+
+

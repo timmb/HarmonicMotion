@@ -549,25 +549,25 @@ Skeleton3d& Skeleton3d::operator/=(Point3d const& rhs)
 }
 
 
-Scene3d Skeleton3d::operator+(Scene3d const& rhs) const
-{
-	return rhs + *this;
-}
-
-Scene3d Skeleton3d::operator-(Scene3d const& rhs) const
-{
-	return rhs - *this;
-}
-
-Scene3d Skeleton3d::operator*(Scene3d const& rhs) const
-{
-	return rhs * *this;
-}
-
-Scene3d Skeleton3d::operator/(Scene3d const& rhs) const
-{
-	return rhs / *this;
-}
+//Scene3d Skeleton3d::operator+(Scene3d const& rhs) const
+//{
+//	return rhs + *this;
+//}
+//
+//Scene3d Skeleton3d::operator-(Scene3d const& rhs) const
+//{
+//	return rhs - *this;
+//}
+//
+//Scene3d Skeleton3d::operator*(Scene3d const& rhs) const
+//{
+//	return rhs * *this;
+//}
+//
+//Scene3d Skeleton3d::operator/(Scene3d const& rhs) const
+//{
+//	return rhs / *this;
+//}
 
 
 Skeleton3d& Skeleton3d::operator*=(Value const& rhs)
