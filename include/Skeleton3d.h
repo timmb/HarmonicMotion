@@ -179,10 +179,10 @@ namespace hm
 		Skeleton3d& operator*=(Point3d const& rhs);
 		Skeleton3d& operator/=(Point3d const& rhs);
 		
-		Scene3d operator+(Scene3d const& rhs) const;
-		Scene3d operator-(Scene3d const& rhs) const;
-		Scene3d operator*(Scene3d const& rhs) const;
-		Scene3d operator/(Scene3d const& rhs) const;
+//		Scene3d operator+(Scene3d const& rhs) const;
+//		Scene3d operator-(Scene3d const& rhs) const;
+//		Scene3d operator*(Scene3d const& rhs) const;
+//		Scene3d operator/(Scene3d const& rhs) const;
 		
 		Skeleton3d operator*(Value const& rhs) const;
 		Skeleton3d operator/(Value const& rhs) const;

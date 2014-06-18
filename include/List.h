@@ -15,7 +15,6 @@ namespace hm
 	{
 	public:
 		typedef typename DataType::BaseType BaseType;
-		std::true_type is_list;
 		
 		explicit
 		List(double timestamp=0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta)
@@ -66,36 +65,37 @@ namespace hm
 //		List<DataType> operator+() const;
 		List<DataType> operator-() const;
 		
-		// Operations against types that may operate
+		// Operations against types that may operate.
+		// e.g. List<Type> * T -> List<Type*T>
 		// on DataType. Only define if List<DataType> * T is defined and not if T is a list
 		// as we define those separately.
 		// T is applied individually to each element of the list
 		template <typename T>
-		typename supports_addition<List<DataType>, typename boost::disable_if<typename T::is_list, T>>::return_type
+		typename supports_addition<List<DataType>, typename boost::disable_if<is_list<T>, T>>::return_type
 		operator+(T const& rhs) const;
 		
 		template <typename T>
-		typename supports_addition<List<DataType>, typename boost::disable_if<typename T::is_list, T>>::return_type
+		typename supports_addition<List<DataType>, typename boost::disable_if<is_list<T>, T>>::return_type
 		operator-(T const& rhs) const;
 		
 		template <typename T>
-		typename supports_multiplication<List<DataType>, typename boost::disable_if<typename T::is_list, T>>::return_type
+		typename supports_multiplication<List<DataType>, typename boost::disable_if<is_list<T>, T>>::return_type
 		operator*(T const& rhs) const;
 		
 		template <typename T>
-		typename supports_multiplication<List<DataType>, typename boost::disable_if<typename T::is_list, T>>::return_type
+		typename supports_multiplication<List<DataType>, typename boost::disable_if<is_list<T>, T>>::return_type
 		operator/(T const& rhs) const;
 		
 		// Support an assignment operator if the operator is supported and its return type
 		// equals that of this class, and if T is not a list
-		// e.g. List<DataType> *= T
+		// e.g. List<DataType> *= T -> List<DataType>
 		template <typename T>
 		typename std::enable_if<
 			std::is_same<
 				List<DataType>,
 				typename supports_addition<
 					List<DataType>,
-					typename boost::disable_if<typename T::is_list, T>::type
+					typename boost::disable_if<is_list<T>, T>::type
 				>::return_type>::value, typename supports_addition<List<DataType>, T>::return_type&>
 		::type
 		operator+=(T const& rhs);
@@ -106,7 +106,7 @@ namespace hm
 				List<DataType>,
 				typename supports_addition<
 					List<DataType>,
-					typename boost::disable_if<typename T::is_list, T>::type
+					typename boost::disable_if<is_list<T>, T>::type
 				>::return_type>::value, typename supports_addition<List<DataType>, T>::return_type&>
 		::type
 		operator-=(T const& rhs);
@@ -115,9 +115,9 @@ namespace hm
 		typename std::enable_if<
 			std::is_same<
 				List<DataType>,
-				typename supports_addition<
+				typename supports_multiplication<
 					List<DataType>,
-					typename boost::disable_if<typename T::is_list, T>::type
+					typename boost::disable_if<is_list<T>, T>::type
 				>::return_type>::value, typename supports_multiplication<List<DataType>, T>::return_type&>
 		::type
 		operator*=(T const& rhs);
@@ -126,9 +126,9 @@ namespace hm
 		typename std::enable_if<
 			std::is_same<
 				List<DataType>,
-				typename supports_addition<
+				typename supports_multiplication<
 					List<DataType>,
-					typename boost::disable_if<typename T::is_list, T>::type
+					typename boost::disable_if<is_list<T>, T>::type
 				>::return_type>::value, typename supports_multiplication<List<DataType>, T>::return_type&>
 		::type
 		operator/=(T const& rhs);
@@ -140,49 +140,51 @@ namespace hm
 		// the result of the operation is List<DataType>
 		template <typename T>
 		typename std::enable_if<
-			T::is_list::value && std::is_same<typename supports_addition<List<DataType>, T>::return_type, List<DataType>>::value,
+			is_list<T>::value && std::is_same<typename supports_addition<List<DataType>, T>::return_type, List<DataType>>::value,
 			typename supports_addition<List<DataType>, T>::return_type&
 		>::type
 		operator+=(List<T> const& rhs);
 		
 		template <typename T>
 		typename std::enable_if<
-			T::is_list::value && std::is_same<typename supports_addition<List<DataType>, T>::return_type, List<DataType>>::value,
+			is_list<T>::value && std::is_same<typename supports_addition<List<DataType>, T>::return_type, List<DataType>>::value,
 			typename supports_addition<List<DataType>, T>::return_type&
 		>::type
 		operator-=(List<T> const& rhs);
 		
 		template <typename T>
 		typename std::enable_if<
-			T::is_list::value && std::is_same<typename supports_multiplication<List<DataType>, T>::return_type, List<DataType>>::value,
-			typename supports_addition<List<DataType>, T>::return_type&
+			is_list<T>::value && std::is_same<typename supports_multiplication<List<DataType>, T>::return_type, List<DataType>>::value,
+			typename supports_multiplication<List<DataType>, T>::return_type&
 		>::type
 		operator*=(List<T> const& rhs);
 		
 		template <typename T>
 		typename std::enable_if<
-			T::is_list::value && std::is_same<typename supports_multiplication<List<DataType>, T>::return_type, List<DataType>>::value,
-			typename supports_addition<List<DataType>, T>::return_type&
+			is_list<T>::value && std::is_same<typename supports_multiplication<List<DataType>, T>::return_type, List<DataType>>::value,
+			typename supports_multiplication<List<DataType>, T>::return_type&
 		>::type
 		operator/=(List<T> const& rhs);
 		
+		// Operators for List<DataType> on List<T> if DataType can operate on T.
+		// List elements are operated piecewise
+		
 		template <typename T>
-		typename std::enable_if<T::is_list::value, typename supports_addition<List<DataType>, T>::return_type&>::type
+		typename std::enable_if<is_list<T>::value, typename supports_addition<List<DataType>, T>::return_type>::type
 		operator+(List<T> const& rhs) const;
 		
 		template <typename T>
-		typename std::enable_if<T::is_list::value, typename supports_addition<List<DataType>, T>::return_type&>::type
+		typename std::enable_if<is_list<T>::value, typename supports_addition<List<DataType>, T>::return_type>::type
 		operator-(List<T> const& rhs) const;
 		
 		template <typename T>
-		typename std::enable_if<T::is_list::value, typename supports_multiplication<List<DataType>, T>::return_type&>::type
+		typename std::enable_if<is_list<T>::value, typename supports_multiplication<List<DataType>, T>::return_type>::type
 		operator*(List<T> const& rhs) const;
 		
 		template <typename T>
-		typename std::enable_if<T::is_list::value, typename supports_multiplication<List<DataType>, T>::return_type&>::type
+		typename std::enable_if<is_list<T>::value, typename supports_multiplication<List<DataType>, T>::return_type>::type
 		operator/(List<T> const& rhs) const;
 
-		to do... update implementations to match the new signatures.
 	};
 	
 	template <typename DataType>
@@ -346,7 +348,14 @@ namespace hm
 #define hm_define_list_datatype_assign(op_assign, trait) \
 	template <typename DataType> \
 	template <typename T> \
-	typename std::enable_if<trait<List<DataType>, T>::value, List<DataType>&>::type \
+		typename std::enable_if< \
+			std::is_same< \
+				List<DataType>, \
+				typename trait< \
+					List<DataType>, \
+					typename boost::disable_if<is_list<T>, T>::type \
+				>::return_type>::value, typename trait<List<DataType>, T>::return_type&> \
+		::type \
 	List<DataType>:: operator op_assign(T const& rhs) \
 	{ \
 		for (DataType& x: value) \
@@ -365,7 +374,7 @@ namespace hm
 #define hm_define_list_datatype_op(op, trait) \
 	template <typename DataType> \
 	template <typename T> \
-	typename std::enable_if<trait<List<DataType>, T>::value, List<DataType>>::type \
+	typename trait<List<DataType>, typename boost::disable_if<is_list<T>, T>>::return_type \
 	List<DataType>::operator op(T const& rhs) const \
 	{ \
 		return List<DataType>(*this) op##= rhs; \
@@ -376,11 +385,14 @@ namespace hm
 	hm_define_list_datatype_op(*, supports_multiplication)
 	hm_define_list_datatype_op(/, supports_multiplication)
 	
-// e.g. List<Type> *= List<T>
+// e.g. List<Type> *= List<T> piecewise
 #define hm_define_list_listT_op_assign(op_assign, trait) \
 	template <typename DataType> \
 	template <typename T> \
-	typename std::enable_if<trait<List<DataType>, T>::value, List<DataType>&>::type \
+		typename std::enable_if< \
+			is_list<T>::value && std::is_same<typename trait<List<DataType>, T>::return_type, List<DataType>>::value, \
+			typename trait<List<DataType>, T>::return_type& \
+		>::type \
 	List<DataType>::operator op_assign(List<T> const& rhs) \
 	{ \
 		value.resize(std::min(value.size(), rhs.value.size())); \
@@ -403,7 +415,7 @@ namespace hm
 #define hm_define_list_listT_op(op, trait) \
 	template <typename DataType> \
 	template <typename T> \
-	typename trait<List<DataType>, T>::return_type \
+typename std::enable_if<is_list<T>::value, typename trait<List<DataType>, T>::return_type>::type \
 	List<DataType>::operator op(List<T> const& rhs) const \
 	{ \
 		return (typename trait<List<DataType>, T>::return_type)(*this) op##= rhs; \
@@ -434,10 +446,10 @@ namespace hm
 	
 	// MARK: Free operators with container right hand side
 	
-	// e.g. T * List<Type>
+	// e.g. T * List<Type> if T is not a list and T * Type is defined
 #define hm_define_T_list_op(op, trait) \
 template <typename T, typename DataType> \
-typename trait<T, List<DataType>>::return_type \
+typename boost::disable_if<is_list<T>, typename trait<T, List<DataType>>::return_type>::type \
 operator op (T const& lhs, List<DataType> const& rhs) \
 { \
 	static_assert(trait<T, List<DataType>>::value, "SFINAE failure"); \
