@@ -136,27 +136,27 @@ void NodeRenderer::draw(int viewportWidth, int viewportHeight)
 
 	// Data older than this will be destroyed
 	double const expiryTime = 3;
+	double t = elapsedTime();
 	
-	// we iterate through inlets in reverse order as later inlets may describe
-	// how to render earlier inlets
-	vector<InletPtr> inlets_ = inlets();
-	for (int i=inlets_.size()-1; i>=0; i--)
+	// Construct a set of data based on mCache to pass to the renderer
+	vector<pair<Data, int>> dataSet;
+	for (int inletIndex=0; inletIndex<mCache.size(); inletIndex++)
 	{
-		for (auto it = mCache[i].begin(); it!=mCache[i].end(); )
+		map<OutletPtr, Data> & inletCache = mCache[inletIndex];
+		for (auto it=inletCache.begin(); it!=inletCache.end(); )
 		{
-			Data data(inlets_[i]->data());
-			if (elapsedTime() - data.timestamp() > expiryTime)
+			if (it->second.timestamp() - t > expiryTime)
 			{
-				it = mCache[i].erase(it);
+				it = inletCache.erase(it);
 			}
 			else
 			{
-				mRenderers[mRenderer]->render(data, Area(0, 0, viewportWidth, viewportHeight), i);
+				dataSet.push_back(pair<Data, int>(it->second, inletIndex));
 				++it;
 			}
-			
 		}
 	}
+	mRenderers[mRenderer]->render(std::move(dataSet), Area(0, 0, viewportWidth, viewportHeight));
 	mTimestampOfLastDraw = max<double>(mTimestampOfLastDraw, mTimestampOfData);
 }
 

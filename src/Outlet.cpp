@@ -101,7 +101,7 @@ namespace hm
 			}
 			for (PatchCordPtr cord: mPatchCords)
 			{
-				assert(data.type() & cord->inlet()->types());
+//				assert(data.type() & cord->inlet()->types());
 				cord->inlet()->provideNewData(data, self);
 			}
 		}

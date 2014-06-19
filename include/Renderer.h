@@ -30,9 +30,18 @@ namespace hm
 				 std::vector<InletDescription> const& inlets);
 		
 		/// Renders data to the current OpenGL context.
-		/// \param inlet indicates the inlet of nodeWidget into which the
-		/// data arrived		
-		void render(Data const& data, ci::Area const& viewport, int inlet=0);
+		/// \param dataSet Is a list of Data objects that are to be
+		/// rendered, alongside the inlet into which they arrived.
+		void render(std::vector<std::pair<Data, int>> dataSet, ci::Area const& viewport);
+		
+		/// This function iterates through the dataset and uses the
+		/// operator() functions below to render it. By default, data
+		/// is renderered from the highest numbered inlet to the lowest,
+		/// with multiple Data at each inlet rendering in the order:
+		/// Images, 3d vector types, 2d vector types, 1d types.
+		/// Derived classes can override this function if they would
+		/// like a different order
+		virtual void render(std::vector<std::pair<Data, int>> dataSet);
 		
 //		/// If you are using multiple renderers in a single context
 //		/// then they may set up the environment matrices differently.
