@@ -12,6 +12,7 @@ using namespace hm;
 using namespace ci;
 using namespace std;
 using boost::assign::list_of;
+using boost::assign::map_list_of;
 
 Renderer::Renderer(std::string const& name_, std::string const& description_, vector<InletDescription> const& inlets_)
 : mLastSceneMeta(SceneMeta::sDefaultSceneMeta)
@@ -45,7 +46,7 @@ void Renderer::setupMatricesWindow()
 }
 
 
-void Renderer::render(Data const& data, ci::Area const& viewport, int inlet)
+void Renderer::render(std::vector<std::pair<Data, int>> dataSet, ci::Area const& viewport)
 {
 	if (!(viewport == mViewport))
 	{
@@ -53,8 +54,39 @@ void Renderer::render(Data const& data, ci::Area const& viewport, int inlet)
 		gl::setViewport(mViewport);
 	}
 	mNeedsRefresh = true;
-	boost::variant<int> inletAsVariant(inlet);
-	boost::apply_visitor(*this, data.data, inletAsVariant);
+	render(std::move(dataSet));
+}
+
+void Renderer::render(std::vector<std::pair<Data, int>> dataSet)
+{
+	// The default order in which different types are passed to the rener
+	// functions
+	static int tmp = 0;
+	static map<Type, int> typeOrder = map_list_of
+	(IMAGE2D, tmp++)
+	(SCENE3D, tmp++)
+	(SKELETON3D, tmp++)
+	(LIST_POINT3D, tmp++)
+	(POINT3D, tmp++)
+	(LIST_POINT2D, tmp++)
+	(POINT2D, tmp++)
+	(LIST_VALUE, tmp++)
+	(VALUE, tmp++)
+	(UNDEFINED, tmp++);
+	static_assert(IMAGE2D|SCENE3D|SKELETON3D|LIST_POINT3D|POINT3D|LIST_POINT2D|POINT2D|LIST_VALUE|VALUE|UNDEFINED == ALL_TYPES, "Renderer type order is not defined for all types");
+	// Comparer function to sort dataSet
+	static auto comparer = [](pair<Data, int> x, pair<Data, int> y) {
+		// x happens first if inlet is higher, or inlets are same and type is
+		// earlier in the typeOrder list
+		return x.second > y.second || (x.second==y.second && typeOrder[x.first.type()] < typeOrder[y.first.type()]);
+	};
+	
+	std::sort(begin(dataSet), end(dataSet), comparer);
+	for (auto dataPair: dataSet)
+	{
+		boost::variant<int> inletContainer(dataPair.second);
+		boost::apply_visitor(*this, dataPair.first.data, inletContainer);
+	}
 }
 
 
