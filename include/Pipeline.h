@@ -108,6 +108,8 @@ namespace hm
 		
 		bool isRunning() const { return mIsRunning; }
 		
+		/// Stop the pipeline. This function will block until all worker threads
+		/// have finished.
 		/// \warning Do not call stop() from a thread that has locked mPipelineMutex
 		/// as the main process may require a unique lock before it can stop.
 		void stop();
@@ -187,7 +189,8 @@ namespace hm
 		
 		/// \pre Requires a unique lock to be active
 		/// Checks for any patch cords that are attached to Lets that are
-		/// detached from their node and deletes them.
+		/// detached from their node and attempts to recreate them if
+		/// equivalent nodes exist, or deletes them otherwise.
 		Events p_RemoveDeadPatchCords();
 		
 		/// \pre Requires a shared lock to be active

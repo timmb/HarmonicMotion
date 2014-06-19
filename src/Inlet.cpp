@@ -24,9 +24,10 @@ namespace hm
 	
 	Inlet::Inlet(Types types,
 				 Node& node,
+				 int index,
 				 string const& name,
 				 string const& helpText)
-	: Let(types, node, name, helpText)
+	: Let(types, node, index, name, helpText)
 	, mDataTimestamp(-42)
 	, mNumConnections(0)
 	, mDestructorHasBeenCalled(false)
@@ -57,6 +58,20 @@ namespace hm
 	std::string Inlet::toString() const
 	{
 		return (stringstream() << *this).str();
+	}
+	
+	
+	std::string Inlet::path() const
+	{
+		NodePtr n = node().lock();
+		if (n==nullptr)
+		{
+			return "[detached]/inlets/" + to_string(index());
+		}
+		else
+		{
+			return n->path() + "/inlets/" + to_string(index());
+		}
 	}
 	
 	

@@ -36,6 +36,7 @@ namespace hm
 		
 		ci::CaptureRef mCapture;
 		OutletPtr mOutlet;
+		SceneMetaPtr mSceneMeta;
 	};
 }
 

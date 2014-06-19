@@ -19,8 +19,8 @@ NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
 	assert(mRequestedDeviceParameter);
 	addParameter("Requested width", &mRequestedWidth)->setBounds(0, 999999, 0, 40960);
 	addParameter("Requested height", &mRequestedHeight)->setBounds(0, 999999, 0, 40960);
-	addParameter("Actual width", &mActualWidth)->setBounds(0, 999999, 0, 40960);
-	addParameter("Actual height", &mActualHeight)->setBounds(0, 999999, 0, 40960);
+//	addParameter("Actual width", &mActualWidth)->setBounds(0, 999999, 0, 40960);
+//	addParameter("Actual height", &mActualHeight)->setBounds(0, 999999, 0, 40960);
 	updateCurrentDevice();
 	
 	mOutlet = createOutlet(IMAGE2D, "Camera images", "2D images will be outputted here as they are received from the camera");

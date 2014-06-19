@@ -29,6 +29,10 @@ namespace hm
 		/// This function is called from the main thread (Pipeline's thread).
 		virtual void stop() {};
 		
+	private:
+		/// Guards against stopProcessing and destruction during a
+		/// step()
+		mutable boost::mutex mProcessMutex;
 	};
 	std::ostream& operator<<(std::ostream&, NodeUnthreaded const&);
 }

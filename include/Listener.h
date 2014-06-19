@@ -14,8 +14,9 @@ namespace hm
 		/// hold reference to any patchcords).
 		virtual void nodeRemoved(NodePtr node) {}
 		/// Node characterics refers to the number of inlets or outlets
-		/// on a node. Any patch cords that need to be deleted as a
-		/// consequence will have aready been notified to this listener.
+		/// on a node. All patch cords will have been deleted from the
+		/// node by the time this is called, and if applicable will be
+		/// recreated afterwards.
 		virtual void nodeCharacteristicsChanged(NodePtr node) {}
 		/// Node Params is the Node::Params struct that defines a node's
 		/// name, gui location, etc.

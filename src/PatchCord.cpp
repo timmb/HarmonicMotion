@@ -18,11 +18,19 @@ namespace hm
 	PatchCord::PatchCord(OutletPtr outlet, InletPtr inlet)
 	: mOutlet(outlet)
 	, mInlet(inlet)
+	, mOutletNode(outlet->node())
+	, mInletNode(inlet->node())
+	, mOutletIndex(outlet->index())
+	, mInletIndex(inlet->index())
 	{}
 	
 	PatchCord::PatchCord(Json::Value const& json, PipelinePtr p)
 	: mOutlet(p->outletFromPath(json["outlet"].asString()))
 	, mInlet(p->inletFromPath(json["inlet"].asString()))
+	, mOutletNode(mOutlet->node())
+	, mInletNode(mInlet->node())
+	, mOutletIndex(mOutlet->index())
+	, mInletIndex(mInlet->index())
 	{
 	}
 	

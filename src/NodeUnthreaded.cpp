@@ -9,16 +9,18 @@ namespace hm
 	
 	void NodeUnthreaded::startProcessing()
 	{
+		boost::lock_guard<boost::mutex> lock(mProcessMutex);
 		if (!isProcessing())
 		{
-		Node::startProcessing();
-		start();
-		assert(isProcessing());
+			Node::startProcessing();
+			start();
+			assert(isProcessing());
 		}
 	}
 	
 	bool NodeUnthreaded::stepProcessing()
 	{
+		boost::lock_guard<boost::mutex> lock(mProcessMutex);
 		assert(isProcessing());
 		updateParameters();
 		if (isEnabled())
@@ -30,6 +32,7 @@ namespace hm
 	
 	void NodeUnthreaded::stopProcessing()
 	{
+		boost::lock_guard<boost::mutex> lock(mProcessMutex);
 		Node::stopProcessing();
 		stop();
 		assert(!isProcessing());

@@ -12,9 +12,10 @@
 using namespace hm;
 
 
-Let::Let(Types types, Node& owner, std::string const& name, std::string const& helpText)
-: mNode(&owner)
-, mTypes(types)
+Let::Let(Types types, Node& owner, int index, std::string const& name, std::string const& helpText)
+: mTypes(types)
+, mNode(&owner)
+, mIndex(index)
 , mName(name)
 , mHelpText(helpText)
 , mIsDetached(false)
@@ -35,15 +36,3 @@ void Let::detachOwnerNode()
 }
 
 
-std::string Let::path() const
-{
-	NodePtr n = node().lock();
-	if (n==nullptr)
-	{
-		return "[detached]/"+name();
-	}
-	else
-	{
-		return n->path() + '/' + name();
-	}
-}

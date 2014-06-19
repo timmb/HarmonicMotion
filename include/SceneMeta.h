@@ -26,16 +26,25 @@ namespace hm
 		ci::Vec3f cameraDir;
 		/// Field of view of camera in degrees
 		double cameraFov;
+		/// Size of the original viewport. This is used for 2D
+		/// images and points
+		ci::Vec2f viewportSize;
 		
 		SceneMeta()
 		: cameraPos(0,0,0)
 		, cameraDir(0,0,1)
 		, cameraFov(57)
+		, viewportSize(640, 480)
 		{}
 		
 		/// Sets up the current GL context to use the camera defined by this
 		/// metadata
 		void setupCamera(int pixelWidth, int pixelHeight) const;
+		/// Sets up the current GL context so that the area from 0,0
+		/// to \c viewportSize fits exactly within the bounds of
+		/// the viewport defined by the parameters. This will introduce
+		/// letterboxing to ensure the apsect ratio is correct.
+		void setupWindowLetterbox(int pixelWidth, int pixelHeight) const;
 		
 		static const SceneMetaPtr sDefaultSceneMeta;
 		

@@ -18,8 +18,8 @@ using namespace std;
 namespace hm
 {
 	
-	Outlet::Outlet(Types types, Node& node, string const& name, string const& helpText)
-	: Let(types, node, name, helpText)
+	Outlet::Outlet(Types types, Node& node, int index, string const& name, string const& helpText)
+	: Let(types, node, index, name, helpText)
 	{
 	}
 	
@@ -44,6 +44,20 @@ namespace hm
 	std::string Outlet::toString() const
 	{
 		return (stringstream() << *this).str();
+	}
+	
+	
+	std::string Outlet::path() const
+	{
+		NodePtr n = node().lock();
+		if (n==nullptr)
+		{
+			return "[detached]/outlets/" + to_string(index());
+		}
+		else
+		{
+			return n->path() + "/outlets/" + to_string(index());
+		}
 	}
 	
 	void Outlet::addPatchCord(PatchCordPtr patchCord)

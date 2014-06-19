@@ -308,16 +308,41 @@ void Pipeline::start()
 			if (!nodesWithChangedCharacteristics.empty())
 			{
 				Events events;
+				Events disconnectionEvents;
 				{
 					UniqueLock lock(mPipelineMutex);
-					Events e = p_RemoveDeadPatchCords();
+					disconnectionEvents = p_RemoveDeadPatchCords();
 					assert(p_PatchCordInvariant());
-					events.insert(end(events), begin(e), end(e));
+					events.insert(end(events), begin(disconnectionEvents), end(disconnectionEvents));
 				}
 				for (NodePtr node: nodesWithChangedCharacteristics)
 				{
 					events.push_back(EventPtr(new NodeCharacteristicsChangedEvent(node)));
 				}
+				// We now attempt to recreate any disconnected patch cords
+				// if equivalent inlets/outlets are available.
+				for (EventPtr event: disconnectionEvents)
+				{
+					shared_ptr<PatchCordRemovedEvent> e = dynamic_pointer_cast<PatchCordRemovedEvent>(event);
+					if (e != nullptr)
+					{
+						PatchCordPtr p = e->patchCord;
+						NodePtr outletNode = p->outletNode().lock();
+						NodePtr inletNode = p->inletNode().lock();
+						if (outletNode && inletNode)
+						{
+							OutletPtr outlet = outletNode->outlet(p->outletIndex());
+							InletPtr inlet = inletNode->inlet(p->inletIndex());
+							if (outlet && inlet)
+							{
+								Events e = p_Connect(outlet, inlet);
+								events.insert(end(events), begin(e), end(e));
+							}
+						}
+					}
+				}
+
+				
 				p_Process(events);
 			}
 			double delta = elapsedTime() - timeOfLastUpdate;
@@ -335,6 +360,7 @@ void Pipeline::start()
 void Pipeline::stop()
 {
 	mIsRunning = false;
+	mThread->join();
 	for (NodePtr node: mNodes)
 	{
 		node->stopProcessing();
@@ -678,9 +704,14 @@ OutletPtr Pipeline::outletFromPath(std::string const& path) const
 OutletPtr Pipeline::p_OutletFromPath(std::string const& path) const
 {
 	std::vector<std::string> splitPath = tokenizePath(path);
-	if (splitPath.size() < 2)
+	if (splitPath.size() < 3)
 	{
 		hm_info("Path '"+path+"' does not contain both a node name and outlet name.");
+		return nullptr;
+	}
+	if (splitPath[1] != "outlets")
+	{
+		hm_info("Path '"+path+"' does not refer to an outlet.");
 		return nullptr;
 	}
 	NodePtr node = p_NodeFromPath(splitPath[0]);
@@ -688,7 +719,7 @@ OutletPtr Pipeline::p_OutletFromPath(std::string const& path) const
 	{
 		for (OutletPtr outlet: node->outlets())
 		{
-			if (outlet->name() == splitPath[1])
+			if (to_string(outlet->index()) == splitPath[2])
 			{
 				return outlet;
 			}
@@ -713,12 +744,17 @@ InletPtr Pipeline::p_InletFromPath(std::string const& path) const
 		hm_info("Path '"+path+"' does not contain both a node name and inlet name.");
 		return nullptr;
 	}
+	if (splitPath[1] != "inlets")
+	{
+		hm_info("Path '"+path+"' does not refer to an inlet.");
+		return nullptr;
+	}
 	NodePtr node = p_NodeFromPath(splitPath[0]);
 	if (node)
 	{
 		for (InletPtr inlet: node->inlets())
 		{
-			if (inlet->name() == splitPath[1])
+			if (to_string(inlet->index()) == splitPath[2])
 			{
 				return inlet;
 			}

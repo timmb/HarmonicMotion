@@ -16,22 +16,15 @@ namespace hm
 	class Outlet : public Let
 	{
 	public:
-//		Types types() const { return mTypes; }
-//		std::string name() const { return mName; }
-//		std::string helpText() const { return mHelpText; }
-		
         bool isConnectedTo(InletPtr inlet) const;
+		
 		void outputNewData(Data& data);
+		
 		/// \return The number of inlets this outlet is connected to.
 		int numInlets() const { return mPatchCords.size(); }
 		
-//        /// If this inlet is owned by a node and that node was was
-//        /// created by FactoryNode then this function will return a weak
-//        /// pointer to the node. Otherwise it returns
-//        /// std::weak_ptr<Node>(nullptr)
-//        std::weak_ptr<Node> node() const;
-		
 		virtual std::string toString() const override;
+		virtual std::string path() const override;
 		
 		/// \return a shared pointer to this instance. This needs to be checked
 		/// against nullptr in case this outlet is in the process of being destroyed.
@@ -42,7 +35,7 @@ namespace hm
 		/// The Node will automatically have this outlet registered with
 		/// it.
 		/// Outlets are only created by Nodes
-		Outlet(Types type, Node& owner, std::string const& name, std::string const& helpText);
+		Outlet(Types type, Node& owner, int index, std::string const& name, std::string const& helpText);
 		
 		
 		/// Connections are all managed exclusively by the owning pipeline.

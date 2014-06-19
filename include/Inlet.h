@@ -24,32 +24,35 @@ namespace hm
 		int numConnections() const { return mNumConnections; }
 		
 		Data data() const;
+		
 		double dataTimestamp() const;
+		
 		/// Returns a pointer to the outlet that provided the current data held
 		/// in this inlet. If data().isNull() then dataSource() may be nullptr.
 		OutletPtr dataSource() const;
+		
 		/// Returns data if it is newer than \p timestamp, or a null data object
 		/// if it is not. Use this to avoid race conditions between dataTimestamp() and data() calls
 		Data dataIfNewerThan(double timestamp) const;
+		
 		/// will block until:
 		/// - This inlet's destructor is called (returning false)
 		/// - dataTimestamp() > lastTimestampReceived (returning true)
 		bool waitForNewData(double lastTimestampReceived) const;
+		
 		/// Set a function to be called when new data arrives.
 		/// \param function A callback function called when new data arrives.
 		/// The timestamp of the new data is provided as argument to the function
 		/// \note This function must be thread safe and should not block
 		void setNotifyCallback(std::function<void(double)> function);
-//        /// If this inlet is owned by a node and that node was was
-//        /// created by FactoryNode then this function will return a weak
-//        /// pointer to the node. Otherwise it returns
-//        /// std::weak_ptr<Node>()
-//        std::weak_ptr<Node> node() const;
+		
 		virtual std::string toString() const override;
+		
+		virtual std::string path() const override;
 		
 	private:
 		/// Type may be a combination of Type flags.
-		Inlet(Types types, Node& node, std::string const& name, std::string const& helpText);
+		Inlet(Types types, Node& node, int index, std::string const& name, std::string const& helpText);
 
 		// Accessed by Node ------------
 		/// This is used by the node when it is destroyed or this Let
