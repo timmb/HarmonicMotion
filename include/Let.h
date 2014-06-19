@@ -20,8 +20,14 @@ namespace hm
 		Types types() const { return mTypes; }
 		std::string name() const { return mName; }
 		std::string helpText() const { return mHelpText; }
+		/// The index of a Let identifies which inlet (or outlet) this
+		/// is for a given Node, starting at 0, 1, etc. An inlet may
+		/// share an index with an outlet for a given node.
+		int index() const { return mIndex; }
 		virtual std::string toString() const = 0;
-		std::string path() const;
+		/// The path of a Let is, e.g., /<node-name>/inlets/0 where 0 is
+		/// the index of the node
+		virtual std::string path() const = 0;
 
         /// If this inlet is owned by a node and that node was was
         /// created by FactoryNode then this function will return a weak
@@ -41,7 +47,7 @@ namespace hm
 		bool isDetached() const { return mIsDetached; }
 		
 	protected:
-		Let(Types types, Node& owner, std::string const& name, std::string const& helpText);
+		Let(Types types, Node& owner, int index, std::string const& name, std::string const& helpText);
 		
 		/// This is used by the owning node when it is destroyed just in case
 		/// the
@@ -51,8 +57,9 @@ namespace hm
 		virtual void detachOwnerNode();
 		
 	private:
-		Node* mNode;
 		Types mTypes;
+		Node* mNode;
+		int mIndex;
 		std::string mName;
 		std::string mHelpText;
 		bool mIsDetached;

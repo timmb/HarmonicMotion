@@ -67,10 +67,6 @@ namespace hm
 	class Base1dData : public BaseData
 	{
 	public:
-		/// The presence of this constant indicates that this class supports
-		/// addition/subtraction with scalars (i.e. other Base1dData)
-		std::true_type supports_scalar_addition;
-
 		Base1dData(double timestamp, SceneMetaPtr sceneMeta)
 		: BaseData(timestamp, sceneMeta)
 		{}

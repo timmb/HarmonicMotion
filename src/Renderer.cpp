@@ -41,7 +41,7 @@ void Renderer::setupMatricesWindow()
 {
 	if (mNeedsRefresh)
 	{
-		gl::setMatricesWindow(mViewport.getWidth(), mViewport.getHeight());
+		mLastSceneMeta->setupWindowLetterbox(mViewport.getWidth(), mViewport.getHeight());
 	}
 }
 
@@ -165,7 +165,6 @@ Renderer2D::Renderer2D()
 		   (InletDescription("Value or a list of values determining the size of points to render.", VALUE | LIST_VALUE)))
 , mValueMemoryDuration(1.)
 , mValueScale(1.)
-, mLastValues(vector<Value>(1, Value(1.)))
 {
 	vector<ParameterDescription> parameters;
 //	{
@@ -185,53 +184,35 @@ Renderer2D::Renderer2D()
 void Renderer2D::operator()(Image2d const& v, int inlet)
 {
 	setupMatricesWindow();
-	
-	// Letterbox the image to ensure it is not distorted by the viewport shape
-	
-	Vec2f offset;
-	float scale(1);
-	// input data aspect
-	float dataAspect = float(v.value.cols)/v.value.rows;
-	// viewport aspect
-	float vAspect = float(mViewport.getWidth()) / mViewport.getHeight();
-	if (dataAspect > vAspect)
-	{
-		// requires letterboxes on top and bottom
-		scale = float(mViewport.getWidth()) / v.value.cols;
-		offset.y = int((mViewport.getHeight() - scale * v.value.rows) / 2);
-	}
-	else if (dataAspect < vAspect)
-	{
-		// requires letterboxes on left and right
-		scale = float(mViewport.getHeight()) / v.value.rows;
-		offset.x = int((mViewport.getWidth() - scale * v.value.cols) / 2);
-	}
-	Area drawArea(offset, mViewport.getSize() - offset);
-	gl::translate(offset);
-	gl::scale(scale, scale);
-//	gl::draw(gl::Texture(v.toSurface()), drawArea);
 	gl::draw(gl::Texture(v.toSurface()));
 }
 
 void Renderer2D::operator()(Point2d const& p, int inlet, int count)
 {
-	setupMatricesWindow();
-	// TODO: Ensure this matches any transformations created by a Image2d
-	gl::color(ColorA(1.f, 1.f, 1.f, 0.9f));
-	double size = 2.5 * mValueScale;
-	if (elapsedTime() - mLastValues.timestamp < mValueMemoryDuration)
+	if (inlet==0)
 	{
-		size *= mLastValues.value[std::min<int>(count, mLastValues.value.size()-1)];
+		setupMatricesWindow();
+		gl::color(ColorA(1.f, 1.f, 1.f, 0.9f));
+		double size = 2.5 * mValueScale;
+		hm_debug(elapsedTime() - mLastValues.timestamp);
+		if (!mLastValues.value.empty() && elapsedTime() - mLastValues.timestamp < mValueMemoryDuration)
+		{
+			hm_debug("orig size "<<size<<" value "<<mLastValues.value[std::min<int>(count, mLastValues.value.size()-1)])
+			size *= mLastValues.value[std::min<int>(count, mLastValues.value.size()-1)];
+		}
+		gl::drawSolidCircle(p.value, size);
 	}
-	gl::drawSolidCircle(p.value, size);
 }
 
 
 void Renderer2D::operator()(ListPoint2d const& x, int inlet)
 {
-	for (int i=0; i<x.value.size(); i++)
+	if (inlet==0)
 	{
-		(*this)(x.value[i], inlet, i);
+		for (int i=0; i<x.value.size(); i++)
+		{
+			(*this)(x.value[i], inlet, i);
+		}
 	}
 }
 
@@ -241,6 +222,7 @@ void Renderer2D::operator()(Value const& x, int inlet)
 	if (inlet==1)
 	{
 		mLastValues.value.assign(1, x);
+		mLastValues.timestamp = x.timestamp;
 	}
 }
 

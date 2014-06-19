@@ -57,25 +57,32 @@ namespace hm
 		virtual ~Node();
 		std::string type() const { return mClassName; }
 		std::string name() const { return nodeParams().name; }
+		
 		/// The full path to this node, without a trailing slash.
 		/// The path is a slash separated string of the parents of this node
 		/// followed by the name of this node.
 		/// \note At present nodes do not have parents, so this is just "/<name>"
 		std::string path() const;
+		
 		/// If this node is attached to a pipeline then \p name may be modified to
 		/// ensure it is unique
 		void setName(std::string const& name);
+		
 		std::string toString() const;
+		
 		/// Export a Params instance that may be used to reproduce this
 		/// object in its current state. This will copy all of the current
 		/// parameter values into the initial values of the Params object.
 		Params exportParams() const;
+		
 		/// \param This function may modify \p params to ensure it has
 		/// valid values.
 		void setNodeParams(Params& params);
 
 		
 		int numInlets() const;
+		
+		/// \return The inlet at index \p index, or nullptr if none exists.
 		/// \warning If this node changes its characteristics during runtime
 		/// (i.e. adds or removes nodes) then the return of this value should
 		/// be checked against \c nullptr event if previously you have tested
@@ -84,6 +91,7 @@ namespace hm
 		std::vector<InletPtr> inlets() const;
 		
 		int numOutlets() const;
+		/// \return The outlet at index \p index, or nullptr if none exists.
 		/// \warning If this node changes its characteristics during runtime
 		/// (i.e. adds or removes nodes) then the return of this value should
 		/// be checked against \c nullptr event if previously you have tested
@@ -107,8 +115,10 @@ namespace hm
 		/// implement code to initialize processing. Call this original function
 		/// first.
 		virtual void startProcessing();
+		
 		/// Requests that the node processes one frame of data from its inlets.
-		/// Override this function to implement code that performs a single update.
+		/// Override this function to implement code that performs a single
+		/// update.
 		/// This function may be called
 		/// sequentially from different threads (but not concurrently).
 		/// \return true if this node's characteristics have been changed and this
@@ -116,10 +126,12 @@ namespace hm
 		/// each change should only trigger a true return value one time). False
 		/// otherwise.
 		virtual bool stepProcessing();
+		
 		/// Requests that the node stops processing data. Override this function to
 		/// implement code that concludes processing. Call this original function
 		/// first.
 		virtual void stopProcessing();
+		
 		/// \return true if we are between startProcessing and stopProcessing calls
 		/// (even if isEnabled is false)
 		bool isProcessing() const { return mIsProcessing; }
@@ -139,13 +151,17 @@ namespace hm
 		/// Create an inlet with the given \p name. This will print an error
 		/// and return \c nullptr if \p name is already in use.
 		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
+		
 		/// Create an outlet with the given \p name. This will print an error
 		/// and return \c nullptr if \p name is already in use.
 		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& helpText="");
+		
 		/// Removes an inlet from this node.
 		bool removeInlet(InletPtr inlet);
+		
 		/// Removes an outlet from this node.
 		bool removeOutlet(OutletPtr outlet);
+		
 		/// Create a parameter. A pointer to the parameter is returned which may
 		/// be used to customise it.
 		/// Parameter effects (callbacks and updates from external sources) only take
@@ -164,10 +180,12 @@ namespace hm
 		/// \return A shared pointer to the parameter.
 		template <typename T>
 		ParameterPtrT<T> addParameter(std::string name, T* value);
+		
 		/// Create a parameter that has already been created. Note that this
 		/// will not automatically set the initial value.
 		template <typename T>
 		ParameterPtrT<T> addParameter(ParameterPtrT<T> parameter);
+		
 		/// Updates all parameters, activating callbacks where applicable. Callbacks
 		/// run in the same thread as this function. This function is called
 		/// before step() within NodeUnthreaded. Within NodeThreaded you
@@ -188,7 +206,6 @@ namespace hm
 		friend Pipeline;
 		/// FUNCTION TO BE ACCESSED BY PIPELINE ONLY.
 		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
-
 		/////////////////////////////////////
 		
 		/// The pipeline this node is contained within. This may be nullptr
@@ -209,9 +226,6 @@ namespace hm
 		/// Guards changes to the characteristics of the node (i.e.
 		/// how many inlets and outlets it has)
 		mutable boost::shared_mutex mCharacteristicsMutex;
-		/// Guards against stopProcessing and destruction during a
-		/// step()
-		mutable boost::mutex mProcessMutex;
 		std::atomic<bool> mIsEnabled;
 		std::atomic<bool> mIsProcessing;
 		std::atomic<bool> mHasStartEverBeenCalled;

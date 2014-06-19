@@ -25,3 +25,46 @@ void SceneMeta::setupCamera(int pixelWidth, int pixelHeight) const
 	cam.setViewDirection(cameraDir);
 	gl::setMatrices(cam);
 }
+
+
+void SceneMeta::setupWindowLetterbox(int pixelWidth, int pixelHeight) const
+{
+	gl::setMatricesWindow(pixelWidth, pixelHeight);
+	
+	if (viewportSize != Vec2f())
+	{
+		
+		// less confusing names:
+		Vec2f const& inputSize = viewportSize;
+		Vec2f outputSize(pixelWidth, pixelHeight);
+		
+		// Calculate the offset and scale required to be able to draw to (0,0)-
+		// mViewportSize and have the output letterboxed within the actual viewport
+		Vec2f offset;
+		float scale(1);
+		// input data aspect
+		float inputAspect = inputSize.x / inputSize.y;
+		// viewport aspect
+		float outputAspect = outputSize.x / outputSize.y;
+		// if input is wider than output
+		if (inputAspect > outputAspect)
+		{
+			// requires letterboxes on top and bottom
+			scale = outputSize.x / inputSize.x;
+			offset.y = int((outputSize.y - scale * inputSize.y) / 2);
+		}
+		else if (inputAspect < outputAspect)
+		{
+			// requires letterboxes on left and right
+			scale = outputSize.y / inputSize.y;
+			offset.x = int((outputSize.x - scale * inputSize.x) / 2);
+		}
+		gl::translate(offset);
+		gl::scale(scale, scale);
+	}
+}
+
+
+
+
+
