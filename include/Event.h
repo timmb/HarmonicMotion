@@ -61,4 +61,28 @@ namespace hm
 		PatchCordRemovedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
 		virtual void notify(Listener* listener) override;
 	};
+	
+	struct ParameterChangedExternallyEvent : public Event {
+		ParameterPtr parameter;
+		
+		ParameterChangedExternallyEvent(ParameterPtr p) : parameter(p) {}
+		virtual void notify(Listener* listener) override;
+	};
+	
+	struct ParameterChangedInternallyEvent : public Event {
+		ParameterPtr parameter;
+		
+		ParameterChangedInternallyEvent(ParameterPtr p) : parameter(p) {}
+		virtual void notify(Listener* listener) override;
+	};
+
 }
+
+
+
+
+
+
+
+
+

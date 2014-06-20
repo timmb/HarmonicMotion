@@ -137,13 +137,17 @@ namespace hm
 		bool loadJson(std::string filePath);
 		
 	private:
+		/// Callbacks for all parameters. This immediate triggers an
+		/// event to any registered listeners
+		void callbackParameterValueChangedExternally(ParameterPtr p);
+		/// \copydoc callbackParameterValueChangedExternally
+		void callbackParameterValueChangedInternally(ParameterPtr p);
+		
 		// When we perform actions on the pipeline, Events are
 		// created. Rather than notify listeners immediately, we queue
 		// them up and wait until the pipeline mutex is unlocked before
 		// sending them. This way if a listener tries to modify the
 		// pipline within its callback then we avoid a deadlock.
-		
-
 		
 		// MARK: Private functions with strict mutex requirements.
 		// *********
@@ -226,6 +230,10 @@ namespace hm
 		/// All patch cords in the pipeline, sorted by inlet
 		std::list<PatchCordPtr> mPatchCords;
 		std::list<Listener*> mListeners;
+		/// Memory of callbacks registered with parameters, for when they need
+		/// to be removed
+		std::map<BaseParameter*, int> mParameterInternalCallbackHandles;
+		std::map<BaseParameter*, int> mParameterExternalCallbackHandles;
 		
 		/// Guards against simultaneous updating (by this class's threads)
 		/// and changing of pipeline

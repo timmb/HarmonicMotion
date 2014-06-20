@@ -9,20 +9,34 @@ namespace hm
 	{
 	public:
 		virtual void nodeAdded(NodePtr node) {}
+		
 		/// Nodes are guaranteed not to be removed if they are still
 		/// referenced by active patchcords (equivalently if they still
 		/// hold reference to any patchcords).
 		virtual void nodeRemoved(NodePtr node) {}
+		
 		/// Node characterics refers to the number of inlets or outlets
 		/// on a node. All patch cords will have been deleted from the
 		/// node by the time this is called, and if applicable will be
 		/// recreated afterwards.
 		virtual void nodeCharacteristicsChanged(NodePtr node) {}
+		
 		/// Node Params is the Node::Params struct that defines a node's
 		/// name, gui location, etc.
 		virtual void nodeParamsChanged(NodePtr node) {}
+		
 		virtual void patchCordAdded(OutletPtr outlet, InletPtr inlet) {}
+		
 		virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet) {}
+		
+		/// A parameter change is described as external if the change
+		/// happens from a client using Parameter<T>::set
+		virtual void parameterChangedExternally(ParameterPtr parameter) {}
+		
+		/// A parameter change is described as internal if the change
+		/// happens when a node changes a value that is observed by
+		/// a parameter
+		virtual void parameterChangedInternally(ParameterPtr parameter) {}
 	};
 
 }

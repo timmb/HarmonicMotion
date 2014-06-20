@@ -34,3 +34,14 @@ void PatchCordRemovedEvent::notify(Listener* listener)
 	listener->patchCordRemoved(patchCord->outlet(), patchCord->inlet());
 }
 
+void ParameterChangedExternallyEvent::notify(Listener* listener)
+{
+	listener->parameterChangedExternally(parameter);
+}
+
+void ParameterChangedInternallyEvent::notify(Listener* listener)
+{
+	listener->parameterChangedInternally(parameter);
+}
+
+
