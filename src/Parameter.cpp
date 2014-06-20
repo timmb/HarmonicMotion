@@ -11,6 +11,9 @@
 #include <iostream>
 #include <ctime>
 #include "Node.h"
+#include <boost/assign/list_of.hpp>
+
+using boost::assign::map_list_of;
 
 namespace std
 {
@@ -51,7 +54,7 @@ namespace hm {
 	, mSoftMin(0)
 	, mSoftMax(100)
 	, mIsVisible(true)
-	, mChangeOfCharacteristicsCallbackNextHandle(0)
+	, mNextHandle(0)
 	, mIsDetached(false)
 	, mHasEnumerationLabels(false)
 	, mHaveCharacteristicsChanged(false)
@@ -76,10 +79,12 @@ namespace hm {
 		return (isDetached()? string("(detached)") : mParent.path()) + '/' + name();
 	}
 	
+	
 	std::string BaseParameter::typeString() const
 	{
 		return to_string(type());
 	}
+	
 	
 	void BaseParameter::setEnumerationLabels(vector<string> const& labels)
 	{
@@ -90,6 +95,7 @@ namespace hm {
 		mHaveCharacteristicsChanged = true;
 	}
 	
+	
 	void BaseParameter::setBounds(double hardMin, double hardMax, double softMin, double softMax)
 	{
 		mHardMin = hardMin;
@@ -99,34 +105,54 @@ namespace hm {
 		mHaveCharacteristicsChanged = true;
 	}
 	
+	
 	void BaseParameter::setVisible(bool isVisible)
 	{
 		mIsVisible = isVisible;
 		mHaveCharacteristicsChanged = true;
 	}
 	
-	void BaseParameter::addNewExternalValueCallback(std::function<void(void)> callbackFunction)
+	
+	int BaseParameter::addNewExternalValueCallback(std::function<void(void)> callbackFunction)
 	{
-		boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
-		mNewExternalValueCallbacks.push_back(callbackFunction);
+		return addCallback(callbackFunction, mNewExternalValueCallbacks, mNewExternalValueCallbacksMutex);
 	}
+	
 	
 	int BaseParameter::addChangeOfCharacteristicsCallback(std::function<void ()> callbackFunction)
 	{
-		boost::lock_guard<boost::mutex> lock(mChangeOfCharacteristicsCallbacksMutex);
-		mChangeOfCharateristicsCallbacks.push_back(pair<function<void()>,int>(callbackFunction, mChangeOfCharacteristicsCallbackNextHandle));
-		return mChangeOfCharacteristicsCallbackNextHandle++;
+		return addCallback(callbackFunction, mChangeOfCharateristicsCallbacks, mChangeOfCharacteristicsCallbacksMutex);
 	}
 	
-	bool BaseParameter::removeChangeOfCharacteristicsCallback(int handle)
+	int BaseParameter::addNewInternalValueCallback(function<void()> callbackFunction)
 	{
-		boost::lock_guard<boost::mutex> lock(mChangeOfCharacteristicsCallbacksMutex);
-		for (auto it=mChangeOfCharateristicsCallbacks.begin(); it!=mChangeOfCharateristicsCallbacks.end(); ++it)
+		return addCallback(callbackFunction, mNewInternalValueCallbacks, mNewExternalValueCallbacksMutex);
+	}
+	
+	
+
+	
+	bool BaseParameter::removeCallback(int callbackHandle)
+	{
+		vector<pair<vector<Callback>*, boost::mutex*>> callbackSets = map_list_of
+		(&mNewExternalValueCallbacks, &mNewExternalValueCallbacksMutex)
+		(&mChangeOfCharateristicsCallbacks, &mChangeOfCharacteristicsCallbacksMutex)
+		(&mNewInternalValueCallbacks, &mNewInternalValueCallbacksMutex);
+		
+		for (const auto& pair: callbackSets)
 		{
-			if (it->second == handle)
+			vector<Callback>& callbackList = *pair.first;
+			boost::lock_guard<boost::mutex> lock(*pair.second);
+			for (auto it=callbackList.begin(); it!=callbackList.end(); ++it)
 			{
-				mChangeOfCharateristicsCallbacks.erase(it);
-				return true;
+				if (it->second == callbackHandle)
+				{
+					callbackList.erase(it);
+					// assert there was only one callback with this
+					// handle
+					assert(!removeCallback(callbackHandle));
+					return true;
+				}
 			}
 		}
 		return false;
@@ -139,9 +165,9 @@ namespace hm {
 			if (checkExternalValue())
 			{
 				boost::lock_guard<boost::mutex> lock(mNewExternalValueCallbacksMutex);
-				for (auto & callback: mNewExternalValueCallbacks)
+				for (auto & p: mNewExternalValueCallbacks)
 				{
-					callback();
+					p.first();
 				}
 			}
 			if (mHaveCharacteristicsChanged)

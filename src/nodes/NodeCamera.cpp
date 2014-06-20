@@ -6,6 +6,13 @@ using namespace hm;
 using namespace std;
 using namespace ci;
 
+// Sadly, the Capture destructor seems to lead to all sorts of problems
+// (on OSX). Therefore, we keep keep a reference that is not destroyed.
+namespace
+{
+	set<CaptureRef> sCaptureRefs;
+}
+
 NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
 : NodeUnthreaded(params, className)
 , mCurrentDevice(-42)
@@ -57,6 +64,7 @@ void NodeCamera::updateCurrentDevice()
 	else
 	{
 		mCapture = Capture::create(mRequestedWidth, mRequestedHeight, devices[mRequestedDevice-1]);
+		sCaptureRefs.insert(mCapture);
 		if (mCapture)
 		{
 			mCurrentDevice = mRequestedDevice;

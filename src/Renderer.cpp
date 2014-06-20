@@ -197,7 +197,6 @@ void Renderer2D::operator()(Point2d const& p, int inlet, int count)
 		hm_debug(elapsedTime() - mLastValues.timestamp);
 		if (!mLastValues.value.empty() && elapsedTime() - mLastValues.timestamp < mValueMemoryDuration)
 		{
-			hm_debug("orig size "<<size<<" value "<<mLastValues.value[std::min<int>(count, mLastValues.value.size()-1)])
 			size *= mLastValues.value[std::min<int>(count, mLastValues.value.size()-1)];
 		}
 		gl::drawSolidCircle(p.value, size);

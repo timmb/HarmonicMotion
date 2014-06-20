@@ -101,6 +101,26 @@ Events Pipeline::p_AddNode(NodePtr node)
 	Events events = p_EnsureNameIsUnique(node);
 	mNodes.push_back(node);
 	node->setPipeline(this);
+	for (ParameterPtr p: node->parameters())
+	{
+		// need to be careful not to give parameter a shared ptr to
+		// itself
+		std::weak_ptr<BaseParameter> p_weak = p;
+		mParameterInternalCallbackHandles[p.get()] = p->addNewInternalValueCallback([p_weak,this]() {
+			ParameterPtr p = p_weak.lock();
+			if (p != nullptr)
+			{
+				this->callbackParameterValueChangedInternally(p);
+			}
+		});
+		mParameterExternalCallbackHandles[p.get()] = p->addNewExternalValueCallback([p_weak,this]() {
+			ParameterPtr p = p_weak.lock();
+			if (p != nullptr)
+			{
+				this->callbackParameterValueChangedExternally(p);
+			}
+		});
+	}
 	hm_info("Added node "+node->toString()+" to pipeline.");
 	if (isRunning() && !node->isProcessing())
 	{
@@ -161,6 +181,29 @@ Events Pipeline::p_RemoveNode(NodePtr node)
 				}
 			}
 			node->setPipeline(nullptr);
+			// remove parameter callbacks
+			for (ParameterPtr p: node->parameters())
+			{
+				if (mParameterInternalCallbackHandles.count(p.get())==0)
+				{
+					assert(false);
+				}
+				else
+				{
+					BOOST_VERIFY(p->removeCallback(mParameterInternalCallbackHandles[p.get()]));
+					mParameterInternalCallbackHandles.erase(p.get());
+								 
+				}
+				if (mParameterExternalCallbackHandles.count(p.get())==0)
+				{
+					assert(false);
+				}
+				else
+				{
+					BOOST_VERIFY(p->removeCallback(mParameterExternalCallbackHandles[p.get()]));
+					mParameterExternalCallbackHandles.erase(p.get());
+				}
+			}
 			mNodes.erase(it);
 		}
 		events.push_back(EventPtr(new NodeRemovedEvent(node)));
@@ -936,6 +979,18 @@ bool Pipeline::saveJson(string filePath) const
 		return false;
 	}
 	return true;
+}
+
+
+void Pipeline::callbackParameterValueChangedExternally(ParameterPtr p)
+{
+	p_Process(Events(1, EventPtr(new ParameterChangedExternallyEvent(p))));
+}
+
+
+void Pipeline::callbackParameterValueChangedInternally(ParameterPtr p)
+{
+	p_Process(Events(1, EventPtr(new ParameterChangedInternallyEvent(p))));
 }
 
 

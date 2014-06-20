@@ -14,6 +14,7 @@
 #include <boost/thread/lock_guard.hpp>
 #include "Common.h"
 #include <boost/variant.hpp>
+#include <atomic>
 
 namespace hm {
 	
@@ -49,12 +50,17 @@ namespace hm {
 
 		/// e.g. "/My Node/My Parameter"
 		std::string path() const;
+		
 		/// e.g. "My Parameter"
 		std::string name() const { return mName; }
+		
 		virtual Type type() const = 0;
+		
 		/// \return Type in string format
 		std::string typeString() const;
+		
 		virtual std::string toString() const = 0;
+		
 		/// \return The current value represented by this parameter.
 		/// \note If a new external value has arrived and update() has
 		/// not yet been called then this will return the new external
@@ -62,11 +68,6 @@ namespace hm {
 		/// to by this parameter.
 		virtual ParameterValueContainer toContainer() const = 0;
 		
-		/// Register a callback to be alerted when the internal value (corresponding
-		/// to the pointer this parameter was constructed with) is altered
-		/// externally (e.g. by a GUI). Callbacks are not called until update()
-		/// is called, and run in the same thread as that function.
-		void addNewExternalValueCallback(std::function<void(void)> callbackFunction);
 		
 		/// If an external value has been received, then this writes it to
 		/// this parameter's corresponding value pointer, and then calls
@@ -82,17 +83,48 @@ namespace hm {
 		// of parameter
 		/// The minimum value that may be received externally (enforced where applicable)
 		double hardMin() const { return mHardMin; }
+		
 		/// The maximum value that may be received extenrally (enforced where applicable)
 		double hardMax() const { return mHardMax; }
+		
 		/// The minimum value suggested by the user interface (not enforced)
 		double softMin() const { return mSoftMin; }
+		
 		/// The maximum value suggested by the user interface (not enforced)
 		double softMax() const { return mSoftMax; }
+		
 		
 		/// Set this to suggest to the user interface whether this
 		/// parameter should be visible at present.
 		void setVisible(bool isVisible);
+		
 		bool isVisible() const { return mIsVisible; }
+		
+		/// Only applicable for integer parameters: provide a set of labels
+		/// describing each possible value. This will update soft/hard min/
+		/// max to the range [0..labels.size())
+		void setEnumerationLabels(std::vector<std::string> const& labels);
+		
+		bool hasEnumerationLabels() const { return mHasEnumerationLabels; }
+		
+		std::vector<std::string> enumerationLabels() const { return mEnumerationLabels; }
+		
+		// MARK: Modifying callbacks
+		
+		/// Register a callback to be alerted when the internal value (corresponding
+		/// to the pointer this parameter was constructed with) is altered
+		/// externally (e.g. by a GUI). Callbacks are not called until update()
+		/// is called, and run in the same thread as that function.
+		/// \return A handle that can be used to remove the callback
+		int addNewExternalValueCallback(std::function<void(void)> callbackFunction);
+		
+		/// Register a callback to be alerted when the internal value (corresponding
+		/// to the pointer this parameter was constructed with) is altered
+		/// without any external influence (i.e. by the Node itself).
+		/// Callbacks are not called until update()
+		/// is called, and run in the same thread as that function.
+		/// \return A handle that can be used to remove the callback
+		int addNewInternalValueCallback(std::function<void()> callbackFunction);
 		
 		/// Use this to register a callback to receive notification of when this
 		/// parameters characteristics have changed. Characteristics include the
@@ -101,24 +133,24 @@ namespace hm {
 		/// \return A handle that may be used to remove the callback.
 		int addChangeOfCharacteristicsCallback(std::function<void(void)> callbackFunction);
 		
-		bool removeChangeOfCharacteristicsCallback(int handle);
+		virtual bool removeCallback(int callbackHandle);
+
 		
-		/// Only applicable for integer parameters: provide a set of labels
-		/// describing each possible value. This will update soft/hard min/
-		/// max to the range [0..labels.size())
-		void setEnumerationLabels(std::vector<std::string> const& labels);
-		bool hasEnumerationLabels() const { return mHasEnumerationLabels; }
-		std::vector<std::string> enumerationLabels() const { return mEnumerationLabels; }
-		
-		// TODO: Add function for Node to detach itself when it is destroyed
 		/// Node calls this on its destruction. This will prevent the
 		/// parameter from attempting to read/write to the value pointer
 		/// or activate any callbacks. It's pretty much useless and
 		/// (safely) waiting to be destroyed.
 		virtual void detach();
+		
 		bool isDetached() const { return mIsDetached; }
 		
 	protected:
+		/// Generic callback type
+		template <typename F>
+		using CallbackT = std::pair<std::function<F>, int>;
+		/// Void callback type
+		typedef CallbackT<void()> Callback;
+		
 		/// \param path Slash separated with the final element being the
 		/// user-visible name of this parameter.
 		/// e.g. "/Accumulator1/smoothing value"
@@ -132,6 +164,17 @@ namespace hm {
 		/// value and return false.
 		virtual bool checkExternalValue() = 0;
 
+		/// Next handle for any callback function
+		int mNextHandle;
+		
+		/// These callbacks are triggered by Parameter<T> rather than this class
+		std::vector<Callback> mNewInternalValueCallbacks;
+		mutable boost::mutex mNewInternalValueCallbacksMutex;
+
+		// helper function
+		template <typename F>
+		int addCallback(std::function<F> callback, std::vector<CallbackT<F>> & callbackList, boost::mutex& mutex);
+	
 	private:
 		double mHardMin;
 		double mHardMax;
@@ -139,12 +182,13 @@ namespace hm {
 		double mSoftMax;
 		bool mIsVisible;
 		
-		std::vector<std::function<void()>> mNewExternalValueCallbacks;
-		boost::mutex mNewExternalValueCallbacksMutex;
+
 		
-		std::vector<std::pair<std::function<void()>, int>> mChangeOfCharateristicsCallbacks;
-		boost::mutex mChangeOfCharacteristicsCallbacksMutex;
-		int mChangeOfCharacteristicsCallbackNextHandle;
+		std::vector<Callback> mNewExternalValueCallbacks;
+		mutable boost::mutex mNewExternalValueCallbacksMutex;
+		
+		std::vector<Callback> mChangeOfCharateristicsCallbacks;
+		mutable boost::mutex mChangeOfCharacteristicsCallbacksMutex;
 		
 		Node& mParent;
 		const std::string mName;
@@ -153,6 +197,16 @@ namespace hm {
 		std::vector<std::string> mEnumerationLabels;
 		bool mHaveCharacteristicsChanged;
 	};
+	
+	template <typename F>
+	int BaseParameter::addCallback(std::function<F> callbackFunction, std::vector<CallbackT<F>> & callbackList, boost::mutex & mutex)
+	{
+		int callbackHandle = mNextHandle++;
+		
+		boost::lock_guard<boost::mutex> lock(mutex);
+		callbackList.push_back(Callback(callbackFunction, callbackHandle));
+		return callbackHandle;
+	}
 	
 }
 
@@ -184,7 +238,6 @@ namespace hm
 		, mValue(value)
 		, mExternalValue(*value)
 		, mHasNewExternalValue(false)
-		, mNewInternalValueCallbacksIsNotEmpty(false)
 		{
 			assert(mValue != nullptr);
 		}
@@ -197,7 +250,6 @@ namespace hm
 		, mValue(value)
 		, mExternalValue(initialValue)
 		, mHasNewExternalValue(false)
-		, mNewInternalValueCallbacksIsNotEmpty(false)
 		{
 			assert(mValue != nullptr);
 			*mValue = initialValue;
@@ -228,33 +280,7 @@ namespace hm
 		/// \return A handle that can be used to remove the function
 		int addNewInternalValueCallback(std::function<void(T)> callbackFunction)
 		{
-			boost::lock_guard<boost::mutex> lock(mNewInternalValueCallbacksMutex);
-			int handle = mNextNewInternalValueCallbackHandle++;
-			mNewInternalValueCallbacks.push_back(std::pair<std::function<void(T)>,int>(callbackFunction, handle));
-			mNewInternalValueCallbacksIsNotEmpty = true;
-			return handle;
-		}
-		
-		bool removeNewInternalValueCallback(int functionHandle)
-		{
-			boost::lock_guard<boost::mutex> lock(mNewInternalValueCallbacksMutex);
-			for (auto it=mNewInternalValueCallbacks.begin(); it != mNewInternalValueCallbacks.end(); )
-			{
-				if (it->second == functionHandle)
-				{
-					mNewInternalValueCallbacks.erase(it);
-					if (mNewInternalValueCallbacks.empty())
-					{
-						mNewInternalValueCallbacksIsNotEmpty = false;
-					}
-					return true;
-				}
-				else
-				{
-					++it;
-				}
-			}
-			return false;
+			return addCallback(callbackFunction, mNewInternalValueCallbackTs, mNewInternalValueCallbackTsMutex);
 		}
 		
 		virtual void toJson(Json::Value& value) const override
@@ -314,7 +340,7 @@ namespace hm
 			}
 			// Otherwise, if callbacks for internal value changes are registered
 			// then we need to check if the internal value has changed
-			else if (mNewInternalValueCallbacksIsNotEmpty)
+			else
 			{
 				// Do not allow new external values to be provided while we are
 				// in the middle of this
@@ -322,13 +348,24 @@ namespace hm
 				if (*mValue != mExternalValue)
 				{
 					mExternalValue = *mValue;
-					// Do not allow new callbacks to be registered while we are
-					// iterating through them.
-					boost::lock_guard<boost::mutex> lock2(mNewInternalValueCallbacksMutex);
-					for (auto callback: mNewInternalValueCallbacks)
 					{
-						callback.first(*mValue);
+						// Do not allow new callbacks to be registered while we are
+						// iterating through them.
+						boost::lock_guard<boost::mutex> lock2(mNewInternalValueCallbackTsMutex);
+						for (auto callback: mNewInternalValueCallbackTs)
+						{
+							callback.first(*mValue);
+						}
 					}
+					{
+						// and callbacks registered without receiving the new value.
+						boost::lock_guard<boost::mutex> lock2(mNewInternalValueCallbacksMutex);
+						for (auto callback: mNewInternalValueCallbacks)
+						{
+							callback.first();
+						}
+					}
+
 				}
 			}
 			return false;
@@ -343,11 +380,10 @@ namespace hm
 		T mExternalValue;
 		mutable boost::mutex mExternalValueMutex;
 		std::atomic<bool> mHasNewExternalValue;
+		
 		// functions stored with their removal handle
-		std::vector<std::pair<std::function<void(T)>, int>> mNewInternalValueCallbacks;
-		int mNextNewInternalValueCallbackHandle;
-		mutable boost::mutex mNewInternalValueCallbacksMutex;
-		std::atomic<bool> mNewInternalValueCallbacksIsNotEmpty;
+		std::vector<CallbackT<void(T)>> mNewInternalValueCallbackTs;
+		mutable boost::mutex mNewInternalValueCallbackTsMutex;
 		
 		friend std::ostream& operator<<(std::ostream& out, Parameter<T> const& rhs);
 	};

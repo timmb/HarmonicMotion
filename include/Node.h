@@ -283,6 +283,11 @@ namespace hm
 	template <typename T>
 	ParameterPtrT<T> Node::addParameter(ParameterPtrT<T> parameter)
 	{
+		// Parameters may only be registered in the constructor.
+		// This is because Pipeline needs to register a callback with
+		// them and it does that when the parameter is added to the pipeline
+		assert(!mHasStartEverBeenCalled);
+		
 		boost::lock_guard<boost::shared_mutex> lock(mParametersMutex);
 		mParameters.push_back(parameter);
 		return parameter;
