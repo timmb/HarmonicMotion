@@ -148,9 +148,6 @@ namespace hm {
 				if (it->second == callbackHandle)
 				{
 					callbackList.erase(it);
-					// assert there was only one callback with this
-					// handle
-					assert(!removeCallback(callbackHandle));
 					return true;
 				}
 			}
