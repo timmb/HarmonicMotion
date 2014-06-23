@@ -11,7 +11,7 @@ namespace hm
 	
 	std::ostream& Skeleton3d::printTo(std::ostream& out) const
 	{
-		out << "Skeleton3d id:"<<id()<<' ';
+		out << "Skeleton3d id:"<<id<<' ';
 		for (int i=0; i<NUM_JOINTS; i++)
 		{
 			out << jointNameAbbr(i)<<':'
@@ -327,9 +327,8 @@ namespace hm
 using namespace hm;
 
 
-Skeleton3d::Skeleton3d(double timestamp, SceneMetaPtr sceneMeta)
-: mId(-1)
-, Base3dData(timestamp, sceneMeta)
+Skeleton3d::Skeleton3d(double timestamp, int id, SceneMetaPtr sceneMeta)
+: Base3dData(timestamp, id, sceneMeta)
 , mJoints(NUM_JOINTS)
 , mJointProjectives(NUM_JOINTS)
 , mJointConfidences(NUM_JOINTS)
@@ -356,7 +355,7 @@ void Skeleton3d::draw()
 
 Skeleton3d Skeleton3d::operator+(Skeleton3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) + rhs.joint(i);
@@ -368,7 +367,7 @@ Skeleton3d Skeleton3d::operator+(Skeleton3d const& rhs) const
 
 Skeleton3d Skeleton3d::operator-(Skeleton3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) - rhs.joint(i);
@@ -380,7 +379,7 @@ Skeleton3d Skeleton3d::operator-(Skeleton3d const& rhs) const
 
 Skeleton3d Skeleton3d::operator*(Skeleton3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) * rhs.joint(i);
@@ -392,7 +391,7 @@ Skeleton3d Skeleton3d::operator*(Skeleton3d const& rhs) const
 
 Skeleton3d Skeleton3d::operator/(Skeleton3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) / rhs.joint(i);
@@ -405,7 +404,10 @@ Skeleton3d Skeleton3d::operator/(Skeleton3d const& rhs) const
 
 Skeleton3d& Skeleton3d::operator+=(Skeleton3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
+	
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) += rhs.joint(i);
@@ -417,7 +419,10 @@ Skeleton3d& Skeleton3d::operator+=(Skeleton3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator-=(Skeleton3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
+
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) -= rhs.joint(i);
@@ -429,7 +434,10 @@ Skeleton3d& Skeleton3d::operator-=(Skeleton3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator*=(Skeleton3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
+
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) *= rhs.joint(i);
@@ -441,7 +449,10 @@ Skeleton3d& Skeleton3d::operator*=(Skeleton3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator/=(Skeleton3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
+
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) /= rhs.joint(i);
@@ -456,7 +467,7 @@ Skeleton3d& Skeleton3d::operator/=(Skeleton3d const& rhs)
 
 Skeleton3d Skeleton3d::operator+(Point3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) + rhs;
@@ -468,7 +479,7 @@ Skeleton3d Skeleton3d::operator+(Point3d const& rhs) const
 
 Skeleton3d Skeleton3d::operator-(Point3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) - rhs;
@@ -480,7 +491,7 @@ Skeleton3d Skeleton3d::operator-(Point3d const& rhs) const
 
 Skeleton3d Skeleton3d::operator*(Point3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) * rhs;
@@ -492,7 +503,7 @@ Skeleton3d Skeleton3d::operator*(Point3d const& rhs) const
 
 Skeleton3d Skeleton3d::operator/(Point3d const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) / rhs;
@@ -506,7 +517,9 @@ Skeleton3d Skeleton3d::operator/(Point3d const& rhs) const
 
 Skeleton3d& Skeleton3d::operator+=(Point3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) += rhs;
@@ -517,7 +530,9 @@ Skeleton3d& Skeleton3d::operator+=(Point3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator-=(Point3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) -= rhs;
@@ -528,7 +543,9 @@ Skeleton3d& Skeleton3d::operator-=(Point3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator*=(Point3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) *= rhs;
@@ -539,7 +556,9 @@ Skeleton3d& Skeleton3d::operator*=(Point3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator/=(Point3d const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) /= rhs;
@@ -572,7 +591,9 @@ Skeleton3d& Skeleton3d::operator/=(Point3d const& rhs)
 
 Skeleton3d& Skeleton3d::operator*=(Value const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) *= rhs;
@@ -583,7 +604,9 @@ Skeleton3d& Skeleton3d::operator*=(Value const& rhs)
 
 Skeleton3d& Skeleton3d::operator/=(Value const& rhs)
 {
-	timestamp = max(timestamp, rhs.timestamp);
+	timestamp = chooseTimestamp(*this, rhs);
+	id = chooseId(*this, rhs);
+	sceneMeta = chooseSceneMeta(*this, rhs);
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		joint(i) /= rhs;
@@ -595,7 +618,7 @@ Skeleton3d& Skeleton3d::operator/=(Value const& rhs)
 
 Skeleton3d Skeleton3d::operator*(Value const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) * rhs;
@@ -607,7 +630,7 @@ Skeleton3d Skeleton3d::operator*(Value const& rhs) const
 
 Skeleton3d Skeleton3d::operator/(Value const& rhs) const
 {
-	Skeleton3d out(max(timestamp, rhs.timestamp), sceneMeta);
+	Skeleton3d out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
 		out.joint(i) = joint(i) / rhs;

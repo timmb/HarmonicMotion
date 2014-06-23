@@ -8,6 +8,7 @@
 
 #pragma once
 #include "BaseData.h"
+#include "Common.h"
 #include "cinder/Vector.h"
 #include <type_traits>
 
@@ -19,8 +20,8 @@ namespace hm
 	public:
 		typedef Base1dData BaseType;
 		
-		Value(double value = 0., double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
-		Value(float value, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Value(double value = 0., double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Value(float value, double timestamp = 0., int id = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return VALUE; }
@@ -55,7 +56,7 @@ namespace hm
 		Value operator/(double rhs) const;
 		
 		Value operator+() const { return *this; }
-		Value operator-() const { return Value(-value, timestamp, sceneMeta); }
+		Value operator-() const { return Value(-value, timestamp, id, sceneMeta); }
 		
 //		operator double&() { return value; }
 //		operator double() const { return value; }

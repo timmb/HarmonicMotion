@@ -19,8 +19,9 @@ namespace hm
 
 using namespace hm;
 
-BaseData::BaseData(double timestamp_, SceneMetaPtr sceneMeta_)
+BaseData::BaseData(double timestamp_, int id_, SceneMetaPtr sceneMeta_)
 : timestamp(timestamp_)
+, id(id_)
 , sceneMeta(sceneMeta_)
 {
 	assert(sceneMeta != nullptr);

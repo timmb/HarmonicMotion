@@ -19,30 +19,27 @@ using namespace hm;
 using namespace ci;
 using namespace std;
 
-Point3d::Point3d(Vec3f const& v, double timestamp, SceneMetaPtr sceneMeta)
-: Base3dData(timestamp, sceneMeta)
+Point3d::Point3d(Vec3f const& v, double timestamp, int id, SceneMetaPtr sceneMeta)
+: Base3dData(timestamp, id, sceneMeta)
 , value(v)
 {}
 	
 
 
-Point3d::Point3d(float x, float y, float z, double timestamp, SceneMetaPtr sceneMeta)
-: Point3d(ci::Vec3f(x,y,z), timestamp, sceneMeta)
+Point3d::Point3d(float x, float y, float z, double timestamp, int id, SceneMetaPtr sceneMeta)
+: Point3d(ci::Vec3f(x,y,z), timestamp, id, sceneMeta)
 {
 	
 }
 
-Point3d::Point3d(double timestamp, SceneMetaPtr sceneMeta)
-: Base3dData(timestamp, sceneMeta)
+Point3d::Point3d(double timestamp, int id, SceneMetaPtr sceneMeta)
+: Base3dData(timestamp, id, sceneMeta)
 {
 	
 }
 
 Point3d::Point3d(Value const& x, Value const& y, Value const& z)
-: Base3dData(max(max(x.timestamp, y.timestamp), z.timestamp),
-			 x.sceneMeta!=SceneMeta::sDefaultSceneMeta? x.sceneMeta :
-			 y.sceneMeta!=SceneMeta::sDefaultSceneMeta? y.sceneMeta :
-			 z.sceneMeta)
+: Base3dData(chooseTimestamp(x, y, z), chooseId(x, y, z), chooseSceneMeta(x, y, z))
 , value(x.value, y.value, z.value)
 {}
 

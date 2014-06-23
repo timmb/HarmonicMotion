@@ -24,6 +24,7 @@ namespace hm
 	{
 		static const std::vector<Type> types =
 		{
+			UNDEFINED,
 			VALUE,
 			POINT2D,
 			POINT3D,
@@ -51,5 +52,8 @@ namespace hm
 		}
 		return ss.str();
 	}
+	
+	
+
 	
 }

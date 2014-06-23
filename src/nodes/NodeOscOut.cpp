@@ -132,7 +132,7 @@ void NodeOscOut::DataSender::operator()(Skeleton3d const& skel)
 {
 	for (int i=0; i<NUM_JOINTS; i++)
 	{
-		Message m = JointMessage(mNode.mPrefixWithSlash, jointName(i), skel.id(), skel.jointConfidence(i), skel.joint(i).value);
+		JointMessage m(mNode.mPrefixWithSlash, jointName(i), skel.id, skel.jointConfidence(i), skel.joint(i).value);
 		mNode.mOsc.sendMessage(m);
 	}
 }

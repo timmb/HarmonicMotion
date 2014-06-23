@@ -9,8 +9,8 @@
 #include "DataNull.h"
 using namespace hm;
 
-DataNull::DataNull(double timestamp, SceneMetaPtr sceneMeta)
-: BaseData(timestamp, sceneMeta)
+DataNull::DataNull(double timestamp, int id, SceneMetaPtr sceneMeta)
+: BaseData(timestamp, id, sceneMeta)
 {}
 
 std::ostream& DataNull::printTo(std::ostream& out) const

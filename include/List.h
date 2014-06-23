@@ -17,12 +17,12 @@ namespace hm
 		typedef typename DataType::BaseType BaseType;
 		
 		explicit
-		List(double timestamp=0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta)
-		: BaseType(timestamp, sceneMeta)
+		List(double timestamp=0., int id=0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta)
+		: BaseType(timestamp, id, sceneMeta)
 		{}
 		
-		List(std::vector<DataType> const& values, double timestamp=0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta)
-		: BaseType(timestamp, sceneMeta)
+		List(std::vector<DataType> const& values, double timestamp=0., int id=0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta)
+		: BaseType(timestamp, id, sceneMeta)
 		, value(values)
 		{}
 		

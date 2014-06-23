@@ -30,10 +30,10 @@ namespace hm
 	public:
 		typedef Base2dData BaseType;
 		
-		Point2d(ci::Vec2f const& v, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
-		Point2d(float x, float y, double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point2d(ci::Vec2f const& v, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point2d(float x, float y, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		explicit
-		Point2d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point2d(double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 		Point2d(Value const& x, Value const& y);
 		

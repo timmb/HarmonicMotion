@@ -14,6 +14,7 @@
 #include "Type.h"
 #include "TypeTraits.h"
 #include "SceneMeta.h"
+#include "BaseData.h"
 
 namespace hm
 {
@@ -66,6 +67,7 @@ namespace hm
 #define hm_define_get_type(T, typeEnumValue) \
 	template<> inline Type getType<T>() { return typeEnumValue; }
 	
+	hm_define_get_type(DataNull, UNDEFINED)
 	hm_define_get_type(Value, VALUE)
 	hm_define_get_type(Point2d, POINT2D)
 	hm_define_get_type(Point3d, POINT3D)
@@ -76,6 +78,7 @@ namespace hm
 	hm_define_get_type(List<Point2d>, LIST_POINT2D)
 	hm_define_get_type(List<Point3d>, LIST_POINT3D)
 	
+	
 	// Get a string representation of a Data type
 	template<typename T>
 	std::string stringRepresentation()
@@ -84,68 +87,83 @@ namespace hm
 		return std::to_string(getType<T>());
 	}
 	
-	/// Chooses the highest timestamp providing at least one of T or U
-	/// derives from BaseData
-	template<typename T, typename U>
-	typename
-	std::enable_if<std::is_base_of<BaseData, T>::value,
-	std::enable_if<std::is_base_of<BaseData, U>::value,
-	double>>::type
-	chooseTimestamp(T const& lhs, U const& rhs)
-	{
-		return std::max(lhs.timestamp, rhs.timestamp);
-	}
 	
-	template <typename T, typename U>
-	typename
-	std::enable_if<std::is_base_of<BaseData, T>::value,
-	std::enable_if<!std::is_base_of<BaseData, U>::value,
-	double>>::type
-	chooseTimestamp(T const& lhs, U const& rhs)
+	inline double chooseTimestamp(BaseData const& x, BaseData const& y)
 	{
-		return lhs.timestamp;
+		return std::max(x.timestamp, y.timestamp);
 	}
 
-	template <typename T, typename U>
-	typename
-	std::enable_if<!std::is_base_of<BaseData, T>::value,
-	std::enable_if<std::is_base_of<BaseData, U>::value,
-	double>>::type
-	chooseTimestamp(T const& lhs, U const& rhs)
+	inline double chooseTimestamp(BaseData const& x, BaseData const& y, BaseData const& z)
 	{
-		return rhs.timestamp;
+		return std::max(chooseTimestamp(x, y), z.timestamp);
 	}
 	
-	/// Chooses a sceneMeta providing at least one of T or U
-	/// derives from BaseData. Priority is to non-default sceneMeta
-	template<typename T, typename U>
-	typename
-	std::enable_if<std::is_base_of<BaseData, T>::value,
-	std::enable_if<std::is_base_of<BaseData, U>::value,
-	double>>::type
-	chooseSceneMeta(T const& lhs, U const& rhs)
+	template <typename T> inline
+	typename std::enable_if<!std::is_base_of<BaseData, T>::value, double>::type
+	chooseTimestamp(T x, BaseData const& y)
 	{
-		return lhs.sceneMeta==SceneMeta::sDefaultSceneMeta? rhs.sceneMeta : lhs.sceneMeta;
+		return y.timestamp;
 	}
 	
-	template <typename T, typename U>
-	typename
-	std::enable_if<std::is_base_of<BaseData, T>::value,
-	std::enable_if<!std::is_base_of<BaseData, U>::value,
-	double>>::type
-	chooseSceneMeta(T const& lhs, U const& rhs)
+	template <typename T> inline
+	typename std::enable_if<!std::is_base_of<BaseData, T>::value, double>::type
+	chooseTimestamp(BaseData const& x, T y)
 	{
-		return lhs.sceneMeta;
+		return x.timestamp;
 	}
 	
-	template <typename T, typename U>
-	typename
-	std::enable_if<!std::is_base_of<BaseData, T>::value,
-	std::enable_if<std::is_base_of<BaseData, U>::value,
-	double>>::type
-	chooseSceneMeta(T const& lhs, U const& rhs)
+	
+	
+	inline int chooseId(BaseData const& x, BaseData const& y)
 	{
-		return rhs.sceneMeta;
+		return x.id==0? y.id : x.id;
+	}
+	
+	inline int chooseId(BaseData const& x, BaseData const& y, BaseData const& z)
+	{
+		int const& id = chooseId(x, y);
+		return id==0? z.id : id;
+	}
+	
+	template <typename T> inline
+	typename std::enable_if<!std::is_base_of<BaseData, T>::value, int>::type
+	chooseId(T x, BaseData const& y)
+	{
+		return y.id;
+	}
+	
+	template <typename T> inline
+	typename std::enable_if<!std::is_base_of<BaseData, T>::value, int>::type
+	chooseId(BaseData const& x, T y)
+	{
+		return x.id;
+	}
+
+		
+	
+	inline SceneMetaPtr chooseSceneMeta(BaseData const& x, BaseData const& y)
+	{
+		return x.sceneMeta==SceneMeta::sDefaultSceneMeta? y.sceneMeta : x.sceneMeta;
+	}
+	
+	inline SceneMetaPtr chooseSceneMeta(BaseData const& x, BaseData const& y, BaseData const& z)
+	{
+		SceneMetaPtr const& s = chooseSceneMeta(x, y);
+		return s==SceneMeta::sDefaultSceneMeta? z.sceneMeta : s;
+	}
+	
+	template <typename T> inline
+	typename std::enable_if<!std::is_base_of<BaseData, T>::value, SceneMetaPtr>::type
+	chooseSceneMeta(T x, BaseData const& y)
+	{
+		return y.sceneMeta;
+	}
+	
+	template <typename T> inline
+	typename std::enable_if<!std::is_base_of<BaseData, T>::value, SceneMetaPtr>::type
+	chooseSceneMeta(BaseData const& x, T y)
+	{
+		return x.sceneMeta;
 	}
 
 

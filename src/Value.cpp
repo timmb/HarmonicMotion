@@ -22,13 +22,13 @@ std::ostream& Value::printTo(std::ostream& out) const
 	return out << value;
 }
 
-Value::Value(double value_, double timestamp, SceneMetaPtr sceneMeta)
-: Base1dData(timestamp, sceneMeta)
+Value::Value(double value_, double timestamp, int id, SceneMetaPtr sceneMeta)
+: Base1dData(timestamp, id, sceneMeta)
 , value(value_)
 {}
 
-Value::Value(float value_, double timestamp, SceneMetaPtr sceneMeta)
-: Base1dData(timestamp, sceneMeta)
+Value::Value(float value_, double timestamp, int id, SceneMetaPtr sceneMeta)
+: Base1dData(timestamp, id, sceneMeta)
 , value(value_)
 {}
 
