@@ -4,6 +4,7 @@
 #include "opencv2/core/core_c.h"
 #include "opencv2/core/core.hpp"
 #include "cinder/Surface.h"
+#include "Value.h"
 
 namespace hm
 {
@@ -14,18 +15,20 @@ namespace hm
 		
 		/// Construct a black 640x480 RGB image
 		explicit
-		Image2d(double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		Image2d(double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
 		
 		/// Construct a black RGB image of the given size
-		Image2d(int width, int height, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		Image2d(int width, int height, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
 		
 		/// Construct an image matching the given \p surface
-		Image2d(ci::Surface8u surface, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		explicit
+		Image2d(ci::Surface8u surface, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
 		
 		/// Construct an image matching the given \p matrix.
 		/// \param matrix will be allocated to 640,480 RGB 8 bit if it
 		/// is not already allocated.
-		Image2d(cv::Mat matrix, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		explicit
+		Image2d(cv::Mat matrix, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
 		
 		/// Data representing this image.
 		/// \invariant value.rows > 0 && value.cols > 0
@@ -62,6 +65,9 @@ namespace hm
 		Image2d operator+() const;
 		Image2d operator-() const;
 		
+		bool operator==(Image2d const& rhs) const;
+		bool operator!=(Image2d const& rhs) const;
+		
 		
 		/// Checks that \c value is not a null image.
 		bool invariant() const;
@@ -69,6 +75,9 @@ namespace hm
 	private:
 		void checkValueHasDimensions();
 	};
+	
+	hm_data_define_free_scalar_operators(Image2d)
+	
 }
 
 

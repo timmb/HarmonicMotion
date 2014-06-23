@@ -113,25 +113,25 @@ Scene3d Value::operator/(Scene3d const& rhs) const
 	return rhs * (1. / *this);
 }
 
-Image2d Value::operator+(Image2d const& rhs) const
-{
-	return rhs + *this;
-}
-
-Image2d Value::operator-(Image2d const& rhs) const
-{
-	return rhs - *this;
-}
-
-Image2d Value::operator*(Image2d const& rhs) const
-{
-	return rhs * *this;
-}
-
-Image2d Value::operator/(Image2d const& rhs) const
-{
-	return rhs / *this;
-}
+//Image2d Value::operator+(Image2d const& rhs) const
+//{
+//	return rhs + *this;
+//}
+//
+//Image2d Value::operator-(Image2d const& rhs) const
+//{
+//	return rhs - *this;
+//}
+//
+//Image2d Value::operator*(Image2d const& rhs) const
+//{
+//	return rhs * *this;
+//}
+//
+//Image2d Value::operator/(Image2d const& rhs) const
+//{
+//	return rhs / *this;
+//}
 
 
 //Point3d Value::operator*(Point3d const& rhs) const

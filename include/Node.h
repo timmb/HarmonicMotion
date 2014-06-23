@@ -179,7 +179,7 @@ namespace hm
 		/// \param A pointer to the value that the parameter will be controlling.
 		/// \return A shared pointer to the parameter.
 		template <typename T>
-		ParameterPtrT<T> addParameter(std::string name, T* value);
+		ParameterPtrT<T> addParameter(std::string name, T* value, std::string description="");
 		
 		/// Create a parameter that has already been created. Note that this
 		/// will not automatically set the initial value.
@@ -252,7 +252,7 @@ namespace hm
 	
 	
 	template <typename T>
-	ParameterPtrT<T> Node::addParameter(std::string name, T* value)
+	ParameterPtrT<T> Node::addParameter(std::string name, T* value, std::string description)
 	{
 		// Check if we have a custom initial value
 		T* initialValue = nullptr;
@@ -271,11 +271,11 @@ namespace hm
 		ParameterPtrT<T> parameter;
 		if (initialValue)
 		{
-			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, value, *initialValue));
+			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, description, value, *initialValue));
 		}
 		else
 		{
-			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, value));
+			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, description, value));
 		}
 		return addParameter(parameter);
 	}

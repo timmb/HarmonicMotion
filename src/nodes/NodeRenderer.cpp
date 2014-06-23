@@ -46,8 +46,8 @@ NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
 , mTimestampOfLastDraw(-43.)
 , mRenderer(0)
 {
-	mRenderers.push_back(RendererPtr(new RendererBlob()));
-	mRenderers.push_back(RendererPtr(new Renderer2D()));
+	mRenderers.push_back(RendererPtr(new Renderer3d()));
+	mRenderers.push_back(RendererPtr(new Renderer2d()));
 	
 
 	assert(!mRenderers.empty());

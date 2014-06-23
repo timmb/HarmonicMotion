@@ -116,13 +116,13 @@ namespace hm
 	
 	inline int chooseId(BaseData const& x, BaseData const& y)
 	{
-		return x.id==0? y.id : x.id;
+		return x.id==BaseData::sDefaultId? y.id : x.id;
 	}
 	
 	inline int chooseId(BaseData const& x, BaseData const& y, BaseData const& z)
 	{
 		int const& id = chooseId(x, y);
-		return id==0? z.id : id;
+		return id==BaseData::sDefaultId? z.id : id;
 	}
 	
 	template <typename T> inline

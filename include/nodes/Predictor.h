@@ -20,7 +20,7 @@
 /// Based on equations in paper: P. Kalekar, “Time series forecasting using
 /// holt-winters exponential smoothing,” tech. rep., Kanwal Rekhi School of
 /// Information Technology, Mumbai, India, 2004.
-template<class T, class Scalar=float>
+template<class T, class Scalar=double>
 class Predictor
 {
 public:

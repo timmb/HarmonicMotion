@@ -46,8 +46,9 @@ namespace hm {
 	
 	// MARK: BaseParameter
 		
-	BaseParameter::BaseParameter(Node& parent, std::string name)
+	BaseParameter::BaseParameter(Node& parent, std::string name, std::string description)
 	: mName(name)
+	, mDescription(description)
 	, mParent(parent)
 	, mHardMin(-999999999)
 	, mHardMax(999999999)

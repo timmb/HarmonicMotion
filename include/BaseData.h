@@ -32,8 +32,8 @@ namespace hm
 		
 		/// An id associated with this data. This may be the ID of a joint if
 		/// this is a component of a skeleton. Or it may be a user ID if this
-		/// is a component of a Scene3d. This has a default value of 0 unless
-		/// explicitly set.
+		/// is a component of a Scene3d. This has a default value of sDefaultId
+		/// unless explicitly set.
 		int id;
 		
 		/// The latest time of entry associated with this data
@@ -46,7 +46,8 @@ namespace hm
 		/// the front of this list (up to a maximum number)
 		std::deque<std::string> nodeHistory;
 		
-		static const int MAX_HISTORY_LENGTH = 100;
+		static int const MAX_HISTORY_LENGTH = 100;
+		static int const sDefaultId = -1;
 	};
 	
 	std::ostream& operator<<(std::ostream&, BaseData const&);
