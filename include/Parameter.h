@@ -204,7 +204,7 @@ namespace hm {
 		int callbackHandle = mNextHandle++;
 		
 		boost::lock_guard<boost::mutex> lock(mutex);
-		callbackList.push_back(Callback(callbackFunction, callbackHandle));
+		callbackList.push_back(CallbackT<F>(callbackFunction, callbackHandle));
 		return callbackHandle;
 	}
 	

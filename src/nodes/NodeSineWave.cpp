@@ -53,6 +53,7 @@ void NodeSineWave::run()
 	mTimeOfLastOutput = mStartTime - mOutputDelta;
 	while (!isRequestedToStop())
 	{
+		updateParameters();
 		double now = elapsedTime();
 		if (now - mTimeOfLastOutput > mOutputDelta)
 		{
