@@ -11,7 +11,6 @@
 #include <ostream>
 #include "Type.h"
 #include "SceneMeta.h"
-#include "Common.h"
 #include <deque>
 #include "TypeTraits.h"
 
@@ -21,7 +20,7 @@ namespace hm
 	class BaseData
 	{
 	public:
-		BaseData(double timestamp_, SceneMetaPtr sceneMeta_);
+		BaseData(double timestamp_, int id_, SceneMetaPtr sceneMeta_);
 		virtual ~BaseData() {}
 		/// Assumes we are already in a GL context
 		virtual void draw() {}
@@ -31,44 +30,49 @@ namespace hm
 		/// Print to the stream and return it
 		virtual std::ostream& printTo(std::ostream&) const = 0;
 		
+		/// An id associated with this data. This may be the ID of a joint if
+		/// this is a component of a skeleton. Or it may be a user ID if this
+		/// is a component of a Scene3d. This has a default value of 0 unless
+		/// explicitly set.
+		int id;
+		
 		/// The latest time of entry associated with this data
 		double timestamp;
+		
 		/// Information about the scene associated with this data
 		SceneMetaPtr sceneMeta;
+		
 		/// Every time this DataType leaves a node, its name is added to
 		/// the front of this list (up to a maximum number)
 		std::deque<std::string> nodeHistory;
+		
 		static const int MAX_HISTORY_LENGTH = 100;
 	};
 	
 	std::ostream& operator<<(std::ostream&, BaseData const&);
 
-	// At this level, we distinguish between categories: 3D vector types, Scalars,
-	// and Image2D types, etc. with the requirement that classes in the same
-	// category support basic arithmetic operations on each other: +-*/
-	
 	/// Empty base classes to distinguish 3D Vector types (Point3d, Skeleton3d, Scene3d)
 	class Base3dData : public BaseData
 	{
 	public:
-		Base3dData(double timestamp, SceneMetaPtr sceneMeta)
-		: BaseData(timestamp, sceneMeta)
+		Base3dData(double timestamp, int id, SceneMetaPtr sceneMeta)
+		: BaseData(timestamp, id, sceneMeta)
 		{}
 	};
 	
 	class Base2dData : public BaseData
 	{
 	public:
-		Base2dData(double timestamp, SceneMetaPtr sceneMeta)
-		: BaseData(timestamp, sceneMeta)
+		Base2dData(double timestamp, int id, SceneMetaPtr sceneMeta)
+		: BaseData(timestamp, id, sceneMeta)
 		{}
 	};
 	
 	class Base1dData : public BaseData
 	{
 	public:
-		Base1dData(double timestamp, SceneMetaPtr sceneMeta)
-		: BaseData(timestamp, sceneMeta)
+		Base1dData(double timestamp, int id, SceneMetaPtr sceneMeta)
+		: BaseData(timestamp, id, sceneMeta)
 		{}
 	};
 	
@@ -78,24 +82,13 @@ namespace hm
 	// use hm_data_define_self_operators_and_assigns(Type) to do everything
 	// requires `value` member of Type to support the operators
 	
-	
-//#define hm_data_declare_self_operators_and_assigns(Type) \
-//		Type& operator+=(Type const& rhs); \
-//		Type& operator-=(Type const& rhs); \
-//		Type& operator*=(Type const& rhs); \
-//		Type& operator/=(Type const& rhs); \
-//		Type operator+(Type const& rhs) const; \
-//		Type operator-(Type const& rhs) const; \
-//		Type operator*(Type const& rhs) const; \
-//		Type operator/(Type const& rhs) const; \
-//		Type operator+() const; \
-//		Type operator-() const;
-
 	// Helper:
 #define _hm_data_define_self_op_assign(Type, op_assign) \
 	inline Type& op_assign (Type const& rhs) \
 	{ \
-		timestamp = std::max<double>(timestamp, rhs.timestamp); \
+		timestamp = chooseTimestamp(*this, rhs); \
+		id = chooseId(*this, rhs); \
+		sceneMeta = chooseSceneMeta(*this, rhs); \
 		value.op_assign(rhs.value); \
 		return *this; \
 	}
@@ -112,7 +105,7 @@ namespace hm
 #define _hm_data_define_self_unary(Type, op_func, op) \
 	inline Type op_func () const \
 	{ \
-		return Type(op value, timestamp, sceneMeta); \
+		return Type(op value, timestamp, id, sceneMeta); \
 	}
 	
 #define hm_data_define_self_operators_and_assigns(Type) \
@@ -149,7 +142,9 @@ namespace hm
 	inline Type& operator op_assign (Value const& rhs) \
 	{ \
 		value op_assign rhs.value; \
-		timestamp = std::max(timestamp, rhs.timestamp); \
+		timestamp = chooseTimestamp(*this, rhs); \
+		id = chooseId(*this, rhs); \
+		sceneMeta = chooseSceneMeta(*this, rhs); \
 		return *this; \
 	}
 
@@ -169,8 +164,9 @@ inline Type operator op (Value const& rhs) const \
 { \
 	Type out(*this); \
 	out op_assign rhs; \
-	out.timestamp = std::max(timestamp, rhs.timestamp); \
-	out.sceneMeta = choose(sceneMeta, rhs.sceneMeta); \
+	out.timestamp = chooseTimestamp(*this, rhs); \
+	out.id = chooseId(*this, rhs); \
+	out.sceneMeta = chooseSceneMeta(*this, rhs); \
 	return out; \
 }
 
@@ -211,7 +207,9 @@ _hm_data_define_scalar_op_and_assign(Type, /, /=)
 	inline Type operator op (Value const& lhs, Type rhs) \
 	{ \
 		rhs.value = lhs.value op rhs.value; \
-		rhs.timestamp = std::max(lhs.timestamp, rhs.timestamp); \
+		rhs.timestamp = chooseTimestamp(lhs, rhs); \
+		rhs.id = chooseId(lhs, rhs); \
+		rhs.sceneMeta = chooseSceneMeta(lhs, rhs); \
 		return rhs; \
 	}
 	
@@ -235,7 +233,7 @@ _hm_data_define_scalar_op_and_assign(Type, /, /=)
 #define _hm_data_define_equality_op(Type, op) \
 	bool operator op(Type const& rhs) const \
 	{ \
-		return BaseData::timestamp op rhs.timestamp && value op rhs.value && BaseData::sceneMeta op rhs.sceneMeta; \
+		return BaseData::timestamp op rhs.timestamp && value op rhs.value && BaseData::id op rhs.id && BaseData::sceneMeta op rhs.sceneMeta; \
 	}
 	
 #define hm_data_define_equality_ops(Type) \

@@ -78,7 +78,7 @@ void NodeImageProcessor::step()
 					output = input;
 					break;
 			}
-			Data out(Image2d(output, mTimestamp, data.sceneMeta()));
+			Data out(Image2d(output, mTimestamp, data.id(), data.sceneMeta()));
 			mOutlet->outputNewData(out);
 		}
 	}

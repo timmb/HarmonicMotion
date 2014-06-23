@@ -44,6 +44,7 @@ namespace hm
 		Data(ListPoint3d const& x);
 
 		Type type() const { return mType; }
+		int id() const { return asBaseData()->id; }
 		double timestamp() const { return asBaseData()->timestamp; }
 		SceneMetaPtr sceneMeta() const { return asBaseData()->sceneMeta; }
 		

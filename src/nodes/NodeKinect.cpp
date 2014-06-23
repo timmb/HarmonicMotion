@@ -151,11 +151,11 @@ void NodeKinect::processDevice()
 		{
 			double timestamp = elapsedTime();
 			OpenNIUserList users = deviceManager.getUserList();
-			Scene3d scene = Scene3d(timestamp, sceneMeta());
+			Scene3d scene = Scene3d(timestamp, 0, sceneMeta());
 			for (OpenNIUserRef user: users)
 			{
-				Skeleton3d skeleton(timestamp, sceneMeta());
-				skeleton.id() = user->getId();
+				Skeleton3d skeleton(timestamp, user->getId(), sceneMeta());
+				skeleton.id = user->getId();
 				for (int i=0; i<NUM_JOINTS; i++)
 				{
 					OpenNIBone const& bone = *user->getBone(jointToVBone(i));
@@ -164,8 +164,8 @@ void NodeKinect::processDevice()
 					// SDK standard and use a right handed system with x going
 					// to the left. Also OpenNI uses millimetres whereas we
 					// use metres (like MS SDK).
-					skeleton.joint(i) = Point3d(ci::Vec3f(-bone.position[0], bone.position[1], bone.position[2]) / 1000.f, timestamp, sceneMeta());
-					skeleton.jointProjective(i) = Point3d(ci::Vec3f(bone.positionProjective), timestamp, sceneMeta());
+					skeleton.joint(i) = Point3d(ci::Vec3f(-bone.position[0], bone.position[1], bone.position[2]) / 1000.f, timestamp, i, sceneMeta());
+					skeleton.jointProjective(i) = Point3d(ci::Vec3f(bone.positionProjective), timestamp, i, sceneMeta());
 					skeleton.jointConfidence(i) = bone.positionConfidence;
 				}
 				scene.value.push_back(skeleton);

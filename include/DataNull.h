@@ -17,7 +17,7 @@ namespace hm
 	class DataNull : public BaseData
 	{
 	public:
-		DataNull(double timestamp_ = -1, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		DataNull(double timestamp_ = -1, int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return UNDEFINED; }

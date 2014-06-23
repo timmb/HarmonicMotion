@@ -126,7 +126,7 @@ namespace hm
 		typedef Base3dData BaseType;
 		
 		explicit
-		Skeleton3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Skeleton3d(double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 //		std::vector<Point3d> const& joints() const { return mJoints; }
 //		std::vector<Point3d>& joints() { return mJoints; }
@@ -151,9 +151,6 @@ namespace hm
 		
 		float& jointConfidence(Joint jointId);
 		float const& jointConfidence(Joint jointId) const;
-		
-		int& id() { return mId; }
-		int const& id() const { return mId; }
 		
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return SKELETON3D; }
@@ -203,7 +200,6 @@ namespace hm
 		Skeleton3d operator-() const;
 		
 	private:
-		int mId;
 		std::vector<Point3d> mJoints;
 		std::vector<Point3d> mJointProjectives;
 		std::vector<float> mJointConfidences;
@@ -324,7 +320,7 @@ namespace hm
 			out.joint(i) = lhs op rhs.joint(i); \
 			out.jointProjective(i) = lhs op rhs.jointProjective(i); \
 			out.jointConfidence(i) = rhs.jointConfidence(i); \
-			out.id() = rhs.id(); \
+			out.id = chooseId(lhs, rhs); \
 		} \
 		return out; \
 	}

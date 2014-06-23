@@ -14,15 +14,18 @@ namespace hm
 		
 		/// Construct a black 640x480 RGB image
 		explicit
-		Image2d(double timestamp = 0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		Image2d(double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		
 		/// Construct a black RGB image of the given size
-		Image2d(int width, int height, double timestamp = 0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		Image2d(int width, int height, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		
 		/// Construct an image matching the given \p surface
-		Image2d(ci::Surface8u surface, double timestamp = 0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		Image2d(ci::Surface8u surface, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		
 		/// Construct an image matching the given \p matrix.
 		/// \param matrix will be allocated to 640,480 RGB 8 bit if it
 		/// is not already allocated.
-		Image2d(cv::Mat matrix, double timestamp = 0., SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
+		Image2d(cv::Mat matrix, double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta=SceneMeta::sDefaultSceneMeta);
 		
 		/// Data representing this image.
 		/// \invariant value.rows > 0 && value.cols > 0
