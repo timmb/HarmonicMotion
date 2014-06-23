@@ -6,6 +6,7 @@
 #include "cinder/Area.h"
 #include "cinder/Color.h"
 #include "Parameter.h"
+#include <deque>
 
 namespace hm
 {
@@ -156,25 +157,59 @@ namespace hm
 //		
 //	};
 	
-	/// Renderer for 3D points as circles
-	class RendererBlob : public Renderer
+	/// Renderer for 3D data
+	/// Positional data is drawn as:
+	/// - Skeleton3d/Scene3d: lines connecting joints. Colour based on confidence
+	/// - Point3d / List3D: blobs
+	/// Non-positional data is drawn as:
+	/// - Skeleton3d/Scene3d/Point3d: 3D vectors sticking out of joints, where IDs match
+	/// - Value / ListValue: Blobs of this size on joints, where IDs match
+	class Renderer3d : public Renderer
 	{
 	public:
-		RendererBlob();
+		Renderer3d();
 		
-		virtual void operator()(Point3d const& x, int inlet, ci::ColorA const& color=ci::ColorA::white());
+		virtual void operator()(Point3d const& x, int inlet) override;
 		virtual void operator()(Skeleton3d const& x, int inlet) override;
 		virtual void operator()(Scene3d const& x, int inlet) override;
 		virtual void operator()(ListPoint3d const& x, int inlet) override;
+		virtual void operator()(Value const& x, int inlet) override;
+		virtual void operator()(ListValue const& x, int inlet) override;
 		
 	private:
+		void drawPoint(Point3d const& x, Point3d const& descriptor);
+		void drawPoint(Point3d const& x, Value const& descriptor);
+		void drawSkeleton(Skeleton3d const& x, Skeleton3d const& descriptor);
+		void drawSkeleton(Skeleton3d const& x, ListValue const& descriptor);
+		/// Basic skeleton
+		void drawSkeletonLines(Skeleton3d const& x);
+		
+		/// Data that has arrived in the second inlet that will describe
+		/// how data in the first inlet will be rendered. New data is put at
+		/// front of this queue. Old data is removed from the back when
+		/// we receive any data that is more than 2 seconds newer than
+		/// it.
+		std::deque<Data> mDescriptors;
+		
+		/// Add a descriptor to the queue
+		void addDescriptor(Data const& x);
+		/// Clear up old descriptors from the queue more than a second
+		/// old given \p latestTimestamp
+		void cleanDescriptors(double latestTimestamp);
+		/// Returns the newest descriptor matching the Types and id.
+		/// \note This does not search the id's of elements inside a container
+		/// (so searching for a SKELETON3D with id of 1 will not search inside
+		/// a scene for that skeleton)
+		/// \return A descriptor matching the description, or a reference to
+		/// DataNull if none is found
+		Data const& getDescriptor(int id, Types possibleDescriptorTypes);
 	};
 	
 	/// Renderer for 2D images
-	class Renderer2D : public Renderer
+	class Renderer2d : public Renderer
 	{
 	public:
-		Renderer2D();
+		Renderer2d();
 		
 		virtual void operator()(Image2d const& x, int inlet) override;
 		virtual void operator()(Point2d const& x, int inlet, int count=0);

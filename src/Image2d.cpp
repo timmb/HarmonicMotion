@@ -223,6 +223,15 @@ Image2d Image2d::operator-() const
 	return Image2d(-value, timestamp, id, sceneMeta);
 }
 
+bool Image2d::operator==(Image2d const& rhs) const
+{
+	return cv::countNonZero(*this != rhs) == 0;
+}
+
+bool Image2d::operator!=(Image2d const& rhs) const
+{
+	return cv::countNonZero(*this == rhs) == 0;
+}
 
 
 

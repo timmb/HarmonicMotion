@@ -54,6 +54,9 @@ namespace hm {
 		/// e.g. "My Parameter"
 		std::string name() const { return mName; }
 		
+		/// e.g. "This controls the cutoff frequency of the output."
+		std::string description() const { return mDescription; }
+		
 		virtual Type type() const = 0;
 		
 		/// \return Type in string format
@@ -155,7 +158,7 @@ namespace hm {
 		/// user-visible name of this parameter.
 		/// e.g. "/Accumulator1/smoothing value"
 		/// or "/value"
-		BaseParameter(Node& parent, std::string name);
+		BaseParameter(Node& parent, std::string name, std::string description);
 
 		/// If an external value is pending, derived class should write the
 		/// most recent external value to the pointer registered with this
@@ -191,7 +194,8 @@ namespace hm {
 		mutable boost::mutex mChangeOfCharacteristicsCallbacksMutex;
 		
 		Node& mParent;
-		const std::string mName;
+		std::string const mName;
+		std::string const mDescription;
 		bool mIsDetached;
 		bool mHasEnumerationLabels;
 		std::vector<std::string> mEnumerationLabels;
@@ -233,8 +237,8 @@ namespace hm
 		/// \param parent The node to which this parameter belongs
 		/// \param name The name of the parameter
 		/// \param value A pointer to the value to be controlled by the parameter
-		Parameter(Node& parent, std::string name, T* value)
-		: BaseParameter(parent, name)
+		Parameter(Node& parent, std::string name, std::string description, T* value)
+		: BaseParameter(parent, description, name)
 		, mValue(value)
 		, mExternalValue(*value)
 		, mHasNewExternalValue(false)
@@ -245,8 +249,8 @@ namespace hm
 		/// \copydoc Parameter(Node&, std::string, T*)
 		/// \param initialValue This is written to *value without triggering
 		/// any callbacks
-		Parameter(Node& parent, std::string name, T* value, T const& initialValue)
-		: BaseParameter(parent, name)
+		Parameter(Node& parent, std::string name, std::string description, T* value, T const& initialValue)
+		: BaseParameter(parent, name, description)
 		, mValue(value)
 		, mExternalValue(initialValue)
 		, mHasNewExternalValue(false)

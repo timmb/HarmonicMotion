@@ -20,8 +20,9 @@ namespace hm
 	public:
 		typedef Base1dData BaseType;
 		
-		Value(double value = 0., double timestamp = 0., int id = 0, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
-		Value(float value, double timestamp = 0., int id = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Value(double value = 0., double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		
+		Value(float value, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
 		
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return VALUE; }
@@ -46,10 +47,10 @@ namespace hm
 		Scene3d operator*(Scene3d const& rhs) const;
 		Scene3d operator/(Scene3d const& rhs) const;
 		
-		Image2d operator+(Image2d const& rhs) const;
-		Image2d operator-(Image2d const& rhs) const;
-		Image2d operator*(Image2d const& rhs) const;
-		Image2d operator/(Image2d const& rhs) const;
+//		Image2d operator+(Image2d const& rhs) const;
+//		Image2d operator-(Image2d const& rhs) const;
+//		Image2d operator*(Image2d const& rhs) const;
+//		Image2d operator/(Image2d const& rhs) const;
 		
 		
 		Value operator*(double rhs) const;
