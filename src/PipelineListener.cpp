@@ -1,4 +1,5 @@
 #include "PipelineListener.h"
+#include "Parameter.h"
 using namespace hm;
 
 PipelineListener::PipelineListener(QObject* parent)
@@ -34,3 +35,17 @@ void PipelineListener::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 {
 	Q_EMIT sigPatchCordRemoved(outlet, inlet);
 }
+
+void PipelineListener::parameterChangedExternally(ParameterPtr parameter)
+{
+	Q_EMIT sigParameterChangedExternally(parameter);
+}
+
+void PipelineListener::parameterChangedInternally(ParameterPtr parameter)
+{
+	Q_EMIT sigParameterChangedInternally(parameter);
+}
+
+
+
+

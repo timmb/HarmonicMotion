@@ -51,6 +51,17 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr))));
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr))));
 	
+	// Make changes to pipeline mark this view as dirty
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeParamsChanged(NodePtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeCharacteristicsChanged(NodePtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigParameterChangedInternally(ParameterPtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigParameterChangedExternally(ParameterPtr)), this, SLOT(markDirty())));
+	
+	
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setFocusPolicy(Qt::ClickFocus);
 	setAutoFillBackground(true);
@@ -836,4 +847,17 @@ void WidgetPatchArea::raise(WidgetNode* w)
 	{
 		p->raise();
 	}
+}
+
+
+void WidgetPatchArea::markDirty()
+{
+	mIsDirty = true;
+	setWindowModified(true);
+}
+
+void WidgetPatchArea::markClean()
+{
+	mIsDirty = false;
+	setWindowModified(false);
 }

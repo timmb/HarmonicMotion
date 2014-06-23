@@ -22,6 +22,8 @@ namespace hm
 		virtual void nodeCharacteristicsChanged(NodePtr node) override;
 		virtual void patchCordAdded(OutletPtr outlet, InletPtr inlet) override;
 		virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet) override;
+		virtual void parameterChangedExternally(ParameterPtr parameter) override;
+		virtual void parameterChangedInternally(ParameterPtr parameter) override;
 		
 	Q_SIGNALS:
 		void sigNodeAdded(NodePtr node);
@@ -30,5 +32,7 @@ namespace hm
 		void sigNodeCharacteristicsChanged(NodePtr node);
 		void sigPatchCordAdded(OutletPtr outlet, InletPtr inlet);
 		void sigPatchCordRemoved(OutletPtr outlet, InletPtr inlet);
+		void sigParameterChangedExternally(ParameterPtr parameter);
+		void sigParameterChangedInternally(ParameterPtr parameter);
 	};
 }

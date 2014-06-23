@@ -39,6 +39,13 @@ namespace hm
 		WidgetPatchArea(PipelinePtr pipeline, QWidget* parent=nullptr);
 		virtual ~WidgetPatchArea();
 		
+		/// \return Whether the pipeline is dirty (i.e. has unsaved data)
+		bool isDirty() const { return mIsDirty; }
+		
+		/// Clears the dirty flag indicating that there is now no unsaved
+		/// data on this pipeline.
+		void markClean();
+		
 		/// \return A shared pointer to the pipeline represented by this patch
 		/// area
 		PipelinePtr pipeline() const { return mPipeline; }
@@ -54,28 +61,11 @@ namespace hm
         /// If there is an inlet under point \p position then this will
         /// return a pointer to it. Otherwise it will return nullptr.
         WidgetInlet* findInlet(QPoint position) const;
-//		/// If there is an inlet or outlet visible at point \p position then
-//		/// this will return a pointer to it. Otherwise it will return
-//		/// nullptr.
-//		WidgetLet* findLet(QPoint position) const;
         
         /// \copydoc isConnectionValid(OutletPtr, InletPtr)
 		bool isConnectionValid(WidgetOutlet* outlet, WidgetInlet* inlet) const;
 		
 		// MARK: Functions that cause modifications the underlying Pipeline model (as well as this view).
-		
-//		/// This will call deleteLater() on \p patchCord, so may be called
-//		/// by patchCord itself. The destructor of WidgetPatchCord
-//		/// is responsible for updating the underlying model
-//		void erasePatchCord(WidgetPatchCord* patchCord);
-//		/// This will call deleteLater() on \p node so may be called
-//		/// by node itself. The destructor of WidgetNode is responsible
-//		/// for updating the underlying model.
-//		void eraseNode(WidgetNode* node);
-		// not needed at the moment
-//		/// Erases the node that currently has focus.
-//		/// \return true if a node had focused (in which case it was deleted.
-//		bool eraseNodeWithFocus();
 		
 		// MARK: Other functions
 		/// This is called by WidgetLet when it receives a mouse press
@@ -115,6 +105,9 @@ namespace hm
 		/// on to the info panel
 		void provideInfoPanelText(QString);
 		void loadStyleSheet();
+		/// Mark the pipeline as dirty, meaning the user will be prompted
+		/// to save the next time they do something that would lose everything
+		void markDirty();
 		
 	protected Q_SLOTS:
 		// MARK: PipelineListener slots
@@ -143,6 +136,8 @@ namespace hm
 		virtual void resizeEvent(QResizeEvent* event) override;
         
     private:
+		bool mIsDirty;
+		
 		/// \return nullptr if \p node has no corresponding widget
 		WidgetNode* findWidgetFor(NodePtr node) const;
 		/// Creates and returns a new WidgetNode instance (or derived

@@ -45,7 +45,7 @@ WidgetBaseParameter::WidgetBaseParameter(ParameterPtr parameter)
 
 WidgetBaseParameter::~WidgetBaseParameter()
 {
-	BOOST_VERIFY(mParameter->removeChangeOfCharacteristicsCallback(mCallbackHandle));
+	BOOST_VERIFY(mParameter->removeCallback(mCallbackHandle));
 }
 
 void WidgetBaseParameter::characteristicsCallback_()

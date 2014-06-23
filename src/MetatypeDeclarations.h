@@ -11,3 +11,4 @@ Q_DECLARE_METATYPE(std::shared_ptr<hm::PatchCord>);
 Q_DECLARE_METATYPE(std::shared_ptr<hm::Outlet>);
 Q_DECLARE_METATYPE(std::shared_ptr<hm::Inlet>);
 Q_DECLARE_METATYPE(std::shared_ptr<hm::NodeRenderer>);
+Q_DECLARE_METATYPE(std::shared_ptr<hm::BaseParameter>);

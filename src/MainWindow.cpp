@@ -196,7 +196,11 @@ bool MainWindow::saveOpenFile()
 		out.open(QIODevice::WriteOnly | QIODevice::Text);
 		out.write(json.toUtf8());
 		bool ok = out.commit();
-		if (!ok)
+		if (ok)
+		{
+			mPatchArea->markClean();
+		}
+		else
 		{
 			QMessageBox::critical(this, "Error saving file", "An error occurred while attempting to save to "+mOpenedFile+". The pipeline has not been saved.");
 		}
@@ -240,28 +244,35 @@ void MainWindow::actionSave()
 
 bool MainWindow::confirmDestroyWithUser()
 {
-	QMessageBox confirm;
-	confirm.setText("The pipeline has been modified.");
-	confirm.setInformativeText("Do you want to save your changes?");
-	confirm.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-	confirm.setDefaultButton(QMessageBox::Save);
-	int ret = confirm.exec();
-	bool okToContinue = false;
-	switch (ret)
+	if (mPatchArea->isDirty())
 	{
-		case QMessageBox::Save:
-			okToContinue = saveOpenFile();
-			break;
-		case QMessageBox::Discard:
-			okToContinue = true;
-			break;
-		case QMessageBox::Cancel:
-			okToContinue = false;
-			break;
-		default:
-			assert(false);
+		QMessageBox confirm;
+		confirm.setText("The pipeline has been modified.");
+		confirm.setInformativeText("Do you want to save your changes?");
+		confirm.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+		confirm.setDefaultButton(QMessageBox::Save);
+		int ret = confirm.exec();
+		bool okToContinue = false;
+		switch (ret)
+		{
+			case QMessageBox::Save:
+				okToContinue = saveOpenFile();
+				break;
+			case QMessageBox::Discard:
+				okToContinue = true;
+				break;
+			case QMessageBox::Cancel:
+				okToContinue = false;
+				break;
+			default:
+				assert(false);
+		}
+		return okToContinue;
 	}
-	return okToContinue;
+	else
+	{
+		return true;
+	}
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
