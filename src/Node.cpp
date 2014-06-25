@@ -232,6 +232,7 @@ void Node::setNodeParams(Params& params)
 	// any lock is on mNodeParamsMutex as Pipeline::ensureNameIsUnique may
 	// subsequently call a function of this class that will attempt a unique
 	// lock on mNodeParamsMutex.
+	// TODO: This needs to be shared pointer to be safe
 	if (Pipeline* p = pipeline())
 	{
 		NodePtr me = FactoryNode::instance()->getNodePtr(this);
@@ -257,10 +258,7 @@ InletPtr Node::createInlet(Types types, std::string const& name, std::string con
 	
 	InletPtr inlet(new Inlet(types, *this, index, name, helpText));
 	mInlets.push_back(inlet);
-	if (mHasStartEverBeenCalled)
-	{
-		mHaveAllCharacteristicChangesBeenReported.clear();
-	}
+	notifyCharacteristicsChanged();
 	return inlet;
 }
 
@@ -279,10 +277,7 @@ OutletPtr Node::createOutlet(Types types, std::string const& name, std::string c
 	OutletPtr outlet(new Outlet(types, *this, index, name, helpText));
 	outlet->mSelf = outlet;
 	mOutlets.push_back(outlet);
-	if (mHasStartEverBeenCalled)
-	{
-		mHaveAllCharacteristicChangesBeenReported.clear();
-	}
+	notifyCharacteristicsChanged();
 	return outlet;
 }
 
@@ -425,7 +420,7 @@ bool Node::removeInlet(InletPtr inlet)
 	{
 		mInlets.erase(it);
 		inlet->detachOwnerNode();
-		mHaveAllCharacteristicChangesBeenReported.clear();
+		notifyCharacteristicsChanged();
 		return true;
 	}
 	return false;
@@ -439,12 +434,41 @@ bool Node::removeOutlet(OutletPtr outlet)
 	{
 		mOutlets.erase(it);
 		(**it).detachOwnerNode();
+		notifyCharacteristicsChanged();
+		return true;
 	}
+	return false;
+}
+
+
+void Node::setPipeline(Pipeline* pipeline)
+{
+	mPipeline = pipeline;
+	if (mPipeline==nullptr)
+	{
+		mDispatcher = nullptr;
+	}
+	else
+	{
+		mDispatcher = mPipeline.load()->dispatcher;
+		assert(mDispatcher != nullptr);
+	}
+}
+
+
+void Node::notifyCharacteristicsChanged()
+{
+	// don't notify of inlets being added, etc in the constructor
 	if (mHasStartEverBeenCalled)
 	{
 		mHaveAllCharacteristicChangesBeenReported.clear();
+		NodePtr me = FactoryNode::instance()->getNodePtr(this);
+		EventDispatcherPtr dispatcher = mDispatcher;
+		if (dispatcher != nullptr && dispatcher != nullptr)
+		{
+			dispatcher->dispatch(EventPtr(new NodeCharacteristicsChangedEvent(me)));
+		}
 	}
-	return it!=end(mOutlets);
 }
 
 
