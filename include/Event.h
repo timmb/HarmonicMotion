@@ -10,7 +10,7 @@ namespace hm
 	{
 		/// Notify \p listener of the event associated with this object
 		virtual void notify(Listener* listener) = 0;
-		virtual std::string name() const = 0;
+		virtual std::string type() const = 0;
 	};
 	typedef std::shared_ptr<Event> EventPtr;
 	typedef std::vector<EventPtr> Events;
@@ -21,7 +21,7 @@ namespace hm
 		
 		NodeAddedEvent(NodePtr node_) : node(node_) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "NodeAddedEvent"; }
+		virtual std::string type() const { return "NodeAddedEvent"; }
 	};
 	
 	struct NodeRemovedEvent : public Event
@@ -30,7 +30,7 @@ namespace hm
 		
 		NodeRemovedEvent(NodePtr node_) : node(node_) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "NodeRemovedEvent"; }
+		virtual std::string type() const { return "NodeRemovedEvent"; }
 	};
 	
 	struct NodeCharacteristicsChangedEvent : public Event
@@ -39,7 +39,7 @@ namespace hm
 		
 		NodeCharacteristicsChangedEvent(NodePtr node_) : node(node_) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "NodeCharacteristicsChangedEvent"; }
+		virtual std::string type() const { return "NodeCharacteristicsChangedEvent"; }
 	};
 	
 	struct NodeParamsChangedEvent : public Event
@@ -48,7 +48,7 @@ namespace hm
 		
 		NodeParamsChangedEvent(NodePtr node_) : node(node_) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "NodeParamsChangedEvent"; }
+		virtual std::string type() const { return "NodeParamsChangedEvent"; }
 	};
 	
 	struct PatchCordAddedEvent : public Event
@@ -57,7 +57,7 @@ namespace hm
 		
 		PatchCordAddedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "PatchCordAddedEvent"; }
+		virtual std::string type() const { return "PatchCordAddedEvent"; }
 	};
 	
 	struct PatchCordRemovedEvent : public Event
@@ -66,7 +66,7 @@ namespace hm
 		
 		PatchCordRemovedEvent(PatchCordPtr patchCord_) : patchCord(patchCord_) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "PatchCordRemovedEvent"; }
+		virtual std::string type() const { return "PatchCordRemovedEvent"; }
 	};
 	
 	struct ParameterChangedExternallyEvent : public Event {
@@ -74,7 +74,7 @@ namespace hm
 		
 		ParameterChangedExternallyEvent(ParameterPtr p) : parameter(p) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "ParameterChangedExternallyEvent"; }
+		virtual std::string type() const { return "ParameterChangedExternallyEvent"; }
 	};
 	
 	struct ParameterChangedInternallyEvent : public Event {
@@ -82,7 +82,7 @@ namespace hm
 		
 		ParameterChangedInternallyEvent(ParameterPtr p) : parameter(p) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "ParameterChagnedInternallyEvent"; }
+		virtual std::string type() const { return "ParameterChagnedInternallyEvent"; }
 	};
 	
 	struct LoadFromJsonCompleteEvent : public Event {
@@ -91,7 +91,7 @@ namespace hm
 		
 		LoadFromJsonCompleteEvent(std::vector<std::string> e) : errors(e) {}
 		virtual void notify(Listener* listener) override;
-		virtual std::string name() const { return "LoadFromJsonCompleteEvent"; }
+		virtual std::string type() const { return "LoadFromJsonCompleteEvent"; }
 	};
 
 }

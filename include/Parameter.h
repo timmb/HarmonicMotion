@@ -25,6 +25,22 @@ namespace hm {
 	/// On rare occasions it's useful to have a container that can contain
 	/// a pointer to any value.
 	typedef boost::variant<bool*, float*, double*, int*, std::string*> ParameterValuePointerContainer;
+	/// A Visitor that will set a ParameterValueContainer from a
+	/// Json::Value. Returns true if the setting was successful
+	struct ParameterValueContainerSetter : public boost::static_visitor<bool>
+	{
+		Json::Value const& value;
+		
+		ParameterValueContainerSetter(Json::Value const& value_)
+		: value(value_) {}
+		
+		template <typename T>
+		bool operator()(T & t)
+		{
+			return value >> t;
+		}
+	};
+
 
 	/// Base class of all parameters
 	class BaseParameter

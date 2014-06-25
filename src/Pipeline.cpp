@@ -803,7 +803,7 @@ InletPtr Pipeline::p_InletFromPath(std::string const& path) const
 				return inlet;
 			}
 		}
-		hm_info("Node "+node->name()+" of type "+node->type()+" does not " "have an inlet named "+splitPath[1]);
+		hm_info("Node "+node->name()+" of type "+node->type()+" does not " "have an inlet with index "+splitPath[2]);
 	}
 	return nullptr;
 }
@@ -912,7 +912,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 				continue;
 			}
 			Node::Params nodeParams;
-			if (!(jNode["settings"] >> nodeParams))
+			if (!(jNode >> nodeParams))
 			{
 				errors.push_back("Failed to parse 'settings' element for node of type '"+type+"'. Skipping this node.");
 				continue;
@@ -921,7 +921,8 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			assert(node!=nullptr);
 			if (node!=nullptr)
 			{
-				jNode >> *node;
+				// now done through the params
+//				jNode >> *node;
 				addNode(node);
 			}
 			else

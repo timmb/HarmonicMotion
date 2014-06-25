@@ -81,6 +81,15 @@ void EventDispatcher::threadFunction()
 				event = mQueue.front();
 				assert(event != nullptr);
 				mQueue.pop();
+				// Don't send sequential Node chacteristic changed
+				// events for the same node as they are redundant.
+				if (event->type()=="NodeCharacteristicsChangedEvent")
+				{
+					while (!mQueue.empty() && mQueue.front()->type()=="NodeCharacteristicsChangedEvent")
+					{
+						mQueue.pop();
+					}
+				}
 			}
 		}
 		

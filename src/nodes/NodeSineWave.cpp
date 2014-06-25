@@ -16,10 +16,10 @@ using namespace hm;
 NodeSineWave::NodeSineWave(Node::Params params, std::string className)
 : NodeThreaded(params, className)
 , mOutlet(nullptr)
-, mStartTime(-42)
+, mLastPhase(0)
 , mTimeOfLastOutput(-42)
 , mFrequency(0.2)
-, mPhase(0.)
+, mInitialPhase(0.)
 , mAmplitude(1.)
 , mOutputDelta(0.3)
 {
@@ -28,7 +28,7 @@ NodeSineWave::NodeSineWave(Node::Params params, std::string className)
 	createOutlet(VALUE, "Test outlet", "temp test outlet");
 	createOutlet(VALUE, "Test outlet 2", "temp test outlet");
 	addParameter("Frequency", &mFrequency)->setBounds(0, 999999, 0, 999999);
-	addParameter("Phase (0-1)", &mPhase)->setBounds(0, 1, 0, 1);
+	addParameter("Initial phase (0-1)", &mInitialPhase)->setBounds(0, 1, 0, 1);
 	addParameter("Amplitude", &mAmplitude)->setBounds(-999999, 999999, -9, +9);
 	addParameter("Time between outputs (s)", &mOutputDelta)->setBounds(0, 999999, 0, 999);
 }
@@ -49,8 +49,8 @@ void NodeSineWave::run()
 	const double maxSleepDuration(0.2);
 	
 	
-	mStartTime = elapsedTime();
-	mTimeOfLastOutput = mStartTime - mOutputDelta;
+	mLastPhase = mInitialPhase;
+	mTimeOfLastOutput = elapsedTime() - mOutputDelta;
 	while (!isRequestedToStop())
 	{
 		updateParameters();
@@ -67,8 +67,9 @@ void NodeSineWave::run()
 
 void NodeSineWave::emitValue(double now)
 {
-	double t = now - mStartTime;
-	Value value(sinf(float((t * mFrequency + mPhase) * 2. * M_PI )) * float(mAmplitude), elapsedTime());
+	double dt = now - mTimeOfLastOutput;
+	mLastPhase = mLastPhase + float(dt * mFrequency);
+	Value value(sinf(mLastPhase * 2.f * float(M_PI)) * mAmplitude, elapsedTime());
 	Data data(value);
 	mOutlet->outputNewData(data);
 }

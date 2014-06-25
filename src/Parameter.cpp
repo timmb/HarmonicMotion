@@ -43,7 +43,7 @@ namespace std
 using namespace std;
 
 namespace hm {
-	
+
 	// MARK: BaseParameter
 		
 	BaseParameter::BaseParameter(Node& parent, std::string name, std::string description)
