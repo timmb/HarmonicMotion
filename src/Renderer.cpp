@@ -231,12 +231,14 @@ void Renderer3d::drawSkeletonLines(Skeleton3d const& x)
 						  0.5f * endBrightness,
 						  0.2f+0.8f*int(isLeft)*endBrightness,
 						  1.0f);
-		glBegin(GL_LINE);
+//		gl::color(ColorA::white());
+		glBegin(GL_LINES);
 		gl::color(startColor);
 		gl::vertex(x.joint(limbJoints(i).first).value);
 		gl::color(endColor);
 		gl::vertex(x.joint(limbJoints(i).second).value);
 		glEnd();
+//		gl::drawLine(x.joint(limbJoints(i).first).value, x.joint(limbJoints(i).second).value);
 		
 	}
 }

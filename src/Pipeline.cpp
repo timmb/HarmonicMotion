@@ -891,8 +891,8 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 		return false;
 	}
 	
-	// Note - we do not lock the pipeline when loading json - just
-	// use the public interface.
+//	bool wasRunning = isRunning();
+//	stop();
 	
 	{
 		clear();
@@ -957,6 +957,11 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 			}
 		}
 	}
+//	if (wasRunning)
+//	{
+//		start();
+//	}
+	p_Process(Events(1, EventPtr(new LoadFromJsonCompleteEvent(errors))));
 	return errors.empty();
 }
 

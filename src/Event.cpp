@@ -44,4 +44,7 @@ void ParameterChangedInternallyEvent::notify(Listener* listener)
 	listener->parameterChangedInternally(parameter);
 }
 
-
+void LoadFromJsonCompleteEvent::notify(Listener* listener)
+{
+	listener->loadFromJsonComplete(errors);
+}
