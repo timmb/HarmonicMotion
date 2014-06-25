@@ -15,6 +15,7 @@
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/locks.hpp>
 #include "Event.h"
+#include "EventDispatcher.h"
 
 namespace hm
 {
@@ -88,18 +89,18 @@ namespace hm
 		/// \return true if \p outlet is connected to \p inlet
 		bool isConnected(OutletPtr outlet, InletPtr inlet) const;
 		
-		// MARK: Listen to pipeline
-		
-		/// Register a listener to be notified of updates to this pipeline.
-		/// Listeners are notified in the order that they are added, from
-		/// the same thread that caused the modification to the pipeline.
-		/// \param listener must remain valid for the duration of this
-		/// pipeline, or until it is removed.
-		void addListener(Listener* listener);
-		
-		/// \return true if \p listener was registered and has been
-		/// removed, false if \p listener was not registered.
-		bool removeListener(Listener* listener);
+//		// MARK: Listen to pipeline
+//		
+//		/// Register a listener to be notified of updates to this pipeline.
+//		/// Listeners are notified in the order that they are added, from
+//		/// the same thread that caused the modification to the pipeline.
+//		/// \param listener must remain valid for the duration of this
+//		/// pipeline, or until it is removed.
+//		void addListener(Listener* listener);
+//		
+//		/// \return true if \p listener was registered and has been
+//		/// removed, false if \p listener was not registered.
+//		bool removeListener(Listener* listener);
 		
 		// MARK: Start/stop pipeline
 		
@@ -135,6 +136,9 @@ namespace hm
 		/// Read JSON from file, overwriting the current state of this pipeline
 		/// with its values.
 		bool loadJson(std::string filePath);
+		
+		/// Use this to listen to pipeline events
+		EventDispatcherPtr dispatcher;
 		
 	private:
 		/// Callbacks for all parameters. This immediate triggers an
@@ -204,12 +208,15 @@ namespace hm
 		/// \return The \c PatchCordPtr instance that connectes \p outlet
 		/// and \p inlet, or \c nullptr if none exists
 		PatchCordPtr p_FindPatchCord(OutletPtr outlet, InletPtr inlet) const;
+		
 		/// \pre Requires a shared lock to be active
 		/// \param path e.g. "My node" or "/My node/
 		NodePtr p_NodeFromPath(std::string path) const;
+		
 		/// \pre Requires a shared lock to be active
 		/// \param path e.g. "/My node/My outlet"
 		OutletPtr p_OutletFromPath(std::string const& path) const;
+		
 		/// \pre Requires a shared lock to be active
 		InletPtr p_InletFromPath(std::string const& path) const;
 		
@@ -217,11 +224,11 @@ namespace hm
 		/// \pre Requires a shared lock to be active
 		bool p_PatchCordInvariant() const;
 		
-		/// \note This function grabs a shared lock on mListenersMutex.
-		/// \pre Requires no unique or upgrade lock of mPipelineMutex to be
-		/// active, and no unique or upgrade lock of mListenersMutex to be
-		/// active.
-		void p_Process(Events const& events) const;
+//		/// \note This function grabs a shared lock on mListenersMutex.
+//		/// \pre Requires no unique or upgrade lock of mPipelineMutex to be
+//		/// active, and no unique or upgrade lock of mListenersMutex to be
+//		/// active.
+//		void p_Process(Events const& events) const;
 		
 		
 		std::unique_ptr<boost::thread> mThread;

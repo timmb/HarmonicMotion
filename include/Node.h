@@ -16,6 +16,7 @@
 #include "Common.h"
 #include "Parameter.h"
 #include "json/json.h"
+#include "EventDispatcher.h"
 
 namespace hm
 {
@@ -203,9 +204,12 @@ namespace hm
 		
 		
 	private:
+		// helper function
+		void notifyCharacteristicsChanged();
+		
 		friend Pipeline;
 		/// FUNCTION TO BE ACCESSED BY PIPELINE ONLY.
-		void setPipeline(Pipeline* pipeline) { mPipeline = pipeline; }
+		void setPipeline(Pipeline* pipeline);
 		/////////////////////////////////////
 		
 		/// The pipeline this node is contained within. This may be nullptr
@@ -214,6 +218,8 @@ namespace hm
 		/// from their \p stepProcessing() function or any Parameter callbacks
 		/// as that might create a deadlock with the pipeline mutex.
 		Pipeline* pipeline() const { return mPipeline; }
+		/// This may be nullptr and needs to be checked each time.
+		EventDispatcherPtr mDispatcher;
 
 		/// We retain a reference to the pipeline. This may be nullptr
 		std::atomic<Pipeline*> mPipeline;
@@ -226,13 +232,17 @@ namespace hm
 		/// Guards changes to the characteristics of the node (i.e.
 		/// how many inlets and outlets it has)
 		mutable boost::shared_mutex mCharacteristicsMutex;
-		std::atomic<bool> mIsEnabled;
-		std::atomic<bool> mIsProcessing;
-		std::atomic<bool> mHasStartEverBeenCalled;
 		/// If node characteristics change after start has been called
 		/// then this is set to false until we notify the pipeline of the
 		/// event.
 		std::atomic_flag mHaveAllCharacteristicChangesBeenReported;
+		std::atomic<bool> mIsEnabled;
+		std::atomic<bool> mIsProcessing;
+		std::atomic<bool> mHasStartEverBeenCalled;
+//		/// If node characteristics change after start has been called
+//		/// then this is set to false until we notify the pipeline of the
+//		/// event.
+//		std::atomic_flag mHaveAllCharacteristicChangesBeenReported;
 		const std::string mClassName;
 		
 		friend Json::Value& operator<<(Json::Value&, Node const&);

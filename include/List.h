@@ -208,6 +208,9 @@ namespace hm
 		{ \
 			x op_assign rhs; \
 		} \
+		BaseData::timestamp = chooseTimestamp(*this, rhs); \
+		BaseData::id = chooseId(*this, rhs); \
+		BaseData::sceneMeta = chooseSceneMeta(*this, rhs); \
 		return *this; \
 	}
 	
@@ -223,7 +226,7 @@ namespace hm
 typename trait<List<DataType>, T>::return_type \
 	List<DataType>::operator op(T const& rhs) const \
 	{ \
-		typename trait<List<DataType>, T>::return_type out; \
+		typename trait<List<DataType>, T>::return_type out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs)); \
 		out.value.reserve(value.size()); \
 		for (auto it=value.begin(); it!=value.end(); ++it) \
 		{ \
@@ -254,6 +257,9 @@ typename trait<List<DataType>, T>::return_type \
 		{ \
 			*lhs_it op_assign *rhs_it; \
 		} \
+		BaseData::timestamp = chooseTimestamp(*this, rhs); \
+		BaseData::id = chooseId(*this, rhs); \
+		BaseData::sceneMeta = chooseSceneMeta(*this, rhs); \
 		return *this; \
 	}
 	
@@ -270,7 +276,7 @@ typename trait<List<DataType>, T>::return_type \
 	typename trait <List<DataType>, List<T>>::return_type \
 	List<DataType>::operator op(List<T> const& rhs) const \
 	{ \
-		typename trait <List<DataType>, List<T>>::return_type out; \
+		typename trait <List<DataType>, List<T>>::return_type out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs)); \
 		int n = std::min(value.size(), rhs.value.size()); \
 		for (int i=0; i<n; i++) \
 		{ \
@@ -290,7 +296,7 @@ typename trait<List<DataType>, T>::return_type \
 	template <typename DataType> \
 	List<DataType> List<DataType>::operator op() const \
 	{ \
-		List<DataType> out; \
+		List<DataType> out(BaseData::timestamp, BaseData::id, BaseData::sceneMeta); \
 		out.value.reserve(value.size()); \
 		for (DataType const& x: value) \
 		{ \
@@ -312,7 +318,7 @@ typename boost::disable_if<is_list<T>, typename trait<T, List<DataType>>::return
 operator op (T const& lhs, List<DataType> const& rhs) \
 { \
 	static_assert(trait<T, List<DataType>>::value, "SFINAE failure"); \
-	typename trait<T, List<DataType>>::return_type out; \
+	typename trait<T, List<DataType>>::return_type out(chooseTimestamp(lhs, rhs), chooseId(lhs, rhs), chooseSceneMeta(lhs, rhs)); \
 	out.value.reserve(rhs.value.size()); \
 	for (auto it = rhs.value.begin(); it!=rhs.value.end(); ++it) \
 	{ \

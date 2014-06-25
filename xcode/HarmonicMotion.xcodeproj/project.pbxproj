@@ -185,6 +185,8 @@
 		34C5D01419471EC500CC2AE8 /* NodeImageProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C5D01319471EC500CC2AE8 /* NodeImageProcessor.h */; };
 		34C83216194209D100953F09 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C83215194209D100953F09 /* Renderer.cpp */; };
 		34C83218194209D800953F09 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C83217194209D800953F09 /* Renderer.h */; };
+		34C90A27195B2AD7009CEFB8 /* EventDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C90A26195B2AD6009CEFB8 /* EventDispatcher.cpp */; };
+		34C90A29195B2AE0009CEFB8 /* EventDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C90A28195B2AE0009CEFB8 /* EventDispatcher.h */; };
 		34DBA74B193F3A9600D24456 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34DBA729193F3A9600D24456 /* IpEndpointName.cpp */; };
 		34DBA74C193F3A9600D24456 /* IpEndpointName.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DBA72A193F3A9600D24456 /* IpEndpointName.h */; };
 		34DBA74D193F3A9600D24456 /* NetworkingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DBA72B193F3A9600D24456 /* NetworkingUtils.h */; };
@@ -434,6 +436,8 @@
 		34C83215194209D100953F09 /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
 		34C83217194209D800953F09 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderer.h; path = ../include/Renderer.h; sourceTree = "<group>"; };
 		34C90A1A195B17A4009CEFB8 /* cinder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cinder.xcodeproj; path = ../../../Cinder/xcode/cinder.xcodeproj; sourceTree = "<group>"; };
+		34C90A26195B2AD6009CEFB8 /* EventDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventDispatcher.cpp; sourceTree = "<group>"; };
+		34C90A28195B2AE0009CEFB8 /* EventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDispatcher.h; path = ../include/EventDispatcher.h; sourceTree = "<group>"; };
 		34DBA729193F3A9600D24456 /* IpEndpointName.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IpEndpointName.cpp; sourceTree = "<group>"; };
 		34DBA72A193F3A9600D24456 /* IpEndpointName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpEndpointName.h; sourceTree = "<group>"; };
 		34DBA72B193F3A9600D24456 /* NetworkingUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingUtils.h; sourceTree = "<group>"; };
@@ -500,6 +504,8 @@
 				22197F8517F4996F003B1883 /* Common.h */,
 				347662E919409A4600539238 /* Event.cpp */,
 				347662F11940A00100539238 /* Event.h */,
+				34C90A26195B2AD6009CEFB8 /* EventDispatcher.cpp */,
+				34C90A28195B2AE0009CEFB8 /* EventDispatcher.h */,
 				22C5DF6118A25BC200920089 /* FactoryNode.cpp */,
 				22C5DF6418A25BCA00920089 /* FactoryNode.h */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
@@ -1080,6 +1086,7 @@
 				22293736181677C8008CAA09 /* VOpenNIHeaders.h in Headers */,
 				22293739181677C8008CAA09 /* VOpenNINetwork.h in Headers */,
 				34DBA74E193F3A9600D24456 /* PacketListener.h in Headers */,
+				34C90A29195B2AE0009CEFB8 /* EventDispatcher.h in Headers */,
 				34DBA757193F3A9600D24456 /* OscHostEndianness.h in Headers */,
 				34DBA767193F3A9600D24456 /* OscMessage.h in Headers */,
 				2229373C181677C8008CAA09 /* VOpenNIRecorder.h in Headers */,
@@ -1218,6 +1225,7 @@
 				22293731181677C8008CAA09 /* VOpenNIDevice.cpp in Sources */,
 				34C83216194209D100953F09 /* Renderer.cpp in Sources */,
 				22293734181677C8008CAA09 /* VOpenNIDeviceManager.cpp in Sources */,
+				34C90A27195B2AD7009CEFB8 /* EventDispatcher.cpp in Sources */,
 				226A966F189BED140056DCD1 /* NodeFilter.cpp in Sources */,
 				343ACE081947769F0094E08B /* List.cpp in Sources */,
 				22293738181677C8008CAA09 /* VOpenNINetwork.cpp in Sources */,

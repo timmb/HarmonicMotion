@@ -28,6 +28,7 @@ typedef boost::shared_lock<boost::shared_mutex> SharedLock;
 
 Pipeline::Pipeline()
 : mIsRunning(false)
+, dispatcher(new EventDispatcher)
 {
 	hm_debug("Pipeline constructed");
 }
@@ -81,20 +82,20 @@ void Pipeline::addNode(NodePtr node)
 		UniqueLock lock(mPipelineMutex);
 		events = p_AddNode(node);
 	}
-	p_Process(events);
+	dispatcher->dispatch(events);;
 }
 
-void Pipeline::p_Process(Events const& events) const
-{
-	SharedLock listenerLock(mListenersMutex);
-	for (EventPtr event: events)
-	{
-		for (Listener* listener: mListeners)
-		{
-			event->notify(listener);
-		}
-	}
-}
+//void Pipeline::p_Process(Events const& events) const
+//{
+//	SharedLock listenerLock(mListenersMutex);
+//	for (EventPtr event: events)
+//	{
+//		for (Listener* listener: mListeners)
+//		{
+//			event->notify(listener);
+//		}
+//	}
+//}
 
 Events Pipeline::p_AddNode(NodePtr node)
 {
@@ -137,7 +138,7 @@ void Pipeline::removeNode(NodePtr node)
 		UniqueLock lock(mPipelineMutex);
 		events = p_RemoveNode(node);
 	}
-	p_Process(events);
+	dispatcher->dispatch(events);
 }
 
 Events Pipeline::p_RemoveNode(NodePtr node)
@@ -279,7 +280,7 @@ void Pipeline::replaceNode(NodePtr oldNode, NodePtr newNode)
 			}
 		}
 	} // end of unique lock
-	p_Process(events);
+	dispatcher->dispatch(events);
 }
 
 void Pipeline::ensureNameIsUnique(NodePtr node)
@@ -291,7 +292,7 @@ void Pipeline::ensureNameIsUnique(NodePtr node)
 	}
 	{
 		SharedLock lock(mListenersMutex);
-		p_Process(events);
+		dispatcher->dispatch(events);
 	}
 }
 
@@ -386,7 +387,7 @@ void Pipeline::start()
 				}
 
 				
-				p_Process(events);
+				dispatcher->dispatch(events);
 			}
 			double delta = elapsedTime() - timeOfLastUpdate;
 			timeOfLastUpdate += delta;
@@ -501,7 +502,7 @@ bool Pipeline::connect(OutletPtr outlet, InletPtr inlet)
 		UniqueLock lock(mPipelineMutex);
 		events = p_Connect(outlet, inlet);
 	}
-	p_Process(events);
+	dispatcher->dispatch(events);
 	
 	// assert that if events is not empty then connection was a success
 	assert([&]() {
@@ -564,7 +565,7 @@ bool Pipeline::disconnect(OutletPtr outlet, InletPtr inlet)
 		UniqueLock lock(mPipelineMutex);
 		events = p_Disconnect(outlet, inlet);
 	}
-	p_Process(events);
+	dispatcher->dispatch(events);
 	
 	// assert that if events is not empty then disconnection was a success
 	assert([&]() {
@@ -667,29 +668,29 @@ bool Pipeline::p_IsConnected(OutletPtr outlet, InletPtr inlet) const
 }
 
 
-void Pipeline::addListener(Listener* listener)
-{
-	UniqueLock lock(mListenersMutex);
-	mListeners.push_back(listener);
-	hm_debug("Added listener "<<listener);
-}
-
-bool Pipeline::removeListener(Listener* listener)
-{
-	UniqueLock lock(mListenersMutex);
-	auto it = std::find(mListeners.begin(), mListeners.end(), listener);
-	if (it==mListeners.end())
-	{
-		hm_warning("Failed to remove listener "<<listener<<" as it was not recognised.");
-		return false;
-	}
-	else
-	{
-		mListeners.erase(it);
-		hm_debug("Removed listener "<<listener);
-		return true;
-	}
-}
+//void Pipeline::addListener(Listener* listener)
+//{
+//	UniqueLock lock(mListenersMutex);
+//	mListeners.push_back(listener);
+//	hm_debug("Added listener "<<listener);
+//}
+//
+//bool Pipeline::removeListener(Listener* listener)
+//{
+//	UniqueLock lock(mListenersMutex);
+//	auto it = std::find(mListeners.begin(), mListeners.end(), listener);
+//	if (it==mListeners.end())
+//	{
+//		hm_warning("Failed to remove listener "<<listener<<" as it was not recognised.");
+//		return false;
+//	}
+//	else
+//	{
+//		mListeners.erase(it);
+//		hm_debug("Removed listener "<<listener);
+//		return true;
+//	}
+//}
 
 
 NodePtr Pipeline::nodeFromPath(string path) const
@@ -835,7 +836,7 @@ void Pipeline::clear()
 		UniqueLock lock(mPipelineMutex);
 		events = p_Clear();
 	}
-	p_Process(events);
+	dispatcher->dispatch(events);
 }
 
 
@@ -961,7 +962,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 //	{
 //		start();
 //	}
-	p_Process(Events(1, EventPtr(new LoadFromJsonCompleteEvent(errors))));
+	dispatcher->dispatch(EventPtr(new LoadFromJsonCompleteEvent(errors)));
 	return errors.empty();
 }
 
@@ -989,13 +990,13 @@ bool Pipeline::saveJson(string filePath) const
 
 void Pipeline::callbackParameterValueChangedExternally(ParameterPtr p)
 {
-	p_Process(Events(1, EventPtr(new ParameterChangedExternallyEvent(p))));
+	dispatcher->dispatch(EventPtr(new ParameterChangedExternallyEvent(p)));
 }
 
 
 void Pipeline::callbackParameterValueChangedInternally(ParameterPtr p)
 {
-	p_Process(Events(1, EventPtr(new ParameterChangedInternallyEvent(p))));
+	dispatcher->dispatch(EventPtr(new ParameterChangedInternallyEvent(p)));
 }
 
 
