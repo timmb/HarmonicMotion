@@ -48,6 +48,7 @@ namespace hm
 		void actionSave();
 		void actionSaveAs();
 		void actionOpen();
+		void actionResetView();
 		
 		void addRenderView(NodeRendererPtr node);
 		void removeRenderView(NodeRendererPtr node);

@@ -45,11 +45,9 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 
 //	mLayout->addWidget(mConsole);
 //	mLayout->addWidget(mPatchArea);
-	bool success(true);
 	
-	success = connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString)));
-	assert(success);
-	
+	BOOST_VERIFY(connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString))));
+		
 	mPatchScrollArea = new QScrollArea(this);
 	mPatchScrollArea->setWidget(mPatchArea);
 	mPatchScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -78,6 +76,7 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	QAction* actionPrintNodeNames = new QAction("Print &node names in use", this);
 	QAction* actionCheckDatatypeInvariant = new QAction("Check datatype invariant", this);
 	QAction* actionPrintWidgets = new QAction("Print widgets", this);
+	QAction* actionResetView = new QAction("Reset view",this);
 	
 	
 	QMenu* menuFile = new QMenu("&File", this);
@@ -92,6 +91,7 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	menuDebug->addAction(actionPrintNodeNames);
 	menuDebug->addAction(actionCheckDatatypeInvariant);
 	menuDebug->addAction(actionPrintWidgets);
+	menuDebug->addAction(actionResetView);
 	
 	QMenuBar* menuBar = new QMenuBar(this);
 	menuBar->addMenu(menuFile);
@@ -99,28 +99,21 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	
 	setMenuBar(menuBar);
 	
-	success = connect(this, SIGNAL(newInfoPanelText(QString)), infoPanel, SLOT(setPlainText(QString)));
-	assert(success);
+	BOOST_VERIFY(connect(this, SIGNAL(newInfoPanelText(QString)), infoPanel, SLOT(setPlainText(QString))));
 	BOOST_VERIFY(connect(mPatchArea, SIGNAL(nodeRendererAdded(NodeRendererPtr)), this, SLOT(addRenderView(NodeRendererPtr))));
 	BOOST_VERIFY(connect(mPatchArea, SIGNAL(nodeRendererRemoved(NodeRendererPtr)), this, SLOT(removeRenderView(NodeRendererPtr))));
 	
 	
-	success = connect(actionNew, SIGNAL(triggered()), this, SLOT(actionNew()));
-	assert(success);
-	success = connect(actionSave, SIGNAL(triggered()), this, SLOT(actionSave()));
-	assert(success);
-	success = connect(actionSaveAs, SIGNAL(triggered()), this, SLOT(actionSaveAs()));
-	assert(success);
-	success = connect(actionOpen, SIGNAL(triggered()), this, SLOT(actionOpen()));
-	assert(success);
-	success = connect(actionQuit, SIGNAL(triggered()), QApplication::instance(), SLOT(quit()));
+	BOOST_VERIFY(connect(actionNew, SIGNAL(triggered()), this, SLOT(actionNew())));
+	BOOST_VERIFY(connect(actionSave, SIGNAL(triggered()), this, SLOT(actionSave())));
+	BOOST_VERIFY(connect(actionSaveAs, SIGNAL(triggered()), this, SLOT(actionSaveAs())));
+	BOOST_VERIFY(connect(actionOpen, SIGNAL(triggered()), this, SLOT(actionOpen())));
+	BOOST_VERIFY(connect(actionQuit, SIGNAL(triggered()), QApplication::instance(), SLOT(quit())));
 	
-	success = connect(actionPrintNodeNames, SIGNAL(triggered()), this, SLOT(actionPrintNodeNames()));
-	assert(success);
-	success = connect(actionCheckDatatypeInvariant, SIGNAL(triggered()), this, SLOT(actionCheckDatatypeInvariant()));
-	assert(success);
-	success = connect(actionPrintWidgets, SIGNAL(triggered()), this, SLOT(actionPrintWidgets()));
-	assert(success);
+	BOOST_VERIFY(connect(actionPrintNodeNames, SIGNAL(triggered()), this, SLOT(actionPrintNodeNames())));
+	BOOST_VERIFY(connect(actionCheckDatatypeInvariant, SIGNAL(triggered()), this, SLOT(actionCheckDatatypeInvariant())));
+	BOOST_VERIFY(connect(actionPrintWidgets, SIGNAL(triggered()), this, SLOT(actionPrintWidgets())));
+	BOOST_VERIFY(connect(actionResetView, SIGNAL(triggered()), this, SLOT(actionResetView())));
 }
 
 
@@ -244,6 +237,12 @@ void MainWindow::actionOpen()
 void MainWindow::actionSave()
 {
 	saveOpenFile();
+}
+
+
+void MainWindow::actionResetView()
+{
+	mPatchArea->resetView();
 }
 
 
