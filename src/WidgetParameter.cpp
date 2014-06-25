@@ -252,7 +252,7 @@ WidgetParameterInt::WidgetParameterInt(std::shared_ptr<Parameter<int>> parameter
 	else
 	{
 		QSpinBox* spinBox = new QSpinBox(this);
-		spinBox->setRange(parameter->softMin(), parameter->softMax());
+		spinBox->setRange(parameter->hardMin(), parameter->hardMax());
 		if (value)
 		{
 			spinBox->setValue(*value);
