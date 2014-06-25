@@ -5,6 +5,8 @@ namespace hm
 {
 	/// Override this class and register it with Pipeline to be
 	/// notified of updates.
+	/// \note The functions of this class may be called from different
+	/// threads.
 	class Listener
 	{
 	public:
@@ -37,6 +39,11 @@ namespace hm
 		/// happens when a node changes a value that is observed by
 		/// a parameter
 		virtual void parameterChangedInternally(ParameterPtr parameter) {}
+		
+		/// This is triggered when a load from Json completes.
+		/// \param errors If empty then the load was successful, otherwise
+		/// a list of error messages.
+		virtual void loadFromJsonComplete(std::vector<std::string> const& errors) {}
 	};
 
 }

@@ -75,6 +75,14 @@ namespace hm
 		ParameterChangedInternallyEvent(ParameterPtr p) : parameter(p) {}
 		virtual void notify(Listener* listener) override;
 	};
+	
+	struct LoadFromJsonCompleteEvent : public Event {
+		/// If errors.empty() then the load was successful
+		std::vector<std::string> errors;
+		
+		LoadFromJsonCompleteEvent(std::vector<std::string> e) : errors(e) {}
+		virtual void notify(Listener* listener) override;
+	};
 
 }
 
