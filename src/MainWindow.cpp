@@ -312,7 +312,7 @@ void MainWindow::addRenderView(NodeRendererPtr node)
 	qDebug() <<"****** add Render View" << node.get();
 	QDockWidget* dock = new QDockWidget(str(node->name()), this);
 	WidgetRenderView* view = new WidgetRenderView(node, dock);
-	mRenderViews.push_back(view);
+	mRenderViews.push_back(QPair<QDockWidget*, WidgetRenderView*>(dock, view));
 	dock->setWidget(view);
 	addDockWidget(Qt::BottomDockWidgetArea, dock);
 
@@ -323,11 +323,12 @@ void MainWindow::removeRenderView(NodeRendererPtr node)
 	qDebug() <<"****** remove Render View" << node.get();
 	for (auto it=mRenderViews.begin(); it!=mRenderViews.end(); ++it)
 	{
-		WidgetRenderView* view = *it;
+		QDockWidget* dock = it->first;
+		WidgetRenderView* view = it->second;
 		if (view->node() == node)
 		{
-			// view's parent is its containing dock widget
-			delete view->parent();
+			removeDockWidget(dock);
+			delete dock;
 			mRenderViews.erase(it);
 			return;
 		}

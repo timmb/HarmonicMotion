@@ -21,6 +21,11 @@ WidgetRenderView::WidgetRenderView(shared_ptr<NodeRenderer> node, QWidget* paren
 	
 }
 
+WidgetRenderView::~WidgetRenderView()
+{
+	hm_debug("WidgetRenderView::~WidgetRenderView");
+}
+
 
 
 WidgetRenderViewGl::WidgetRenderViewGl(shared_ptr<NodeRenderer> node, QWidget* parent)

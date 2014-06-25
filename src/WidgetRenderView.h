@@ -14,6 +14,7 @@ namespace hm
 	{
 	public:
 		WidgetRenderView(std::shared_ptr<NodeRenderer> node, QWidget* parent);
+		virtual ~WidgetRenderView();
 		
 		NodePtr node() const { return mNode; }
 		

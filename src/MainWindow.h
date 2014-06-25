@@ -84,7 +84,7 @@ namespace hm
 		QScrollArea* mPatchScrollArea;
 		QString mOpenedFile;
 		
-		QList<WidgetRenderView*> mRenderViews;
+		QList<QPair<QDockWidget*, WidgetRenderView*>> mRenderViews;
 	};
 	
 	

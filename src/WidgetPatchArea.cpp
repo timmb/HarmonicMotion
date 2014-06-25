@@ -44,7 +44,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	{
 		mPipeline = PipelinePtr(new Pipeline);
 	}
-	mPipeline->addListener(mPipelineListener);
+	mPipeline->dispatcher->addListener(mPipelineListener);
 	// We use queued connections to ensure that the order of
 	// events is preserved even though some signals are
 	// triggered from different events.
@@ -80,7 +80,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 
 WidgetPatchArea::~WidgetPatchArea()
 {
-	mPipeline->removeListener(mPipelineListener);
+	mPipeline->dispatcher->removeListener(mPipelineListener);
 }
 
 QSize WidgetPatchArea::sizeHint() const
@@ -895,29 +895,30 @@ void WidgetPatchArea::resetView()
 
 void WidgetPatchArea::slot_resetView()
 {
-	if (mViewNeedsToBeReset)
-	{
-		qDebug() << "View has become out of sync with pipeline. Resetting...";
-		while (!mWidgetPatchCords.empty())
-		{
-			WidgetPatchCord* w = mWidgetPatchCords.back();
-			patchCordRemoved(w->outlet()->outlet(), w->inlet()->inlet());
-		}
-		while (!mWidgetNodes.empty())
-		{
-			nodeRemoved(mWidgetNodes.back()->node());
-		}
-		
-		for (NodePtr node: mPipeline->nodes())
-		{
-			nodeAdded(node);
-		}
-		for (PatchCordPtr p: mPipeline->patchCords())
-		{
-			patchCordAdded(p->outlet(), p->inlet());
-		}
-		mViewNeedsToBeReset = false;
-	}
+	// currently disabled as it seems to be causing problems.
+//	if (mViewNeedsToBeReset)
+//	{
+//		qDebug() << "View has become out of sync with pipeline. Resetting...";
+//		while (!mWidgetPatchCords.empty())
+//		{
+//			WidgetPatchCord* w = mWidgetPatchCords.back();
+//			patchCordRemoved(w->outlet()->outlet(), w->inlet()->inlet());
+//		}
+//		while (!mWidgetNodes.empty())
+//		{
+//			nodeRemoved(mWidgetNodes.back()->node());
+//		}
+//		
+//		for (NodePtr node: mPipeline->nodes())
+//		{
+//			nodeAdded(node);
+//		}
+//		for (PatchCordPtr p: mPipeline->patchCords())
+//		{
+//			patchCordAdded(p->outlet(), p->inlet());
+//		}
+//		mViewNeedsToBeReset = false;
+//	}
 }
 
 
