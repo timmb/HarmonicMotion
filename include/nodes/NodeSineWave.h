@@ -30,14 +30,14 @@ namespace hm
 		OutletPtr mOutlet;
 		
 		//MARK: State
-		double mStartTime;
+		float mLastPhase;
 		double mTimeOfLastOutput;
 		
 		//MARK: Parameters
 		/// Cycles per second
 		double mFrequency;
-		/// Ranges from 0 to 1
-		double mPhase;
+		/// Initial phase - ranges from 0 to 1
+		double mInitialPhase;
 		double mAmplitude;
 		/// How long to wait between outputting values. This class isn't
 		/// super-accurate and the actual output rate may differ from

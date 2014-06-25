@@ -344,7 +344,7 @@ namespace hm
 					return p->name() == name;
 				});
 				// if we've found the parameter try to write in
-				if (it != node.mParameters.end()
+				if (it != parameters.end()
 					&& (**it).fromJson(jParameters[name]))
 				{
 					// remove from our list of parameters once found so that
@@ -381,21 +381,42 @@ namespace hm
 		value["guiLocationY"] = params.guiLocationY;
 		return value;
 	}
+	
 
 	bool operator>>(Json::Value const& value, Node::Params& params)
 	{
-		if (!(value["name"].isConvertibleTo(Json::stringValue)
-			  && value["guiLocationX"].isConvertibleTo(Json::intValue)
-			  && value["guiLocationY"].isConvertibleTo(Json::intValue)
+		if (!(value["settings"]["name"].isConvertibleTo(Json::stringValue)
+			  && value["settings"]["guiLocationX"].isConvertibleTo(Json::intValue)
+			  && value["settings"]["guiLocationY"].isConvertibleTo(Json::intValue)
 			  ))
 		{
 			hm_debug("Error when loading \"params\" object from JSON.");
 			return false;
 		}
-		params.guiLocationX = value["guiLocationX"].asInt();
-		params.guiLocationY = value["guiLocationY"].asInt();
+		params.guiLocationX = value["settings"]["guiLocationX"].asInt();
+		params.guiLocationY = value["settings"]["guiLocationY"].asInt();
+		if (value["parameters"].isObject())
+		{
+			vector<string> parameterNames = value["parameters"].getMemberNames();
+			for (string const& s: parameterNames)
+			{
+				for (auto& pair: params.parameterInitialValues)
+				{
+					if (pair.first == s)
+					{
+						ParameterValueContainerSetter visitor(value["parameters"][s]);
+						bool success = boost::apply_visitor(visitor, pair.second);
+						if (!success)
+						{
+							hm_warning("Unrecognised parameter: "<<s);
+						}
+					}
+				}
+			}
+		}
+		
 		// TODO: Check name is unique
-		string name = value["name"].asString();
+		string name = value["settings"]["name"].asString();
 		if (!name.empty())
 		{
 			params.name = name;
