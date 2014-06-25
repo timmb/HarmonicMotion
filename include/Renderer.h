@@ -7,6 +7,7 @@
 #include "cinder/Color.h"
 #include "Parameter.h"
 #include <deque>
+#include <boost/circular_buffer.hpp>
 
 namespace hm
 {
@@ -226,6 +227,22 @@ namespace hm
 		/// Values are scaled by this amount
 		double mValueScale;
 	};
+	
+	class RendererHistory : public Renderer
+	{
+	public:
+		RendererHistory();
+		
+		virtual void operator()(Value const& x, int inlet) override;
+		
+	private:
+		int mSize;
+		boost::circular_buffer<Data> mBuffer;
+	};
 }
+
+
+
+
 
 

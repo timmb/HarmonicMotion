@@ -48,6 +48,7 @@ NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
 {
 	mRenderers.push_back(RendererPtr(new Renderer3d()));
 	mRenderers.push_back(RendererPtr(new Renderer2d()));
+	mRenderers.push_back(RendererPtr(new RendererHistory()));
 	
 
 	assert(!mRenderers.empty());
