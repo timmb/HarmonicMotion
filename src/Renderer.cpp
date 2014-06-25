@@ -36,6 +36,10 @@ void Renderer::setupMatrices3d()
 	if (mNeedsRefresh)
 	{
 		mLastSceneMeta->setupCamera(mViewport.getWidth(), mViewport.getHeight());
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_POLYGON_SMOOTH);
 	}
 }
 
@@ -44,6 +48,10 @@ void Renderer::setupMatricesWindow()
 	if (mNeedsRefresh)
 	{
 		mLastSceneMeta->setupWindowLetterbox(mViewport.getWidth(), mViewport.getHeight());
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_POLYGON_SMOOTH);
 	}
 }
 
@@ -217,6 +225,8 @@ void Renderer3d::drawSkeleton(Skeleton3d const& x, ListValue const& descriptor)
 void Renderer3d::drawSkeletonLines(Skeleton3d const& x)
 {
 	setupMatrices3d();
+	glPushAttrib(GL_LINE_WIDTH);
+	glLineWidth(2.5);
 	for (int i=0; i<NUM_LIMBS; i++)
 	{
 		float startBrightness = x.jointConfidence(limbJoints(i).first) * 0.5f + 0.5f;
@@ -241,6 +251,7 @@ void Renderer3d::drawSkeletonLines(Skeleton3d const& x)
 //		gl::drawLine(x.joint(limbJoints(i).first).value, x.joint(limbJoints(i).second).value);
 		
 	}
+	glPopAttrib();
 }
 
 
