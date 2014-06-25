@@ -238,7 +238,7 @@ namespace hm
 		/// \param name The name of the parameter
 		/// \param value A pointer to the value to be controlled by the parameter
 		Parameter(Node& parent, std::string name, std::string description, T* value)
-		: BaseParameter(parent, description, name)
+		: BaseParameter(parent, name, description)
 		, mValue(value)
 		, mExternalValue(*value)
 		, mHasNewExternalValue(false)

@@ -424,7 +424,7 @@ bool Node::removeInlet(InletPtr inlet)
 	if (it!=end(mInlets))
 	{
 		mInlets.erase(it);
-		(**it).detachOwnerNode();
+		inlet->detachOwnerNode();
 		mHaveAllCharacteristicChangesBeenReported.clear();
 		return true;
 	}
