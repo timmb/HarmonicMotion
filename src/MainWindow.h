@@ -84,7 +84,11 @@ namespace hm
 		QScrollArea* mPatchScrollArea;
 		QString mOpenedFile;
 		
-		QList<QPair<QDockWidget*, WidgetRenderView*>> mRenderViews;
+		typedef QPair<QDockWidget*, WidgetRenderView*> RenderWidgetPair;
+		QList<RenderWidgetPair> mActiveRenderViews;
+		/// For some reason, deleting render views seems to be able to
+		/// trigger a crash. So for now, reuse them instead of deleting them.
+		QList<WidgetRenderView*> mInactiveRenderViews;
 	};
 	
 	

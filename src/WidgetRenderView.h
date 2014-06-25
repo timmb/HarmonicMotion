@@ -17,6 +17,7 @@ namespace hm
 		virtual ~WidgetRenderView();
 		
 		NodePtr node() const { return mNode; }
+		void setNode(NodePtr node) { mNode = node; }
 		
 	private:
 		NodePtr mNode;
@@ -29,6 +30,7 @@ namespace hm
 		
 	public:
 		WidgetRenderViewGl(std::shared_ptr<NodeRenderer> node, QWidget* parent);
+		virtual ~WidgetRenderViewGl();
 		
 		virtual void initializeGL() override;
 		virtual void paintGL() override;

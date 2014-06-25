@@ -120,6 +120,17 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 MainWindow::~MainWindow()
 {
 	hm_debug("MainWindow destructor.");
+	// This is a bad hack at the moment, but for some reason the destructor
+	// of WidgetRenderView causes a crash regarding memory corruption.
+	// Until this is fixed, we don't destroy them properly.
+	for (auto pair: mActiveRenderViews)
+	{
+		pair.second->setParent(nullptr);
+	}
+	for (auto w: mInactiveRenderViews)
+	{
+		w->setParent(nullptr);
+	}
 }
 
 
@@ -311,8 +322,17 @@ void MainWindow::addRenderView(NodeRendererPtr node)
 {
 	qDebug() <<"****** add Render View" << node.get();
 	QDockWidget* dock = new QDockWidget(str(node->name()), this);
-	WidgetRenderView* view = new WidgetRenderView(node, dock);
-	mRenderViews.push_back(QPair<QDockWidget*, WidgetRenderView*>(dock, view));
+	WidgetRenderView* view = nullptr;
+	if (mInactiveRenderViews.empty())
+	{
+		view = new WidgetRenderView(node, dock);
+	}
+	else
+	{
+		view = mInactiveRenderViews.takeLast();
+		view->setNode(node);
+	}
+	mActiveRenderViews.push_back(RenderWidgetPair(dock, view));
 	dock->setWidget(view);
 	addDockWidget(Qt::BottomDockWidgetArea, dock);
 
@@ -321,15 +341,18 @@ void MainWindow::addRenderView(NodeRendererPtr node)
 void MainWindow::removeRenderView(NodeRendererPtr node)
 {
 	qDebug() <<"****** remove Render View" << node.get();
-	for (auto it=mRenderViews.begin(); it!=mRenderViews.end(); ++it)
+	for (int i=0; i<mActiveRenderViews.size(); i++)
 	{
-		QDockWidget* dock = it->first;
-		WidgetRenderView* view = it->second;
+		RenderWidgetPair pair = mActiveRenderViews[i];
+		QDockWidget* dock = pair.first;
+		WidgetRenderView* view = pair.second;
 		if (view->node() == node)
 		{
-			removeDockWidget(dock);
-			delete dock;
-			mRenderViews.erase(it);
+			RenderWidgetPair widgets = mActiveRenderViews.takeAt(i);
+			removeDockWidget(widgets.first);
+			view->setParent(nullptr);
+			dock->setWidget(nullptr);
+			mInactiveRenderViews.push_back(view);
 			return;
 		}
 	}

@@ -23,7 +23,7 @@ WidgetRenderView::WidgetRenderView(shared_ptr<NodeRenderer> node, QWidget* paren
 
 WidgetRenderView::~WidgetRenderView()
 {
-	hm_debug("WidgetRenderView::~WidgetRenderView");
+	hm_debug("WidgetRenderView::~WidgetRenderView. this: "<<this<<" parent: "<<parent());
 }
 
 
@@ -36,6 +36,12 @@ WidgetRenderViewGl::WidgetRenderViewGl(shared_ptr<NodeRenderer> node, QWidget* p
 {
 	mTimer->setInterval(1000 / mMaxFrameRate);
 	connect(mTimer, SIGNAL(timeout()), this, SLOT(timerCallback()));
+}
+
+WidgetRenderViewGl::~WidgetRenderViewGl()
+{
+	hm_debug("~WidgetRenderViewGl::~~WidgetRenderViewGl. this: "<<this<<" parent: "<<parent());
+	mTimer->stop();
 }
 
 void WidgetRenderViewGl::initializeGL()

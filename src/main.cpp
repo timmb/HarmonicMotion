@@ -26,7 +26,8 @@ int main(int argc, char** argv)
 		throw e;
 	}
 	delete c;
-	delete app;
+	// avoid deleting now due to a memory corruption issue regarding RenderViews
+//	delete app;
 	return ret;
 }
 
