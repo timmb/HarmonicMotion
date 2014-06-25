@@ -156,6 +156,7 @@ void MainWindow::actionNew()
 	if (confirmDestroyWithUser())
 	{
 		mPatchArea->pipeline()->clear();
+		mPatchArea->markClean();
 	}
 }
 
@@ -222,7 +223,11 @@ void MainWindow::actionOpen()
 			QString json = QString::fromUtf8(file.readAll());
 			std::vector<std::string> errors;
 			bool ok = patchArea()->pipeline()->fromJsonString(json.toStdString(), errors);
-			if (!ok)
+			if (ok)
+			{
+				patchArea()->markClean();
+			}
+			else
 			{
 				QStringList _errors;
 				for (std::string const& s: errors)

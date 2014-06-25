@@ -108,6 +108,9 @@ namespace hm
 		/// Mark the pipeline as dirty, meaning the user will be prompted
 		/// to save the next time they do something that would lose everything
 		void markDirty();
+		/// Recreate the entire view of the pipeline. Use this if something
+		/// causes the view to go out of sync with the pipeline.
+		void resetView();
 		
 	protected Q_SLOTS:
 		// MARK: PipelineListener slots
@@ -118,7 +121,12 @@ namespace hm
 		void nodeCharacteristicsChanged(NodePtr node);
 		void patchCordAdded(OutletPtr outlet, InletPtr inlet);
 		void patchCordRemoved(OutletPtr outlet, InletPtr inlet);
+		void loadFromJsonComplete(QStringList errors);
 
+		/// If something gets out of kilter then this will cause the window
+		/// to completely recreate all of its widgets. Do not call this
+		/// directly - use resetView() instead.
+		void slot_resetView();
         
 	Q_SIGNALS:
 		/// New text to be sent to the info panel
@@ -126,6 +134,9 @@ namespace hm
 		
 		void nodeRendererAdded(NodeRendererPtr node);
 		void nodeRendererRemoved(NodeRendererPtr node);
+		/// This will reset the view on the next loop of the event cycle.
+		/// Do not signal this directly - use resetView() instead.
+		void sig_resetView();
 	
 	protected:
 		virtual QSize sizeHint() const override;
@@ -137,6 +148,7 @@ namespace hm
         
     private:
 		bool mIsDirty;
+		bool mViewNeedsToBeReset;
 		
 		/// \return nullptr if \p node has no corresponding widget
 		WidgetNode* findWidgetFor(NodePtr node) const;

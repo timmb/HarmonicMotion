@@ -26,18 +26,7 @@ Controller::Controller(QObject* parent)
 , mAccum(nullptr)
 , mRedrawIsRequired(false)
 {
-	qRegisterMetaType<std::shared_ptr<hm::Node>>();
-	qRegisterMetaType<std::shared_ptr<hm::PatchCord>>();
-	qRegisterMetaType<std::shared_ptr<hm::Outlet>>();
-	qRegisterMetaType<std::shared_ptr<hm::Inlet>>();
-	qRegisterMetaType<std::shared_ptr<hm::NodeRenderer>>();
-	qRegisterMetaType<std::shared_ptr<hm::BaseParameter>>();
-	qRegisterMetaType<hm::NodePtr>("NodePtr");
-	qRegisterMetaType<hm::PatchCordPtr>("PatchCordPtr");
-	qRegisterMetaType<hm::OutletPtr>("OutletPtr");
-	qRegisterMetaType<hm::InletPtr>("InletPtr");
-	qRegisterMetaType<hm::NodeRendererPtr>("NodeRendererPtr");
-	qRegisterMetaType<hm::ParameterPtr>("ParameterPtr");
+	registerMetaTypes();
 	
 	mPipeline = mMainWindow->patchArea()->pipeline();
 //	NodePtr gen = FactoryNode::instance()->create("NodeSineWave");

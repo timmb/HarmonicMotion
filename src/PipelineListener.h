@@ -24,6 +24,7 @@ namespace hm
 		virtual void patchCordRemoved(OutletPtr outlet, InletPtr inlet) override;
 		virtual void parameterChangedExternally(ParameterPtr parameter) override;
 		virtual void parameterChangedInternally(ParameterPtr parameter) override;
+		virtual void loadFromJsonComplete(std::vector<std::string> const& errors) override;
 		
 	Q_SIGNALS:
 		void sigNodeAdded(NodePtr node);
@@ -34,5 +35,6 @@ namespace hm
 		void sigPatchCordRemoved(OutletPtr outlet, InletPtr inlet);
 		void sigParameterChangedExternally(ParameterPtr parameter);
 		void sigParameterChangedInternally(ParameterPtr parameter);
+		void sigLoadFromJsonComplete(QStringList errors);
 	};
 }

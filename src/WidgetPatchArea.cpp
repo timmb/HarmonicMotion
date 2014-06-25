@@ -26,6 +26,7 @@
 #include "PatchAreaMousePressFilter.h"
 #include "PatchCord.h"
 #include "nodes/NodeRenderer.h"
+#include "MetaTypeDeclarations.h"
 
 using namespace hm;
 
@@ -44,12 +45,18 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 		mPipeline = PipelinePtr(new Pipeline);
 	}
 	mPipeline->addListener(mPipelineListener);
-	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(nodeAdded(NodePtr))));
-	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(nodeRemoved(NodePtr))));
-	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeParamsChanged(NodePtr)), this, SLOT(nodeParamsChanged(NodePtr))));
-	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeCharacteristicsChanged(NodePtr)), this, SLOT(nodeCharacteristicsChanged(NodePtr))));
-	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr))));
-	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr))));
+	// We use queued connections to ensure that the order of
+	// events is preserved even though some signals are
+	// triggered from different events.
+	registerMetaTypes();
+	
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(nodeAdded(NodePtr)), Qt::QueuedConnection));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeRemoved(NodePtr)), this, SLOT(nodeRemoved(NodePtr)), Qt::QueuedConnection));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeParamsChanged(NodePtr)), this, SLOT(nodeParamsChanged(NodePtr)), Qt::QueuedConnection));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeCharacteristicsChanged(NodePtr)), this, SLOT(nodeCharacteristicsChanged(NodePtr)), Qt::QueuedConnection));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordAdded(OutletPtr, InletPtr)), this, SLOT(patchCordAdded(OutletPtr, InletPtr)), Qt::QueuedConnection));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(patchCordRemoved(OutletPtr, InletPtr)), Qt::QueuedConnection));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigLoadFromJsonComplete(QStringList)), this, SLOT(loadFromJsonComplete(QStringList)), Qt::QueuedConnection));
 	
 	// Make changes to pipeline mark this view as dirty
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigNodeAdded(NodePtr)), this, SLOT(markDirty())));
@@ -61,6 +68,9 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigParameterChangedInternally(ParameterPtr)), this, SLOT(markDirty())));
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigParameterChangedExternally(ParameterPtr)), this, SLOT(markDirty())));
 	
+	// Queued connection to allow it to happen on the next cycle of the event
+	// loop
+	BOOST_VERIFY(connect(this, SIGNAL(sig_resetView()), this, SLOT(slot_resetView()), Qt::QueuedConnection));
 	
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setFocusPolicy(Qt::ClickFocus);
@@ -406,6 +416,7 @@ void WidgetPatchArea::nodeAdded(NodePtr node)
 		if (w->node() == node)
 		{
 			// we shouldn't already have a widget if we've received this signal.
+			// If we have then things might be out of sync - request a reset.
 			assert(false);
 			return;
 		}
@@ -453,9 +464,8 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 		if (inlet->node()->node() == node
 			|| outlet->node()->node() == node)
 		{
-			hm_error("nodeRemoved signal received from pipeline "
-				   "while patch cords still attached to node.");
-			assert(false);
+			// nodeRemoved signal received from pipeline while patch cords still attached to node. Something's out of sync, so request a reset.
+			resetView();
 			if (mPipeline->isConnected(outlet->outlet(), inlet->inlet()))
 			{
 				mPipeline->disconnect(outlet->outlet(), inlet->inlet());
@@ -642,14 +652,17 @@ void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 	});
 	if (itWidgetInlet==mWidgetInlets.end())
 	{
-		hm_error("Patch cord added to inlet that is not recognised by WidgetPatchArea: "+inlet->toString()+". This is a bug.");
-		qDebug() << "Currently registered nodes:";
-		for (WidgetNode* w: mWidgetNodes)
-		{
-			qDebug() << '-' << str(w->node()->toString());
-		}
-		qDebug() << "Number of inlets:"<<mWidgetInlets.size();
-		assert(itWidgetInlet!=mWidgetInlets.end());
+		// The view has become out of sync with the pipeline. Bail and request
+		// a full reset
+		resetView();
+//		hm_error("Patch cord added to inlet that is not recognised by WidgetPatchArea: "+inlet->toString()+". This is a bug.");
+//		qDebug() << "Currently registered nodes:";
+//		for (WidgetNode* w: mWidgetNodes)
+//		{
+//			qDebug() << '-' << str(w->node()->toString());
+//		}
+//		qDebug() << "Number of inlets:"<<mWidgetInlets.size();
+//		assert(itWidgetInlet!=mWidgetInlets.end());
 		return;
 	}
 	WidgetInlet* widgetInlet = *itWidgetInlet;
@@ -677,9 +690,9 @@ void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 {
 	hm_debug("WidgetPatchArea::patchCordRemoved");
-	// If we have refernce to the patch cord then we need to remove it
+	// If we have reference to the patch cord then we need to remove it
 	int size=mWidgetPatchCords.size();
-	;
+	
 	for (auto it = mWidgetPatchCords.begin() ; it!=mWidgetPatchCords.end(); ++it)
 	{
 		WidgetPatchCord* w = *it;
@@ -690,12 +703,22 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 			break;
 		}
 	}
-	// check we did have a widget to erase
-	assert(mWidgetPatchCords.size() < size);
+	// If we did not have a widget to erase then request a reset as things
+	// may have gotten out of sync.
+	if (mWidgetPatchCords.size() < size)
+	{
+		resetView();
+	}
 	// assert we have no more references to this connection
 	assert(std::all_of(mWidgetPatchCords.begin(), mWidgetPatchCords.end(), [&](WidgetPatchCord* w) {
 		return w->outlet()->outlet()!=outlet || w->inlet()->inlet() != inlet;
 	}));
+}
+
+
+void WidgetPatchArea::loadFromJsonComplete(QStringList errors)
+{
+	// Alerting and marking clean is done by MainWindow
 }
 
 
@@ -861,3 +884,40 @@ void WidgetPatchArea::markClean()
 	mIsDirty = false;
 	setWindowModified(false);
 }
+
+void WidgetPatchArea::resetView()
+{
+	// Use a flag to avoid multiple calls to resetView in on cycle of the
+	// event loop triggering multiple resets
+	mViewNeedsToBeReset = true;
+	Q_EMIT sig_resetView();
+}
+
+void WidgetPatchArea::slot_resetView()
+{
+	if (mViewNeedsToBeReset)
+	{
+		qDebug() << "View has become out of sync with pipeline. Resetting...";
+		while (!mWidgetPatchCords.empty())
+		{
+			WidgetPatchCord* w = mWidgetPatchCords.back();
+			patchCordRemoved(w->outlet()->outlet(), w->inlet()->inlet());
+		}
+		while (!mWidgetNodes.empty())
+		{
+			nodeRemoved(mWidgetNodes.back()->node());
+		}
+		
+		for (NodePtr node: mPipeline->nodes())
+		{
+			nodeAdded(node);
+		}
+		for (PatchCordPtr p: mPipeline->patchCords())
+		{
+			patchCordAdded(p->outlet(), p->inlet());
+		}
+		mViewNeedsToBeReset = false;
+	}
+}
+
+
