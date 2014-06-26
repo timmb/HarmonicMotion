@@ -46,7 +46,7 @@ namespace hm
 		/// letterboxing to ensure the apsect ratio is correct.
 		void setupWindowLetterbox(int pixelWidth, int pixelHeight) const;
 		
-		static const SceneMetaPtr sDefaultSceneMeta;
+		static SceneMetaPtr defaultSceneMeta();
 		
 	};
 	
@@ -54,6 +54,8 @@ namespace hm
 	// prioritising \p x if both are non-default
 	inline SceneMetaPtr choose(SceneMetaPtr const& x, SceneMetaPtr const& y)
 	{
-		return x==SceneMeta::sDefaultSceneMeta? y : x;
+		return x==SceneMeta::defaultSceneMeta()? y : x;
 	}
 }
+
+

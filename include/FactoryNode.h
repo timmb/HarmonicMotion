@@ -76,6 +76,14 @@ namespace hm
 		
 		bool hasNodeType(std::string className) const;
 		
+		/// This creates a Params object that contains all of the
+		/// ParameterInitialValue elements that would be exported by
+		/// \p className. Use this, set the parameters and then feed it back
+		/// into create() to create a Node.
+		/// If \p className is not found then a default constructed Node::Params
+		/// is returned
+		Node::Params createParams(std::string const& className);
+		
 		/// Create a new node of the specified type.
 		/// \return A shared pointer to the new node instance, or nullptr if
 		/// \p className has not been registered
@@ -105,6 +113,7 @@ namespace hm
 		/// the create or nodeType functions have been called.
 		std::atomic<bool> mNodeFunctionsCalled;
         std::map<Node*, std::weak_ptr<Node>> mCreatedNodes;
+		std::map<std::string, Node::Params> mNodeParams;
 	};
 	
 }

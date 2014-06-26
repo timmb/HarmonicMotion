@@ -51,7 +51,7 @@ namespace hm
 	
 	std::ostream& operator<<(std::ostream& out, Inlet const& inlet)
 	{
-		return out << "[Inlet "<<inlet.numConnections()<<" connections]";
+		return out << inlet.path() << " ("<<inlet.numConnections()<<" connections)";
 	}
 	
 	

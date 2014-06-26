@@ -265,23 +265,30 @@ namespace hm
 	ParameterPtrT<T> Node::addParameter(std::string name, T* value, std::string description)
 	{
 		// Check if we have a custom initial value
-		T* initialValue = nullptr;
-		for (std::pair<std::string,ParameterValueContainer> i: nodeParams().parameterInitialValues)
+		bool hasInitialValue = false;
+		T initialValue = T();
+		auto parameterInitialValues = nodeParams().parameterInitialValues;
+		for (std::pair<std::string,ParameterValueContainer> i: parameterInitialValues)
 		{
 			if (i.first == name)
 			{
-				initialValue = boost::get<T>(&i.second);
-				if (initialValue == nullptr)
+				T* t = boost::get<T>(&i.second);
+				if (t == nullptr)
 				{
 					hm_error("Node was constructed with an initial value for "
 							 "parameter "+name+" that was of the wrong type.");
 				}
+				else
+				{
+					initialValue = *t;
+					hasInitialValue = true;
+				}
 			}
 		}
 		ParameterPtrT<T> parameter;
-		if (initialValue)
+		if (hasInitialValue)
 		{
-			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, description, value, *initialValue));
+			parameter = std::shared_ptr<Parameter<T>>(new Parameter<T>(*this, name, description, value, initialValue));
 		}
 		else
 		{

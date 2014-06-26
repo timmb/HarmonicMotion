@@ -13,7 +13,11 @@
 using namespace hm;
 using namespace ci;
 
-const SceneMetaPtr SceneMeta::sDefaultSceneMeta(new SceneMeta);
+SceneMetaPtr SceneMeta::defaultSceneMeta()
+{
+	static const SceneMetaPtr s(new SceneMeta);
+	return s;
+}
 
 void SceneMeta::setupCamera(int pixelWidth, int pixelHeight) const
 {

@@ -143,13 +143,13 @@ namespace hm
 	
 	inline SceneMetaPtr chooseSceneMeta(BaseData const& x, BaseData const& y)
 	{
-		return x.sceneMeta==SceneMeta::sDefaultSceneMeta? y.sceneMeta : x.sceneMeta;
+		return x.sceneMeta==SceneMeta::defaultSceneMeta()? y.sceneMeta : x.sceneMeta;
 	}
 	
 	inline SceneMetaPtr chooseSceneMeta(BaseData const& x, BaseData const& y, BaseData const& z)
 	{
 		SceneMetaPtr const& s = chooseSceneMeta(x, y);
-		return s==SceneMeta::sDefaultSceneMeta? z.sceneMeta : s;
+		return s==SceneMeta::defaultSceneMeta()? z.sceneMeta : s;
 	}
 	
 	template <typename T> inline

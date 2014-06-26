@@ -20,9 +20,9 @@ namespace hm
 	public:
 		typedef Base1dData BaseType;
 		
-		Value(double value = 0., double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Value(double value = 0., double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 		
-		Value(float value, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Value(float value, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 		
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		virtual Type type() const override { return VALUE; }
