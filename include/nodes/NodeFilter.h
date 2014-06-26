@@ -41,24 +41,27 @@ namespace hm
 			FilterSavitzky<Scene3d, float> mScene3d;
 			FilterSavitzky<Image2d, float> mImage2d;
 			
-			#define hm_nodefilter_filters_define_visitation(Type) \
-				void operator()(Type & x) \
-				{ \
-					x = m##Type.update(x); \
-				}
-			
-			hm_nodefilter_filters_define_visitation(Value)
-			hm_nodefilter_filters_define_visitation(ListValue)
-			hm_nodefilter_filters_define_visitation(Point2d)
-			hm_nodefilter_filters_define_visitation(ListPoint2d)
-			hm_nodefilter_filters_define_visitation(Point3d)
-			hm_nodefilter_filters_define_visitation(ListPoint3d)
-			hm_nodefilter_filters_define_visitation(Skeleton3d)
-			hm_nodefilter_filters_define_visitation(Scene3d)
-			hm_nodefilter_filters_define_visitation(Image2d)
+			void operator()(Value& x);
+			void operator()(ListValue& x);
+			void operator()(Point2d& x);
+			void operator()(ListPoint2d& x);
+			void operator()(Point3d& x);
+			void operator()(ListPoint3d& x);
+			void operator()(Skeleton3d& x);
+			void operator()(Scene3d& x);
+			void operator()(Image2d& x);
 			
 			void operator()(DataNull & d) {}
+			
+		private:
+			std::vector<int> mPrevListValueIds;
+			std::vector<int> mPrevListPoint2dIds;
+			std::vector<int> mPrevListPoint3dIds;
+			std::vector<int> mPrevScene3dIds;
 		};
+		
+		void callbackAlphaBetaChanged();
+		
 		/// First order smoothing on the Predictor
 		float mAlpha;
 		/// Second order smoothing on the Predictor

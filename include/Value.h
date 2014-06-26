@@ -53,8 +53,8 @@ namespace hm
 //		Image2d operator/(Image2d const& rhs) const;
 		
 		
-		Value operator*(double rhs) const;
-		Value operator/(double rhs) const;
+//		Value operator*(double rhs) const;
+//		Value operator/(double rhs) const;
 		
 		Value operator+() const { return *this; }
 		Value operator-() const { return Value(-value, timestamp, id, sceneMeta); }

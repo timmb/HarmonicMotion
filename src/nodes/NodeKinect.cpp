@@ -119,6 +119,10 @@ void NodeKinect::run()
 				hm_error("Failed to open kinect.");
 				break;
 			}
+			catch (...)
+			{
+				hm_error("Unhandled exception from OpenNI/Kinect");
+			}
 		}
 		else
 		{

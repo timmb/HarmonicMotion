@@ -47,6 +47,10 @@ namespace hm
 		/// the next time update() is called.
 		T const& update(T const& x);
 		
+		/// Resets the memory of the filter to as if it had just been created,
+		/// but setting its starting value to x
+		void reset(T const& x);
+		
 		Predictor<T, Scalar> predictor;
 		
 		
@@ -78,6 +82,15 @@ namespace hm
 			0.11040723981900452,   0.078733031674208143, 0.038009049773755653, -0.011764705882352941, -0.070588235294117646
 		}; // 3rd order 15 points
 		assert(mCoefficients.size() == LENGTH);
+	}
+	
+	
+	template <class T, class Scalar, class PredictorType>
+	void FilterSavitzky<T,Scalar,PredictorType>::reset(T const& x)
+	{
+		mFilteredValue = x;
+		mValues.clear();
+		predictor.reset(x);
 	}
 	
 	
