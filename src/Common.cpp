@@ -9,6 +9,7 @@
 #include "Common.h"
 #include "cinder/Timer.h"
 #include <sstream>
+#include "Data.h"
 
 namespace hm
 {
@@ -54,6 +55,15 @@ namespace hm
 	}
 	
 	
+	double getTimestamp(Data const& x)
+	{
+		return x.timestamp();
+	}
+	
+	double getTimestamp(BaseData const& x)
+	{
+		return x.timestamp;
+	}
 
 	
 }

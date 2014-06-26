@@ -18,3 +18,5 @@
 #include "nodes/NodeCamera.h"
 #include "nodes/NodeImageProcessor.h"
 #include "nodes/NodeBlobTracker.h"
+#include "nodes/NodeMovingAverage.h"
+#include "nodes/NodeMixer.h"

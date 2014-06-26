@@ -19,6 +19,7 @@
 namespace hm
 {
 	// forward declarations
+	class Data;
 	class Inlet;
 	class Outlet;
 	class Node;
@@ -86,6 +87,10 @@ namespace hm
 		static_assert(std::is_base_of<BaseData, T>::value, "stringRepresentation() only defined for derivatives of BaseData");
 		return std::to_string(getType<T>());
 	}
+	
+	/// Get the timestamp from either Data or a class derived from BaseData
+	double getTimestamp(Data const& x);
+	double getTimestamp(BaseData const& x);
 	
 	
 	inline double chooseTimestamp(BaseData const& x, BaseData const& y)
