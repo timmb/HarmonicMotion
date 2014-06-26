@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NodeUnthreaded.h"
-#include "utils/TimeBuffer.h"
+#include <boost/circular_buffer.hpp>
 
 namespace hm
 {
@@ -16,11 +16,12 @@ namespace hm
 		
 	private:
 		double mLastTimestamp;
-		Data mCurrentAverage;
-		double mDuration;
-		TimeBuffer<Data> mBuffer;
+		/// Sum of data in mBuffer
+		Data mCurrentSum;
+		int mNumSamples;
+		boost::circular_buffer<Data> mBuffer;
 	};
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeMovingAverage, "Moving average", "Finds the average value over the past n seconds");
+hm_register_node(NodeMovingAverage, "Moving average", "Finds the average value over the past n samples");
