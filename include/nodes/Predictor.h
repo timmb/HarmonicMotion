@@ -29,6 +29,11 @@ public:
 	
 	T const& update(T newInput); // Returns a reference to the final (m-1'th) forecasted value
 	
+	/// Resets the Predictor to as if it had just been constructed, except
+	/// its initial value is set to x rather than T(). The initial
+	/// speed estimate is set to x * 0.
+	void reset(T const& x);
+	
 	/// NB. How many steps into the future to predict. NB this includes an estimate of the current value. So if you want
 	/// the value k steps into the future you'll need to set predictionSize = k+1
 	int predictionSize;
@@ -66,6 +71,15 @@ Predictor<T, Scalar>::Predictor(int predictionSize_, Scalar alpha_, Scalar beta_
 //, s(T())
 , mPrediction(predictionSize_)
 {
+}
+
+template<class T, class Scalar>
+void Predictor<T,Scalar>::reset(T const& x)
+{
+	s_initialized = false;
+	b_initialized = false;
+	b = x * 0.;
+	mPrediction.assign(predictionSize, x);
 }
 
 
