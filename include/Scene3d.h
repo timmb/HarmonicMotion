@@ -62,7 +62,7 @@ inline Scene3d operator op(Point3d const& lhs, Scene3d rhs) \
 //		typedef Base3dData BaseType;
 //		
 //		explicit
-//		Scene3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+//		Scene3d(double timestamp = 0., SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 //		
 //		std::vector<Skeleton3d> skeletons;
 //		

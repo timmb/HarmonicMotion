@@ -46,12 +46,12 @@ namespace hm
 	public:
 		typedef Base3dData BaseType;
 		
-		Point3d(ci::Vec3f const& v, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point3d(ci::Vec3f const& v, double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 		
-		Point3d(float x, float y, float z, double timestamp=0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point3d(float x, float y, float z, double timestamp=0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 		
 		explicit
-		Point3d(double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Point3d(double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 		
 		/// Constructs a Point3d taking the maximum timestamp from
 		/// the given Values. SceneMeta is taken in priority of x,

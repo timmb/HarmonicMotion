@@ -126,7 +126,7 @@ namespace hm
 		typedef Base3dData BaseType;
 		
 		explicit
-		Skeleton3d(double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::sDefaultSceneMeta);
+		Skeleton3d(double timestamp = 0., int id = sDefaultId, SceneMetaPtr sceneMeta = SceneMeta::defaultSceneMeta());
 		
 //		std::vector<Point3d> const& joints() const { return mJoints; }
 //		std::vector<Point3d>& joints() { return mJoints; }

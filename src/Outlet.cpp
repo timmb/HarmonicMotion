@@ -26,18 +26,7 @@ namespace hm
 	
 	std::ostream& operator<<(std::ostream& out, Outlet const& o)
 	{
-		out << "[Outlet " << o.name() << " ";
-		for (int i=0; i<o.mPatchCords.size(); i++)
-		{
-			InletPtr inlet = o.mPatchCords[i]->inlet();
-			NodePtr node = inlet->node().lock();
-			out
-			<< (node? node->name() : "(nodeless)")
-			<< '/'
-			<< inlet->name()
-			<< (i==o.mPatchCords.size()-1? "" : ", ");
-		}
-		return out << ']';
+		return out << o.path() <<" ("<<o.mPatchCords.size()<<" connections)";
 	}
 	
 	

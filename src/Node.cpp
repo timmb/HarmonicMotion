@@ -483,12 +483,12 @@ void Node::notifyCharacteristicsChanged()
 	if (mHasStartEverBeenCalled)
 	{
 		mHaveAllCharacteristicChangesBeenReported.clear();
-		NodePtr me = FactoryNode::instance()->getNodePtr(this);
-		EventDispatcherPtr dispatcher = mDispatcher;
-		if (dispatcher != nullptr && dispatcher != nullptr)
-		{
-			dispatcher->dispatch(EventPtr(new NodeCharacteristicsChangedEvent(me)));
-		}
+//		NodePtr me = FactoryNode::instance()->getNodePtr(this);
+//		EventDispatcherPtr dispatcher = mDispatcher;
+//		if (dispatcher != nullptr && dispatcher != nullptr)
+//		{
+//			dispatcher->dispatch(EventPtr(new NodeCharacteristicsChangedEvent(me)));
+//		}
 	}
 }
 

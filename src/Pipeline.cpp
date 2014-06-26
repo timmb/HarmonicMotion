@@ -911,7 +911,7 @@ bool Pipeline::fromJson(Json::Value const& json, vector<string>& errors)
 				errors.push_back("Node element found in JSON with unrecognised node type: '"+type+"'. Skipping this node.");
 				continue;
 			}
-			Node::Params nodeParams;
+			Node::Params nodeParams = factory.createParams(type);
 			if (!(jNode >> nodeParams))
 			{
 				errors.push_back("Failed to parse 'settings' element for node of type '"+type+"'. Skipping this node.");

@@ -18,7 +18,7 @@ namespace hm {
 	using boost::adaptors::reversed;
 	
 	Renderer::Renderer(std::string const& name_, std::string const& description_, vector<InletDescription> const& inlets_)
-	: mLastSceneMeta(SceneMeta::sDefaultSceneMeta)
+	: mLastSceneMeta(SceneMeta::defaultSceneMeta())
 	, name(name_)
 	, description(description_)
 	, inlets(inlets_)
