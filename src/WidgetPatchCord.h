@@ -82,6 +82,9 @@ namespace hm
 		/// Remember the position of the mouse when clicked to test if we should
 		/// receive focus. This position is relative to this widget.
 		QPointF mMouseClickPosition;
+		
+		// for debugging
+		std::string mDescription;
     };
 	
 }

@@ -36,7 +36,8 @@ WidgetPatchCord::WidgetPatchCord(WidgetPatchArea* patchArea, WidgetOutlet* outle
     connectInletSignals();
     connectOutletSignals();
     redraw();
-	hm_debug("New WidgetPatchCord with outlet "+mOutlet->outlet()->toString()+" and inlet "+mInlet->inlet()->toString());
+	mDescription = "WidgetPatchCord "+mOutlet->outlet()->toString()+" -> inlet "+mInlet->inlet()->toString();
+	hm_debug("Created "+mDescription);
 	
 	setAttribute(Qt::WA_TransparentForMouseEvents);
 	
@@ -58,7 +59,7 @@ WidgetPatchCord::~WidgetPatchCord()
 //		hm_error("WidgetPatchCord destroyed before being erased.");
 //		assert(mHasBeenErased);
 //	}
-	hm_debug("WidgetPatchCord destroyed.");
+	hm_debug("Destroyed "+mDescription);
 }
 
 //

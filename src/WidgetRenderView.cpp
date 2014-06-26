@@ -23,7 +23,6 @@ WidgetRenderView::WidgetRenderView(NodeRendererPtr node, QWidget* parent)
 
 WidgetRenderView::~WidgetRenderView()
 {
-	hm_debug("WidgetRenderView::~WidgetRenderView. this: "<<this<<" parent: "<<parent());
 }
 
 NodeRendererPtr WidgetRenderView::node() const
@@ -52,7 +51,6 @@ WidgetRenderViewGl::WidgetRenderViewGl(NodeRendererPtr node, QWidget* parent)
 
 WidgetRenderViewGl::~WidgetRenderViewGl()
 {
-	hm_debug("~WidgetRenderViewGl::~~WidgetRenderViewGl. this: "<<this<<" parent: "<<parent());
 	mTimer->stop();
 	// This prevents memory corruption with Qt 5.2.1 by the QGLWidget
 	// destructor.
