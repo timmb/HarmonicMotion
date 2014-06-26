@@ -32,7 +32,7 @@ void NodeMixer::step()
 		Data d1 = inlet(1)->data();
 		if (d0.canAdd(d1))
 		{
-			Data output = d0 * mBlendFactor + d1 * (1.-mBlendFactor);
+			Data output = d0 * (1.-mBlendFactor) + d1 * mBlendFactor;
 			outlet(0)->outputNewData(output);
 		}
 		mLastTimestamp0 = d0.timestamp();
