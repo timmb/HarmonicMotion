@@ -173,6 +173,10 @@
 		345F5D621946007B003BC862 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F5D611946007B003BC862 /* CinderOpenCV.h */; };
 		345F967B1945F51F001AD393 /* NodeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345F967A1945F51F001AD393 /* NodeCamera.cpp */; };
 		345F967D1945F534001AD393 /* NodeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F967C1945F534001AD393 /* NodeCamera.h */; };
+		34605A3D195CD55200585079 /* Functions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34605A3C195CD55200585079 /* Functions.cpp */; };
+		34605A3F195CD55900585079 /* Functions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34605A3E195CD55900585079 /* Functions.h */; };
+		34605A41195CDB5A00585079 /* NodeSelectSkeleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34605A40195CDB5A00585079 /* NodeSelectSkeleton.h */; };
+		34605A43195CDB6300585079 /* NodeSelectSkeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34605A42195CDB6300585079 /* NodeSelectSkeleton.cpp */; };
 		347662EB19409A4600539238 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 347662E919409A4600539238 /* Event.cpp */; };
 		347662EF19409B9400539238 /* Listener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 347662ED19409B9400539238 /* Listener.cpp */; };
 		347662F31940A00100539238 /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 347662F11940A00100539238 /* Event.h */; };
@@ -182,7 +186,7 @@
 		34A2550D195C78100061F666 /* NodeMixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A25505195C780F0061F666 /* NodeMixer.cpp */; };
 		34A2550E195C78100061F666 /* NodeMovingAverage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A25506195C780F0061F666 /* NodeMovingAverage.cpp */; };
 		34A2550F195C78100061F666 /* NodePeakDecay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A25507195C780F0061F666 /* NodePeakDecay.cpp */; };
-		34A25510195C78100061F666 /* NodeSpeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A25508195C780F0061F666 /* NodeSpeed.cpp */; };
+		34A25510195C78100061F666 /* NodeSpeedAcceleration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A25508195C780F0061F666 /* NodeSpeedAcceleration.cpp */; };
 		34A25511195C78100061F666 /* NodeStandardDeviation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A25509195C78100061F666 /* NodeStandardDeviation.cpp */; };
 		34A25512195C78100061F666 /* NodeVelocity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A2550A195C78100061F666 /* NodeVelocity.cpp */; };
 		34A25513195C78100061F666 /* NodeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A2550B195C78100061F666 /* NodeFilter.cpp */; };
@@ -190,7 +194,7 @@
 		34A2551E195C78520061F666 /* NodeMixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A25518195C78520061F666 /* NodeMixer.h */; };
 		34A2551F195C78520061F666 /* NodeMovingAverage.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A25519195C78520061F666 /* NodeMovingAverage.h */; };
 		34A25520195C78520061F666 /* NodePeakDecay.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551A195C78520061F666 /* NodePeakDecay.h */; };
-		34A25521195C78520061F666 /* NodeSpeed.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551B195C78520061F666 /* NodeSpeed.h */; };
+		34A25521195C78520061F666 /* NodeSpeedAcceleration.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551B195C78520061F666 /* NodeSpeedAcceleration.h */; };
 		34A25522195C78520061F666 /* NodeStandardDeviation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551C195C78520061F666 /* NodeStandardDeviation.h */; };
 		34A25523195C78520061F666 /* NodeVelocity.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551D195C78520061F666 /* NodeVelocity.h */; };
 		34A25526195C7CB10061F666 /* TimeBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A25525195C7CB10061F666 /* TimeBuffer.h */; };
@@ -439,6 +443,10 @@
 		345F5D611946007B003BC862 /* CinderOpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderOpenCV.h; path = "../../../Cinder/blocks/Cinder-OpenCV/include/CinderOpenCV.h"; sourceTree = "<group>"; };
 		345F967A1945F51F001AD393 /* NodeCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeCamera.cpp; path = ../../src/nodes/NodeCamera.cpp; sourceTree = "<group>"; };
 		345F967C1945F534001AD393 /* NodeCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeCamera.h; sourceTree = "<group>"; };
+		34605A3C195CD55200585079 /* Functions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Functions.cpp; sourceTree = "<group>"; };
+		34605A3E195CD55900585079 /* Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Functions.h; path = ../include/Functions.h; sourceTree = "<group>"; };
+		34605A40195CDB5A00585079 /* NodeSelectSkeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSelectSkeleton.h; sourceTree = "<group>"; };
+		34605A42195CDB6300585079 /* NodeSelectSkeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeSelectSkeleton.cpp; path = ../../src/nodes/NodeSelectSkeleton.cpp; sourceTree = "<group>"; };
 		347662E919409A4600539238 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		347662ED19409B9400539238 /* Listener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Listener.cpp; sourceTree = "<group>"; };
 		347662F11940A00100539238 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Event.h; path = ../include/Event.h; sourceTree = "<group>"; };
@@ -448,7 +456,7 @@
 		34A25505195C780F0061F666 /* NodeMixer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeMixer.cpp; path = ../../src/nodes/NodeMixer.cpp; sourceTree = "<group>"; };
 		34A25506195C780F0061F666 /* NodeMovingAverage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeMovingAverage.cpp; path = ../../src/nodes/NodeMovingAverage.cpp; sourceTree = "<group>"; };
 		34A25507195C780F0061F666 /* NodePeakDecay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodePeakDecay.cpp; path = ../../src/nodes/NodePeakDecay.cpp; sourceTree = "<group>"; };
-		34A25508195C780F0061F666 /* NodeSpeed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeSpeed.cpp; path = ../../src/nodes/NodeSpeed.cpp; sourceTree = "<group>"; };
+		34A25508195C780F0061F666 /* NodeSpeedAcceleration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeSpeedAcceleration.cpp; path = ../../src/nodes/NodeSpeedAcceleration.cpp; sourceTree = "<group>"; };
 		34A25509195C78100061F666 /* NodeStandardDeviation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeStandardDeviation.cpp; path = ../../src/nodes/NodeStandardDeviation.cpp; sourceTree = "<group>"; };
 		34A2550A195C78100061F666 /* NodeVelocity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeVelocity.cpp; path = ../../src/nodes/NodeVelocity.cpp; sourceTree = "<group>"; };
 		34A2550B195C78100061F666 /* NodeFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeFilter.cpp; path = ../../src/nodes/NodeFilter.cpp; sourceTree = "<group>"; };
@@ -456,7 +464,7 @@
 		34A25518195C78520061F666 /* NodeMixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeMixer.h; sourceTree = "<group>"; };
 		34A25519195C78520061F666 /* NodeMovingAverage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeMovingAverage.h; sourceTree = "<group>"; };
 		34A2551A195C78520061F666 /* NodePeakDecay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodePeakDecay.h; sourceTree = "<group>"; };
-		34A2551B195C78520061F666 /* NodeSpeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSpeed.h; sourceTree = "<group>"; };
+		34A2551B195C78520061F666 /* NodeSpeedAcceleration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSpeedAcceleration.h; sourceTree = "<group>"; };
 		34A2551C195C78520061F666 /* NodeStandardDeviation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeStandardDeviation.h; sourceTree = "<group>"; };
 		34A2551D195C78520061F666 /* NodeVelocity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeVelocity.h; sourceTree = "<group>"; };
 		34A25525195C7CB10061F666 /* TimeBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeBuffer.h; path = ../../include/utils/TimeBuffer.h; sourceTree = "<group>"; };
@@ -543,6 +551,8 @@
 				34C90A28195B2AE0009CEFB8 /* EventDispatcher.h */,
 				22C5DF6118A25BC200920089 /* FactoryNode.cpp */,
 				22C5DF6418A25BCA00920089 /* FactoryNode.h */,
+				34605A3E195CD55900585079 /* Functions.h */,
+				34605A3C195CD55200585079 /* Functions.cpp */,
 				2229366F181586F2008CAA09 /* HarmonicMotion.h */,
 				22197ECD17F44B1B003B1883 /* Inlet.cpp */,
 				22197EFF17F44B76003B1883 /* Inlet.h */,
@@ -773,44 +783,46 @@
 		226A9656189BECF60056DCD1 /* nodes */ = {
 			isa = PBXGroup;
 			children = (
-				34A25518195C78520061F666 /* NodeMixer.h */,
-				34A25519195C78520061F666 /* NodeMovingAverage.h */,
-				34A2551A195C78520061F666 /* NodePeakDecay.h */,
-				34A2551B195C78520061F666 /* NodeSpeed.h */,
-				34A2551C195C78520061F666 /* NodeStandardDeviation.h */,
-				34A2551D195C78520061F666 /* NodeVelocity.h */,
-				34A25505195C780F0061F666 /* NodeMixer.cpp */,
-				34A25506195C780F0061F666 /* NodeMovingAverage.cpp */,
-				34A25507195C780F0061F666 /* NodePeakDecay.cpp */,
-				34A25508195C780F0061F666 /* NodeSpeed.cpp */,
-				34A25509195C78100061F666 /* NodeStandardDeviation.cpp */,
-				34A2550A195C78100061F666 /* NodeVelocity.cpp */,
-				34A2550B195C78100061F666 /* NodeFilter.cpp */,
-				34A2550C195C78100061F666 /* NodeKinect.cpp */,
-				34A8542F1934AE2400D0E378 /* NodeExpression.cpp */,
-				34A8542D1934AE1A00D0E378 /* NodeExpression.h */,
 				2223EC7718196C2500B900CF /* Filter.h */,
 				226A9665189BED140056DCD1 /* NodeAccumulator.cpp */,
 				226A9657189BECF60056DCD1 /* NodeAccumulator.h */,
-				3478A6BB195195D9000E23C7 /* NodeBlobTracker.h */,
 				3478A6B9195195CB000E23C7 /* NodeBlobTracker.cpp */,
+				3478A6BB195195D9000E23C7 /* NodeBlobTracker.h */,
 				345F967A1945F51F001AD393 /* NodeCamera.cpp */,
 				345F967C1945F534001AD393 /* NodeCamera.h */,
-				226A9666189BED140056DCD1 /* NodeFilter.cpp */,
+				34A8542F1934AE2400D0E378 /* NodeExpression.cpp */,
+				34A8542D1934AE1A00D0E378 /* NodeExpression.h */,
+				34A2550B195C78100061F666 /* NodeFilter.cpp */,
 				226A9658189BECF60056DCD1 /* NodeFilter.h */,
 				34C5D01119471EBA00CC2AE8 /* NodeImageProcessor.cpp */,
 				34C5D01319471EC500CC2AE8 /* NodeImageProcessor.h */,
-				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
+				34A2550C195C78100061F666 /* NodeKinect.cpp */,
 				226A9659189BECF60056DCD1 /* NodeKinect.h */,
+				34A25505195C780F0061F666 /* NodeMixer.cpp */,
+				34A25518195C78520061F666 /* NodeMixer.h */,
+				34A25506195C780F0061F666 /* NodeMovingAverage.cpp */,
+				34A25519195C78520061F666 /* NodeMovingAverage.h */,
 				226A9668189BED140056DCD1 /* NodeOscOut.cpp */,
 				226A965A189BECF60056DCD1 /* NodeOscOut.h */,
+				34A25507195C780F0061F666 /* NodePeakDecay.cpp */,
+				34A2551A195C78520061F666 /* NodePeakDecay.h */,
 				226A9669189BED140056DCD1 /* NodePrinter.cpp */,
 				226A965B189BECF60056DCD1 /* NodePrinter.h */,
 				226A966A189BED140056DCD1 /* NodeRenderer.cpp */,
 				226A965C189BECF60056DCD1 /* NodeRenderer.h */,
+				34605A42195CDB6300585079 /* NodeSelectSkeleton.cpp */,
+				34605A40195CDB5A00585079 /* NodeSelectSkeleton.h */,
 				226A966B189BED140056DCD1 /* NodeSineWave.cpp */,
 				226A965D189BECF60056DCD1 /* NodeSineWave.h */,
+				34A25508195C780F0061F666 /* NodeSpeedAcceleration.cpp */,
+				34A2551B195C78520061F666 /* NodeSpeedAcceleration.h */,
+				34A25509195C78100061F666 /* NodeStandardDeviation.cpp */,
+				34A2551C195C78520061F666 /* NodeStandardDeviation.h */,
+				34A2550A195C78100061F666 /* NodeVelocity.cpp */,
+				34A2551D195C78520061F666 /* NodeVelocity.h */,
 				2223EC7218194A6F00B900CF /* Predictor.h */,
+				226A9666189BED140056DCD1 /* NodeFilter.cpp */,
+				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
 			);
 			name = nodes;
 			path = ../include/nodes;
@@ -1011,6 +1023,7 @@
 			files = (
 				34DBA752193F3A9600D24456 /* UdpSocket.h in Headers */,
 				226A9663189BECF60056DCD1 /* NodeRenderer.h in Headers */,
+				34605A3F195CD55900585079 /* Functions.h in Headers */,
 				226A9664189BECF60056DCD1 /* NodeSineWave.h in Headers */,
 				226A965F189BECF60056DCD1 /* NodeFilter.h in Headers */,
 				22197EFC17F44B54003B1883 /* Resources.h in Headers */,
@@ -1031,6 +1044,7 @@
 				222936CC181677BD008CAA09 /* IXnNodeAllocator.h in Headers */,
 				222936CD181677BD008CAA09 /* XnPlatformLinux-Arm.h in Headers */,
 				222936CE181677BD008CAA09 /* XnOSLinux-x86.h in Headers */,
+				34605A41195CDB5A00585079 /* NodeSelectSkeleton.h in Headers */,
 				34C83218194209D800953F09 /* Renderer.h in Headers */,
 				222936CF181677BD008CAA09 /* XnPlatformLinux-x86.h in Headers */,
 				2294120D189AA35D009550EF /* NodeThreaded.h in Headers */,
@@ -1153,7 +1167,7 @@
 				22293739181677C8008CAA09 /* VOpenNINetwork.h in Headers */,
 				34DBA74E193F3A9600D24456 /* PacketListener.h in Headers */,
 				34C90A29195B2AE0009CEFB8 /* EventDispatcher.h in Headers */,
-				34A25521195C78520061F666 /* NodeSpeed.h in Headers */,
+				34A25521195C78520061F666 /* NodeSpeedAcceleration.h in Headers */,
 				34DBA757193F3A9600D24456 /* OscHostEndianness.h in Headers */,
 				34DBA767193F3A9600D24456 /* OscMessage.h in Headers */,
 				2229373C181677C8008CAA09 /* VOpenNIRecorder.h in Headers */,
@@ -1275,7 +1289,7 @@
 				345F5D601945FF71003BC862 /* Image2d.cpp in Sources */,
 				3442AFD418C0ABE10015B240 /* Let.cpp in Sources */,
 				34E2062518B76FAF00729934 /* PatchCord.cpp in Sources */,
-				34A25510195C78100061F666 /* NodeSpeed.cpp in Sources */,
+				34A25510195C78100061F666 /* NodeSpeedAcceleration.cpp in Sources */,
 				34DBA758193F3A9600D24456 /* OscOutboundPacketStream.cpp in Sources */,
 				34A25513195C78100061F666 /* NodeFilter.cpp in Sources */,
 				34A2550F195C78100061F666 /* NodePeakDecay.cpp in Sources */,
@@ -1293,6 +1307,7 @@
 				22293675181591AD008CAA09 /* Skeleton3d.cpp in Sources */,
 				34A25514195C78100061F666 /* NodeKinect.cpp in Sources */,
 				22293729181677C8008CAA09 /* VFakeKinect.cpp in Sources */,
+				34605A43195CDB6300585079 /* NodeSelectSkeleton.cpp in Sources */,
 				34A25511195C78100061F666 /* NodeStandardDeviation.cpp in Sources */,
 				226A9673189BED140056DCD1 /* NodeOscOut.cpp in Sources */,
 				2229372C181677C8008CAA09 /* VKinect.cpp in Sources */,
@@ -1319,6 +1334,7 @@
 				221E903B1817270D0028EAFD /* Point3d.cpp in Sources */,
 				34C5D01219471EBA00CC2AE8 /* NodeImageProcessor.cpp in Sources */,
 				34DBA74B193F3A9600D24456 /* IpEndpointName.cpp in Sources */,
+				34605A3D195CD55200585079 /* Functions.cpp in Sources */,
 				221E9040181727240028EAFD /* Value.cpp in Sources */,
 				34DBA75B193F3A9600D24456 /* OscPrintReceivedElements.cpp in Sources */,
 			);
