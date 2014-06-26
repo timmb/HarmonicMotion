@@ -139,6 +139,8 @@ WidgetParameterFloat::WidgetParameterFloat(std::shared_ptr<Parameter<float>> par
 	spinBox->setMaximumWidth(100);
 	spinBox->setRange(parameter->hardMin(), parameter->hardMax());
 	spinBox->move(0,0);
+	spinBox->setDecimals(4);
+	spinBox->setSingleStep((parameter->softMax() - parameter->softMin())/100.);
 	
 	ParameterValueContainer valueContainer = parameter->toContainer();
 	float* value = nullptr;
@@ -177,6 +179,8 @@ WidgetParameterDouble::WidgetParameterDouble(std::shared_ptr<Parameter<double>> 
 	QDoubleSpinBox* spinBox = new QDoubleSpinBox(this);
 	spinBox->setMaximumWidth(100);
 	spinBox->setRange(parameter->hardMin(), parameter->hardMax());
+	spinBox->setDecimals(4);
+	spinBox->setSingleStep((parameter->softMax() - parameter->softMin())/100.);
 	spinBox->move(0,0);
 	
 	ParameterValueContainer valueContainer = parameter->toContainer();
