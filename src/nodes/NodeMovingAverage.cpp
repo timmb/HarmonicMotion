@@ -44,7 +44,11 @@ void NodeMovingAverage::step()
 		}
 		else
 		{
-			mCurrentSum = mCurrentSum + d;
+			// do addition this way as the left hand operand keeps
+			// any extra list elements if they are not present in the
+			// right hand side. this allows e.g. skeletons to come and
+			// leave a scene.
+			mCurrentSum = d + mCurrentSum;
 			if (mBuffer.full())
 			{
 				mCurrentSum = mCurrentSum - mBuffer.front();
