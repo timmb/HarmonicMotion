@@ -8,13 +8,13 @@ using namespace hm;
 NodeMovingAverage::NodeMovingAverage(Params params, std::string className)
 : NodeUnthreaded(params, className)
 , mLastTimestamp(-42)
-, mDuration(2)
-, mBuffer(2)
+, mNumSamples(40)
+, mBuffer(40)
 {
 	createInlet(ALL_TYPES, "Input", "Data to be averaged");
 	createOutlet(ALL_TYPES, "Output", "Averaged data");
-	auto p = addParameter("Duration (s)", &mDuration, "This determines how many seconds into the past the average will be calculated over.");
-	p->setBounds(0, mBuffer.MAX_TIME_LIMIT, 0, 100);
+	auto p = addParameter("Number of samples", &mNumSamples, "This determines over how far into the past the average will be calculated.");
+	p->setBounds(0, 100000, 0, 1000);
 }
 
 
@@ -25,9 +25,9 @@ NodePtr NodeMovingAverage::create(Node::Params params) const
 
 void NodeMovingAverage::step()
 {
-	if (mDuration != mBuffer.timeLimit())
+	if (mNumSamples != mBuffer.capacity())
 	{
-		mBuffer.setTimeLimit(mDuration);
+		mBuffer.set_capacity(mNumSamples);
 	}
 	Data d = inlet(0)->dataIfNewerThan(mLastTimestamp);
 	if (!d.isNull())
@@ -40,20 +40,23 @@ void NodeMovingAverage::step()
 		}
 		if (mBuffer.empty())
 		{
-			mCurrentAverage = d;
+			mCurrentSum = d;
 		}
 		else
 		{
-			int n = mBuffer.size();
-			mCurrentAverage = mCurrentAverage + (d - mBuffer.front()) * (1. / n);
+			mCurrentSum = mCurrentSum + d;
+			if (mBuffer.full())
+			{
+				mCurrentSum = mCurrentSum - mBuffer.front();
+				mBuffer.pop_front();
+			}
 		}
 		// TODO: Also incrementally recalculate to get rid of rounding
 		// errors.
-		// note, TimeBuffer automatically pops when data gets old
 		mBuffer.push_back(d);
 		// make a copy as outputNewData modifies its argument
-		Data d = mCurrentAverage;
-		outlet(0)->outputNewData(mCurrentAverage);
+		Data average = mCurrentSum / mBuffer.size();
+		outlet(0)->outputNewData(average);
 	}
 }
 
