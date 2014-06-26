@@ -20,3 +20,5 @@
 #include "nodes/NodeBlobTracker.h"
 #include "nodes/NodeMovingAverage.h"
 #include "nodes/NodeMixer.h"
+#include "nodes/NodeSelectSkeleton.h"
+#include "nodes/NodeSpeedAcceleration.h"

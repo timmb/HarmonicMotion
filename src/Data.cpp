@@ -10,6 +10,7 @@
 #include <sstream>
 #include <type_traits>
 #include <utility>
+#include "Functions.h"
 
 using namespace hm;
 using namespace std;
@@ -145,21 +146,21 @@ namespace
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Error: Attempting to pass DataNull through addition operator.");
+//			assert(rhs.type() != UNDEFINED && "Error: Attempting to pass DataNull through addition operator.");
 			return Data();
 		}
 		
 		template <typename U>
 		Data operator()(DataNull const& lhs, U const& rhs)
 		{
-			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through addition operator.");
+//			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through addition operator.");
 			return Data();
 		}
 		
 		Data operator()(DataNull const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through addition operator.");
+//			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through addition operator.");
 			return Data();
 		}
 		
@@ -188,21 +189,21 @@ namespace
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Error: Attempting to pass DataNull through subtraction operator.");
+//			assert(rhs.type() != UNDEFINED && "Error: Attempting to pass DataNull through subtraction operator.");
 			return Data();
 		}
 		
 		template <typename U>
 		Data operator()(DataNull const& lhs, U const& rhs)
 		{
-			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through subtraction operator.");
+//			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through subtraction operator.");
 			return Data();
 		}
 		
 		Data operator()(DataNull const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through subtraction operator.");
+//			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through subtraction operator.");
 			return Data();
 		}
 		
@@ -231,21 +232,21 @@ namespace
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+//			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
 			return Data();
 		}
 		
 		template <typename U>
 		Data operator()(DataNull const& lhs, U const& rhs)
 		{
-			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+//			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
 			return Data();
 		}
 		
 		Data operator()(DataNull const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+//			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
 			return Data();
 		}
 		
@@ -274,21 +275,21 @@ namespace
 		Data operator()(T const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+//			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
 			return Data();
 		}
 		
 		template <typename U>
 		Data operator()(DataNull const& lhs, U const& rhs)
 		{
-			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+//			assert(lhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
 			return Data();
 		}
 		
 		Data operator()(DataNull const& lhs, DataNull const& rhs)
 		{
 			// will always fail.
-			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
+//			assert(rhs.type() != UNDEFINED && "Attempting to pass DataNull through multiplication operator.");
 			return Data();
 		}
 		
@@ -316,7 +317,7 @@ namespace
 		Data operator()(DataNull const& x)
 		{
 			// will always fail.
-			assert(x.type() != UNDEFINED && "Attempting to pass DataNull through unary positive operator.");
+//			assert(x.type() != UNDEFINED && "Attempting to pass DataNull through unary positive operator.");
 			return Data();
 		}
 		
@@ -334,7 +335,7 @@ namespace
 		Data operator()(DataNull const& x)
 		{
 			// will always fail.
-			assert(x.type() != UNDEFINED && "Attempting to pass DataNull through unary negation operator.");
+//			assert(x.type() != UNDEFINED && "Attempting to pass DataNull through unary negation operator.");
 			return Data();
 		}
 		
@@ -426,8 +427,80 @@ bool Data::canDivide(Data const& rhs) const
 }
 
 
+namespace
+{
+	Data const dataNull;
+	struct AdditiveIdentityVisitor : public boost::static_visitor<Data const&>
+	{
+		Data const& operator()(DataNull const& x) const
+		{
+			return dataNull;
+		}
+		
+		template <typename T>
+		Data const& operator()(T const& x) const
+		{
+			static Data identity = additive_identity<T>::value;
+			return identity;
+		}
+	};
+	AdditiveIdentityVisitor additiveIdentityVisitor;
+	
+	struct MultiplicativeIdentityVisitor : public boost::static_visitor<Data const&>
+	{
+		Data const& operator()(DataNull const& x) const
+		{
+			return dataNull;
+		}
+		
+		template <typename T>
+		Data const& operator()(T const& x) const
+		{
+			static Data identity = multiplicative_identity<T>::value;
+			return identity;
+		}
+	};
+	MultiplicativeIdentityVisitor multiplicativeIdentityVisitor;
+}
+
+Data const& Data::additiveIdentity() const
+{
+	return boost::apply_visitor(additiveIdentityVisitor, data);
+}
+
+Data const& Data::multiplicativeIdentity() const
+{
+	return boost::apply_visitor(multiplicativeIdentityVisitor, data);
+}
 
 
+namespace
+{
+	struct MagnitudeVisitor : public boost::static_visitor<Data>
+	{
+		Data operator()(Scene3d const& x) const
+		{
+			return dataNull;
+		}
+		
+		Data operator()(DataNull const& x) const
+		{
+			return dataNull;
+		}
+		
+		template <typename T>
+		Data operator()(T const& x) const
+		{
+			return magnitude(x);
+		}
+	};
+	MagnitudeVisitor magnitudeVisitor;
+}
+
+Data Data::magnitude() const
+{
+	return boost::apply_visitor(magnitudeVisitor, data);
+}
 
 
 

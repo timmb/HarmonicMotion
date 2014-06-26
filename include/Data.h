@@ -112,6 +112,16 @@ namespace hm
 		bool canSubtract(Data const& rhs) const;
 		bool canMultiply(Data const& rhs) const;
 		bool canDivide(Data const& rhs) const;
+		
+		/// \return the additive identity for the type being held
+		/// in this data
+		Data const& additiveIdentity() const;
+		Data const& multiplicativeIdentity() const;
+		
+		/// \return the absolute value or length of the data (or
+		/// mean if it's an image). May be a list of values.
+		/// Currently unsupported for Scene3d.
+		Data magnitude() const;
 
 		Variant data;
 		
