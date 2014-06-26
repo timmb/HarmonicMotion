@@ -4,14 +4,64 @@
 
 namespace hm
 {
+	/// Has member value
+	template <typename T>
+	struct additive_identity {};
+	
+	template <typename T>
+	struct multiplicative_identity {};
+	
+	
+	
+#define hm_declare_additive_identity(Type, identity, IdentityType) \
+template <> \
+struct additive_identity<Type> { \
+static IdentityType const value; \
+};
+	
+#define hm_declare_multiplicative_identity(Type, identity, IdentityType) \
+template <> \
+struct multiplicative_identity<Type> { \
+static IdentityType const value; \
+};
+	
+	hm_declare_additive_identity(float, 0.f, float)
+	hm_declare_additive_identity(double, 0., double)
+	hm_declare_additive_identity(Value, 0., double)
+	hm_declare_additive_identity(Point2d, Point2d(), Point2d)
+	hm_declare_additive_identity(Point3d, Point3d(), Point3d)
+	hm_declare_additive_identity(Skeleton3d, Skeleton3d(), Skeleton3d)
+	hm_declare_additive_identity(Scene3d, Scene3d(), Scene3d)
+	hm_declare_additive_identity(Image2d, 0, int)
+	hm_declare_additive_identity(ListValue, ListValue(), ListValue)
+	hm_declare_additive_identity(ListPoint2d, ListPoint2d(), ListPoint2d)
+	hm_declare_additive_identity(ListPoint3d, ListPoint3d(), ListPoint3d)
+	
+	hm_declare_multiplicative_identity(float, 1.f, float)
+	hm_declare_multiplicative_identity(double, 1., double)
+	hm_declare_multiplicative_identity(Value, 1., double)
+	hm_declare_multiplicative_identity(Point2d, Point2d(ci::Vec2f(1,1)), Point2d)
+	hm_declare_multiplicative_identity(Point3d, Point3d(ci::Vec3f(1,1,1)), Point3d)
+	hm_declare_multiplicative_identity(Skeleton3d, Skeleton3d(), Skeleton3d)
+	hm_declare_multiplicative_identity(Scene3d, Scene3d(), Scene3d)
+	hm_declare_multiplicative_identity(Image2d, 0, int)
+	hm_declare_multiplicative_identity(ListValue, ListValue(), ListValue)
+	hm_declare_multiplicative_identity(ListPoint2d, ListPoint2d(), ListPoint2d)
+	hm_declare_multiplicative_identity(ListPoint3d, ListPoint3d(), ListPoint3d)
+
+
+	
+	// define a type trait indicating T and U can be added/subtracted
+	// with return type R
 	template <typename LHS, typename RHS>
-	struct supports_addition : public std::false_type {};
+	struct supports_addition : public std::false_type {
+		typedef additive_identity<LHS> lhs_identity;
+	};
 	
 	template <typename LHS, typename RHS>
 	struct supports_multiplication : public std::false_type {};
 	
-	// define a type trait indicating T and U can be added/subtracted
-	// with return type R
+	
 	
 #define hm_enable_supports_addition(T, U, R) \
 template<> \
@@ -58,6 +108,7 @@ struct supports_addition<U, T> : public std::true_type { \
 	
 	hm_enable_supports_commutative_addition(ListPoint3d, Skeleton3d, Scene3d)
 	hm_enable_supports_commutative_addition(ListPoint3d, Scene3d, Scene3d)
+
 	
 	
 	// define a type trait indicating T and U can be added/subtracted
@@ -129,6 +180,8 @@ typedef R return_type; \
 	hm_enable_supports_commutative_multiplication(ListPoint3d, Skeleton3d, Scene3d)
 	hm_enable_supports_commutative_multiplication(ListPoint3d, Scene3d, Scene3d)
 
+
+	
 	
 	template <typename T>
 	struct is_list : public std::false_type {};

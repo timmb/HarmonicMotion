@@ -6,6 +6,7 @@
 #include <utility>
 #include "Value.h"
 #include <boost/utility/enable_if.hpp>
+#include "TypeTraits.h"
 
 namespace hm
 {
@@ -46,7 +47,7 @@ namespace hm
 		// on DataType. Only define if List<DataType> * T is defined and not
 		// if T is a list
 		// as we define those separately.
-		// T is applied individually to each element of the list
+		// T is applied individually to each element of the list.
 		template <typename T>
 		typename supports_addition<List<DataType>, T>::return_type
 		operator+(T const& rhs) const;
@@ -112,9 +113,12 @@ namespace hm
 		operator/=(T const& rhs);
 		
 		// Operations against lists of types that may operate
-		// on DataType. The length of the resulting list is the
-		// minimum of this list and the other list.
-		// Enable if T is a list, List<DataType> and List<T> support the operation, and
+		// on DataType. The resulting list has the same length as
+		// this list. Nothing is done to later elements if the
+		// right hand list is shorter than the left.
+		
+		// Enable if T is a list, List<DataType> and List<T> support the
+		// operation, and
 		// the result of the operation is List<DataType>
 		template <typename T>
 		typename std::enable_if<
@@ -250,10 +254,9 @@ typename trait<List<DataType>, T>::return_type \
 		>::type \
 	List<DataType>::operator op_assign(List<T> const& rhs) \
 	{ \
-		value.resize(std::min(value.size(), rhs.value.size())); \
 		auto lhs_it = value.begin(); \
 		auto rhs_it = rhs.value.begin(); \
-		for ( ; lhs_it != value.end(); ++lhs_it, ++rhs_it) \
+		for ( ; lhs_it != value.end() && rhs_it != rhs.value.end(); ++lhs_it, ++rhs_it) \
 		{ \
 			*lhs_it op_assign *rhs_it; \
 		} \
@@ -270,25 +273,31 @@ typename trait<List<DataType>, T>::return_type \
 	
 	
 	// e.g. List<Type> * List<T> -> List<Type * T>
-#define hm_define_list_listT_op(op, trait) \
+#define hm_define_list_listT_op(op, trait, identity) \
 	template <typename DataType> \
 	template <typename T> \
 	typename trait <List<DataType>, List<T>>::return_type \
 	List<DataType>::operator op(List<T> const& rhs) const \
 	{ \
 		typename trait <List<DataType>, List<T>>::return_type out(chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs)); \
-		int n = std::min(value.size(), rhs.value.size()); \
-		for (int i=0; i<n; i++) \
+		out.value.reserve(value.size()); \
+		auto lhs_it = value.begin(); \
+		auto rhs_it = rhs.value.begin(); \
+		for ( ; lhs_it!=value.end() && rhs_it != rhs.value.end(); ++lhs_it, ++rhs_it) \
 		{ \
-			out.value.push_back(value[i] op rhs.value[i]); \
+			out.value.push_back(*lhs_it op *rhs_it); \
+		} \
+		for ( ; lhs_it!=value.end(); ++lhs_it) \
+		{ \
+			out.value.push_back(*lhs_it op identity<T>::value); \
 		} \
 		return out; \
 	}
 	
-	hm_define_list_listT_op(+, supports_addition)
-	hm_define_list_listT_op(-, supports_addition)
-	hm_define_list_listT_op(*, supports_multiplication)
-	hm_define_list_listT_op(/, supports_multiplication)
+	hm_define_list_listT_op(+, supports_addition, additive_identity)
+	hm_define_list_listT_op(-, supports_addition, additive_identity)
+	hm_define_list_listT_op(*, supports_multiplication, multiplicative_identity)
+	hm_define_list_listT_op(/, supports_multiplication, multiplicative_identity)
 	
 	
 	// -List<Type> -> List<Type>

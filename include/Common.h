@@ -12,7 +12,7 @@
 #include <ostream>
 #include <iostream>
 #include "Type.h"
-#include "TypeTraits.h"
+//#include "TypeTraits.h"
 #include "SceneMeta.h"
 #include "BaseData.h"
 
