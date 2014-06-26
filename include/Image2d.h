@@ -5,6 +5,7 @@
 #include "opencv2/core/core.hpp"
 #include "cinder/Surface.h"
 #include "Value.h"
+#include "Common.h"
 
 namespace hm
 {

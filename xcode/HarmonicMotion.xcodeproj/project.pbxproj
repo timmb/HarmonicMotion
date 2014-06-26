@@ -194,6 +194,8 @@
 		34A25522195C78520061F666 /* NodeStandardDeviation.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551C195C78520061F666 /* NodeStandardDeviation.h */; };
 		34A25523195C78520061F666 /* NodeVelocity.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A2551D195C78520061F666 /* NodeVelocity.h */; };
 		34A25526195C7CB10061F666 /* TimeBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A25525195C7CB10061F666 /* TimeBuffer.h */; };
+		34A49214195CBA5400C83258 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A49213195CBA5400C83258 /* Types.h */; };
+		34A49219195CBD9400C83258 /* TypeTraits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A49218195CBD9400C83258 /* TypeTraits.cpp */; };
 		34A8542E1934AE1A00D0E378 /* NodeExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A8542D1934AE1A00D0E378 /* NodeExpression.h */; };
 		34A854301934AE2400D0E378 /* NodeExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34A8542F1934AE2400D0E378 /* NodeExpression.cpp */; };
 		34C5D01219471EBA00CC2AE8 /* NodeImageProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34C5D01119471EBA00CC2AE8 /* NodeImageProcessor.cpp */; };
@@ -458,6 +460,8 @@
 		34A2551C195C78520061F666 /* NodeStandardDeviation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeStandardDeviation.h; sourceTree = "<group>"; };
 		34A2551D195C78520061F666 /* NodeVelocity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeVelocity.h; sourceTree = "<group>"; };
 		34A25525195C7CB10061F666 /* TimeBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeBuffer.h; path = ../../include/utils/TimeBuffer.h; sourceTree = "<group>"; };
+		34A49213195CBA5400C83258 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Types.h; path = ../include/Types.h; sourceTree = "<group>"; };
+		34A49218195CBD9400C83258 /* TypeTraits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TypeTraits.cpp; path = ../src/TypeTraits.cpp; sourceTree = "<group>"; };
 		34A8542D1934AE1A00D0E378 /* NodeExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeExpression.h; sourceTree = "<group>"; };
 		34A8542F1934AE2400D0E378 /* NodeExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeExpression.cpp; path = ../../src/nodes/NodeExpression.cpp; sourceTree = "<group>"; };
 		34A9EF6F18B4D29200B2CD48 /* HarmonicMotionApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HarmonicMotionApp copy-Info.plist"; path = "/Users/timmb/Documents/Programming/HarmonicMotion/xcode/HarmonicMotionApp copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -843,9 +847,11 @@
 				22293671181591A2008CAA09 /* Skeleton3d.h */,
 				3445431119363F8600E90E13 /* Type.cpp */,
 				221E9036181725A10028EAFD /* Type.h */,
+				34A49218195CBD9400C83258 /* TypeTraits.cpp */,
 				34FD8D43194AF94000374ECC /* TypeTraits.h */,
 				221E903D181727220028EAFD /* Value.cpp */,
 				221E90431817273C0028EAFD /* Value.h */,
+				34A49213195CBA5400C83258 /* Types.h */,
 			);
 			name = Data;
 			path = ../xcode;
@@ -1042,6 +1048,7 @@
 				222936D7181677BD008CAA09 /* XnBitSet.h in Headers */,
 				222936D8181677BD008CAA09 /* XnCallback.h in Headers */,
 				222936D9181677BD008CAA09 /* XnCodecIDs.h in Headers */,
+				34A49214195CBA5400C83258 /* Types.h in Headers */,
 				222936DA181677BD008CAA09 /* XnContext.h in Headers */,
 				34DBA760193F3A9600D24456 /* OscTypes.h in Headers */,
 				34DBA761193F3A9600D24456 /* OscArg.h in Headers */,
@@ -1262,6 +1269,7 @@
 				34DBA75F193F3A9600D24456 /* OscTypes.cpp in Sources */,
 				22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */,
 				347662EB19409A4600539238 /* Event.cpp in Sources */,
+				34A49219195CBD9400C83258 /* TypeTraits.cpp in Sources */,
 				34DBA75D193F3A9600D24456 /* OscReceivedElements.cpp in Sources */,
 				2223EC611817EEA400B900CF /* DataNull.cpp in Sources */,
 				345F5D601945FF71003BC862 /* Image2d.cpp in Sources */,
