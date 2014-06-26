@@ -10,6 +10,7 @@
 #include "Common.h"
 #include "Data.h"
 #include "Let.h"
+#include <boost/thread/mutex.hpp>
 
 namespace hm
 {
@@ -48,22 +49,16 @@ namespace hm
 		/// (failure to do so will cause a memory leak due to the symmetric
 		/// shared_ptr references).
 		void addPatchCord(PatchCordPtr patchCord);
+		
 		/// Connections are all managed exclusively by the owning pipeline.
 		/// Responsibility lies with the pipeline to ensure patchCords are
 		/// removed from both outlet and inlet when removed from either.
 		void removePatchCord(PatchCordPtr patchCord);
-		std::vector<PatchCordPtr> patchCords() const { return mPatchCords; }
-//		/// \return false if cannot connect with inlet due to being wrong
-//		/// type.
-//		bool connect(InletPtr inlet);
-//        /// Disconnects an inlet that was previously connected using
-//        /// \c connect(InletPtr). If there is no connection, this either
-//        /// fails an assertion (in debug) or fails silently (in release).
-//        void disconnect(InletPtr inlet);
 		
-//		std::string mNodeName;
-//		std::vector<std::weak_ptr<Inlet>> mOutputs;
+		std::vector<PatchCordPtr> patchCords() const;
+
 		std::vector<PatchCordPtr> mPatchCords;
+		mutable boost::mutex mPatchCordsMutex;
 		
 		/// Outlet maintains a weak pointer to itself. This is set by Node when
 		///	Outlet is created.

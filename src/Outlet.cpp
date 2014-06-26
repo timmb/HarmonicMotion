@@ -12,8 +12,11 @@
 #include "FactoryNode.h"
 #include "PatchCord.h"
 #include <algorithm>
+#include <boost/thread/mutex.hpp>
 
 using namespace std;
+
+typedef boost::lock_guard<boost::mutex> Lock;
 
 namespace hm
 {
@@ -51,6 +54,7 @@ namespace hm
 	
 	void Outlet::addPatchCord(PatchCordPtr patchCord)
 	{
+		Lock lock(mPatchCordsMutex);
 		// check no equivalent patch cord has been added, and that the outlet
 		// of the new one is correct
 		bool isValid = !any_of(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
@@ -66,6 +70,7 @@ namespace hm
 	
 	void Outlet::removePatchCord(PatchCordPtr patchCord)
 	{
+		Lock lock(mPatchCordsMutex);
 		auto it = std::find(mPatchCords.begin(), mPatchCords.end(), patchCord);
 		bool isValid = it != mPatchCords.end();
 		assert(isValid);
@@ -73,6 +78,12 @@ namespace hm
 		{
 			mPatchCords.erase(it);
 		}
+	}
+	
+	vector<PatchCordPtr> Outlet::patchCords() const
+	{
+		Lock lock(mPatchCordsMutex);
+		return mPatchCords;
 	}
 	
 	
@@ -102,30 +113,13 @@ namespace hm
 					history.push_front("(unknown)");
 				}
 			}
-			for (PatchCordPtr cord: mPatchCords)
+			auto cords = patchCords();
+			for (PatchCordPtr cord: cords)
 			{
 //				assert(data.type() & cord->inlet()->types());
 				cord->inlet()->provideNewData(data, self);
 			}
 		}
-		//	for (auto outRefIt=mOutputs.begin(); outRefIt!=mOutputs.end(); )
-		//	{
-		//		InletPtr out = outRefIt->lock();
-		//		// check the inlet still exists. if it doesn't then remove the connection
-		//		if (out == nullptr)
-		//		{
-		//			outRefIt = mOutputs.erase(outRefIt);
-		//		}
-		//		else
-		//		{
-		//			// Only send data to inlets that support it
-		//			if (out->types() & data.type())
-		//			{
-		//				out->provideNewData(data);
-		//			}
-		//			++outRefIt;
-		//		}
-		//	}
 	}
 	
 	
@@ -136,40 +130,10 @@ namespace hm
 		return std::any_of(mPatchCords.begin(), mPatchCords.end(), [&](PatchCordPtr p) {
 			return p->inlet()==inlet;
 		});
-		//    for (auto weakInletPtr: mOutputs)
-		//    {
-		//        InletPtr i = weakInletPtr.lock();
-		//        assert(i != nullptr);
-		//        if (i==inlet)
-		//        {
-		//            return true;
-		//        }
-		//    }
-		//    return false;
+
 	}
 	
-	
-	//void Outlet::disconnect(InletPtr inlet)
-	//{
-	//    std::weak_ptr<Inlet> weakPtr(inlet);
-	//    for (auto it=mOutputs.begin(); it!=mOutputs.end(); )
-	//    {
-	//        InletPtr o = it->lock();
-	//        assert(o != nullptr);
-	//        if (o == inlet)
-	//        {
-	//            it = mOutputs.erase(it);
-	//            return;
-	//        }
-	//        else
-	//        {
-	//            ++it;
-	//        }
-	//    }
-	//    // If we reach here then we weren't connected to inlet.
-	//    assert(false);
-	//}
-	
+
 	
 	
 	
