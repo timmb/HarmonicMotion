@@ -120,16 +120,18 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 MainWindow::~MainWindow()
 {
 	hm_debug("MainWindow destructor.");
-	// This is a bad hack at the moment, but for some reason the destructor
-	// of WidgetRenderView causes a crash regarding memory corruption.
-	// Until this is fixed, we don't destroy them properly.
+//	// This is a bad hack at the moment, but for some reason the destructor
+//	// of WidgetRenderView causes a crash regarding memory corruption.
+//	// Until this is fixed, we don't destroy them properly.
 	for (auto pair: mActiveRenderViews)
 	{
-		pair.second->setParent(nullptr);
+//		pair.second->setParent(nullptr);
+		pair.second->setNode(nullptr);
 	}
 	for (auto w: mInactiveRenderViews)
 	{
-		w->setParent(nullptr);
+//		w->setParent(nullptr);
+		w->setNode(nullptr);
 	}
 }
 
@@ -351,6 +353,7 @@ void MainWindow::removeRenderView(NodeRendererPtr node)
 			RenderWidgetPair widgets = mActiveRenderViews.takeAt(i);
 			removeDockWidget(widgets.first);
 			view->setParent(nullptr);
+			view->setNode(nullptr);
 			dock->setWidget(nullptr);
 			mInactiveRenderViews.push_back(view);
 			return;

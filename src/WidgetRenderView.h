@@ -3,24 +3,26 @@
 #include "WidgetNode.h"
 #include <QGLWidget>
 #include <QTimer>
+#include "Utilities.h"
 
 
 namespace hm
 {
 	class NodeRenderer;
-	class GlWidget;
+	class WidgetRenderViewGl;
+	
 	
 	class WidgetRenderView : public QWidget
 	{
 	public:
-		WidgetRenderView(std::shared_ptr<NodeRenderer> node, QWidget* parent);
+		WidgetRenderView(NodeRendererPtr node, QWidget* parent);
 		virtual ~WidgetRenderView();
 		
-		NodePtr node() const { return mNode; }
-		void setNode(NodePtr node) { mNode = node; }
+		NodeRendererPtr node() const;
+		void setNode(NodeRendererPtr node);
 		
 	private:
-		NodePtr mNode;
+		WidgetRenderViewGl* mGlWidget;
 	};
 	
 	
@@ -32,15 +34,22 @@ namespace hm
 		WidgetRenderViewGl(std::shared_ptr<NodeRenderer> node, QWidget* parent);
 		virtual ~WidgetRenderViewGl();
 		
+		void start() { mTimer->start(); }
+		void stop() { mTimer->stop(); }
+		
 		virtual void initializeGL() override;
 		virtual void paintGL() override;
 		virtual QSize sizeHint() const override;
+		
+		NodeRendererPtr node() const;
+		void setNode(NodeRendererPtr node);
 		
 		protected Q_SLOTS:
 		void timerCallback();
 		
 	private:
-		std::shared_ptr<NodeRenderer> mNode;
+		bool mForceRedraw;
+		NodeRendererPtr mNode;
 		QTimer* mTimer;
 		int mMaxFrameRate;
 	};

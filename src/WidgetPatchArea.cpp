@@ -718,7 +718,34 @@ void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
 
 void WidgetPatchArea::loadFromJsonComplete(QStringList errors)
 {
-	// Alerting and marking clean is done by MainWindow
+	// Check we have no dud patch cords...shouldn't need to but it
+	// seems to be happening at some points
+	for (auto it=mWidgetPatchCords.begin(); it!=mWidgetPatchCords.end(); )
+	{
+		WidgetPatchCord* w = *it;
+		OutletPtr outlet = w->outlet()->outlet();
+		InletPtr inlet = w->inlet()->inlet();
+		if (!mPipeline->isConnected(outlet, inlet))
+		{
+			hm_warning("Found ghost WidgetPatchCord. Deleting.");
+			it = mWidgetPatchCords.erase(it);
+			delete w;
+			continue;
+		}
+		// check for duplicate widget patch cord
+		for (auto jt = it+1; jt!=mWidgetPatchCords.end(); ++jt)
+		{
+			WidgetPatchCord* w2 = *jt;
+			if (w2->outlet()->outlet() == outlet && w2->inlet()->inlet() == inlet)
+			{
+				hm_warning("Found duplicate WidgetPatchCord. Deleting.");
+				it = mWidgetPatchCords.erase(it);
+				delete w;
+				continue;
+			}
+		}
+		++it;
+	}
 }
 
 
