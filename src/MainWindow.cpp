@@ -123,16 +123,16 @@ MainWindow::~MainWindow()
 //	// This is a bad hack at the moment, but for some reason the destructor
 //	// of WidgetRenderView causes a crash regarding memory corruption.
 //	// Until this is fixed, we don't destroy them properly.
-	for (auto pair: mActiveRenderViews)
-	{
+//	for (auto pair: mActiveRenderViews)
+//	{
 //		pair.second->setParent(nullptr);
-		pair.second->setNode(nullptr);
-	}
-	for (auto w: mInactiveRenderViews)
-	{
+//		pair.second->setNode(nullptr);
+//	}
+//	for (auto w: mInactiveRenderViews)
+//	{
 //		w->setParent(nullptr);
-		w->setNode(nullptr);
-	}
+//		w->setNode(nullptr);
+//	}
 }
 
 
@@ -324,17 +324,8 @@ void MainWindow::addRenderView(NodeRendererPtr node)
 {
 	qDebug() <<"****** add Render View" << node.get();
 	QDockWidget* dock = new QDockWidget(str(node->name()), this);
-	WidgetRenderView* view = nullptr;
-	if (mInactiveRenderViews.empty())
-	{
-		view = new WidgetRenderView(node, dock);
-	}
-	else
-	{
-		view = mInactiveRenderViews.takeLast();
-		view->setNode(node);
-	}
-	mActiveRenderViews.push_back(RenderWidgetPair(dock, view));
+	WidgetRenderView* view = new WidgetRenderView(node, dock);
+	mRenderViews.push_back(RenderWidgetPair(dock, view));
 	dock->setWidget(view);
 	addDockWidget(Qt::BottomDockWidgetArea, dock);
 
@@ -343,19 +334,16 @@ void MainWindow::addRenderView(NodeRendererPtr node)
 void MainWindow::removeRenderView(NodeRendererPtr node)
 {
 	qDebug() <<"****** remove Render View" << node.get();
-	for (int i=0; i<mActiveRenderViews.size(); i++)
+	for (int i=0; i<mRenderViews.size(); i++)
 	{
-		RenderWidgetPair pair = mActiveRenderViews[i];
+		RenderWidgetPair pair = mRenderViews[i];
 		QDockWidget* dock = pair.first;
 		WidgetRenderView* view = pair.second;
 		if (view->node() == node)
 		{
-			RenderWidgetPair widgets = mActiveRenderViews.takeAt(i);
+			RenderWidgetPair widgets = mRenderViews.takeAt(i);
 			removeDockWidget(widgets.first);
-			view->setParent(nullptr);
-			view->setNode(nullptr);
-			dock->setWidget(nullptr);
-			mInactiveRenderViews.push_back(view);
+			delete dock;
 			return;
 		}
 	}
