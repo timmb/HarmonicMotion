@@ -33,6 +33,7 @@ namespace hm
 		Data();
 		/// Convenience function to create a Value object with timestamp 0.
 		Data(double x);
+		Data(DataNull const& x);
 		Data(Value const& x);
 		Data(Point2d const& x);
 		Data(Point3d const& x);
@@ -98,8 +99,11 @@ namespace hm
 
 		std::string toString() const;
 		
-		// Mathematical operators. See individual type definitions for notes
-		// on the effect of operators on pairs of distinct types
+		// Mathematical operators. See individual type definitions for
+		// notes
+		// on the effect of operators on pairs of distinct types.
+		// If an operation is not supported then a null data will
+		// be returned.
 		Data operator+(Data const& rhs) const;
 		Data operator-(Data const& rhs) const;
 		Data operator*(Data const& rhs) const;
@@ -130,5 +134,16 @@ namespace hm
 	};
 	
 	std::ostream& operator<<(std::ostream& out, Data const& rhs);
+	
+	/// Whether calling max on the two data's is valid (return true)
+	/// or whether it will result in a Null Data (return false
+	bool canMaximum(Data const& lhs, Data const& rhs);
+	/// \return The maximum of the two arguments, or NullData if max
+	/// is not supported
+	Data maximum(Data const& lhs, Data const& rhs);
 }
+
+
+
+
 

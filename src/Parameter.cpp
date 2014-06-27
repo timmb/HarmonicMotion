@@ -207,19 +207,19 @@ namespace hm {
 	template<>
 	void Parameter<int>::validateExternalValue(int& value) const
 	{
-		value = max<int>(hardMin(), min<int>(hardMax(), value));
+		value = std::max<int>(hardMin(), min<int>(hardMax(), value));
 	}
 	
 	template<>
 	void Parameter<double>::validateExternalValue(double& value) const
 	{
-		value = max<double>(hardMin(), min<double>(hardMax(), value));
+		value = std::max<double>(hardMin(), min<double>(hardMax(), value));
 	}
 	
 	template<>
 	void Parameter<float>::validateExternalValue(float& value) const
 	{
-		value = max<float>(hardMin(), min<float>(hardMax(), value));
+		value = std::max<float>(hardMin(), min<float>(hardMax(), value));
 	}
 
 }

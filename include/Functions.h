@@ -30,4 +30,20 @@ namespace hm
 		return out;
 	}
 	
+	
+	
+	/// max(T, T) is supported for Scalar types only. Other types
+	/// will return DataNull.
+	Value maximum(Value const& lhs, Value const& rhs);
+	/// max on lists of different sizes will return a list of the greater
+	/// size with later values being taken unconditionally from the later
+	/// list
+	ListValue maximum(ListValue const& lhs, ListValue const& rhs);
+	/// Generic function for unordered datatypes
+	template <typename T>
+	typename std::enable_if<!supports_maximum<T>::value, DataNull>::type
+	maximum(T const& lhs, T const& rhs)
+	{
+		return DataNull();
+	}
 }

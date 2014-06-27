@@ -11,6 +11,30 @@ namespace hm
 	template <typename T>
 	struct multiplicative_identity {};
 	
+	// define a type trait indicating T and U can be added/subtracted
+	// with return type R
+	template <typename LHS, typename RHS>
+	struct supports_addition : public std::false_type {
+		typedef additive_identity<LHS> lhs_identity;
+	};
+	
+	template <typename LHS, typename RHS>
+	struct supports_multiplication : public std::false_type {};
+	
+	template <typename T>
+	struct is_list : public std::false_type {};
+	
+	template <typename T>
+	struct is_list<List<T>> : public std::true_type {};
+	
+	/// Trait to get a type from a "Type" enumeration value at compile time
+	template <Type E>
+	struct type_from_enum {};
+	
+	/// Trait determining if a value supports maximum(T,T)
+	template <typename T>
+	struct supports_maximum : public std::false_type {};
+	
 	
 	
 #define hm_declare_additive_identity(Type, identity, IdentityType) \
@@ -50,16 +74,6 @@ static IdentityType const value; \
 	hm_declare_multiplicative_identity(ListPoint3d, ListPoint3d(), ListPoint3d)
 
 
-	
-	// define a type trait indicating T and U can be added/subtracted
-	// with return type R
-	template <typename LHS, typename RHS>
-	struct supports_addition : public std::false_type {
-		typedef additive_identity<LHS> lhs_identity;
-	};
-	
-	template <typename LHS, typename RHS>
-	struct supports_multiplication : public std::false_type {};
 	
 	
 	
@@ -183,18 +197,9 @@ typedef R return_type; \
 
 	
 	
-	template <typename T>
-	struct is_list : public std::false_type {};
-	
-	template <typename T>
-	struct is_list<List<T>> : public std::true_type {};
-	
 	static_assert(is_list<ListValue>::value && is_list<ListPoint2d>::value && is_list<ListPoint3d>::value && is_list<Scene3d>::value, "is_list type trait is incorrectly defined");
 	static_assert(!(is_list<float>::value || is_list<Value>::value || is_list<Skeleton3d>::value), "is_list type trait is incorrectly defined");
 	
-	/// Trait to get a type from a "Type" enumeration value at compile time
-	template <Type E>
-	struct type_from_enum {};
 	
 #define hm_define_type_from_enum(typeEnum, Type) \
 template<> struct type_from_enum<typeEnum> { typedef Type type; };
@@ -212,6 +217,15 @@ template<> struct type_from_enum<typeEnum> { typedef Type type; };
 	
 	static_assert(ALL_TYPES == (UNDEFINED | VALUE | POINT2D | POINT3D | SKELETON3D | SCENE3D | IMAGE2D | LIST_VALUE | LIST_POINT2D | LIST_POINT3D), "type_from_enum is missing types.");
 
+#define hm_declare_supports_maximum(Type) \
+template <> struct supports_maximum<Type> : public std::true_type {};
+
+	hm_declare_supports_maximum(float)
+	hm_declare_supports_maximum(double)
+	hm_declare_supports_maximum(Value)
+	hm_declare_supports_maximum(ListValue)
+	
+	
 }
 
 
