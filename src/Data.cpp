@@ -34,6 +34,7 @@ Data::Data(Type const& x) \
 , data(x) \
 {}
 
+hm_data_define_constructor(DataNull)
 hm_data_define_constructor(Value)
 hm_data_define_constructor(Point2d)
 hm_data_define_constructor(Point3d)
@@ -175,8 +176,8 @@ namespace
 		typename enable_if<!supports_addition<T,U>::value, Data>::type
 		operator()(T const& lhs, U const& rhs) const
 		{
-			BOOST_ASSERT_MSG(false, ("Error: Cannot add objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
-			return Data(); \
+//			BOOST_ASSERT_MSG(false, ("Error: Cannot add objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str());
+			return Data();
 		}
 		
 
@@ -219,8 +220,8 @@ namespace
 		typename enable_if<!supports_addition<T,U>::value, Data>::type
 		operator()(T const& lhs, U const& rhs) const
 		{
-			BOOST_ASSERT_MSG(false, ("Error: Cannot subtract objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
-			return Data(); \
+//			BOOST_ASSERT_MSG(false, ("Error: Cannot subtract objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str());
+			return Data();
 		}
 	};
 	VisitorSub visitorSub;
@@ -262,8 +263,8 @@ namespace
 		typename enable_if<!supports_multiplication<T,U>::value, Data>::type
 		operator()(T const& lhs, U const& rhs) const
 		{
-			BOOST_ASSERT_MSG(false, ("Error: Cannot multiply objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
-			return Data(); \
+//			BOOST_ASSERT_MSG(false, ("Error: Cannot multiply objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str());
+			return Data();
 		}
 	};
 	VisitorMul visitorMul;
@@ -304,8 +305,8 @@ namespace
 		typename enable_if<!supports_multiplication<T,U>::value, Data>::type
 		operator()(T const& lhs, U const& rhs) const
 		{
-			BOOST_ASSERT_MSG(false, ("Error: Cannot divide objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str()); \
-			return Data(); \
+//			BOOST_ASSERT_MSG(false, ("Error: Cannot divide objects of type "+stringRepresentation<T>()+" and "+stringRepresentation<U>()+".").c_str());
+			return Data();
 		}
 	};
 	VisitorDiv visitorDiv;
@@ -501,6 +502,71 @@ Data Data::magnitude() const
 {
 	return boost::apply_visitor(magnitudeVisitor, data);
 }
+
+
+namespace
+{
+	struct CanMaximumVisitor : public boost::static_visitor<bool>
+	{
+		template <typename T>
+		bool operator()(T const& x) const
+		{
+			return supports_maximum<T>::value;
+		}
+		
+//		template <typename T>
+//		typename enable_if<supports_maximum<T>::value, bool>::type
+//		operator()(T const& x) const { return true; }
+//		
+//		template <typename T>
+//		typename enable_if<!supports_maximum<T>::value, bool>::type
+//		operator()(T const& x) const { return false; }
+		
+//		template <typename T>
+//		bool operator()(T const& x) const { return false; }
+
+	};
+	CanMaximumVisitor canMaximumVisitor;
+	
+	struct MaximumVisitor : public boost::static_visitor<Data>
+	{
+		template <typename T>
+		Data operator()(T const& lhs, T const& rhs) const
+		{
+			return Data(maximum(lhs, rhs));
+		}
+		
+		Data operator()(DataNull const& lhs, DataNull const& rhs) const
+		{
+			return dataNull;
+		}
+		
+		template <typename T, typename U>
+		typename enable_if<!is_same<T,U>::value, Data>::type
+		operator()(T const& lhs, U const& rhs) const
+		{
+			return dataNull;
+		}
+	};
+	MaximumVisitor maximumVisitor;
+}
+
+bool hm::canMaximum(Data const& lhs, Data const& rhs)
+{
+	return lhs.type()==rhs.type() && boost::apply_visitor(canMaximumVisitor, lhs.data);
+}
+
+
+Data hm::maximum(Data const& lhs, Data const& rhs)
+{
+	return lhs.type()==rhs.type()? boost::apply_visitor(maximumVisitor, lhs.data, rhs.data) : dataNull;
+}
+
+
+
+
+
+
 
 
 

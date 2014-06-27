@@ -22,3 +22,4 @@
 #include "nodes/NodeMixer.h"
 #include "nodes/NodeSelectSkeleton.h"
 #include "nodes/NodeSpeedAcceleration.h"
+#include "nodes/NodePeakDecay.h"

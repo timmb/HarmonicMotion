@@ -14,6 +14,11 @@ NodePeakDecay(Node::Params params, std::string className = "NodePeakDecay");
 		virtual void step() override;
 		
 	private:
-		
+		double mLastTimestamp;
+		double mDecayRate;
+		Data mPeak;
 	};
 }
+
+#include "FactoryNode.h"
+hm_register_node(NodePeakDecay, "Peak decay", "Calculates the peak value with an adjustable decay.")

@@ -125,7 +125,7 @@ NodePtr NodeRenderer::create(Params params) const
 
 bool NodeRenderer::isRedrawRequired() const
 {
-	return mTimestampOfData > mTimestampOfLastDraw;
+	return mTimestampOfData > mTimestampOfLastDraw || elapsedTime() - mTimestampOfData > 2;
 }
 
 void NodeRenderer::draw(int viewportWidth, int viewportHeight)
@@ -146,7 +146,7 @@ void NodeRenderer::draw(int viewportWidth, int viewportHeight)
 		map<OutletPtr, Data> & inletCache = mCache[inletIndex];
 		for (auto it=inletCache.begin(); it!=inletCache.end(); )
 		{
-			if (it->second.timestamp() - t > expiryTime)
+			if (t - it->second.timestamp() > expiryTime)
 			{
 				it = inletCache.erase(it);
 			}
