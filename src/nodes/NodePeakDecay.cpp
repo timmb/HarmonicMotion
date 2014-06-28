@@ -13,7 +13,7 @@ NodePeakDecay::NodePeakDecay(Node::Params params, std::string className)
 	createInlet(SCALAR_TYPES, "Input", "Data received here will have it's recent peak value calculated and outputted.");
 	createOutlet(SCALAR_TYPES, "Output", "The peak value will be outputted here.");
 	
-	auto p = addParameter("Decay rate", &mDecayRate, "This determines how slowly the peak falls with time. A value of 1 means it never falls, 0 means it falls instantly.");
+	auto p = addParameter("Decay rate", &mDecayRate, "This determines how slowly the peak falls with time. A value of 1 means it never falls, 0 means it falls isntantly.");
 	p->setBounds(0, 1, 0, 1);
 }
 
@@ -34,9 +34,10 @@ void NodePeakDecay::step()
 		}
 		else
 		{
-			// adjust decay rate based on time between data
-			double dt = data.timestamp() - mLastTimestamp;
-			double adjustedDecayRate = 1. - dt * (1. - mDecayRate);
+//			// adjust decay rate based on time between data
+//			double dt = data.timestamp() - mLastTimestamp;
+//			double adjustedDecayRate = 1. - dt * (1. - mDecayRate);
+			double adjustedDecayRate = mDecayRate;
 			mPeak = maximum(mPeak * adjustedDecayRate, data);
 		}
 		Data output = mPeak;

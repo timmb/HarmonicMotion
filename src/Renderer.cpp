@@ -534,7 +534,10 @@ namespace hm {
 	
 	void RendererHistory::callbackAutoBounds()
 	{
-		
+		for (ParameterPtr p: mParametersToHideForAutoBounds)
+		{
+			p->setVisible(!mAutoBounds);
+		}
 	}
 	
 	
@@ -551,7 +554,7 @@ namespace hm {
 		mBuffer.push_back(x);
 		if (mNeedsRefresh)
 		{
-			gl::setMatricesWindow(mViewport.getSize());
+			gl::setMatricesWindow(mViewport.getSize(), false);
 			mNeedsRefresh = false;
 		}
 		// find limits
