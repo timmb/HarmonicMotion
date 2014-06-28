@@ -453,7 +453,7 @@ void WidgetPatchArea::nodeAdded(NodePtr node)
 	w->show();
 
 	// custom node actions
-	if (node->type() == "NodeRenderer")
+	if (node->className() == "NodeRenderer")
 	{
 		std::shared_ptr<NodeRenderer> n = std::dynamic_pointer_cast<NodeRenderer>(node);
 		assert(n);
@@ -535,7 +535,7 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 	}));
 	
 	// custom node actions
-	if (node->type() == "NodeRenderer")
+	if (node->className() == "NodeRenderer")
 	{
 		std::shared_ptr<NodeRenderer> n = std::dynamic_pointer_cast<NodeRenderer>(node);
 		assert(n);
