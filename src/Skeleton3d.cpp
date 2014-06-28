@@ -3,6 +3,7 @@
 #include "Value.h"
 #include "Scene3d.h"
 #include "cinder/gl/gl.h"
+#include <vector>
 
 using namespace std;
 
@@ -164,6 +165,15 @@ namespace hm
 				return "?";
 		}
 	}
+	
+	std::vector<std::string> const JOINT_NAMES = ([]() {
+		std::vector<std::string> v;
+		for (int i=0; i<NUM_JOINTS; i++)
+		{
+			v.push_back(jointName(i));
+		}
+		return v;
+	})();
 	
 	
 	std::pair<Joint, Joint> limbJoints(Limb limb)
