@@ -73,6 +73,11 @@ namespace hm
 		/// Renderers may have parameters, which should be created in
 		/// this function which is called by NodeRenderer.
 		std::vector<ParameterDescription> parameters() const;
+		/// When a renderer is constructed, the NodeRenderer provides it with
+		/// the constructed parameters that were requested through
+		/// \c setParameterDescriptions in case they need to access them
+		virtual void provideParameters(std::vector<ParameterPtr> const& parameters) {}
+		
 		
 		/// Describes an inlet that might be requested by a Renderer
 		struct InletDescription
@@ -93,21 +98,24 @@ namespace hm
 		{
 			/// A pointer to the value to be controlled by the parameter
 			ParameterValuePointerContainer pointer;
-			/// A user-visible descriptive name of the parameter
+			/// A user-friendly name for the parameter
 			std::string name;
+			/// A user-friendly description fo the parameter
+			std::string description;
 			// See Parameter class for description of these properties
 			double softMin;
 			double softMax;
 			double hardMin;
 			double hardMax;
 			
-			ParameterDescription(ParameterValuePointerContainer const& pointer_, std::string const& name_)
+			ParameterDescription(ParameterValuePointerContainer const& pointer_, std::string const& name_, std::string const& description_="", double softMin_=0, double softMax_=100, double hardMin_=-9999999, double hardMax_=9999999)
 			: pointer(pointer_)
 			, name(name_)
-			, softMin(0)
-			, softMax(100)
-			, hardMin(-9999999)
-			, hardMax(9999999)
+			, description(description_)
+			, softMin(softMin_)
+			, softMax(softMax_)
+			, hardMin(hardMin_)
+			, hardMax(hardMax_)
 			{}
 		};
 		
@@ -235,9 +243,17 @@ namespace hm
 		
 		virtual void operator()(Value const& x, int inlet) override;
 		
+		virtual void provideParameters(std::vector<ParameterPtr> const& parameters) override;
+		
 	private:
+		void callbackAutoBounds();
+		
+		bool mAutoBounds;
 		int mSize;
+		double mLowerBound;
+		double mUpperBound;
 		boost::circular_buffer<Data> mBuffer;
+		std::vector<ParameterPtr> mParametersToHideForAutoBounds;
 	};
 }
 
