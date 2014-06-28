@@ -8,6 +8,12 @@
 	<qresource>
 		<file>qss/WidgetNodePrototype.qss</file>
 	</qresource>
+	<qresource>
+		<file>qss/WidgetPatchArea.qss</file>
+	</qresource>
+	<qresource>
+		<file>qss/WidgetLet.qss</file>
+	</qresource>
 
 <qresource>
 <file>icons/outlet.svg</file>

@@ -11,6 +11,13 @@ using namespace hm;
 
 int main(int argc, char** argv)
 {
+	// find plugins dir
+	QDir dir(argv[0]);
+	dir.cdUp();
+	dir.cdUp();
+	dir.cd("plugins");
+	QCoreApplication::setLibraryPaths(QStringList()<<dir.absolutePath());
+	
 	QApplication* app = new QApplication(argc, argv);
 	QCoreApplication::setOrganizationName("Centre for Digital Music");
 	QCoreApplication::setApplicationName("Harmonic Motion");
