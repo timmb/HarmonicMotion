@@ -65,6 +65,10 @@ namespace hm
 		void addWidget(QWidget* widget);
 		
 	Q_SIGNALS:
+		/// Emitted during a drag action. Parameter passed is a pointer to
+		/// \c this.
+		void beingDragged(WidgetNode*);
+		/// Emitted at the end of a drag action
 		void geometryChanged();
 		
 		/// Emitted when this node has gained focus and so the info panel

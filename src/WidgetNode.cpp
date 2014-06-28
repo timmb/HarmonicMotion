@@ -124,6 +124,8 @@ namespace hm
 		assert(success);
 		success = connect(this, SIGNAL(geometryChanged()), patchArea, SLOT(updateSize()));
 		assert(success);
+		success = connect(this, SIGNAL(beingDragged(WidgetNode*)), patchArea, SLOT(widgetNodeBeingDragged(WidgetNode*)));
+		assert(success);
 		success = connect(this, SIGNAL(newInfoPanelText(QString)), patchArea, SLOT(provideInfoPanelText(QString)));
 		assert(success);
 		
@@ -245,8 +247,9 @@ namespace hm
 //            if (isWindow())
 //                move(event->globalPos() - mDragOffset);
 //            else
-			qDebug() << "event->pos"<<event->pos()<<"to parent"<<mapToParent(event->pos())<<"parent pos"<<parentWidget()->pos();
+//			qDebug() << "event->pos"<<event->pos()<<"to parent"<<mapToParent(event->pos())<<"parent pos"<<parentWidget()->pos();
                 move(mapToParent(event->pos() - mDragOffset));
+//			Q_EMIT beingDragged(this);
         }
 		else
 		{
@@ -261,12 +264,12 @@ namespace hm
             event->accept(); // do not propagate
             mDragOffset = QPoint();
 			mIsDragging = false;
+			Q_EMIT geometryChanged();
         }
 	}
 	
 	void WidgetNode::resizeEvent(QResizeEvent* event)
 	{
-		Q_EMIT geometryChanged();
 	}
 	
 	void WidgetNode::moveEvent(QMoveEvent* event)
@@ -291,7 +294,14 @@ namespace hm
 			move(pos);
 			return;
 		}
-		Q_EMIT geometryChanged();
+		if (mIsDragging)
+		{
+			Q_EMIT beingDragged(this);
+		}
+		if (!mIsDragging)
+		{
+			Q_EMIT geometryChanged();
+		}
 	}
 	
 	void WidgetNode::focusInEvent(QFocusEvent* event)

@@ -30,13 +30,14 @@
 
 using namespace hm;
 
-WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QWidget* parent)
+WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QScrollArea* parent)
 : QWidget(parent)
 , mPipeline(pipeline)
 , mPipelineListener(new PipelineListener(this))
 , mNewPatchCord(nullptr)
 , mMouseGrabber(new MouseGrabber(this))
 , mMousePressFilter(new PatchAreaMousePressFilter(this))
+, mContainingScrollArea(parent)
 {
 	setObjectName("WidgetPatchArea");
 	loadStyleSheet();
@@ -305,9 +306,23 @@ void WidgetPatchArea::updateSize()
 	QRect content = childrenRect();
 	content.setLeft(0);
 	content.setTop(0);
-	content.setWidth(qMax(sizeHint().width(), content.width()));
-	content.setHeight(qMax(sizeHint().height(), content.height()));
+//	content.setWidth(qMax(sizeHint().width(), content.width()));
+//	content.setHeight(qMax(sizeHint().height(), content.height()));
+	content.setWidth(qMax(width(), qMax(sizeHint().width(), content.width())));
+	content.setHeight(qMax(height(), qMax(sizeHint().height(), content.height())));
 	resize(content.width(), content.height());
+}
+
+void WidgetPatchArea::widgetNodeBeingDragged(WidgetNode* widget)
+{
+	QRect content = childrenRect();
+	content.setLeft(0);
+	content.setTop(0);
+	content.setWidth(qMax(width(), qMax(sizeHint().width(), content.width())));
+	content.setHeight(qMax(height(), qMax(sizeHint().height(), content.height())));
+	resize(content.width(), content.height());
+//	mContainingScrollArea->ensureWidgetVisible(widget, 0, 0);
+
 }
 
 void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint position)

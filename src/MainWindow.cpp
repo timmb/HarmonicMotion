@@ -30,7 +30,7 @@ using namespace hm;
 MainWindow::MainWindow(PipelinePtr pipeline)
 : mConsole(nullptr)
 , mLayout(nullptr)
-, mPatchArea(new WidgetPatchArea(pipeline))
+, mPatchArea(nullptr)
 , mPatchScrollArea(nullptr)
 {
 //	mLayout = new QVBoxLayout;
@@ -46,9 +46,9 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 //	mLayout->addWidget(mConsole);
 //	mLayout->addWidget(mPatchArea);
 	
-	BOOST_VERIFY(connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString))));
 		
 	mPatchScrollArea = new QScrollArea(this);
+	mPatchArea = new WidgetPatchArea(pipeline, mPatchScrollArea);
 	mPatchScrollArea->setWidget(mPatchArea);
 	mPatchScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	mPatchScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -60,6 +60,9 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	QPlainTextEdit* infoPanel = new QPlainTextEdit(infoPanelDock);
 	infoPanelDock->setWidget(infoPanel);
 	addDockWidget(Qt::BottomDockWidgetArea, infoPanelDock);
+	
+	BOOST_VERIFY(connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString))));
+
 	
 	QAction* actionNew = new QAction("New", this);
 	actionNew->setShortcut(QKeySequence::New);

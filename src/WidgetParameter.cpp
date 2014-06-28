@@ -290,6 +290,7 @@ WidgetParameterString::WidgetParameterString(std::shared_ptr<Parameter<std::stri
 : WidgetParameter<std::string>(parameter)
 {
 	QLineEdit* widget = new QLineEdit(this);
+	widget->setText(str(parameter->lastValue()));
 	widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 	widget->move(0,0);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);

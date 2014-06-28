@@ -16,6 +16,7 @@
 #include "PipelineListener.h"
 #include "Utilities.h"
 #include "MetatypeDeclarations.h"
+#include <QScrollArea>
 
 namespace hm
 {
@@ -36,7 +37,7 @@ namespace hm
 	public:
 		/// \param pipeline The pipeline that this patch area will represent.
 		/// Will be created if null.
-		WidgetPatchArea(PipelinePtr pipeline, QWidget* parent=nullptr);
+		WidgetPatchArea(PipelinePtr pipeline, QScrollArea* parent);
 		virtual ~WidgetPatchArea();
 		
 		/// \return Whether the pipeline is dirty (i.e. has unsaved data)
@@ -101,6 +102,9 @@ namespace hm
 		/// moves or is resized to ensure the scroll area
 		/// encapsulating this widget updates
 		void updateSize();
+		/// Like updateSize() except it only updates the patch area if that
+		/// would make it bigger. Use this during a drag.
+		void widgetNodeBeingDragged(WidgetNode*);
 		/// Provide new Info Panel data to this patch area, to be forwarded
 		/// on to the info panel
 		void provideInfoPanelText(QString);
@@ -174,6 +178,9 @@ namespace hm
 		WidgetNewPatchCord* mNewPatchCord;
 		MouseGrabber* mMouseGrabber;
 		PatchAreaMousePressFilter* mMousePressFilter;
+		
+		/// The scroll area that this widget lives in.
+		QScrollArea* mContainingScrollArea;
 	};
 	
 //	template <typename T>
