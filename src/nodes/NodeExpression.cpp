@@ -181,7 +181,7 @@ namespace hm
 	} // namespace expression
 	
 	NodeExpression::NodeExpression(Node::Params params, string className)
-	: NodeUnthreaded(params, className)
+	: NodeUnthreaded(params, className, "Expression", "Write a mathematical expression to define how input is transformed into output.")
 	, mIsValid(false)
 	, mLastTimestamp(-42.)
 	, mGrammar(new expression::Grammar<string::const_iterator>)

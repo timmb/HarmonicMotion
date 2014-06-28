@@ -54,7 +54,7 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeKinect, "Kinect (OpenNI)", "Receive skeleton data from a Kinect.")
+hm_register_node(NodeKinect)
 
 
 

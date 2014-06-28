@@ -52,7 +52,7 @@ namespace hm
 		
 	private:
 		/// Type may be a combination of Type flags.
-		Inlet(Types types, Node& node, int index, std::string const& name, std::string const& helpText);
+		Inlet(Types types, Node& node, int index, std::string const& name, std::string const& description);
 
 		// Accessed by Node ------------
 		/// This is used by the node when it is destroyed or this Let

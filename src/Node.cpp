@@ -45,8 +45,10 @@ using namespace std;
 typedef boost::shared_lock<boost::shared_mutex> SharedLock;
 typedef boost::unique_lock<boost::shared_mutex> UniqueLock;
 
-Node::Node(Params params, string className)
-: mClassName(className)
+Node::Node(Params params, string className_, string type_, string description_)
+: mClassName(className_)
+, mType(type_)
+, mDescription(description_)
 , mIsEnabled(true)
 , mIsProcessing(false)
 , mHasStartEverBeenCalled(false)
@@ -57,10 +59,10 @@ Node::Node(Params params, string className)
 	// if no node name has been set, default it to the class name
 	if (params.name == "")
 	{
-		params.name = mClassName;
+		params.name = type();
 	}
 	setNodeParams(params);
-	hm_debug("Node constructed: "+className);
+	hm_debug("Node constructed: "+className_);
 }
 
 Node::~Node()

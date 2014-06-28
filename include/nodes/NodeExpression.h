@@ -253,4 +253,4 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeExpression, "Expression", "Write a mathematical expression to define how input is transformed into output.")
+hm_register_node(NodeExpression)

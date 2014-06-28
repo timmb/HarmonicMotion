@@ -36,7 +36,7 @@ namespace hm
 		/// The Node will automatically have this outlet registered with
 		/// it.
 		/// Outlets are only created by Nodes
-		Outlet(Types type, Node& owner, int index, std::string const& name, std::string const& helpText);
+		Outlet(Types type, Node& owner, int index, std::string const& name, std::string const& description);
 		
 		
 		/// Connections are all managed exclusively by the owning pipeline.

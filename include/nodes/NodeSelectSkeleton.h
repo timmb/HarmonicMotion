@@ -24,4 +24,4 @@ namespace hm
 	};
 }
 #include "FactoryNode.h"
-hm_register_node(NodeSelectSkeleton, "Select Skeleton", "Choose a skeleton from a scene based on distance.")
+hm_register_node(NodeSelectSkeleton)

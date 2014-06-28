@@ -18,13 +18,16 @@ namespace hm
 ///     //...
 /// };
 /// hm_register_node(NodeOscOut, "OSC out", "Sends received data to another application via OSC")
-#define hm_register_node(ClassName, FriendlyName, FriendlyDescription) namespace { \
+#define hm_register_node(ClassName) namespace { \
 	static bool hm__registrar_##ClassName = ([]() { \
 		if (!hm::FactoryNode::instance()->hasNodeType(#ClassName)) { \
-			hm::FactoryNode::instance()->registerNodeType(hm::NodeInfo(\
+				/* Create a temporary instance, grab the params. */ \
+			hm::NodePtr instance(new hm::ClassName(hm::Node::Params())); \
+			hm::FactoryNode::instance()->registerNodeType(hm::NodeInfo( \
 				#ClassName, \
-				FriendlyName, \
-				FriendlyDescription, \
+				instance->type(), \
+				instance->description(), \
+				instance->exportParams(), \
 				[](hm::Node::Params params) { \
 					return hm::NodePtr(new hm::ClassName(params)); \
 				})); \
@@ -41,21 +44,26 @@ namespace hm
 		std::string className;
 		/// The node type name as presented to the user
 		/// e.g. OSC out
-		std::string friendlyName;
+		std::string type;
 		/// A brief description of what the node does, as presented to the user
 		/// e.g. Sends received data to another application using Open Sound Control (OSC).
-		std::string friendlyDescription;
+		std::string description;
+		/// The default Params, which will contain descriptions of all the
+		/// parameters registered by the node
+		Node::Params params;
 		/// A function that generates new instances
 		/// of the node.
 		NodeCreationFunction creationFunction;
 		
 		NodeInfo(std::string className_,
-				 std::string friendlyName_,
-				 std::string friendlyDescription_,
+				 std::string type_,
+				 std::string description_,
+				 Node::Params const& params_,
 				 NodeCreationFunction creationFunction_)
 		: className(className_)
-		, friendlyName(friendlyName_)
-		, friendlyDescription(friendlyDescription_)
+		, type(type_)
+		, description(description_)
+		, params(params_)
 		, creationFunction(creationFunction_)
 		{}
 	};
@@ -113,7 +121,7 @@ namespace hm
 		/// the create or nodeType functions have been called.
 		std::atomic<bool> mNodeFunctionsCalled;
         std::map<Node*, std::weak_ptr<Node>> mCreatedNodes;
-		std::map<std::string, Node::Params> mNodeParams;
+//		std::map<std::string, Node::Params> mNodeParams;
 	};
 	
 }

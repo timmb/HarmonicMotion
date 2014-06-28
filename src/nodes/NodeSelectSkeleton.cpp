@@ -8,7 +8,7 @@
 using namespace hm;
 
 NodeSelectSkeleton::NodeSelectSkeleton(Node::Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Select skeleton", "Choose a skeleton from a scene based on distance.")
 , mMode(0)
 , mLastDataTimestamp(-42.)
 {

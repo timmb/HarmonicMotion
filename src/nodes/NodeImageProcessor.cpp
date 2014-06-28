@@ -8,7 +8,7 @@ using namespace std;
 
 
 NodeImageProcessor::NodeImageProcessor(Node::Params const& params, string const& className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Image processor", "Process 2D images (e.g. blur, threshold, etc.)")
 , mProcess(0)
 , mBlurAmount(0.f)
 , mThreshold(128)

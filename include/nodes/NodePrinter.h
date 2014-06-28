@@ -30,5 +30,5 @@ namespace hm
 
 
 #include "FactoryNode.h"
-hm_register_node(NodePrinter, "Printer", "Print the input to the debug console.")
+hm_register_node(NodePrinter)
 

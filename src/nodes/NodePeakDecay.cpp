@@ -6,7 +6,7 @@
 using namespace hm;
 
 NodePeakDecay::NodePeakDecay(Node::Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Peak decay", "Calculates the peak value with an adjustable decay.")
 , mLastTimestamp(-42)
 , mDecayRate(0.9)
 {

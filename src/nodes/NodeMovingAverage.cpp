@@ -6,7 +6,7 @@
 using namespace hm;
 
 NodeMovingAverage::NodeMovingAverage(Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Moving average", "Finds the average value over the past n samples")
 , mLastTimestamp(-42)
 , mNumSamples(40)
 , mBuffer(40)

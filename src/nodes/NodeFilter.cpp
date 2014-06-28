@@ -58,7 +58,7 @@ hm_nodefilter_filters_define_list_visitation(Scene3d);
 
 
 NodeFilter::NodeFilter(Params const& params, std::string const& className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Filter", "Smooths data.")
 , mAlpha(0.5f)
 , mBeta(0.5f)
 , mInlet(nullptr)

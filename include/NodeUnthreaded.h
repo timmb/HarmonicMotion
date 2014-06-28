@@ -7,7 +7,8 @@ namespace hm
 	class NodeUnthreaded : public Node
 	{
 	public:
-		NodeUnthreaded(Node::Params params, std::string className);
+		/// \see Node()
+		NodeUnthreaded(Node::Params params, std::string className, std::string type, std::string description);
 		
 		virtual void startProcessing() override final;
 		virtual bool stepProcessing() override final;

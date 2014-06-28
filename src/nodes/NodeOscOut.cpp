@@ -37,7 +37,7 @@ public:
 };
 
 NodeOscOut::NodeOscOut(Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "OSC out", "Sends received data to another application via Open Sound Control (OSC)")
 //, mOsc(new Sender)
 , mInlet(nullptr)
 , mLastSentTimestamp(-42.)

@@ -6,7 +6,7 @@ using namespace hm;
 using namespace std;
 
 NodeSelectJoint::NodeSelectJoint(Params const& params, string const& className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Select joint", "Choose a joint from a skeleton.")
 , mNumOutlets(1)
 , mSelectedJoints(MAX_NUM_OUTLETS, 0)
 , mLastTimestamp(-42)

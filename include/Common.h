@@ -20,6 +20,7 @@ namespace hm
 {
 	// forward declarations
 	class Data;
+	class Let;
 	class Inlet;
 	class Outlet;
 	class Node;
@@ -33,6 +34,7 @@ namespace hm
 	
 	
 	// typedefs
+	typedef std::shared_ptr<Let> LetPtr;
 	typedef std::shared_ptr<Inlet> InletPtr;
 	typedef std::shared_ptr<Outlet> OutletPtr;
 	typedef std::shared_ptr<Node> NodePtr;
@@ -48,8 +50,6 @@ namespace hm
 	/// \return number of seconds since the program began
 	double elapsedTime();
 	
-	std::vector<Type> const& listOfTypes();
-	
 	// Check if STL container contains an element
 	template <typename Container, typename Value>
 	bool contains(Container container, Value const& value)
@@ -61,32 +61,6 @@ namespace hm
 	std::string indent(std::string const& s, int indentAmount=2);
 	
 	
-	/// You can use getType<T>() to return the type of T
-	template <typename T>
-	Type getType();
-	
-#define hm_define_get_type(T, typeEnumValue) \
-	template<> inline Type getType<T>() { return typeEnumValue; }
-	
-	hm_define_get_type(DataNull, UNDEFINED)
-	hm_define_get_type(Value, VALUE)
-	hm_define_get_type(Point2d, POINT2D)
-	hm_define_get_type(Point3d, POINT3D)
-	hm_define_get_type(Skeleton3d, SKELETON3D)
-	hm_define_get_type(Scene3d, SCENE3D)
-	hm_define_get_type(Image2d, IMAGE2D)
-	hm_define_get_type(List<Value>, LIST_VALUE)
-	hm_define_get_type(List<Point2d>, LIST_POINT2D)
-	hm_define_get_type(List<Point3d>, LIST_POINT3D)
-	
-	
-	// Get a string representation of a Data type
-	template<typename T>
-	std::string stringRepresentation()
-	{
-		static_assert(std::is_base_of<BaseData, T>::value, "stringRepresentation() only defined for derivatives of BaseData");
-		return std::to_string(getType<T>());
-	}
 	
 	/// Get the timestamp from either Data or a class derived from BaseData
 	double getTimestamp(Data const& x);

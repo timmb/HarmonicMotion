@@ -81,7 +81,7 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeFilter, "Filter", "Smooths data.");
+hm_register_node(NodeFilter);
 
 
 

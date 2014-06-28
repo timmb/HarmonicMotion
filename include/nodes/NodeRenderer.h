@@ -57,5 +57,5 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeRenderer, "Renderer", "Renders data received to an Open GL context.")
+hm_register_node(NodeRenderer)
 

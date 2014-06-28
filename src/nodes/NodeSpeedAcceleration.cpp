@@ -5,7 +5,7 @@
 using namespace hm;
 
 NodeSpeedAcceleration::NodeSpeedAcceleration(Node::Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Speed and Acceleration", "Calculate the speed and acceleration of values.")
 , mLastTimestamp(-42)
 {
 	createInlet(SCALAR_TYPES | VECTOR2D_TYPES | VECTOR3D_TYPES, "Input", "Values received here will have their speed and acceleration calculated.");

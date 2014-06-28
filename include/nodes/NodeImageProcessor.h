@@ -44,5 +44,5 @@ namespace hm
 
 
 #include "FactoryNode.h"
-hm_register_node(NodeImageProcessor, "Image processor", "Process 2D images (e.g. blur, threshold, etc.)")
+hm_register_node(NodeImageProcessor)
 

@@ -37,9 +37,6 @@ void FactoryNode::registerNodeType(NodeInfo const& nodeInfo)
 		throw std::runtime_error("Node "+nodeInfo.className+" has already been regstered with FactoryNode.");
 	}
 	mNodeInfos.emplace(nodeInfo.className, nodeInfo);
-	// Create a temporary instance, grab the params.
-	NodePtr instance = nodeInfo.creationFunction(Node::Params());
-	mNodeParams[nodeInfo.className] = instance->exportParams();
 	hm_info("Node type "+nodeInfo.className+" registered.");
 }
 
@@ -62,10 +59,9 @@ std::vector<NodeInfo> FactoryNode::nodeTypes()
 
 Node::Params FactoryNode::createParams(std::string const& className)
 {
-	assert(hasNodeType(className) == (mNodeParams.count(className)==1));
 	if (hasNodeType(className))
 	{
-		return mNodeParams.at(className);
+		return mNodeInfos.at(className).params;
 	}
 	else
 	{
