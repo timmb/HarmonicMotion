@@ -41,7 +41,7 @@ namespace hm
 	
 	Value maximum(Value const& lhs, Value const& rhs)
 	{
-		return lhs.value < rhs.value? rhs : lhs;
+		return lhs.value < rhs.value? Value(rhs.value, chooseTimestamp(lhs, rhs), chooseId(lhs,rhs), chooseSceneMeta(lhs,rhs)) : Value(lhs.value, chooseTimestamp(lhs,rhs), chooseId(lhs,rhs), chooseSceneMeta(lhs,rhs));
 	}
 	
 	ListValue maximum(ListValue const& lhs, ListValue const& rhs)
