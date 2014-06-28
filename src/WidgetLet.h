@@ -8,6 +8,7 @@
 
 #pragma once
 #include <QLabel>
+#include "Common.h"
 
 namespace hm
 {
@@ -33,11 +34,12 @@ namespace hm
         void positionChanged();
         
     protected:
-		WidgetLet(WidgetNode* parent);
+		WidgetLet(LetPtr let, WidgetNode* parent);
         virtual void moveEvent(QMoveEvent*) override;
         virtual void resizeEvent(QResizeEvent*) override;
 		virtual void mousePressEvent(QMouseEvent*) override;
         
         WidgetNode* mParent;
+		LetPtr mLet;
 	};
 }

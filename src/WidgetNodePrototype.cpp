@@ -35,10 +35,10 @@ WidgetNodePrototype::WidgetNodePrototype(NodeInfo const& info, MainWindow* mainW
 	setObjectName("WidgetNodePrototype");
 	loadStyleSheet();
 	
-	QLabel* name = new QLabel(str(info.friendlyName));
+	QLabel* name = new QLabel(str(info.type));
 	name->setObjectName("name");
 	name->setWordWrap(true);
-	QLabel* description = new QLabel(str(info.friendlyDescription));
+	QLabel* description = new QLabel(str(info.description));
 	description->setObjectName("description");
 	description->setWordWrap(true);
 	

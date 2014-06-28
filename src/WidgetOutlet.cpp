@@ -18,7 +18,7 @@
 using namespace hm;
 
 WidgetOutlet::WidgetOutlet(OutletPtr outlet, WidgetNode* parent)
-: WidgetLet(parent)
+: WidgetLet(outlet, parent)
 , mOutlet(outlet)
 {
 	assert(mOutlet != nullptr);

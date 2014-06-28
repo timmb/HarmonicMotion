@@ -14,11 +14,34 @@
 
 using namespace hm;
 
-WidgetLet::WidgetLet(WidgetNode* parent)
+WidgetLet::WidgetLet(LetPtr let, WidgetNode* parent)
 : QLabel(parent)
 , mParent(parent)
+, mLet(let)
 {
+	assert(let != nullptr);
     assert(mParent != nullptr);
+	// we recreate the help description as rich text
+	
+	std::string helpText = "<b>"+let->className()+" "
+	+std::to_string(let->index()+1)+": "+let->name()+"</b> (<i>";
+	for (Type type: listOfTypes())
+	{
+		if (let->types() & type)
+		{
+			helpText += std::to_string(type) + ", ";
+		}
+	}
+	// Check if we need to remove final comma
+	if (helpText.back() != '(')
+	{
+		assert(helpText.size()>=2);
+		assert(helpText.substr(helpText.size()-2, helpText.size()) == ", ");
+		helpText.resize(helpText.size() - 2);
+	}
+	helpText += "</i>)\n"+let->description();
+
+	setToolTip(str(helpText));
 }
 
 WidgetLet::~WidgetLet()

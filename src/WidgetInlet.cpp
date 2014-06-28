@@ -18,7 +18,7 @@
 using namespace hm;
 
 WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
-: WidgetLet(parent)
+: WidgetLet(inlet, parent)
 , mInlet(inlet)
 , mParent(parent)
 {

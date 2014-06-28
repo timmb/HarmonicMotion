@@ -44,6 +44,7 @@ namespace hm
         
 		QLabel* typeLabel = new QLabel(str(mNode->type()));
 		typeLabel->setObjectName("LabelNodeType");
+		typeLabel->setToolTip(("<span>"+mNode->description()+"</span>").c_str());
 		
 		mNameWidget = new QLineEdit(str(mNode->name()));
 
@@ -58,6 +59,8 @@ namespace hm
 		{
 			WidgetBaseParameter* widget = WidgetBaseParameter::create(p);
 			QLabel* label = new QLabel(str(p->name()));
+			widget->setToolTip(str(p->description()));
+			label->setToolTip(str(p->description()));
 			mWidgetParameters.push_back(QPair<QLabel*, WidgetBaseParameter*>(label, widget));
 			BOOST_VERIFY(connect(widget, SIGNAL(parameterVisibilityChanged(WidgetBaseParameter*, bool)), this, SLOT(parameterVisibilityChanged(WidgetBaseParameter*, bool))));
 		}
