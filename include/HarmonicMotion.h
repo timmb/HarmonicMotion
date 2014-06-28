@@ -23,3 +23,4 @@
 #include "nodes/NodeSelectSkeleton.h"
 #include "nodes/NodeSpeedAcceleration.h"
 #include "nodes/NodePeakDecay.h"
+#include "nodes/NodeSelectJoint.h"

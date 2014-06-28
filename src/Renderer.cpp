@@ -371,7 +371,7 @@ namespace hm {
 	
 	void Renderer3d::cleanDescriptors(double latestTimestamp)
 	{
-		while (!mDescriptors.empty() && mDescriptors.back().timestamp() - 2 > latestTimestamp)
+		while (!mDescriptors.empty() && latestTimestamp - 2 >  mDescriptors.back().timestamp())
 		{
 			mDescriptors.pop_back();
 		}

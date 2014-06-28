@@ -168,6 +168,8 @@
 		3442AFD818C0AF2E0015B240 /* Let.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD618C0AF2E0015B240 /* Let.h */; };
 		3442AFD918C0AF2E0015B240 /* PatchCord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3442AFD718C0AF2E0015B240 /* PatchCord.h */; };
 		3445431219363F8600E90E13 /* Type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3445431119363F8600E90E13 /* Type.cpp */; };
+		34592FA2195EF33400D3E96B /* NodeSelectJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34592FA1195EF33400D3E96B /* NodeSelectJoint.cpp */; };
+		34592FA7195EF34000D3E96B /* NodeSelectJoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 34592FA6195EF34000D3E96B /* NodeSelectJoint.h */; };
 		345F5D5E1945FF6B003BC862 /* Image2d.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F5D5D1945FF6B003BC862 /* Image2d.h */; };
 		345F5D601945FF71003BC862 /* Image2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 345F5D5F1945FF71003BC862 /* Image2d.cpp */; };
 		345F5D621946007B003BC862 /* CinderOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = 345F5D611946007B003BC862 /* CinderOpenCV.h */; };
@@ -438,6 +440,8 @@
 		3442AFD618C0AF2E0015B240 /* Let.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Let.h; path = ../include/Let.h; sourceTree = "<group>"; };
 		3442AFD718C0AF2E0015B240 /* PatchCord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatchCord.h; path = ../include/PatchCord.h; sourceTree = "<group>"; };
 		3445431119363F8600E90E13 /* Type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Type.cpp; path = ../src/Type.cpp; sourceTree = "<group>"; };
+		34592FA1195EF33400D3E96B /* NodeSelectJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeSelectJoint.cpp; path = ../../src/nodes/NodeSelectJoint.cpp; sourceTree = "<group>"; };
+		34592FA6195EF34000D3E96B /* NodeSelectJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeSelectJoint.h; sourceTree = "<group>"; };
 		345F5D5D1945FF6B003BC862 /* Image2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image2d.h; path = ../include/Image2d.h; sourceTree = "<group>"; };
 		345F5D5F1945FF71003BC862 /* Image2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image2d.cpp; path = ../src/Image2d.cpp; sourceTree = "<group>"; };
 		345F5D611946007B003BC862 /* CinderOpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderOpenCV.h; path = "../../../Cinder/blocks/Cinder-OpenCV/include/CinderOpenCV.h"; sourceTree = "<group>"; };
@@ -810,6 +814,8 @@
 				226A965B189BECF60056DCD1 /* NodePrinter.h */,
 				226A966A189BED140056DCD1 /* NodeRenderer.cpp */,
 				226A965C189BECF60056DCD1 /* NodeRenderer.h */,
+				34592FA1195EF33400D3E96B /* NodeSelectJoint.cpp */,
+				34592FA6195EF34000D3E96B /* NodeSelectJoint.h */,
 				34605A42195CDB6300585079 /* NodeSelectSkeleton.cpp */,
 				34605A40195CDB5A00585079 /* NodeSelectSkeleton.h */,
 				226A966B189BED140056DCD1 /* NodeSineWave.cpp */,
@@ -1160,6 +1166,7 @@
 				22C5DF6518A25BCA00920089 /* FactoryNode.h in Headers */,
 				2229372D181677C8008CAA09 /* VKinect.h in Headers */,
 				2229372E181677C8008CAA09 /* VOpenNIBone.h in Headers */,
+				34592FA7195EF34000D3E96B /* NodeSelectJoint.h in Headers */,
 				2229372F181677C8008CAA09 /* VOpenNICommon.h in Headers */,
 				22293732181677C8008CAA09 /* VOpenNIDevice.h in Headers */,
 				22293735181677C8008CAA09 /* VOpenNIDeviceManager.h in Headers */,
@@ -1280,6 +1287,7 @@
 				34DBA750193F3A9600D24456 /* UdpSocket.cpp in Sources */,
 				2262C5B21899703F006CCA1A /* Parameter.cpp in Sources */,
 				345F967B1945F51F001AD393 /* NodeCamera.cpp in Sources */,
+				34592FA2195EF33400D3E96B /* NodeSelectJoint.cpp in Sources */,
 				34DBA75F193F3A9600D24456 /* OscTypes.cpp in Sources */,
 				22C5DF6318A25BC200920089 /* FactoryNode.cpp in Sources */,
 				347662EB19409A4600539238 /* Event.cpp in Sources */,

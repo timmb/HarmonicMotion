@@ -74,6 +74,8 @@ namespace hm
 	
 	char const* jointName(Joint jointId);
 	char const* jointNameAbbr(Joint jointId);
+	extern std::vector<std::string> const JOINT_NAMES;
+	
 	Side jointSide(Joint jointId);
 	
 	inline bool isValidJoint(Joint jointId)
