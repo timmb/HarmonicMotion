@@ -41,6 +41,7 @@ void NodePeakDecay::step()
 		}
 		Data output = mPeak;
 		outlet(0)->outputNewData(output);
+		mLastTimestamp = data.timestamp();
 	}
 }
 
