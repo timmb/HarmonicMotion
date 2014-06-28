@@ -24,16 +24,15 @@ namespace hm
 	
 	Inlet::Inlet(Types types,
 				 Node& node,
-				 int index,
+				 int index_,
 				 string const& name,
-				 string const& helpText)
-	: Let(types, node, index, name, helpText)
+				 string const& description)
+	: Let(types, node, index_, name, description, "Inlet")
 	, mDataTimestamp(-42)
 	, mNumConnections(0)
 	, mDestructorHasBeenCalled(false)
 	//, mNodeName("(mNodeName unset)")
 	{
-		assert(types!=UNDEFINED);
 	}
 	
 	void Inlet::detachOwnerNode()
@@ -156,6 +155,7 @@ namespace hm
 				mNotifyCallback(mDataTimestamp);
 		}
 	}
+
 	
 }
 

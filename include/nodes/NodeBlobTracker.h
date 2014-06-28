@@ -29,5 +29,5 @@ namespace hm
 	};
 }
 #include "FactoryNode.h"
-hm_register_node(NodeBlobTracker, "Blob tracker", "Track blobs in a 2D image")
+hm_register_node(NodeBlobTracker)
 

@@ -27,4 +27,4 @@ namespace hm
 	};
 }
 #include "FactoryNode.h"
-hm_register_node(NodeSelectJoint, "Select joint", "Choose a joint from a skeleton.")
+hm_register_node(NodeSelectJoint)

@@ -42,4 +42,4 @@ namespace hm
 
 
 #include "FactoryNode.h"
-hm_register_node(NodeCamera, "Camera", "Receive video from an attached camera.")
+hm_register_node(NodeCamera)

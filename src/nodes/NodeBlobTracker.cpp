@@ -12,7 +12,7 @@ using namespace std;
 
 
 NodeBlobTracker::NodeBlobTracker(Node::Params const& params, std::string const& className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Blob tracker", "Track blobs in a 2D image")
 , mTimestampOfLastData(-42.)
 , mForceUpdate(false)
 {

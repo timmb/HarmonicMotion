@@ -63,7 +63,7 @@ int jointToVBone(Joint jointId)
 }
 
 NodeKinect::NodeKinect(Params const& params, std::string const& className)
-: NodeThreaded(params, className)
+: NodeThreaded(params, className, "Kinect (OpenNI)", "Receive skeleton data from a Kinect using the OpenNI/NITE libraries.")
 , mSceneOutlet(nullptr)
 , mMetadata(nullptr)
 , mEnableScene(true)

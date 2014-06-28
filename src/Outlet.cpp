@@ -21,8 +21,8 @@ typedef boost::lock_guard<boost::mutex> Lock;
 namespace hm
 {
 	
-	Outlet::Outlet(Types types, Node& node, int index, string const& name, string const& helpText)
-	: Let(types, node, index, name, helpText)
+	Outlet::Outlet(Types types, Node& node, int index_, string const& name, string const& description)
+	: Let(types, node, index_, name, description, "Outlet")
 	{
 	}
 	

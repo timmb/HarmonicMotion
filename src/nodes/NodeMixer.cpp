@@ -5,7 +5,7 @@
 using namespace hm;
 
 NodeMixer::NodeMixer(Node::Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Mixer", "Mixes between two sources of data")
 , mBlendFactor(0.5)
 , mLastTimestamp0(-42)
 , mLastTimestamp1(-42)

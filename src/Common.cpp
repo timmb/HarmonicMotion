@@ -21,24 +21,6 @@ namespace hm
 		return programTimer.getSeconds();
 	}
 	
-	std::vector<Type> const& listOfTypes()
-	{
-		static const std::vector<Type> types =
-		{
-			UNDEFINED,
-			VALUE,
-			POINT2D,
-			POINT3D,
-			SKELETON3D,
-			SCENE3D,
-			IMAGE2D,
-			LIST_VALUE,
-			LIST_POINT2D,
-			LIST_POINT3D
-		};
-		return types;
-	}
-	
 	std::string indent(std::string const& s, int indentAmount)
 	{
 		std::string indent(indentAmount, ' ');

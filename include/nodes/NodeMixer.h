@@ -22,4 +22,4 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeMixer, "Mixer", "Mixes between two sources of data");
+hm_register_node(NodeMixer);

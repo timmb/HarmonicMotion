@@ -3,8 +3,8 @@
 namespace hm
 {
 	
-	NodeUnthreaded::NodeUnthreaded(Node::Params params, std::string className)
-	: Node(params, className)
+	NodeUnthreaded::NodeUnthreaded(Node::Params params, std::string className, std::string type, std::string description)
+	: Node(params, className, type, description)
 	{}
 	
 	void NodeUnthreaded::startProcessing()

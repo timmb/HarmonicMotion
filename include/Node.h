@@ -56,7 +56,13 @@ namespace hm
 		};
 		
 		virtual ~Node();
-		std::string type() const { return mClassName; }
+		std::string className() const { return mClassName; }
+		/// The type of the node is a user-friendly name, and also used to
+		/// construct nodes from FactoryNode.
+		std::string type() const { return mType; }
+		/// \return A user-friendly description of what this node does
+		std::string description() const { return mDescription; }
+		/// \return The unique user-controlled name of this node
 		std::string name() const { return nodeParams().name; }
 		
 		/// The full path to this node, without a trailing slash.
@@ -140,8 +146,12 @@ namespace hm
 	protected:
 		/// Nodes cannot be directly constructed as they are always
 		/// subclassed.
-		/// \param className should the the name of the bottom-most derived class
-		Node(Params params, std::string className);
+		/// \param className This should the the name of the bottom-most derived
+		/// class
+		/// \param type A user-friendly name describing this node type
+		/// \param description A user-friendly description of what the node
+		/// does.
+		Node(Params params, std::string className, std::string type, std::string description);
 		
 		/// Factory function to create new instances of a node. Derived types
 		/// must implement this for nodes to be able to be created.
@@ -151,11 +161,11 @@ namespace hm
 		
 		/// Create an inlet with the given \p name. This will print an error
 		/// and return \c nullptr if \p name is already in use.
-		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& helpText="");
+		virtual InletPtr createInlet(Types types, std::string const& name, std::string const& description="");
 		
 		/// Create an outlet with the given \p name. This will print an error
 		/// and return \c nullptr if \p name is already in use.
-		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& helpText="");
+		virtual OutletPtr createOutlet(Types types, std::string const& name, std::string const& description="");
 		
 		/// Removes an inlet from this node.
 		bool removeInlet(InletPtr inlet);
@@ -243,7 +253,9 @@ namespace hm
 //		/// then this is set to false until we notify the pipeline of the
 //		/// event.
 //		std::atomic_flag mHaveAllCharacteristicChangesBeenReported;
-		const std::string mClassName;
+		std::string const mClassName;
+		std::string const mType;
+		std::string const mDescription;
 		
 		friend Json::Value& operator<<(Json::Value&, Node const&);
 		friend bool operator>>(Json::Value const&, Node&);

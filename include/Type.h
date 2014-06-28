@@ -9,6 +9,7 @@
 #pragma once
 #include <string>
 #include <type_traits>
+#include <vector>
 
 namespace hm
 {
@@ -59,9 +60,42 @@ namespace hm
 	typedef List<Skeleton3d> Scene3d;
 	
 	
+	/// \return a list of all types, optionall including the UNDEFINED
+	/// type (i.e. DataNull).
+	std::vector<Type> const& listOfTypes(bool includeNull=false);
+	
+	
+	/// You can use getType<T>() to return the type of T
+	template <typename T>
+	Type getType();
+	
+#define hm_define_get_type(T, typeEnumValue) \
+template<> inline Type getType<T>() { return typeEnumValue; }
+	
+	hm_define_get_type(DataNull, UNDEFINED)
+	hm_define_get_type(Value, VALUE)
+	hm_define_get_type(Point2d, POINT2D)
+	hm_define_get_type(Point3d, POINT3D)
+	hm_define_get_type(Skeleton3d, SKELETON3D)
+	hm_define_get_type(Scene3d, SCENE3D)
+	hm_define_get_type(Image2d, IMAGE2D)
+	hm_define_get_type(List<Value>, LIST_VALUE)
+	hm_define_get_type(List<Point2d>, LIST_POINT2D)
+	hm_define_get_type(List<Point3d>, LIST_POINT3D)
+	
+	
+	// Get a string representation of a Data type
+	template<typename T>
+	std::string stringRepresentation()
+	{
+		static_assert(std::is_base_of<BaseData, T>::value, "stringRepresentation() only defined for derivatives of BaseData");
+		return std::to_string(getType<T>());
+	}
+
 }
 
 namespace std
 {
+	/// Get a string representation of a Type
 	std::string to_string(hm::Type type);
 }

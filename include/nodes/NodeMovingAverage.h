@@ -24,4 +24,4 @@ namespace hm
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodeMovingAverage, "Moving average", "Finds the average value over the past n samples");
+hm_register_node(NodeMovingAverage);

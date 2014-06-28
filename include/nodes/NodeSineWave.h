@@ -43,9 +43,8 @@ namespace hm
 		/// super-accurate and the actual output rate may differ from
 		/// this
 		double mOutputDelta;
-	};
+	};	
 }
-
 #include "FactoryNode.h"
-hm_register_node(NodeSineWave, "Sine wave generator", "Continuously outputs a scalar value following a sine wave")
+hm_register_node(NodeSineWave)
 

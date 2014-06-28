@@ -18,8 +18,8 @@ using namespace boost;
 namespace hm
 {
 	
-	NodeThreaded::NodeThreaded(Node::Params params, string className)
-	: Node(params, className)
+	NodeThreaded::NodeThreaded(Node::Params params, string className, string type, string description)
+	: Node(params, className, type, description)
 	, mThreadIsRequestedToStop(false)
 	, mStartHasBeenCalled(false)
 	, mStopAndWaitHasBeenCalled(false)

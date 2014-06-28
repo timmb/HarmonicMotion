@@ -21,4 +21,4 @@ NodePeakDecay(Node::Params params, std::string className = "NodePeakDecay");
 }
 
 #include "FactoryNode.h"
-hm_register_node(NodePeakDecay, "Peak decay", "Calculates the peak value with an adjustable decay.")
+hm_register_node(NodePeakDecay)

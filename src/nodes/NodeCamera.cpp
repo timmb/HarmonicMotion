@@ -14,7 +14,7 @@ namespace
 }
 
 NodeCamera::NodeCamera(Node::Params const& params, std::string const& className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Camera", "Receive video from an attached camera.")
 , mCurrentDevice(-42)
 , mRequestedDevice(0)
 , mRequestedWidth(640)

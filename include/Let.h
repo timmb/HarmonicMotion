@@ -18,8 +18,17 @@ namespace hm
 		virtual ~Let() {}
 		
 		Types types() const { return mTypes; }
+		/// The name of this let, e.g. "Input"
 		std::string name() const { return mName; }
+		/// A description of this let, e.g. "Values received here will
+		/// be filtered."
+		std::string description() const { return mDescription; }
+		/// Help text for this let including its types, name and
+		/// description.
 		std::string helpText() const { return mHelpText; }
+		/// \return either "Inlet" or "Outlet"
+		std::string className() const { return mClassName; }
+		
 		/// The index of a Let identifies which inlet (or outlet) this
 		/// is for a given Node, starting at 0, 1, etc. An inlet may
 		/// share an index with an outlet for a given node.
@@ -47,7 +56,8 @@ namespace hm
 		bool isDetached() const { return mIsDetached; }
 		
 	protected:
-		Let(Types types, Node& owner, int index, std::string const& name, std::string const& helpText);
+		/// \param className should be either "Inlet" or "Outlet"
+		Let(Types types, Node& owner, int index, std::string const& name, std::string const& description, std::string const& className_);
 		
 		/// This is used by the owning node when it is destroyed just in case
 		/// the
@@ -61,7 +71,9 @@ namespace hm
 		Node* mNode;
 		int mIndex;
 		std::string mName;
+		std::string mDescription;
 		std::string mHelpText;
+		std::string mClassName;
 		bool mIsDetached;
 	};
 }

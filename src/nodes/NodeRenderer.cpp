@@ -41,7 +41,7 @@ struct NodeRenderer::ParameterCreationVisitor : public boost::static_visitor<Par
 
 
 NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Renderer", "Visualises data.")
 , mTimestampOfData(-42.)
 , mTimestampOfLastDraw(-43.)
 , mRenderer(0)

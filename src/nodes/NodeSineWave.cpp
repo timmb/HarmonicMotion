@@ -14,7 +14,7 @@
 using namespace hm;
 
 NodeSineWave::NodeSineWave(Node::Params params, std::string className)
-: NodeThreaded(params, className)
+: NodeThreaded(params, className, "Sine wave generator", "Continuously outputs a scalar value following a sine wave")
 , mOutlet(nullptr)
 , mLastPhase(0)
 , mTimeOfLastOutput(-42)

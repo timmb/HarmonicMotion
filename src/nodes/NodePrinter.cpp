@@ -12,7 +12,7 @@
 using namespace hm;
 
 NodePrinter::NodePrinter(Params params, std::string className)
-: NodeUnthreaded(params, className)
+: NodeUnthreaded(params, className, "Printer", "Print the input to the debug console.")
 , mParams(params)
 , mInlet(nullptr)
 , mLastTimestamp(-42.)

@@ -800,7 +800,7 @@
 				226A9658189BECF60056DCD1 /* NodeFilter.h */,
 				34C5D01119471EBA00CC2AE8 /* NodeImageProcessor.cpp */,
 				34C5D01319471EC500CC2AE8 /* NodeImageProcessor.h */,
-				34A2550C195C78100061F666 /* NodeKinect.cpp */,
+				226A9667189BED140056DCD1 /* NodeKinect.cpp */,
 				226A9659189BECF60056DCD1 /* NodeKinect.h */,
 				34A25505195C780F0061F666 /* NodeMixer.cpp */,
 				34A25518195C78520061F666 /* NodeMixer.h */,

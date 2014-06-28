@@ -20,4 +20,4 @@ NodeSpeedAcceleration(Node::Params params, std::string className = "NodeSpeedAcc
 	};
 }
 #include "FactoryNode.h"
-hm_register_node(NodeSpeedAcceleration, "Speed and Acceleration", "Calculate the speed and acceleration of values.")
+hm_register_node(NodeSpeedAcceleration)
