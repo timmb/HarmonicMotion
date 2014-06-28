@@ -48,8 +48,8 @@ WidgetNodeList::WidgetNodeList(MainWindow* mainWindow, QWidget* parent)
 
 void WidgetNodeList::loadStyleSheet()
 {
-	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetNodeList.qss");
+	QFile file(":/qss/WidgetNode.qss");
+//	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetNodeList.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));

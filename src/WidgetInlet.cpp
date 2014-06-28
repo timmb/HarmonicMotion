@@ -42,8 +42,8 @@ WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 void WidgetInlet::loadStyleSheet()
 {
 	//TODO: make resource
-	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetLet.qss");
+	QFile file(":/qss/WidgetLet.qss");
+//	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetLet.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));

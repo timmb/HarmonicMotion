@@ -145,8 +145,8 @@ void WidgetPatchArea::provideInfoPanelText(QString string)
 
 void WidgetPatchArea::loadStyleSheet()
 {
-	//	QFile file(":/qss/WidgetNode.qss");
-	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetPatchArea.qss");
+	QFile file(":/qss/WidgetPatchArea.qss");
+//	QFile file("/Users/timmb/Documents/Programming/HarmonicMotion/Gui/resources/qss/WidgetPatchArea.qss");
 	if (file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		setStyleSheet(QString::fromUtf8(file.readAll()));
