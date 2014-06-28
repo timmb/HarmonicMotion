@@ -226,10 +226,10 @@ namespace hm
         if (mIsDragging)
         {
             event->accept(); // do not propagate
-            if (isWindow())
-                mDragOffset = event->globalPos() - pos();
-            else
-                mDragOffset = event->pos();
+//            if (isWindow())
+//                mDragOffset = event->globalPos() - pos();
+//            else
+			mDragOffset = event->pos();
         }
         else
         {
@@ -242,9 +242,10 @@ namespace hm
         if (mIsDragging)
         {
             event->accept(); // do not propagate
-            if (isWindow())
-                move(event->globalPos() - mDragOffset);
-            else
+//            if (isWindow())
+//                move(event->globalPos() - mDragOffset);
+//            else
+			qDebug() << "event->pos"<<event->pos()<<"to parent"<<mapToParent(event->pos())<<"parent pos"<<parentWidget()->pos();
                 move(mapToParent(event->pos() - mDragOffset));
         }
 		else

@@ -300,7 +300,6 @@ bool WidgetPatchArea::isConnectionValid(WidgetOutlet* outlet, WidgetInlet* inlet
 //	&& (outlet->outlet()->types() & inlet->inlet()->types());
 }
 
-
 void WidgetPatchArea::updateSize()
 {
 	QRect content = childrenRect();
@@ -308,8 +307,7 @@ void WidgetPatchArea::updateSize()
 	content.setTop(0);
 	content.setWidth(qMax(sizeHint().width(), content.width()));
 	content.setHeight(qMax(sizeHint().height(), content.height()));
-//	qDebug() << "settings patcharea geometry to"<<content;
-	setGeometry(content);
+	resize(content.width(), content.height());
 }
 
 void WidgetPatchArea::mousePressEventFromWidgetLet(WidgetLet* let, QPoint position)
