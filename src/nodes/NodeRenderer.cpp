@@ -75,6 +75,7 @@ NodeRenderer::NodeRenderer(Params const& params, std::string const& className)
 			ParameterPtr p = boost::apply_visitor(v, d.pointer);
 			parameters.push_back(p);
 		}
+		r->provideParameters(parameters);
 		mRendererParameters.push_back(parameters);
 	}
 	onRendererChanged();

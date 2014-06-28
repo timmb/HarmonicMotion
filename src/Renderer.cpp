@@ -481,14 +481,60 @@ namespace hm {
 	RendererHistory::RendererHistory()
 	: Renderer("History Renderer", "Renders Value data as a graph with a history.",
 			   list_of(InletDescription("Values to render", VALUE)))
+	, mAutoBounds(false)
 	, mSize(50)
 	, mBuffer(mSize)
+	, mLowerBound(-1)
+	, mUpperBound(1)
 	{
-		ParameterDescription p_size(&mSize, "Buffer size");
-		p_size.hardMin = p_size.softMin = 1;
-		p_size.hardMax = 100000;
+		setParameterDescriptions
+		(list_of
+		 (ParameterDescription(&mSize,
+							   "Buffer size",
+							   "How many recent values to draw",
+							   1,
+							   10000,
+							   1,
+							   100000))
+		 (ParameterDescription(&mAutoBounds,
+							   "Automatically set bounds",
+							   "Automatically choose the bounds of the graph based on the highest and lowest value it needs to display",
+							   0,1,0,1))
+		 (ParameterDescription(&mLowerBound,
+							   "Lower bound",
+							   "The lowest value to fit onto the graph",
+							   -100,
+							   100))
+		 (ParameterDescription(&mUpperBound,
+							   "Upper bound",
+							   "The highest value to fit onto the graph",
+							   -100,
+							   100))
+		 );
+	}
+	
+	void RendererHistory::provideParameters(std::vector<ParameterPtr> const& parameters)
+	{
+		bool callbackSet = false;
+		for (ParameterPtr p: parameters)
+		{
+			if (p->name() == "Lower bound" || p->name() == "Upper bound")
+			{
+				mParametersToHideForAutoBounds.push_back(p);
+			}
+			else if (p->name() == "Automatically set bounds")
+			{
+				p->addNewExternalValueCallback([this](){ callbackAutoBounds(); });
+				callbackSet = true;
+			}
+		}
+		assert(callbackSet);
+		assert(mParametersToHideForAutoBounds.size() == 2);
+	}
+	
+	void RendererHistory::callbackAutoBounds()
+	{
 		
-		setParameterDescriptions(list_of(p_size));
 	}
 	
 	
@@ -510,12 +556,20 @@ namespace hm {
 		}
 		// find limits
 		float min(std::numeric_limits<float>::max()), max(-std::numeric_limits<float>::max());
-		for (Data const& d: mBuffer)
+		if (mAutoBounds)
 		{
-			assert(d.isValue());
-			float value = d.asValue().value;
-			min = std::min(min, value);
-			max = std::max(max, value);
+			for (Data const& d: mBuffer)
+			{
+				assert(d.isValue());
+				float value = d.asValue().value;
+				min = std::min(min, value);
+				max = std::max(max, value);
+			}
+		}
+		else
+		{
+			min = mLowerBound;
+			max = mUpperBound;
 		}
 		glPushAttrib(GL_LINE_WIDTH);
 		glLineWidth(2.0f);
