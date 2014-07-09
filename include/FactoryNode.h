@@ -17,10 +17,11 @@ namespace hm
 /// class NodeOscOut : public NodeUnthreaded {
 ///     //...
 /// };
-/// hm_register_node(NodeOscOut, "OSC out", "Sends received data to another application via OSC")
+/// #include "FactoryNode.h"
+/// hm_register_node(NodeOscOut)
 #define hm_register_node(ClassName) namespace { \
 	static bool hm__registrar_##ClassName = ([]() { \
-		if (!hm::FactoryNode::instance()->hasNodeType(#ClassName)) { \
+		if (!hm::FactoryNode::instance()->hasNodeClass(#ClassName)) { \
 				/* Create a temporary instance, grab the params. */ \
 			hm::NodePtr instance(new hm::ClassName(hm::Node::Params())); \
 			hm::FactoryNode::instance()->registerNodeType(hm::NodeInfo( \
@@ -82,7 +83,13 @@ namespace hm
 		/// has already been registered.
 		void registerNodeType(NodeInfo const& nodeInfo);
 		
-		bool hasNodeType(std::string className) const;
+		/// \return true if \p nodeTypeName has been registered with the factory so
+		/// calls to create(\p nodeTypeName) are valid
+		bool hasNodeType(std::string nodeTypeName) const;
+		
+		/// \return true if a node with class \p nodeClassName has been regsitered
+		/// \note (Nodes are created using their \c type not their class name
+		bool hasNodeClass(std::string nodeClassName) const;
 		
 		/// This creates a Params object that contains all of the
 		/// ParameterInitialValue elements that would be exported by
@@ -90,12 +97,13 @@ namespace hm
 		/// into create() to create a Node.
 		/// If \p className is not found then a default constructed Node::Params
 		/// is returned
-		Node::Params createParams(std::string const& className);
+		Node::Params createParams(std::string const& nodeTypeName);
 		
 		/// Create a new node of the specified type.
+		/// \param nodeTypeName The name of the node as presented to the user
 		/// \return A shared pointer to the new node instance, or nullptr if
 		/// \p className has not been registered
-		NodePtr create(std::string className, Node::Params params = Node::Params());
+		NodePtr create(std::string nodeTypeName, Node::Params params = Node::Params());
 		
 		std::vector<NodeInfo> nodeTypes();
         
