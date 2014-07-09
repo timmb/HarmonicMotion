@@ -148,7 +148,7 @@ void WidgetNodePrototypeBeingDragged::mouseReleaseEvent(QMouseEvent* e)
 		QPoint p = mMainWindow->patchScrollArea()->mapFrom(mMainWindow, a);
 		params.guiLocationX = p.x();
 		params.guiLocationY = p.y();
-		NodePtr node = FactoryNode::instance()->create(mNodeInfo.className, params);
+		NodePtr node = FactoryNode::instance()->create(mNodeInfo.type, params);
 		mMainWindow->patchArea()->pipeline()->addNode(node);
 	}
 	deleteLater();
