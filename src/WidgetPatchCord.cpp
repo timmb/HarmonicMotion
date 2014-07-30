@@ -173,6 +173,8 @@ void WidgetPatchCord::connectOutletSignals()
         assert(success);
 		success = connect(mOutlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
 		assert(success);
+		success = connect(mOutlet->node(), SIGNAL(beingDragged(WidgetNode*)), this, SLOT(redraw()));
+		assert(success);
     }
 }
 
@@ -187,37 +189,39 @@ void WidgetPatchCord::connectInletSignals()
         assert(success);
 		success = connect(mInlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
 		assert(success);
-    }
-}
-
-void WidgetPatchCord::disconnectOutletSignals()
-{
-    assert(mOutlet);
-    
-    if (mOutlet)
-    {
-        bool success(true);
-        
-        success = disconnect(mOutlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
-        assert(success);
-		success = disconnect(mOutlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
-		assert(success);
-		
-
-    }
-}
-
-void WidgetPatchCord::disconnectInletSignals()
-{
-    assert(mInlet);
-    
-    if (mInlet)
-    {
-        bool success(true);
-        
-        success = disconnect(mInlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
-        assert(success);
- 		success = disconnect(mInlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+		success = connect(mInlet->node(), SIGNAL(beingDragged(WidgetNode*)), this, SLOT(redraw()));
 		assert(success);
     }
 }
+
+//void WidgetPatchCord::disconnectOutletSignals()
+//{
+//    assert(mOutlet);
+//    
+//    if (mOutlet)
+//    {
+//        bool success(true);
+//        
+//        success = disconnect(mOutlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
+//        assert(success);
+//		success = disconnect(mOutlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+//		assert(success);
+//		
+//
+//    }
+//}
+//
+//void WidgetPatchCord::disconnectInletSignals()
+//{
+//    assert(mInlet);
+//    
+//    if (mInlet)
+//    {
+//        bool success(true);
+//        
+//        success = disconnect(mInlet, SIGNAL(positionChanged()), this, SLOT(redraw()));
+//        assert(success);
+// 		success = disconnect(mInlet->node(), SIGNAL(geometryChanged()), this, SLOT(redraw()));
+//		assert(success);
+//    }
+//}

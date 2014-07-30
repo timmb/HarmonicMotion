@@ -67,8 +67,8 @@ namespace hm
         void connectOutletSignals();
         /// Connect mInlet's signals to this
         void connectInletSignals();
-        void disconnectOutletSignals();
-        void disconnectInletSignals();
+//        void disconnectOutletSignals();
+//        void disconnectInletSignals();
         
         WidgetOutlet* mOutlet;
         WidgetInlet* mInlet;
