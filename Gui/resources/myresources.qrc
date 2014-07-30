@@ -1,0 +1,24 @@
+<RCC>
+	<qresource>
+		<file>qss/WidgetNode.qss</file>
+	</qresource>
+	<qresource>
+		<file>qss/WidgetNodeList.qss</file>
+	</qresource>
+	<qresource>
+		<file>qss/WidgetNodePrototype.qss</file>
+	</qresource>
+	<qresource>
+		<file>qss/WidgetPatchArea.qss</file>
+	</qresource>
+	<qresource>
+		<file>qss/WidgetLet.qss</file>
+	</qresource>
+
+<qresource>
+<file>icons/outlet.svg</file>
+</qresource>
+<qresource>
+<file>icons/inlet.svg</file>
+</qresource>
+</RCC>
