@@ -7,7 +7,7 @@ cmake_policy(SET CMP0043 NEW)
 project(HarmonicMotion CXX C)
 
 set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/..)
-set(CinderDir ${HarmonicMotionDir}/../Cinder)
+set(CinderDir ${HarmonicMotionDir}/../Cinder CACHE PATH "The location of Cinder (see README.md for details of where to obtain Cinder).")
 
 
 set(OS macosx)

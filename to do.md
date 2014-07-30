@@ -1,3 +1,5 @@
+X indicated something has been completed.
+
 A list (MVP)
 ============
 
@@ -25,7 +27,7 @@ x BUG parameters not going invisible
 x BUG patch cords appear in wrong place when scrolled down
 
 
-B list (Essential for NIME)
+B list (Essential)
 ===========================
 
 x HUD display
@@ -62,7 +64,7 @@ x- BUG ghost patch cords when changing renderer
 x- tooltips for inlet descriptions
 x- 1d renderer limits
 x- BUG saving files mixing type and name
-- BUG patchcords not moving when dragging nodes
+x- BUG patchcords not moving when dragging nodes
 - Midi out
 - make default 1d renderer limits smaller
 
@@ -117,12 +119,6 @@ x- make sure all operators update timestamp correctly
 - Windows build
 - multiple renderers in single node
 
-
-
-
-
-C Spec described in NIME paper
-===========
 /- render view for Value data and 1d list
 - OSCeleton OSC output
 - Thread all nodes
@@ -142,7 +138,7 @@ D Desirable
 - sort node prototypes into groups
 - console in application
 - menu to set debug level for console
-- update Qt to try to get rid of combobox bug
+X- update Qt to try to get rid of combobox bug
 - rename VALUE to SCALAR
 - Make inlet's provideNewData take move constructor only
 - allow strings to be enumerations
@@ -157,7 +153,6 @@ x BUG Parameters initializing to garbage values
 x BUG node names cannot be reused (move sNodeNamesInUse to pipeline and make the unique check done when node added to pipeline)
 - REFACTOR make only pipeline able to create nodes
 - REFACTOR move headers to hm/
-- REFACTOR hm should be submodule of gui
 x REFACTOR Scene3d to inherit from List<Skeleton3d>
 - OSC in/out between instances
 - Info display
