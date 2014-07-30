@@ -80,7 +80,7 @@ do
 	install_name_tool -id @executable_path/../Frameworks/$DYLIB "$FRAMEWORKS_DIR/$DYLIB"
 done
 
-XNLIBS="libXnCore.dylib libnimCodecs.dylib libOpenNI.dylib libXnDDK.dylib libXnFormats.dylib libXnDeviceFile.dylib libXnDeviceSensorV2KM.dylib libXnVFeatures_1_5_2.dylib libXnVHandGenerator_1_5_2.dylib libnimMockNodes.dylib libnimRecorder.dylib"
+XNLIBS="libnimCodecs.dylib libOpenNI.dylib libnimMockNodes.dylib libnimRecorder.dylib" # libXnCore.dylib libXnDDK.dylib libXnFormats.dylib libXnDeviceFile.dylib libXnDeviceSensorV2KM.dylib libXnVFeatures_1_5_2.dylib libXnVHandGenerator_1_5_2.dylib"
 echo "Updating id and inter-references for XN libraries..."
 for A in $XNLIBS
 do
