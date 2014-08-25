@@ -83,6 +83,7 @@ namespace hm
 		WidgetPatchArea* mPatchArea;
 		QScrollArea* mPatchScrollArea;
 		QString mOpenedFile;
+		QMenu* mMenuWindow;
 		
 		typedef QPair<QDockWidget*, WidgetRenderView*> RenderWidgetPair;
 		QList<RenderWidgetPair> mRenderViews;

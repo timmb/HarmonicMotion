@@ -32,6 +32,7 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 , mLayout(nullptr)
 , mPatchArea(nullptr)
 , mPatchScrollArea(nullptr)
+, mMenuWindow(nullptr)
 {
 //	mLayout = new QVBoxLayout;
 //	QWidget* w = new QWidget(this);
@@ -54,12 +55,16 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	mPatchScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	
 	setCentralWidget(mPatchScrollArea);
-	addDockWidget(Qt::LeftDockWidgetArea, new WidgetNodeList(this, this));
+	QList<QDockWidget*> dockWidgets;
+	QDockWidget* nodeList = new WidgetNodeList(this, this);
+	addDockWidget(Qt::LeftDockWidgetArea, nodeList);
+	dockWidgets << nodeList;
 	
 	QDockWidget* infoPanelDock = new QDockWidget("Info", this);
 	QPlainTextEdit* infoPanel = new QPlainTextEdit(infoPanelDock);
 	infoPanelDock->setWidget(infoPanel);
 	addDockWidget(Qt::BottomDockWidgetArea, infoPanelDock);
+	dockWidgets << infoPanelDock;
 	
 	BOOST_VERIFY(connect(mPatchArea, SIGNAL(newInfoPanelText(QString)), this, SLOT(provideInfoPanelText(QString))));
 
@@ -96,9 +101,16 @@ MainWindow::MainWindow(PipelinePtr pipeline)
 	menuDebug->addAction(actionPrintWidgets);
 	menuDebug->addAction(actionResetView);
 	
+	mMenuWindow = new QMenu("&Window", this);
+	for (QDockWidget* const w: dockWidgets)
+	{
+		mMenuWindow->addAction(w->toggleViewAction());
+	}
+	
 	QMenuBar* menuBar = new QMenuBar(this);
 	menuBar->addMenu(menuFile);
 	menuBar->addMenu(menuDebug);
+	menuBar->addMenu(mMenuWindow);
 	
 	setMenuBar(menuBar);
 	
@@ -331,6 +343,7 @@ void MainWindow::addRenderView(NodeRendererPtr node)
 	mRenderViews.push_back(RenderWidgetPair(dock, view));
 	dock->setWidget(view);
 	addDockWidget(Qt::BottomDockWidgetArea, dock);
+	mMenuWindow->addAction(dock->toggleViewAction());
 
 }
 
@@ -346,6 +359,8 @@ void MainWindow::removeRenderView(NodeRendererPtr node)
 		{
 			RenderWidgetPair widgets = mRenderViews.takeAt(i);
 			removeDockWidget(widgets.first);
+			assert(mMenuWindow->actions().contains(dock->toggleViewAction()));
+			mMenuWindow->removeAction(dock->toggleViewAction());
 			delete dock;
 			return;
 		}
