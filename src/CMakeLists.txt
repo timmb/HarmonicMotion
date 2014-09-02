@@ -65,18 +65,21 @@ elseif (${OS} MATCHES "windows")
 		DIRECTORY APPEND PROPERTY
 		COMPILE_DEFINITIONS
 		HM_WINDOWS
+		WIN32
+		__WIN32__
 		# This disables warning about unsafe C functions (printf, etc) that requests using their _s counterpart.
 		# Good advice but the usage is in included libraries which we do not want to modify.
 		_CRT_SECURE_NO_WARNINGS
 	)
-	# For some reason using pragma to disable double to float conversion warnings doesn't work in a number of places
-	# so we disable them all here.
+		# For some reason using pragma to disable double to float conversion warnings doesn't work in a number of places
+		# so we disable them all here.
 	add_definitions(/wd4244)
-	# This disables warning for conversion from size_t to int, which is common in included libraries.
+		# This disables warning for conversion from size_t to int, which is common in included libraries.
 	add_definitions(/wd4267)
-	# Enable multiprocessor compilation
-	#set(flag_var ${flag_var} /MP)
-	#add_definitions(/MP)
+		# Enable multiprocessor compilation
+	add_definitions(/MP)
+		# Enable c++ exceptions
+	add_definitions(/EHsc)
 endif()
 
 if (${INCLUDE_OPENNI})
@@ -99,15 +102,10 @@ set(ExternalIncludeDirs
 
 set(HarmonicMotionIncludeDir ${HarmonicMotionDir}/include)
 
-subdirs(Core Gui)
 
+subdirs(Core Gui Cinder)
 
-#foreach(flag_var CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-## Enable static runtime library in visual studio
-#  if(${flag_var} MATCHES "/MD")
-#    string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-#  endif(${flag_var} MATCHES "/MD")
+#include(${PROJECT_SOURCE_DIR}/CMake/MSVCStaticRuntime.cmake)
 
-#endforeach(flag_var)
 
 

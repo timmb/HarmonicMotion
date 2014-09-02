@@ -225,12 +225,12 @@ Image2d Image2d::operator-() const
 
 bool Image2d::operator==(Image2d const& rhs) const
 {
-	return cv::countNonZero(*this != rhs) == 0;
+	return cv::countNonZero(value != rhs.value) == 0;
 }
 
 bool Image2d::operator!=(Image2d const& rhs) const
 {
-	return cv::countNonZero(*this == rhs) == 0;
+	return cv::countNonZero(value == rhs.value) == 0;
 }
 
 

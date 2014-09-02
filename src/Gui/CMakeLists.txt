@@ -164,11 +164,11 @@ LINK_DIRECTORIES(
 
 if (${OS} MATCHES "macosx")
 link_directories(
-	${CinderDir}/lib/macosx
+#	${CinderDir}/lib/macosx
 )
 elseif(${OS} MATCHES "windows")
 link_directories(
-	${CinderDir}/lib/msw/x64
+#	${CinderDir}/lib/msw/x64
 	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/lib/vc2013/x64
 )
 endif()
@@ -193,6 +193,7 @@ TARGET_LINK_LIBRARIES(HarmonicMotionGui
 	# prefix with debug/optimized to only include in that configuration
 
 	HarmonicMotionCore
+	Cinder
 
 	${CINDER_DEPENDENCIES}
 
@@ -200,8 +201,8 @@ TARGET_LINK_LIBRARIES(HarmonicMotionGui
 
 if (${OS} MATCHES "macosx")
 	TARGET_LINK_LIBRARIES(HarmonicMotionGui
-		optimized libcinder.${STATIC_LIBRARY_EXTENSION}
-		debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
+#		optimized libcinder.${STATIC_LIBRARY_EXTENSION}
+#		debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
 	# OpenCV
 	libopencv_core.${DYNAMIC_LIBRARY_EXTENSION}
 	libopencv_imgproc.${DYNAMIC_LIBRARY_EXTENSION}
@@ -209,8 +210,8 @@ if (${OS} MATCHES "macosx")
 	)
 elseif (${OS} MATCHES "windows")
 	TARGET_LINK_LIBRARIES(HarmonicMotionGui
-		optimized cinder-v120.${STATIC_LIBRARY_EXTENSION}
-		debug cinder-v120_d.${STATIC_LIBRARY_EXTENSION}
+#		optimized cinder-v120.${STATIC_LIBRARY_EXTENSION}
+#		debug cinder-v120_d.${STATIC_LIBRARY_EXTENSION}
 		# OpenCV
 		optimized opencv_core249.${STATIC_LIBRARY_EXTENSION}
 		optimized opencv_imgproc249.${STATIC_LIBRARY_EXTENSION}
