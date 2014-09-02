@@ -10,7 +10,16 @@ set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/..)
 set(CinderDir ${HarmonicMotionDir}/../Cinder CACHE PATH "The location of Cinder (see README.md for details of where to obtain Cinder).")
 
 
-set(OS macosx)
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+	message("macosx detected")
+	set(OS macosx CACHE STRING "Operating system")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+	message("windows detected")
+	set(OS windows CACHE STRING "Operating system")
+endif()
+
+set(IncludeOpenNI (${OS} MATCHES macosx) CACHE BOOL "Include OpenNI (only supported on Mac OSX)")
+
 
 set(CMAKE_DEBUG_POSTFIX "Debug")
 
@@ -35,9 +44,48 @@ set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 set_property(
 	DIRECTORY APPEND PROPERTY 
 	COMPILE_DEFINITIONS
-	$<$<CONFIG:Debug>:	DEBUG _DEBUG CMAKE_INTDIR="Debug" HM_LOG_DEBUG >
+	$<$<CONFIG:Debug>:	DEBUG _DEBUG  CMAKE_INTDIR="Debug" HM_LOG_DEBUG >
 	$<$<CONFIG:Release>: _NDEBUG NDEBUG CMAKE_INTDIR="Release" >
 )
+
+set_property(
+	DIRECTORY APPEND PROPERTY
+	COMPILE_DEFINITIONS
+	UNICODE _UNICODE
+)
+
+if (${OS} MATCHES "macosx")
+	set_property(
+		DIRECTORY APPEND PROPERTY
+		COMPILE_DEFINITIONS
+		HM_MACOSX
+	)
+elseif (${OS} MATCHES "windows")
+	set_property(
+		DIRECTORY APPEND PROPERTY
+		COMPILE_DEFINITIONS
+		HM_WINDOWS
+		# This disables warning about unsafe C functions (printf, etc) that requests using their _s counterpart.
+		# Good advice but the usage is in included libraries which we do not want to modify.
+		_CRT_SECURE_NO_WARNINGS
+	)
+	# For some reason using pragma to disable double to float conversion warnings doesn't work in a number of places
+	# so we disable them all here.
+	add_definitions(/wd4244)
+	# This disables warning for conversion from size_t to int, which is common in included libraries.
+	add_definitions(/wd4267)
+	# Enable multiprocessor compilation
+	#set(flag_var ${flag_var} /MP)
+	#add_definitions(/MP)
+endif()
+
+if (${INCLUDE_OPENNI})
+	set_property(
+		DIRECTORY APPEND PROPERTY
+		COMPILE_DEFINITIONS
+		HM_OPENNI
+	)
+endif()
 
 set(ExternalIncludeDirs 	
 	${CinderDir}/include
@@ -45,11 +93,21 @@ set(ExternalIncludeDirs
 	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/include/Include
 	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src
 	${HarmonicMotionDir}/lib/CinderBlocks/OSC/src
-	${CinderDir}/blocks/Cinder-OpenCV/include
+	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/include
 )
 
 
 set(HarmonicMotionIncludeDir ${HarmonicMotionDir}/include)
 
-
 subdirs(Core Gui)
+
+
+#foreach(flag_var CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+## Enable static runtime library in visual studio
+#  if(${flag_var} MATCHES "/MD")
+#    string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+#  endif(${flag_var} MATCHES "/MD")
+
+#endforeach(flag_var)
+
+

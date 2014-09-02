@@ -1,9 +1,15 @@
+#include "cinder/gl/gl.h"
+// undefine macros that Cinder likes to define
+#undef GL_LINES_ADJACENCY_EXT
+#undef GL_LINE_STRIP_ADJACENCY_EXT
+#undef GL_TRIANGLES_ADJACENCY_EXT
+#undef GL_TRIANGLE_STRIP_ADJACENCY_EXT
+
 #include "WidgetRenderView.h"
 #include "nodes/NodeRenderer.h"
 #include <QBoxLayout>
 #include <QLabel>
 #include "Utilities.h"
-#include "cinder/gl/gl.h"
 
 using namespace std;
 using namespace hm;

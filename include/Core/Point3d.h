@@ -11,6 +11,7 @@
 #include "Value.h"
 #include "cinder/Vector.h"
 
+
 //namespace cinder
 //{
 //	inline Vec3f operator+(Vec3f const& x)
@@ -20,8 +21,12 @@
 //	
 //}
 
+
 namespace cinder
 {
+#pragma warning(push)
+	// disable double to float conversion warning
+#pragma warning(disable: 4244)
 	inline Vec3f operator/(float x, Vec3f const& y)
 	{
 		return Vec3f(x/y.x, x/y.y, x/y.z);
@@ -36,6 +41,7 @@ namespace cinder
 	{
 		return Vec3f(x.value/y.x, x.value/y.y, x.value/y.z);
 	}
+#pragma warning(pop)
 }
 
 namespace hm
@@ -102,7 +108,11 @@ namespace hm
 //		template <typename Scalar>
 //		Point3d& operator/=(Scalar const& rhs);
 		// operators * / *= /= for Scalar types
+#pragma warning(push)
+		// disable double to float conversion warning
+#pragma warning(disable: 4244)
 		hm_data_define_scalar_mult_operators_and_assigns(Point3d)
+#pragma warning(pop)
 		
 		bool operator==(Point3d const& rhs) const;
 		bool operator!=(Point3d const& rhs) const;
@@ -116,8 +126,12 @@ namespace hm
 
 	};
 	
+#pragma warning(push)
+	// disable double to float conversion warning
+#pragma warning(disable: 4244)
 	hm_data_define_free_mult_scalar_operators(Point3d)
-	
+#pragma warning(pop)
+
 //	template <typename Scalar>
 //	Point3d Point3d::operator*(Scalar const& rhs) const
 //	{

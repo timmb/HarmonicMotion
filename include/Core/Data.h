@@ -7,6 +7,7 @@
 //
 
 #pragma once
+
 #include "Common.h"
 #include "Skeleton3d.h"
 #include "Scene3d.h"

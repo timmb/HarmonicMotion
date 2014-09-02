@@ -179,12 +179,12 @@ namespace hm
 	std::ostream& List<DataType>::printTo(std::ostream& out) const
 	{
 		out << '[';
-		auto it = begin(value);
-		if (it!=end(value))
+		auto it = value.begin();
+		if (it!=value.end())
 		{
 			out << *it++;
 		}
-		while (it!=end(value))
+		while (it!=value.end())
 		{
 			out << ", "<<*it;
 			++it;

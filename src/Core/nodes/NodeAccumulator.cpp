@@ -19,12 +19,12 @@ NodeAccumulator::~NodeAccumulator()
 
 bool NodeAccumulator::isEmpty() const
 {
-	return !mBuffer.isNotEmpty();
+	return !const_cast<ci::ConcurrentCircularBuffer<Data>&>(mBuffer).isNotEmpty();
 }
 
 bool NodeAccumulator::isFull() const
 {
-	return !mBuffer.isNotFull();
+	return !const_cast<ci::ConcurrentCircularBuffer<Data>&>(mBuffer).isNotFull();
 }
 
 Data NodeAccumulator::next()

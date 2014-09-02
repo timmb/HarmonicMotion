@@ -58,7 +58,7 @@ namespace hm
 			assert(mThread != nullptr);
 			// wait 5 seconds then give up.
 			hm_debug(toString()+": waiting for thread to finish.");
-			bool ended = !mThreadIsRunning || mThread->timed_join(boost::posix_time::seconds(5.));
+			bool ended = !mThreadIsRunning || mThread->timed_join(boost::posix_time::seconds(5));
 			if (ended)
 			{
 				hm_debug(toString()+": thread finished successfully.");

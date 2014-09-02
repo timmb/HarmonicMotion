@@ -51,7 +51,9 @@ namespace hm
 	
 	std::string PatchCord::toString() const
 	{
-		return (std::stringstream() << *this).str();
+		std::stringstream ss;
+		ss << *this;
+		return ss.str();
 	}
 	
 	Json::Value& operator<<(Json::Value& j, PatchCord const& p)

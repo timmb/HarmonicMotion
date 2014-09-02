@@ -23,6 +23,6 @@ Point2d::Point2d(double timestamp, int id, SceneMetaPtr sceneMeta)
 
 Point2d::Point2d(Value const& x, Value const& y)
 : Base2dData(chooseTimestamp(x, y), chooseId(x, y), chooseSceneMeta(x, y))
-, value(x.value, y.value)
+, value((float) x.value, (float) y.value)
 {}
 

@@ -29,5 +29,7 @@ BaseData::BaseData(double timestamp_, int id_, SceneMetaPtr sceneMeta_)
 
 std::string BaseData::toString() const
 {
-	return (std::stringstream() << *this).str();
+	std::stringstream ss;
+	ss << *this;
+	return ss.str();
 }

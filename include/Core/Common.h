@@ -11,6 +11,7 @@
 #include <vector>
 #include <ostream>
 #include <iostream>
+#include <algorithm>
 #include "Type.h"
 //#include "TypeTraits.h"
 #include "SceneMeta.h"

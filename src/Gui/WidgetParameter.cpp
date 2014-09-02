@@ -24,7 +24,7 @@ using namespace hm;
 // types. This provides a neater method of selection
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
-    static constexpr auto OVERLOAD_OF( R (C::*pmf)(Args...) ) -> decltype(pmf) {
+    static /*constexpr*/ auto OVERLOAD_OF( R (C::*pmf)(Args...) ) -> decltype(pmf) {
         return pmf;
     }
 };

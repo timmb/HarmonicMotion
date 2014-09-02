@@ -873,7 +873,7 @@ bool Pipeline::fromJsonString(std::string const& jsonString, vector<string>& err
 	}
 	else
 	{
-		errors.push_back(reader.getFormatedErrorMessages());
+		errors.push_back(reader.getFormattedErrorMessages());
 		return false;
 	}
 }
@@ -1008,7 +1008,7 @@ namespace hm
 		SharedLock lock(rhs.mPipelineMutex);
 		out << "[Pipeline: "
 		<< (rhs.mIsRunning? "running" : "stopped")
-		<< "\nThread running: "<<!rhs.mThread->get_thread_info()->done
+		<< "\nThread running: " << !rhs.mThread->joinable()
 		<< "\nNodes: [";
 		for (int i=0; i<rhs.mNodes.size(); i++)
 		{

@@ -56,7 +56,9 @@ namespace hm
 	
 	std::string Inlet::toString() const
 	{
-		return (stringstream() << *this).str();
+		stringstream ss;
+		ss << *this;
+		return ss.str();
 	}
 	
 	

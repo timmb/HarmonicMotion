@@ -208,6 +208,10 @@ namespace hm
 	};
 	
 		
+#pragma warning(push)
+	// disable double to float conversion warning
+#pragma warning(disable: 4244)
+
 	inline
 	Skeleton3d Skeleton3d::operator*(double rhs) const
 	{
@@ -261,6 +265,8 @@ namespace hm
 	{
 		return rhs / lhs;
 	}
+
+#pragma warning(pop)
 
 	
 	inline Point3d& Skeleton3d::joint(Joint jointId)

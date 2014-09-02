@@ -201,9 +201,11 @@ namespace hm
 			qi::symbols<char, InletPtr> inlets;
 			qi::symbols<char, OutletPtr> outlets;
 			
+#ifdef HM_MACOSX
 #pragma clang diagnostic push
 			// Ignore bogus clang warning about multiple unsequenced _val assignents
 #pragma clang diagnostic ignored "-Wunsequenced"
+#endif
 
 			Grammar()
 			: Grammar::base_type(program)
@@ -243,7 +245,9 @@ namespace hm
 				
 			}
 
+#ifdef HM_MACOSX
 #pragma clang diagnostic pop
+#endif
 			
 			// Based on http://www.boost.org/doc/libs/1_55_0/libs/spirit/example/qi/compiler_tutorial/calc4.cpp
 			

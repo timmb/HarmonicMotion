@@ -22,7 +22,7 @@ namespace hm
 		void outputNewData(Data& data);
 		
 		/// \return The number of inlets this outlet is connected to.
-		int numInlets() const { return mPatchCords.size(); }
+		int numInlets() const { return static_cast<int>(mPatchCords.size()); }
 		
 		virtual std::string toString() const override;
 		virtual std::string path() const override;

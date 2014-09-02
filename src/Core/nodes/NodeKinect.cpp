@@ -1,3 +1,5 @@
+#ifdef HM_OPENNI
+
 #include "nodes/NodeKinect.h"
 #include "VOpenNIHeaders.h"
 #include "Outlet.h"
@@ -185,3 +187,4 @@ void NodeKinect::processDevice()
 }
 
 
+#endif

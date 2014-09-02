@@ -52,7 +52,6 @@ Node::Node(Params params, string className_, string type_, string description_)
 , mIsEnabled(true)
 , mIsProcessing(false)
 , mHasStartEverBeenCalled(false)
-, mHaveAllCharacteristicChangesBeenReported(true)
 , mPipeline(nullptr)
 {
 	assert(mClassName != "");
@@ -63,6 +62,8 @@ Node::Node(Params params, string className_, string type_, string description_)
 	}
 	setNodeParams(params);
 	hm_debug("Node constructed: "+className_);
+	// initial value
+	mHaveAllCharacteristicChangesBeenReported.test_and_set();
 }
 
 Node::~Node()
@@ -196,18 +197,20 @@ vector<OutletPtr> Node::outlets() const
 int Node::numInlets() const
 {
 	SharedLock lock(mCharacteristicsMutex);
-	return mInlets.size();
+	return (int) mInlets.size();
 }
 
 int Node::numOutlets() const
 {
 	SharedLock lock(mCharacteristicsMutex);
-	return mOutlets.size();
+	return (int) mOutlets.size();
 }
 
 std::string Node::toString() const
 {
-	return (stringstream() << *this).str();
+	stringstream ss;
+	ss << *this;
+	return ss.str();
 }
 
 void Node::setName(std::string const& name)
@@ -256,7 +259,7 @@ InletPtr Node::createInlet(Types types, std::string const& name, std::string con
 				 +name+"' has already been used.");
 		return nullptr;
 	}
-	int index = mInlets.size();
+	int index = (int) mInlets.size();
 	
 	InletPtr inlet(new Inlet(types, *this, index, name, helpText));
 	mInlets.push_back(inlet);
@@ -275,7 +278,7 @@ OutletPtr Node::createOutlet(Types types, std::string const& name, std::string c
 		return nullptr;
 	}
 	
-	int index = mOutlets.size();
+	int index = (int) mOutlets.size();
 	OutletPtr outlet(new Outlet(types, *this, index, name, helpText));
 	outlet->mSelf = outlet;
 	mOutlets.push_back(outlet);
@@ -467,7 +470,7 @@ bool Node::removeOutlet(OutletPtr outlet)
 void Node::setPipeline(Pipeline* pipeline)
 {
 	mPipeline = pipeline;
-	if (mPipeline==nullptr)
+	if (mPipeline.load()==nullptr)
 	{
 		mDispatcher = nullptr;
 	}

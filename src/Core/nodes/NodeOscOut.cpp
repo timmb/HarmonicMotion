@@ -198,7 +198,9 @@ void NodeOscOut::step()
 		}
 		catch (std::exception& e)
 		{
-			hm_error((std::stringstream()<<"Error opening "<<mDestinationHost<<":"<<mDestinationPort<<" "<<e.what()).str());
+			std::stringstream ss;
+			ss << "Error opening " << mDestinationHost << ":" << mDestinationPort << " " << e.what();
+			hm_error(ss.str());
 			mIsSocketOpen = false;
 			return;
 		}

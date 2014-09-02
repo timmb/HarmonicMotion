@@ -132,7 +132,9 @@ namespace hm {
 
 std::string Data::toString() const
 {
-	return (std::stringstream() << *this).str();
+	std::stringstream ss;
+	ss << *this;
+	return ss.str();
 }
 
 // MARK: Operators

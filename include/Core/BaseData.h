@@ -14,6 +14,7 @@
 #include <deque>
 #include "TypeTraits.h"
 
+
 namespace hm
 {
 	/// Base class for different Types
@@ -223,8 +224,7 @@ _hm_data_define_scalar_op_and_assign(Type, /, /=)
 	_hm_data_define_free_scalar_op(Type, -) \
 	_hm_data_define_free_scalar_op(Type, *) \
 	_hm_data_define_free_scalar_op(Type, /)
-	
-	
+
 	
 
 	// Equality and inequality operators. Checks that value, timestamp and

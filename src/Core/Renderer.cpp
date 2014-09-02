@@ -84,7 +84,7 @@ namespace hm {
 		(LIST_VALUE, tmp++)
 		(VALUE, tmp++)
 		(UNDEFINED, tmp++);
-		static_assert(IMAGE2D|SCENE3D|SKELETON3D|LIST_POINT3D|POINT3D|LIST_POINT2D|POINT2D|LIST_VALUE|VALUE|UNDEFINED == ALL_TYPES, "Renderer type order is not defined for all types");
+		static_assert((IMAGE2D|SCENE3D|SKELETON3D|LIST_POINT3D|POINT3D|LIST_POINT2D|POINT2D|LIST_VALUE|VALUE|UNDEFINED) == ALL_TYPES, "Renderer type order is not defined for all types");
 		// Comparer function to sort dataSet
 		static auto comparer = [](pair<Data, int> x, pair<Data, int> y) {
 			// x happens first if inlet is higher, or inlets are same and type is
@@ -161,7 +161,7 @@ namespace hm {
 	{
 		setupMatrices3d();
 		// TODO: Use a VBO to speed this up
-		gl::drawSphere(x.value, 0.05, 12);
+		gl::drawSphere(x.value, 0.05f, 12);
 		gl::drawLine(x.value, x.value+descriptor.value * 4);
 	}
 	

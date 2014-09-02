@@ -13,6 +13,7 @@
 #include <cassert>
 #include <QDebug>
 #include <QVector2D>
+#include <memory>
 
 namespace hm
 {

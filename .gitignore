@@ -222,3 +222,4 @@ xcode/CMakeScripts/HarmonicMotionGui_automoc_cmakeRulesBuildPhase.*
 xcode/CMakeScripts/ReRunCMake.make
 xcode/__/
 xcode
+vs2013/

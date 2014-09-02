@@ -2,6 +2,8 @@
 
 #include "NodeThreaded.h"
 
+#ifdef HM_OPENNI
+
 namespace V
 {
 	class OpenNIDevice;
@@ -56,5 +58,6 @@ namespace hm
 #include "FactoryNode.h"
 hm_register_node(NodeKinect)
 
+#endif
 
 

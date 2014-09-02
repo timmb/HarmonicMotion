@@ -11,8 +11,10 @@ file(GLOB FoundHeadersNodes ${PROJECT_INCLUDE_DIR}/nodes/*.h)
 file(GLOB FoundSourcesNodes nodes/*.cpp)
 
 # Addons
-file(GLOB VOpenNIHeaders ${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src/*.h)
-file(GLOB VOpenNISources ${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src/*.cpp)
+if (${INCLUDE_OPENNI})
+	file(GLOB VOpenNIHeaders ${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src/*.h)
+	file(GLOB VOpenNISources ${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src/*.cpp)
+endif()
 file(GLOB OSCHeaders ${HarmonicMotionDir}/lib/CinderBlocks/OSC/src/*.h ${HarmonicMotionDir}/lib/CinderBlocks/OSC/src/osc/*.h ${HarmonicMotionDir}/lib/CinderBlocks/OSC/src/ip/*.h)
 file(GLOB OSCSources ${HarmonicMotionDir}/lib/CinderBlocks/OSC/src/*.cpp ${HarmonicMotionDir}/lib/CinderBlocks/OSC/src/osc/*.cpp ${HarmonicMotionDir}/lib/CinderBlocks/OSC/src/ip/*.cpp)
 if (${OS} STREQUAL macosx)
@@ -26,7 +28,9 @@ endif()
 
 source_group("Source Files" FILES ${FoundHeaders} ${FoundSources})
 source_group("Source Files\\nodes" FILES ${FoundHeadersNodes} ${FoundSourcesNodes})
-source_group("Blocks\\VOpenNI" FILES ${VOpenNIHeaders} ${VOpenNISources})
+if (${INCLUDE_OPENNI})
+	source_group("Blocks\\VOpenNI" FILES ${VOpenNIHeaders} ${VOpenNISources})
+endif()
 source_group("Blocks\\OSC" FILES ${OSCHeaders} ${OSCSources})
 
 include_directories(
@@ -34,14 +38,22 @@ include_directories(
 )
 
 
-
-add_library(HarmonicMotionCore STATIC 
+set(HarmonicMotionCoreFiles 
 	${FoundHeaders} 
 	${FoundSources} 
 	${FoundHeadersNodes} 
 	${FoundSourcesNodes}
-	${VOpenNIHeaders}
-	${VOpenNISources}
 	${OSCHeaders}
 	${OSCSources}
+)
+
+if(${INCLUDE_OPENNI})
+	set(HarmonicMotionCoreFiles
+		${HarmonicMotionCoreFiles}
+		${VOpenNIHeaders}
+		${VOpenNISources}
 	)
+endif()
+
+
+add_library(HarmonicMotionCore STATIC ${HarmonicMotionCoreFiles})

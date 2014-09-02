@@ -125,18 +125,21 @@ namespace hm
 #define hm_value_define_free_left_scalar_op_assign(op_assign, Type) \
 	inline Type operator op_assign(Type lhs, Value const& rhs) \
 	{ \
-		return lhs op_assign rhs.value; \
+		return (lhs op_assign rhs.value); \
 	}
 	
+#pragma warning(push)
+	// disable double to float conversion warning
+#pragma warning(disable: 4244)
 	hm_value_define_free_left_scalar_op_assign(+=, float)
 	hm_value_define_free_left_scalar_op_assign(-=, float)
 	hm_value_define_free_left_scalar_op_assign(*=, float)
 	hm_value_define_free_left_scalar_op_assign(/=, float)
-	hm_value_define_free_left_scalar_op_assign(+=, double)
+#pragma warning(pop)
+	hm_value_define_free_left_scalar_op_assign(+= , double)
 	hm_value_define_free_left_scalar_op_assign(-=, double)
 	hm_value_define_free_left_scalar_op_assign(*=, double)
 	hm_value_define_free_left_scalar_op_assign(/=, double)
-
 }
 
 namespace cinder

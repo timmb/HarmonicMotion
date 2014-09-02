@@ -40,7 +40,7 @@ Point3d::Point3d(double timestamp, int id, SceneMetaPtr sceneMeta)
 
 Point3d::Point3d(Value const& x, Value const& y, Value const& z)
 : Base3dData(chooseTimestamp(x, y, z), chooseId(x, y, z), chooseSceneMeta(x, y, z))
-, value(x.value, y.value, z.value)
+, value(float(x.value), float(y.value), float(z.value))
 {}
 
 std::ostream& Point3d::printTo(std::ostream& out) const

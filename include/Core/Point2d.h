@@ -6,6 +6,9 @@
 
 namespace cinder
 {
+#pragma warning(push)
+	// disable double to float conversion warning
+#pragma warning(disable: 4244)
 	inline Vec2f operator/(float x, Vec2f const& y)
 	{
 		return Vec2f(x/y.x, x/y.y);
@@ -20,6 +23,7 @@ namespace cinder
 	{
 		return Vec2f(x.value/y.x, x.value/y.y);
 	}
+#pragma warning(pop)
 
 }
 
@@ -44,10 +48,18 @@ namespace hm
 		virtual Type type() const { return POINT2D; }
 		virtual std::ostream& printTo(std::ostream& out) const override;
 		
+#pragma warning(push)
+		// disable double to float conversion warning
+#pragma warning(disable: 4244)
 		hm_data_define_self_operators_and_assigns(Point2d)
 		hm_data_define_scalar_operators_and_assigns(Point2d)
+#pragma warning(pop)
 		hm_data_define_equality_ops(Point2d)
 	};
 	
+#pragma warning(push)
+	// disable double to float conversion warning
+#pragma warning(disable: 4244)
 	hm_data_define_free_mult_scalar_operators(Point2d);
+#pragma warning(pop)
 }

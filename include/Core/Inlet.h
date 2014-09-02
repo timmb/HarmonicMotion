@@ -12,6 +12,7 @@
 #include "Let.h"
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
+#include <atomic>
 
 namespace hm
 {

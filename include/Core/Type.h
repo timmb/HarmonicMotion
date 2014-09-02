@@ -34,7 +34,7 @@ namespace hm
 		LIST_TYPES = LIST_VALUE | LIST_POINT2D | LIST_POINT3D,
 		SCALABLE_TYPES = VECTOR3D_TYPES | VECTOR2D_TYPES | SCALAR_TYPES | IMAGE2D
 	};
-	static_assert(VALUE | POINT3D | SKELETON3D | SCENE3D | IMAGE2D | LIST_VALUE | LIST_POINT2D | LIST_POINT3D == ALL_TYPES, "Types have not been properly defined");
+	static_assert((VALUE | POINT2D | POINT3D | SKELETON3D | SCENE3D | IMAGE2D | LIST_VALUE | LIST_POINT2D | LIST_POINT3D) == ALL_TYPES, "Types have not been properly defined");
 	/// Can be an OR combination of types.
 	typedef int Types;
 	

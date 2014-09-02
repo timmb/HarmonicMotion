@@ -6,8 +6,10 @@
 
 using namespace hm;
 
+#ifdef HM_MACOSX
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
+#endif
 
 int main(int argc, char** argv)
 {
@@ -37,4 +39,6 @@ int main(int argc, char** argv)
 	return ret;
 }
 
+#ifdef HM_MACOSX
 #pragma clang diagnostic pop
+#endif

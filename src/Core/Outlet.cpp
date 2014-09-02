@@ -35,7 +35,9 @@ namespace hm
 	
 	std::string Outlet::toString() const
 	{
-		return (stringstream() << *this).str();
+		std::stringstream ss;
+		ss << *this;
+		return ss.str();
 	}
 	
 	
@@ -96,7 +98,7 @@ namespace hm
 			/// any new data.
 			return;
 		}
-		bool isDataTypeValid = types() & data.type();
+		bool isDataTypeValid = (types() & data.type()) > 0;
 		assert(isDataTypeValid);
 		if (isDataTypeValid)
 		{
