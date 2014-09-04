@@ -103,9 +103,9 @@ set(ExternalIncludeDirs
 set(HarmonicMotionIncludeDir ${HarmonicMotionDir}/include)
 
 
-subdirs(Core Gui Cinder)
+subdirs(Core Gui) # Cinder)
 
-#include(${PROJECT_SOURCE_DIR}/CMake/MSVCStaticRuntime.cmake)
+# include(${PROJECT_SOURCE_DIR}/CMake/MSVCStaticRuntime.cmake)
 
 
 

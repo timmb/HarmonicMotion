@@ -45,10 +45,10 @@ ${CinderDir}/include/cinder/Font.h
 ${CinderDir}/include/cinder/Frustum.h 
 ${CinderDir}/include/cinder/Function.h 
 ${CinderDir}/include/cinder/ImageIo.h 
-${CinderDir}/include/cinder/ImageSourceFileQuartz.h 
+# ${CinderDir}/include/cinder/ImageSourceFileQuartz.h 
 ${CinderDir}/include/cinder/ImageSourceFileWic.h 
 ${CinderDir}/include/cinder/ImageSourcePng.h 
-${CinderDir}/include/cinder/ImageTargetFileQuartz.h 
+# ${CinderDir}/include/cinder/ImageTargetFileQuartz.h 
 ${CinderDir}/include/cinder/ImageTargetFileWic.h 
 ${CinderDir}/include/cinder/Json.h 
 ${CinderDir}/include/cinder/KdTree.h 
@@ -85,12 +85,12 @@ ${CinderDir}/include/cinder/TriMesh.h
 ${CinderDir}/include/cinder/Tween.h 
 ${CinderDir}/include/cinder/Unicode.h 
 ${CinderDir}/include/cinder/Url.h 
-${CinderDir}/include/cinder/UrlImplCocoa.h 
-${CinderDir}/include/cinder/UrlImplCurl.h 
+# ${CinderDir}/include/cinder/UrlImplCocoa.h 
+# ${CinderDir}/include/cinder/UrlImplCurl.h 
 ${CinderDir}/include/cinder/UrlImplWinInet.h 
 ${CinderDir}/include/cinder/Utilities.h 
 ${CinderDir}/include/cinder/Vector.h 
-${CinderDir}/include/cinder/WinRTUtils.h 
+# ${CinderDir}/include/cinder/WinRTUtils.h 
 ${CinderDir}/include/cinder/Xml.h 
 # ${CinderDir}/include/cinder/app/App.h 
 # ${CinderDir}/include/cinder/app/AppBasic.h 
@@ -179,7 +179,7 @@ ${CinderDir}/include/cinder/dx/DxRenderTarget.h
 ${CinderDir}/include/cinder/dx/DxTexture.h 
 ${CinderDir}/include/cinder/dx/DxTextureFont.h 
 ${CinderDir}/include/cinder/dx/DxVbo.h 
-${CinderDir}/include/cinder/dx/FontEnumerator.h 
+# ${CinderDir}/include/cinder/dx/FontEnumerator.h 
 ${CinderDir}/include/cinder/dx/gldx.h 
 ${CinderDir}/include/cinder/dx/HlslProg.h 
 ${CinderDir}/include/cinder/dx/PlatformHelpers.h 
@@ -242,10 +242,10 @@ ${CinderDir}/src/cinder/Exception.cpp
 ${CinderDir}/src/cinder/Font.cpp 
 ${CinderDir}/src/cinder/Frustum.cpp 
 ${CinderDir}/src/cinder/ImageIo.cpp 
-${CinderDir}/src/cinder/ImageSourceFileQuartz.cpp 
+# ${CinderDir}/src/cinder/ImageSourceFileQuartz.cpp 
 ${CinderDir}/src/cinder/ImageSourceFileWic.cpp 
 ${CinderDir}/src/cinder/ImageSourcePng.cpp 
-${CinderDir}/src/cinder/ImageTargetFileQuartz.cpp 
+# ${CinderDir}/src/cinder/ImageTargetFileQuartz.cpp 
 ${CinderDir}/src/cinder/ImageTargetFileWic.cpp 
 ${CinderDir}/src/cinder/Json.cpp 
 ${CinderDir}/src/cinder/Matrix.cpp 
@@ -273,10 +273,10 @@ ${CinderDir}/src/cinder/TriMesh.cpp
 ${CinderDir}/src/cinder/Tween.cpp 
 ${CinderDir}/src/cinder/Unicode.cpp 
 ${CinderDir}/src/cinder/Url.cpp 
-${CinderDir}/src/cinder/UrlImplCurl.cpp 
+# ${CinderDir}/src/cinder/UrlImplCurl.cpp 
 ${CinderDir}/src/cinder/UrlImplWinInet.cpp 
 ${CinderDir}/src/cinder/Utilities.cpp 
-${CinderDir}/src/cinder/WinRTUtils.cpp 
+# ${CinderDir}/src/cinder/WinRTUtils.cpp 
 ${CinderDir}/src/cinder/Xml.cpp 
 # ${CinderDir}/src/cinder/app/App.cpp 
 # ${CinderDir}/src/cinder/app/AppBasic.cpp 
@@ -337,7 +337,7 @@ ${CinderDir}/src/cinder/dx/DxRenderTarget.cpp
 ${CinderDir}/src/cinder/dx/DxTexture.cpp 
 ${CinderDir}/src/cinder/dx/DxTextureFont.cpp 
 ${CinderDir}/src/cinder/dx/DxVbo.cpp 
-${CinderDir}/src/cinder/dx/FontEnumerator.cpp 
+# ${CinderDir}/src/cinder/dx/FontEnumerator.cpp 
 ${CinderDir}/src/cinder/dx/HlslProg.cpp 
 ${CinderDir}/src/cinder/gl/DisplayList.cpp 
 ${CinderDir}/src/cinder/gl/Fbo.cpp 

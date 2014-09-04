@@ -204,23 +204,23 @@ namespace hm {
 		return STRING;
 	}
 
-	template<>
-	void Parameter<int>::validateExternalValue(int& value) const
-	{
-		value = std::max<int>(hardMin(), min<int>(hardMax(), value));
-	}
-	
-	template<>
-	void Parameter<double>::validateExternalValue(double& value) const
-	{
-		value = std::max<double>(hardMin(), min<double>(hardMax(), value));
-	}
-	
-	template<>
-	void Parameter<float>::validateExternalValue(float& value) const
-	{
-		value = std::max<float>(hardMin(), min<float>(hardMax(), value));
-	}
+	//template<>
+	//void Parameter<int>::validateExternalValue(int& value) const
+	//{
+	//	value = std::max<int>(hardMin(), min<int>(hardMax(), value));
+	//}
+	//
+	//template<>
+	//void Parameter<double>::validateExternalValue(double& value) const
+	//{
+	//	value = std::max<double>(hardMin(), min<double>(hardMax(), value));
+	//}
+	//
+	//template<>
+	//void Parameter<float>::validateExternalValue(float& value) const
+	//{
+	//	value = std::max<float>(hardMin(), min<float>(hardMax(), value));
+	//}
 
 }
 

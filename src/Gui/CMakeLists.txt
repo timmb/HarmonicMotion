@@ -41,7 +41,7 @@ if (${OS} MATCHES "macosx")
 	SET(STATIC_LIBRARY_EXTENSION a)
 	SET(DYNAMIC_LIBRARY_EXTENSION dylib)
 elseif (${OS} MATCHES "windows")
-	set(QT5_PATH c:/Qt/5.3/msvc2013_64_opengl CACHE PATH "Path to Qt5")
+	set(QT5_PATH C:/Qt/Qt5.3.1/5.3/msvc2013_64_opengl CACHE PATH "Path to Qt5")
 	set(STATIC_LIBRARY_EXTENSION lib)
 	set(DYNAMIC_LIBRARY_EXTENSION dll)
 endif()
@@ -88,8 +88,8 @@ endif()
 
 # For windows: the boost libraries have a suffix
 if (${OS} MATCHES "windows")
-	set(boost_suffix_optimized -vc120-mt-s-1_55)
-	set(boost_suffix_debug -vc120-mt-sgd-1_55)
+	set(boost_suffix_optimized -vc120-mt-1_55)
+	set(boost_suffix_debug -vc120-mt-gd-1_55)
 else()
 	set(boost_suffix_optimized "")
 	set(boost_suffix_debug "")
@@ -169,7 +169,11 @@ link_directories(
 elseif(${OS} MATCHES "windows")
 link_directories(
 #	${CinderDir}/lib/msw/x64
-	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/lib/vc2013/x64
+# Cinder is shipped with boost builds that link to static runtime library
+# but we have to use dynamic linking to runtime library (for Qt) so we
+# use our own builds of boost instead. Likewise for OpenCV
+	# ${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/lib/vc2013/x64
+	${HarmonicMotionDir}/lib/windows/x64
 )
 endif()
 
@@ -193,7 +197,7 @@ TARGET_LINK_LIBRARIES(HarmonicMotionGui
 	# prefix with debug/optimized to only include in that configuration
 
 	HarmonicMotionCore
-	Cinder
+	#Cinder
 
 	${CINDER_DEPENDENCIES}
 
@@ -210,15 +214,17 @@ if (${OS} MATCHES "macosx")
 	)
 elseif (${OS} MATCHES "windows")
 	TARGET_LINK_LIBRARIES(HarmonicMotionGui
-#		optimized cinder-v120.${STATIC_LIBRARY_EXTENSION}
-#		debug cinder-v120_d.${STATIC_LIBRARY_EXTENSION}
+		optimized cinder-v120.${STATIC_LIBRARY_EXTENSION}
+		debug cinder-v120_d.${STATIC_LIBRARY_EXTENSION}
 		# OpenCV
 		optimized opencv_core249.${STATIC_LIBRARY_EXTENSION}
 		optimized opencv_imgproc249.${STATIC_LIBRARY_EXTENSION}
 		optimized opencv_features2d249.${STATIC_LIBRARY_EXTENSION}
+		optimized opencv_flann249.${STATIC_LIBRARY_EXTENSION}
 		debug opencv_core249d.${STATIC_LIBRARY_EXTENSION}
 		debug opencv_imgproc249d.${STATIC_LIBRARY_EXTENSION}
 		debug opencv_features2d249d.${STATIC_LIBRARY_EXTENSION}
+		debug opencv_flann249d.${STATIC_LIBRARY_EXTENSION}
 	)
 endif()
 
@@ -240,6 +246,12 @@ if (${OS} MATCHES "macosx")
 		COMMAND /bin/bash ${HarmonicMotionDir}/other/copy_in_dylibs.sh
 	)
 endif()
+
+# Required from Cinder
+if (${OS} MATCHES "windows")
+	set_target_properties(HarmonicMotionGui PROPERTIES LINK_FLAGS "/NODEFAULTLIB:libcmt")
+endif()
+
 
 # # Copy dynamic libraries to bundle
 # set(plugin_dest_dir bin)

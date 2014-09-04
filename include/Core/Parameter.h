@@ -15,6 +15,7 @@
 #include "Common.h"
 #include <boost/variant.hpp>
 #include <atomic>
+#include <algorithm>
 
 namespace hm {
 	
@@ -423,12 +424,24 @@ namespace hm
 	template<> inline
 	BaseParameter::Type Parameter<bool>::type() const { return BOOL; }
 	
+	//template<>
+	//void Parameter<int>::validateExternalValue(int& value) const;
+	//
+	//template<>
+	//void Parameter<double>::validateExternalValue(double& value) const;
+
 	template<>
-	void Parameter<int>::validateExternalValue(int& value) const;
-	
+	void Parameter<int>::validateExternalValue(int& value) const
+	{
+		value = std::max<int>(hardMin(), std::min<int>(hardMax(), value));
+	}
+
 	template<>
-	void Parameter<double>::validateExternalValue(double& value) const;
-	
+	void Parameter<double>::validateExternalValue(double& value) const
+	{
+		value = std::max<double>(hardMin(), std::min<double>(hardMax(), value));
+	}
+
 	template <typename T>
 	std::ostream& operator<<(std::ostream& out, Parameter<T> const& rhs)
 	{
