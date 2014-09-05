@@ -13,14 +13,24 @@ using namespace hm;
 
 int main(int argc, char** argv)
 {
+#ifdef HM_MACOSX
 	// find plugins dir
 	QDir dir(argv[0]);
 	dir.cdUp();
 	dir.cdUp();
 	dir.cd("plugins");
 	QCoreApplication::setLibraryPaths(QStringList()<<dir.absolutePath());
+#endif
+#ifdef HM_WINDOWS
+	//QDir plugins(argv[0]);
+	//plugins.cd("plugins");
+	//QDir platforms(argv[0]);
+	////platforms.cd("platforms");
+	//QCoreApplication::setLibraryPaths(QStringList() << plugins.absolutePath() << platforms.absolutePath());
+#endif
 	
 	QApplication* app = new QApplication(argc, argv);
+	qDebug() << QCoreApplication::libraryPaths();
 	QCoreApplication::setOrganizationName("Centre for Digital Music");
 	QCoreApplication::setApplicationName("Harmonic Motion");
 	Controller* c = new Controller(app);
