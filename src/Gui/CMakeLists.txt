@@ -3,7 +3,7 @@ PROJECT (HarmonicMotionGui CXX C)
 
 set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/../..)
 set(CinderDir ${HarmonicMotionDir}/../Cinder)
-set(PROJECT_INCLUDE_DIR ${HarmonicMotionIncludeDir}/Gui) 
+set(PROJECT_INCLUDE_DIR ${HarmonicMotionIncludeDir}/Gui)
 
 
 set(CMAKE_DEBUG_POSTFIX "Debug")
@@ -247,9 +247,78 @@ if (${OS} MATCHES "macosx")
 	)
 endif()
 
-# Required from Cinder
 if (${OS} MATCHES "windows")
+# Required from Cinder
+	set(Qt5BinDebug 
+			Qt5Cored.dll 
+			Qt5Guid.dll 
+			Qt5OpenGLd.dll 
+			Qt5Widgetsd.dll
+		)
+	set(Qt5PluginDebug
+			platforms/qwindowsd.dll 
+			imageformats/qddsd.dll
+			imageformats/qgifd.dll
+			imageformats/qicod.dll
+			imageformats/qicnsd.dll
+			imageformats/qicod.dll
+			imageformats/qjp2d.dll
+			imageformats/qjpegd.dll
+			imageformats/qmngd.dll
+			imageformats/qsvgd.dll
+			imageformats/qtgad.dll
+			imageformats/qtiffd.dll
+			imageformats/qwbmpd.dll
+			imageformats/qwebpd.dll
+		)
+	set(Qt5BinRelease
+			Qt5Core.dll 
+			Qt5Gui.dll 
+			Qt5OpenGL.dll 
+			Qt5Widgets.dll
+		)
+	set(Qt5PluginRelease
+			platforms/qwindows.dll 
+			imageformats/qdds.dll
+			imageformats/qgif.dll
+			imageformats/qico.dll
+			imageformats/qicns.dll
+			imageformats/qico.dll
+			imageformats/qjp2.dll
+			imageformats/qjpeg.dll
+			imageformats/qmng.dll
+			imageformats/qsvg.dll
+			imageformats/qtga.dll
+			imageformats/qtiff.dll
+			imageformats/qwbmp.dll
+			imageformats/qwebp.dll
+		)
+	set(Qt5BinBoth
+			icudt52.dll
+			icuin52.dll
+			icuuc52.dll
+		)
+
+# Until we figure a working method to make add_custom_command configuration-specific
+# if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+# 	set(BIN_DLLS ${Qt5BinDebug} ${Qt5BinBoth})
+# 	set(PLUGIN_DLLS ${Qt5PluginDebug})
+# else()
+# 	set(BIN_DLLS ${Qt5BinRelease} ${Qt5BinBoth})
+# 	set(PLUGIN_DLLS ${Qt5PluginRelease})
+# endif()
+set(BIN_DLLS ${Qt5BinDebug} ${Qt5BinRelease} ${Qt5BinBoth})
+set(PLUGIN_DLLS ${Qt5PluginDebug} ${Qt5PluginRelease} ${Qt5PluginBoth})
 	set_target_properties(HarmonicMotionGui PROPERTIES LINK_FLAGS "/NODEFAULTLIB:libcmt")
+	# Custom script to copy in dlls in VS2013
+	add_custom_command(TARGET HarmonicMotionGui
+		POST_BUILD
+		COMMAND set BIN_DLLS=${BIN_DLLS}
+		COMMAND set PLUGIN_DLLS=${PLUGIN_DLLS}
+		COMMAND set QT5_PATH=${QT5_PATH}
+		COMMAND set EXE_PATH=${PROJECT_BINARY_DIR}
+		COMMAND ${HarmonicMotionDir}/other/copy_in_dlls.bat
+		)
 endif()
 
 
