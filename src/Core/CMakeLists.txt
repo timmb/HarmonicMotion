@@ -27,6 +27,14 @@ endif()
 set(OSCHeaders ${OSCHeaders} ${OSCHeaders_platform})
 set(OSCSources ${OSCSources} ${OSCSources_platform})
 
+# Setup only debug and release
+if(CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_CONFIGURATION_TYPES Debug;Release)
+   set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+     "Reset the configurations to what we need"
+     FORCE)
+ endif()
+
 
 
 source_group("Source Files" FILES ${FoundHeaders} ${FoundSources})

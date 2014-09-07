@@ -29,13 +29,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${HarmonicMotionDir}/bin)
 
 # Setup only debug and release
 if(CMAKE_CONFIGURATION_TYPES)
-   set(CMAKE_CONFIGURATION_TYPES Debug Release)
+   set(CMAKE_CONFIGURATION_TYPES Debug;Release)
    set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
      "Reset the configurations to what we need"
      FORCE)
  endif()
 
-# Enable c++11 support
+# Enable c++11 support in Xcode
 set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")

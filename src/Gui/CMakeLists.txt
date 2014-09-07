@@ -14,13 +14,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${HarmonicMotionDir}/bin)
 
 # Setup only debug and release
 if(CMAKE_CONFIGURATION_TYPES)
-   set(CMAKE_CONFIGURATION_TYPES Debug Release)
+   set(CMAKE_CONFIGURATION_TYPES Debug;Release)
    set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
      "Reset the configurations to what we need"
      FORCE)
  endif()
 
-# Enable c++11 support
+# Enable c++11 support in Xcode
 set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
@@ -255,21 +255,24 @@ if (${OS} MATCHES "windows")
 			Qt5OpenGLd.dll 
 			Qt5Widgetsd.dll
 		)
-	set(Qt5PluginDebug
-			platforms/qwindowsd.dll 
-			imageformats/qddsd.dll
-			imageformats/qgifd.dll
-			imageformats/qicod.dll
-			imageformats/qicnsd.dll
-			imageformats/qicod.dll
-			imageformats/qjp2d.dll
-			imageformats/qjpegd.dll
-			imageformats/qmngd.dll
-			imageformats/qsvgd.dll
-			imageformats/qtgad.dll
-			imageformats/qtiffd.dll
-			imageformats/qwbmpd.dll
-			imageformats/qwebpd.dll
+	set(Qt5PlatformDebug
+			qwindowsd.dll 
+		)
+
+	set(Qt5ImageFormatsDebug
+			qddsd.dll
+			qgifd.dll
+			qicod.dll
+			qicnsd.dll
+			qicod.dll
+			qjp2d.dll
+			qjpegd.dll
+			qmngd.dll
+			qsvgd.dll
+			qtgad.dll
+			qtiffd.dll
+			qwbmpd.dll
+			qwebpd.dll
 		)
 	set(Qt5BinRelease
 			Qt5Core.dll 
@@ -277,21 +280,23 @@ if (${OS} MATCHES "windows")
 			Qt5OpenGL.dll 
 			Qt5Widgets.dll
 		)
-	set(Qt5PluginRelease
-			platforms/qwindows.dll 
-			imageformats/qdds.dll
-			imageformats/qgif.dll
-			imageformats/qico.dll
-			imageformats/qicns.dll
-			imageformats/qico.dll
-			imageformats/qjp2.dll
-			imageformats/qjpeg.dll
-			imageformats/qmng.dll
-			imageformats/qsvg.dll
-			imageformats/qtga.dll
-			imageformats/qtiff.dll
-			imageformats/qwbmp.dll
-			imageformats/qwebp.dll
+	set(Qt5PlatformRelease
+			qwindows.dll 
+		)
+	set(Qt5ImageFormatsRelease
+			qdds.dll
+			qgif.dll
+			qico.dll
+			qicns.dll
+			qico.dll
+			qjp2.dll
+			qjpeg.dll
+			qmng.dll
+			qsvg.dll
+			qtga.dll
+			qtiff.dll
+			qwbmp.dll
+			qwebp.dll
 		)
 	set(Qt5BinBoth
 			icudt52.dll
@@ -308,15 +313,17 @@ if (${OS} MATCHES "windows")
 # 	set(PLUGIN_DLLS ${Qt5PluginRelease})
 # endif()
 set(BIN_DLLS ${Qt5BinDebug} ${Qt5BinRelease} ${Qt5BinBoth})
-set(PLUGIN_DLLS ${Qt5PluginDebug} ${Qt5PluginRelease} ${Qt5PluginBoth})
+set(PLATFORM_DLLS ${Qt5PlatformDebug} ${Qt5PlatformRelease})
+set(IMAGEFORMAT_DLLS ${Qt5ImageFormatsDebug} ${Qt5ImageFormatsRelease})
 	set_target_properties(HarmonicMotionGui PROPERTIES LINK_FLAGS "/NODEFAULTLIB:libcmt")
 	# Custom script to copy in dlls in VS2013
 	add_custom_command(TARGET HarmonicMotionGui
 		POST_BUILD
 		COMMAND set BIN_DLLS=${BIN_DLLS}
-		COMMAND set PLUGIN_DLLS=${PLUGIN_DLLS}
+		COMMAND set PLATFORM_DLLS=${PLATFORM_DLLS}
+		COMMAND set IMAGEFORMAT_DLLS=${IMAGEFORMAT_DLLS}
 		COMMAND set QT5_PATH=${QT5_PATH}
-		COMMAND set EXE_PATH=${PROJECT_BINARY_DIR}
+		COMMAND set EXE_PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>
 		COMMAND ${HarmonicMotionDir}/other/copy_in_dlls.bat
 		)
 endif()

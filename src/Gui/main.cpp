@@ -31,6 +31,7 @@ int main(int argc, char** argv)
 	
 	QApplication* app = new QApplication(argc, argv);
 	qDebug() << QCoreApplication::libraryPaths();
+	qDebug() << "Image formats" << QImageReader::supportedImageFormats();
 	QCoreApplication::setOrganizationName("Centre for Digital Music");
 	QCoreApplication::setApplicationName("Harmonic Motion");
 	Controller* c = new Controller(app);
