@@ -92,11 +92,12 @@ endif()
 
 set(ExternalIncludeDirs 	
 	${CinderDir}/include
-	${CinderDir}/boost
+	${HarmonicMotionDir}/lib/boost
+	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/include
 	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/include/Include
 	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src
 	${HarmonicMotionDir}/lib/CinderBlocks/OSC/src
-	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/include
+	${HarmonicMotionDir}/lib/opencv
 )
 
 

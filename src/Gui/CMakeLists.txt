@@ -88,8 +88,8 @@ endif()
 
 # For windows: the boost libraries have a suffix
 if (${OS} MATCHES "windows")
-	set(boost_suffix_optimized -vc120-mt-1_55)
-	set(boost_suffix_debug -vc120-mt-gd-1_55)
+	set(boost_suffix_optimized -vc120-mt-1_56)
+	set(boost_suffix_debug -vc120-mt-gd-1_56)
 else()
 	set(boost_suffix_optimized "")
 	set(boost_suffix_debug "")
@@ -158,8 +158,7 @@ INCLUDE_DIRECTORIES(
 
 # Link directories - one per line
 LINK_DIRECTORIES(
-	${HarmonicMotionDir}/lib
-	${HarmonicMotionDir}/lib/${OS}
+	${HarmonicMotionDir}/lib/lib/${OS}
 )
 
 if (${OS} MATCHES "macosx")
@@ -173,7 +172,7 @@ link_directories(
 # but we have to use dynamic linking to runtime library (for Qt) so we
 # use our own builds of boost instead. Likewise for OpenCV
 	# ${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/lib/vc2013/x64
-	${HarmonicMotionDir}/lib/windows/x64
+	${HarmonicMotionDir}/lib/lib/windows/x64
 )
 endif()
 
@@ -205,12 +204,43 @@ TARGET_LINK_LIBRARIES(HarmonicMotionGui
 
 if (${OS} MATCHES "macosx")
 	TARGET_LINK_LIBRARIES(HarmonicMotionGui
-#		optimized libcinder.${STATIC_LIBRARY_EXTENSION}
-#		debug libcinder_d.${STATIC_LIBRARY_EXTENSION}
-	# OpenCV
-	libopencv_core.${DYNAMIC_LIBRARY_EXTENSION}
-	libopencv_imgproc.${DYNAMIC_LIBRARY_EXTENSION}
-	libopencv_features2d.${DYNAMIC_LIBRARY_EXTENSION}
+		optimized libcinder.a
+		debug libcinder_d.a
+		# OpenCV
+		debug libopencv_calib3dd.a
+		debug libopencv_contribd.a
+		debug libopencv_cored.a
+		debug libopencv_features2dd.a
+		debug libopencv_flannd.a
+		debug libopencv_gpud.a
+		debug libopencv_highguid.a
+		debug libopencv_imgprocd.a
+		debug libopencv_legacyd.a
+		debug libopencv_mld.a
+		debug libopencv_nonfreed.a
+		debug libopencv_objdetectd.a
+		debug libopencv_photod.a
+		debug libopencv_stitchingd.a
+		debug libopencv_tsd.a
+		debug libopencv_videod.a
+		debug libopencv_videostabd.a
+		optimized libopencv_calib3d.a
+		optimized libopencv_contrib.a
+		optimized libopencv_core.a
+		optimized libopencv_features2d.a
+		optimized libopencv_flann.a
+		optimized libopencv_gpu.a
+		optimized libopencv_highgui.a
+		optimized libopencv_imgproc.a
+		optimized libopencv_legacy.a
+		optimized libopencv_ml.a
+		optimized libopencv_nonfree.a
+		optimized libopencv_objdetect.a
+		optimized libopencv_photo.a
+		optimized libopencv_stitching.a
+		optimized libopencv_ts.a
+		optimized libopencv_video.a
+		optimized libopencv_videostab.a
 	)
 elseif (${OS} MATCHES "windows")
 	TARGET_LINK_LIBRARIES(HarmonicMotionGui

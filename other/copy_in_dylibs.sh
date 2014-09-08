@@ -14,10 +14,10 @@ rm -rf "$PLUGINS_DIR"
 mkdir -p "$PLUGINS_DIR"
 
 echo "Copying in dylibs..."
-for DYLIB in `ls "$SRCROOT/../lib/macosx/" | grep dylib`
+for DYLIB in `ls "$SRCROOT/../lib/bin/macosx/" | grep dylib`
 do
 	echo $DYLIB
-	cp -f "$SRCROOT/../lib/macosx/$DYLIB" "$FRAMEWORKS_DIR"
+	cp -f "$SRCROOT/../lib/bin/macosx/$DYLIB" "$FRAMEWORKS_DIR"
 	install_name_tool -change @executable_path/$DYLIB @executable_path/../Frameworks/$DYLIB "$APP_FILE"
 done
 

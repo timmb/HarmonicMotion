@@ -430,13 +430,13 @@ namespace hm
 	//template<>
 	//void Parameter<double>::validateExternalValue(double& value) const;
 
-	template<>
+	template<> inline
 	void Parameter<int>::validateExternalValue(int& value) const
 	{
 		value = std::max<int>(hardMin(), std::min<int>(hardMax(), value));
 	}
 
-	template<>
+	template<>  inline
 	void Parameter<double>::validateExternalValue(double& value) const
 	{
 		value = std::max<double>(hardMin(), std::min<double>(hardMax(), value));

@@ -7,6 +7,7 @@
 //
 
 #include "Inlet.h"
+#include <atomic>
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 #include "FactoryNode.h"
