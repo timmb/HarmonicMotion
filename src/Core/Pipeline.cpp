@@ -27,8 +27,8 @@ typedef boost::shared_lock<boost::shared_mutex> SharedLock;
 //typedef boost::lock_guard<boost::mutex> Lock;
 
 Pipeline::Pipeline()
-: mIsRunning(false)
-, dispatcher(new EventDispatcher)
+: dispatcher(new EventDispatcher)
+, mIsRunning(false)
 {
 	hm_debug("Pipeline constructed");
 }

@@ -46,13 +46,13 @@ typedef boost::shared_lock<boost::shared_mutex> SharedLock;
 typedef boost::unique_lock<boost::shared_mutex> UniqueLock;
 
 Node::Node(Params params, string className_, string type_, string description_)
-: mClassName(className_)
-, mType(type_)
-, mDescription(description_)
+: mPipeline(nullptr)
 , mIsEnabled(true)
 , mIsProcessing(false)
 , mHasStartEverBeenCalled(false)
-, mPipeline(nullptr)
+, mClassName(className_)
+, mType(type_)
+, mDescription(description_)
 {
 	assert(mClassName != "");
 	// if no node name has been set, default it to the class name

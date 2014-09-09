@@ -18,20 +18,20 @@ using namespace std;
 
 
 Data::Data()
-: mType(UNDEFINED)
-, data(DataNull())
+: data(DataNull())
+, mType(UNDEFINED)
 {}
 
 
 Data::Data(double x)
-: mType(VALUE)
-, data(Value(x))
+: data(Value(x))
+, mType(VALUE)
 {}
 
 #define hm_data_define_constructor(Type) \
 Data::Data(Type const& x) \
-: mType(getType<Type>()) \
-, data(x) \
+: data(x) \
+, mType(getType<Type>()) \
 {}
 
 hm_data_define_constructor(DataNull)

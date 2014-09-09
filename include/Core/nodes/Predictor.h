@@ -65,11 +65,11 @@ Predictor<T, Scalar>::Predictor(int predictionSize_, Scalar alpha_, Scalar beta_
 : predictionSize(predictionSize_)
 , alpha(alpha_)
 , beta(beta_)
+, mPrediction(predictionSize_)
+, b(T())
 , s_initialized(false)
 , b_initialized(false)
-, b(T())
 //, s(T())
-, mPrediction(predictionSize_)
 {
 }
 

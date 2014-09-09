@@ -19,8 +19,8 @@ Let::Let(Types types_, Node& owner, int index_, std::string const& name, std::st
 , mIndex(index_)
 , mName(name)
 , mDescription(description)
-, mIsDetached(false)
 , mClassName(className_)
+, mIsDetached(false)
 {
 	assert(types_!=UNDEFINED);
 	mHelpText = className_+" "+to_string(index()+1)+": "+name+" (";

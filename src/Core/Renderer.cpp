@@ -18,10 +18,10 @@ namespace hm {
 	using boost::adaptors::reversed;
 	
 	Renderer::Renderer(std::string const& name_, std::string const& description_, vector<InletDescription> const& inlets_)
-	: mLastSceneMeta(SceneMeta::defaultSceneMeta())
-	, name(name_)
+	: name(name_)
 	, description(description_)
 	, inlets(inlets_)
+	, mLastSceneMeta(SceneMeta::defaultSceneMeta())
 	, mNeedsRefresh(true)
 	{
 	}
@@ -483,9 +483,9 @@ namespace hm {
 			   list_of(InletDescription("Values to render", VALUE)))
 	, mAutoBounds(false)
 	, mSize(50)
-	, mBuffer(mSize)
 	, mLowerBound(-1)
 	, mUpperBound(1)
+	, mBuffer(mSize)
 	{
 		setParameterDescriptions
 		(list_of

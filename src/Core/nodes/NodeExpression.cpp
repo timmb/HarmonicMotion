@@ -182,10 +182,10 @@ namespace hm
 	
 	NodeExpression::NodeExpression(Node::Params params, string className)
 	: NodeUnthreaded(params, className, "Expression", "Write a mathematical expression to define how input is transformed into output.")
-	, mIsValid(false)
-	, mLastTimestamp(-42.)
 	, mGrammar(new expression::Grammar<string::const_iterator>)
 	, mProgram(new expression::Program)
+	, mIsValid(false)
+	, mLastTimestamp(-42.)
 	, mDebugPrint(false)
 	, mRequestedNumInlets(1)
 	, mRequestedNumOutlets(1)

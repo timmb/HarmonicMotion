@@ -41,11 +41,11 @@ NodeOscOut::NodeOscOut(Params params, std::string className)
 //, mOsc(new Sender)
 , mInlet(nullptr)
 , mLastSentTimestamp(-42.)
+, mDestinationHasChanged(true)
+, mIsSocketOpen(false)
 , mDestinationHost("localhost")
 , mDestinationPort(7110) // OSCeleton default
 , mPrefix("hm")
-, mDestinationHasChanged(true)
-, mIsSocketOpen(false)
 {
 	mInlet = createInlet(VALUE | SKELETON3D | SCENE3D,
 						 "Data to be sent",
