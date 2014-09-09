@@ -25,7 +25,7 @@ http://nime2014.org/proceedings/papers/273_paper.pdf
 
 Harmonic Motion is currently split into two modules: __Core__ and __Gui__. __Core__ is a C++ static library without any user interface that may be accessed directly from another C++ application. __Gui__ provides a visual patch-based user interface for working with __Core__. Patches (or 'pipelines' as we often refer to them) created in __Gui__ can be exported as JSON files and then imported directly in __Core__.
 
-Harmonic Motion is built using CMake 3.0.0, and is dependent upon Cinder 0.8.5 (with Boost 1.48) for the Core library and additionally Qt 5.3 for the user interface. Currently it only builds on OSX:
+Harmonic Motion is built using CMake 3.0.0, and is dependent upon Cinder 0.8.0 (with Boost 1.48) for the Core library and additionally Qt 5.3 for the user interface. Currently it only builds on OSX:
 
 ### OSX
 
