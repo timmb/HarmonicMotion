@@ -24,7 +24,7 @@ WidgetOutlet::WidgetOutlet(OutletPtr outlet, WidgetNode* parent)
 	assert(mOutlet != nullptr);
     // for CSS and WidgetPatchArea
 	setObjectName("WidgetOutlet");
-	QIcon icon(":/icons/outlet.svg");
+	QIcon icon(":/icons/outlet.png");
 	setPixmap(icon.pixmap(20, 20));
 	
 	loadStyleSheet();

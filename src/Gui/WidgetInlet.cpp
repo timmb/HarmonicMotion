@@ -26,7 +26,7 @@ WidgetInlet::WidgetInlet(InletPtr inlet, WidgetNode* parent)
 	assert(mParent != nullptr);
     // for CSS and WidgetPatchArea
 	setObjectName("WidgetInlet");
-	QIcon icon(":/icons/inlet.svg");
+	QIcon icon(":/icons/inlet.png");
 	setPixmap(icon.pixmap(20, 20));
 	
 	loadStyleSheet();

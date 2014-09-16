@@ -16,9 +16,9 @@
 	</qresource>
 
 <qresource>
-<file>icons/outlet.svg</file>
+<file>icons/outlet.png</file>
 </qresource>
 <qresource>
-<file>icons/inlet.svg</file>
+<file>icons/inlet.png</file>
 </qresource>
 </RCC>
