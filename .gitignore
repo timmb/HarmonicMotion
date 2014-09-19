@@ -10,7 +10,7 @@ bin/
 # OS
 .DS_Store
 ehthumbs.db
-Icon\?
+Icon?
 Thumbs.db
 
 # compiled 
@@ -46,7 +46,7 @@ xcuserdata
 
 #android
 bin
-gen
+#gen
 *.apk
 *.ap_
 *.dex
@@ -80,6 +80,9 @@ _ReSharper.*
 
 [Dd]ebug*/
 [Rr]elease/
+
+# but some boost libraries have debug in their path
+!/**/boost/**/[Dd]ebug*/
 
 build/
 
@@ -227,3 +230,4 @@ lib/lib/windows/x64/cinder-v120.lib
 lib/lib/windows/x64/cinder-v120_d.lib
 lib/lib/macosx/libcinder.a
 lib/lib/macosx/libcinder_d.a
+
