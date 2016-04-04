@@ -39,15 +39,21 @@ NodePtr NodeOpticalFlow::create(Params params) const
 	return NodePtr(new NodeOpticalFlow(params));
 }
 
-cv::Mat NodeOpticalFlow::process(cv::Mat & input)
+cv::Mat NodeOpticalFlow::process(cv::Mat & in)
 {
-	cv::Mat flow;
-	if (input.type() == mPrevImage.type() && input.size() == mPrevImage.size())
+    cv::Mat grayInput = in;
+    if (grayInput.channels() > 1)
+    {
+        cv::cvtColor(grayInput, grayInput, CV_BGR2GRAY);
+    }
+
+    cv::Mat flow;
+    if (grayInput.type() == mPrevImage.type() && grayInput.size() == mPrevImage.size())
 	{
-		flow = cv::Mat(input.size(), CV_32FC2);
-		calcOpticalFlowFarneback(mPrevImage, input, flow, mPyrScale, mLevels, mWindowSize, mIterations, mPolyN, mPolySigma, mUseGaussianFilter ? cv::OPTFLOW_FARNEBACK_GAUSSIAN : 0);
+		flow = cv::Mat(grayInput.size(), CV_32FC2);
+		calcOpticalFlowFarneback(mPrevImage, grayInput, flow, mPyrScale, mLevels, mWindowSize, mIterations, mPolyN, mPolySigma, mUseGaussianFilter ? cv::OPTFLOW_FARNEBACK_GAUSSIAN : 0);
 	}
-	mPrevImage = input;
+	mPrevImage = grayInput;
 	return flow;
 
 }

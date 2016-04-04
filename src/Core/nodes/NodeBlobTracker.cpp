@@ -64,7 +64,7 @@ void NodeBlobTracker::step()
 {
 	Data data = mForceUpdate? mInlet->data() : mInlet->dataIfNewerThan(mTimestampOfLastData);
 	mTimestampOfLastData = data.timestamp();
-	if (!data.isNull() && data.isImage2d())
+	if (!data.isNull() && data.isImage2d() && (data.asImage2d().value.channels()==1 || data.asImage2d().value.channels()==3))
 	{
 		assert(data.asImage2d().value.rows && data.asImage2d().value.cols);
 		cv::SimpleBlobDetector blobDetector(mBlobParams);
