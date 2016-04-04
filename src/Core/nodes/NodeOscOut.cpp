@@ -47,7 +47,7 @@ NodeOscOut::NodeOscOut(Params params, std::string className)
 , mDestinationPort(7110) // OSCeleton default
 , mPrefix("hm")
 {
-	mInlet = createInlet(VALUE | SKELETON3D | SCENE3D,
+	mInlet = createInlet(ALL_TYPES,
 						 "Data to be sent",
 						 "Messages are formatted '[/<prefix>]/joint <jointname> <userid> <confidence> <x> <y> <z>' using world coordinates.");
 	addParameter("Destination hostname", &mDestinationHost)->addNewExternalValueCallback([=](){ callbackDestinationChanged(); });
@@ -55,6 +55,7 @@ NodeOscOut::NodeOscOut(Params params, std::string className)
 	p->setBounds(0, 65535, 0, 65535);
 	p->addNewExternalValueCallback([=](){ callbackDestinationChanged(); });
 	addParameter("OSC address prefix", &mPrefix)->addNewExternalValueCallback([=](){ callbackOscAddressChanged(); });
+	callbackOscAddressChanged();
 }
 
 NodePtr NodeOscOut::create(Params params) const
@@ -65,9 +66,17 @@ NodePtr NodeOscOut::create(Params params) const
 
 void NodeOscOut::callbackOscAddressChanged()
 {
-	if (!mPrefix.empty() && mPrefix[0] != '/')
+	if (!mPrefix.empty())
 	{
-		mPrefixWithSlash = '/'+mPrefix;
+		mPrefixWithSlash = mPrefix;
+		if (mPrefixWithSlash[0] != '/')
+		{
+			mPrefixWithSlash = '/' + mPrefixWithSlash;
+		}
+	}
+	else
+	{
+		mPrefixWithSlash = "/";
 	}
 	if (mPrefixWithSlash.size()>1 && mPrefixWithSlash[mPrefixWithSlash.size()-1] == '/')
 	{
@@ -214,7 +223,7 @@ void NodeOscOut::step()
 			DataSender sender(*this);
 			boost::apply_visitor(sender, data.data);
 			mLastSentTimestamp = data.timestamp();
-			std::cout << "Sent data with timestamp "<<mLastSentTimestamp << std::endl;
+			//std::cout << "Sent data with timestamp "<<mLastSentTimestamp << std::endl;
 		}
 	}
 }

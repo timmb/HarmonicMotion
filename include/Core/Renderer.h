@@ -8,6 +8,7 @@
 #include "Parameter.h"
 #include <deque>
 #include <boost/circular_buffer.hpp>
+#include "cinder/gl/GlslProg.h"
 
 namespace hm
 {
@@ -120,6 +121,9 @@ namespace hm
 		};
 		
 	protected:
+		/// Override this function to perform initialization tasks that require a GL context (e.g. compiling shaders)
+		virtual void initializeGl() {};
+
 		// If you are not using these provided setup functions then you
 		// should check mNeedsRefresh before each render call and re-setup
 		// the projection/modelview matrices if it is true (and then set it
@@ -127,13 +131,16 @@ namespace hm
 		
 		/// Set up the camera for the scene described in the \p sceneMeta
 		/// of the most recent Data to have arrived. y axis goes up.
-		/// \note This function will only have any impact if mNeedsRefresh is false
+		/// \note This function will only have any impact if mNeedsRefresh is true
 		/// and will set mNeedsRefresh to false after it is applied. Set
 		/// mNeedsRefresh to true to force it.
 		void setupMatrices3d();
-		/// Set up the camera for a normal 2D window environment. y axis
-		/// goes down.
-		/// \note This function will only have any impact if mNeedsRefresh is false
+		/// Set up the camera for a normal 2D window environment. The ModelView
+		/// matrix will be set up so that the viewport size recorded in the last
+		/// sceneMeta received will be mapped to the viewport resolution provided
+		/// by the client calling \c draw(), letterboxing as necessary to maintain
+		/// the aspect ratio.
+		/// \note This function will only have any impact if mNeedsRefresh is true
 		/// and will set mNeedsRefresh to false after it is applied. Set
 		/// mNeedsRefresh to true to force it.
 		void setupMatricesWindow();
@@ -150,8 +157,13 @@ namespace hm
 		/// setup the projection/modelview matrices before the current
 		/// render, and set it to false once they have set them up.
 		bool mNeedsRefresh;
+
 		
 	private:
+		bool mIsGlInitialized;
+		/// Remember the previous content size passed to setupMatricesWindow to detect
+		/// if we need to recalculate the model view matrix.
+		ci::Vec2i mLastSceneMetaViewportSize;
 		std::string mName;
 		std::string mDescription;
 		std::vector<ParameterDescription> mParameterDescriptions;
@@ -227,6 +239,9 @@ namespace hm
 		virtual void operator()(Value const& x, int inlet) override;
 		virtual void operator()(ListValue const& x, int inlet) override;
 	
+	protected:
+		virtual void initializeGl() override;
+
 	private:
 		ListValue mLastValues;
 		/// How long in seconds until the last value received is forgotten
@@ -234,6 +249,18 @@ namespace hm
 		double mValueMemoryDuration;
 		/// Values are scaled by this amount
 		double mValueScale;
+		/// Optical flow is rendered with vectors covering squares of this size in each dimension.
+		int mFlowFieldWindowSize;
+		/// Flow vectors are scaled by this amount
+		double mFlowFieldScale;
+		/// When showing 16 bit images, go through cycles of greyscale instead of
+		/// quantizing
+		bool mCycle16BitImages;
+		
+		void compileShader();
+		ci::gl::GlslProgRef mUserIndexShader;
+		bool mUserIndexShaderIsCompiled;
+		double mTimeOfLastRecompile;
 	};
 	
 	class RendererHistory : public Renderer

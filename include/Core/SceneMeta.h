@@ -28,13 +28,16 @@ namespace hm
 		double cameraFov;
 		/// Size of the original viewport. This is used for 2D
 		/// images and points
-		ci::Vec2f viewportSize;
+		ci::Vec2i viewportSize;
+		/// Number of users being tracked in the scene, if any
+		int numUsers;
 		
 		SceneMeta()
 		: cameraPos(0,0,0)
 		, cameraDir(0,0,1)
 		, cameraFov(57)
 		, viewportSize(640, 480)
+		, numUsers(0)
 		{}
 		
 		/// Sets up the current GL context to use the camera defined by this

@@ -305,6 +305,7 @@ namespace hm
 		{
 			Q_EMIT geometryChanged();
 		}
+		mPatchArea->markDirty();
 	}
 	
 	void WidgetNode::focusInEvent(QFocusEvent* event)

@@ -35,6 +35,8 @@ namespace hm
 	template <typename T>
 	struct supports_maximum : public std::false_type {};
 	
+	template <typename T>
+	struct supports_minimum : public std::false_type {};
 	
 	
 #define hm_declare_additive_identity(Type, identity, IdentityType) \
@@ -224,8 +226,17 @@ template <> struct supports_maximum<Type> : public std::true_type {};
 	hm_declare_supports_maximum(double)
 	hm_declare_supports_maximum(Value)
 	hm_declare_supports_maximum(ListValue)
+	hm_declare_supports_maximum(Image2d)
 	
-	
+#define hm_declare_supports_minimum(Type) \
+	template <> struct supports_minimum<Type> : public std::true_type{};
+
+	hm_declare_supports_minimum(float)
+	hm_declare_supports_minimum(double)
+	hm_declare_supports_minimum(Value)
+	hm_declare_supports_minimum(ListValue)
+	hm_declare_supports_minimum(Image2d)
+
 }
 
 

@@ -142,6 +142,9 @@ namespace hm
 	/// \return The maximum of the two arguments, or NullData if max
 	/// is not supported
 	Data maximum(Data const& lhs, Data const& rhs);
+
+	bool canMinimum(Data const& lhs, Data const& rhs);
+	Data minimum(Data const& lhs, Data const& rhs);
 }
 
 

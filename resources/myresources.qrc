@@ -1,24 +1,31 @@
 <RCC>
-	<qresource>
-		<file>qss/WidgetNode.qss</file>
-	</qresource>
-	<qresource>
-		<file>qss/WidgetNodeList.qss</file>
-	</qresource>
-	<qresource>
-		<file>qss/WidgetNodePrototype.qss</file>
-	</qresource>
-	<qresource>
-		<file>qss/WidgetPatchArea.qss</file>
-	</qresource>
-	<qresource>
-		<file>qss/WidgetLet.qss</file>
-	</qresource>
+  <qresource>
+    <file>qss/WidgetNode.qss</file>
+  </qresource>
+  <qresource>
+    <file>qss/WidgetNodeList.qss</file>
+  </qresource>
+  <qresource>
+    <file>qss/WidgetNodePrototype.qss</file>
+  </qresource>
+  <qresource>
+    <file>qss/WidgetPatchArea.qss</file>
+  </qresource>
+  <qresource>
+    <file>qss/WidgetLet.qss</file>
+  </qresource>
 
-<qresource>
-<file>icons/outlet.png</file>
-</qresource>
-<qresource>
-<file>icons/inlet.png</file>
-</qresource>
+  <qresource>
+    <file>icons/outlet.png</file>
+  </qresource>
+  <qresource>
+    <file>icons/inlet.png</file>
+  </qresource>
+
+  <qresource>
+    <file>shaders/v_TexturePassthrough.glsl</file>
+  </qresource>
+  <qresource>
+    <file>shaders/f_UserIndexTexture.glsl</file>
+  </qresource>
 </RCC>

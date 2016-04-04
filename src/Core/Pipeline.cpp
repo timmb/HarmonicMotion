@@ -638,7 +638,7 @@ Events Pipeline::p_Disconnect(PatchCordPtr p, bool skipInvariant)
 Events Pipeline::p_RemoveDeadPatchCords()
 {
 	Events events;
-	for (auto it=begin(mPatchCords); it!=end(mPatchCords); ++it)
+	for (auto it=begin(mPatchCords); it!=end(mPatchCords); )
 	{
 		PatchCordPtr p = *it;
 		if (p->inlet()->isDetached() || p->outlet()->isDetached())
@@ -647,6 +647,10 @@ Events Pipeline::p_RemoveDeadPatchCords()
 			events.insert(end(events), begin(e), end(e));
 			// restart loop as mPatchCords is changed by p_Disconnect
 			it = begin(mPatchCords);
+		}
+		else
+		{
+			++it;
 		}
 	}
 	return events;
@@ -858,6 +862,7 @@ Events Pipeline::p_Clear()
 		Events e = p_RemoveNode(mNodes.back());
 		events.insert(end(events), begin(e), end(e));
 	}
+	events.push_back(EventPtr(new ClearCompleteEvent()));
 	return events;
 }
 

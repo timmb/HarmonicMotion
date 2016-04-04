@@ -389,6 +389,11 @@ namespace
 {
 	struct SupportsAdditionVisitor : public boost::static_visitor<bool>
 	{
+		bool operator()(Image2d const& lhs, Image2d const& rhs) const
+		{
+			return lhs.value.type() == rhs.value.type() && lhs.value.size() == rhs.value.size();
+		}
+
 		template <typename T, typename U>
 		bool operator()(T const& lhs, U const& rhs) const
 		{
@@ -399,6 +404,11 @@ namespace
 	
 	struct SupportsMultiplicationVisitor : public boost::static_visitor<bool>
 	{
+		bool operator()(Image2d const& lhs, Image2d const& rhs) const
+		{
+			return lhs.value.channels() == rhs.value.channels() && lhs.value.size() == rhs.value.size();
+		}
+
 		template <typename T, typename U>
 		bool operator()(T const& lhs, U const& rhs) const
 		{
@@ -515,20 +525,19 @@ namespace
 		{
 			return supports_maximum<T>::value;
 		}
-		
-//		template <typename T>
-//		typename enable_if<supports_maximum<T>::value, bool>::type
-//		operator()(T const& x) const { return true; }
-//		
-//		template <typename T>
-//		typename enable_if<!supports_maximum<T>::value, bool>::type
-//		operator()(T const& x) const { return false; }
-		
-//		template <typename T>
-//		bool operator()(T const& x) const { return false; }
 
 	};
 	CanMaximumVisitor canMaximumVisitor;
+
+	struct CanMinimumVisitor : public boost::static_visitor<bool>
+	{
+		template <typename T>
+		bool operator()(T const& x) const
+		{
+			return supports_minimum<T>::value;
+		}
+	};
+	CanMinimumVisitor canMinimumVisitor;
 	
 	struct MaximumVisitor : public boost::static_visitor<Data>
 	{
@@ -551,6 +560,29 @@ namespace
 		}
 	};
 	MaximumVisitor maximumVisitor;
+
+	struct MinimumVisitor : public boost::static_visitor<Data>
+	{
+		template <typename T>
+		Data operator()(T const& lhs, T const& rhs) const
+		{
+			return Data(minimum(lhs, rhs));
+		}
+
+		Data operator()(DataNull const& lhs, DataNull const& rhs) const
+		{
+			return dataNull;
+		}
+
+		template <typename T, typename U>
+		typename enable_if<!is_same<T, U>::value, Data>::type
+			operator()(T const& lhs, U const& rhs) const
+		{
+				return dataNull;
+			}
+	};
+	MinimumVisitor minimumVisitor;
+
 }
 
 bool hm::canMaximum(Data const& lhs, Data const& rhs)
@@ -562,6 +594,17 @@ bool hm::canMaximum(Data const& lhs, Data const& rhs)
 Data hm::maximum(Data const& lhs, Data const& rhs)
 {
 	return lhs.type()==rhs.type()? boost::apply_visitor(maximumVisitor, lhs.data, rhs.data) : dataNull;
+}
+
+bool hm::canMinimum(Data const& lhs, Data const& rhs)
+{
+	return lhs.type() == rhs.type() && boost::apply_visitor(canMinimumVisitor, lhs.data);
+}
+
+
+Data hm::minimum(Data const& lhs, Data const& rhs)
+{
+	return lhs.type() == rhs.type() ? boost::apply_visitor(minimumVisitor, lhs.data, rhs.data) : dataNull;
 }
 
 

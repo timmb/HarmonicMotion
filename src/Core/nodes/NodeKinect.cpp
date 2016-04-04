@@ -1,3 +1,4 @@
+
 #ifdef HM_OPENNI
 
 #include "nodes/NodeKinect.h"

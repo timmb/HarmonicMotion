@@ -142,6 +142,19 @@ namespace hm
 		/// \return true if we are between startProcessing and stopProcessing calls
 		/// (even if isEnabled is false)
 		bool isProcessing() const { return mIsProcessing; }
+
+		// MARK: Optional functionality
+		/// \return True if this Node produces a console (i.e. text) output that may be listened to using addConsoleListener.
+		virtual bool hasConsoleOutput() const { return false; }
+		/// \return True if the default behaviour of this node is to show the console window (e.g. for a 
+		/// printer node). Otherwise if hasConsoleOutput() is true then the console may be considered 
+		/// an optional extra.
+		virtual bool isConsoleShownByDefault() const { return false;  }
+		/// Register a listener to receive console output produced by this node.
+		/// A handle is returned that may be used to remove the listener
+		/// \warning The callback function may be called from any thread.
+		int addConsoleListener(std::function<void(std::string const&)> listenerFunction);
+		bool removeConsoleListener(int handle);
 		
 	protected:
 		/// Nodes cannot be directly constructed as they are always
@@ -205,14 +218,15 @@ namespace hm
 		/// during a call to this function.
 		void updateParameters();
 		
-		
+		/// Output text to any registered console listeners. Note that derived
+		/// types using this function should also override \c hasConsoleOutput()
+		void outputConsoleText(std::string const& text) const;
 		
 		
 		// MARK: Accessors
-		/// Return this node's Params object in its current state.
+		/// \return this node's Params object in its current state.
 		Params nodeParams() const;
-		
-		
+
 	private:
 		// helper function
 		void notifyCharacteristicsChanged();
@@ -256,6 +270,11 @@ namespace hm
 		std::string const mClassName;
 		std::string const mType;
 		std::string const mDescription;
+
+		std::vector<std::pair<int, std::function<void(std::string const&)>>> mConsoleListeners;
+		int mNextConsoleListenerHandle;
+		mutable boost::mutex mConsoleListenersMutex;
+
 		
 		friend Json::Value& operator<<(Json::Value&, Node const&);
 		friend bool operator>>(Json::Value const&, Node&);

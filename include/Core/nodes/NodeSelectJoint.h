@@ -24,6 +24,7 @@ namespace hm
 		// Parameters that control mSelectedJoints
 		std::vector<ParameterPtr> mSelectedJointParameters;
 		double mLastTimestamp;
+		bool mSelectProjectedJoints;
 	};
 }
 #include "FactoryNode.h"

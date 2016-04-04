@@ -1,3 +1,7 @@
+#ifdef HM_WINDOWS
+#pragma comment(linker, "/SUBSYSTEM:CONSOLE")
+#endif
+
 #include <QMainWindow>
 #include <QApplication>
 #include <QDebug>
@@ -30,8 +34,8 @@ int main(int argc, char** argv)
 #endif
 	
 	QApplication* app = new QApplication(argc, argv);
-	qDebug() << QCoreApplication::libraryPaths();
-	qDebug() << "Image formats" << QImageReader::supportedImageFormats();
+	//qDebug() << QCoreApplication::libraryPaths();
+	//qDebug() << "Image formats" << QImageReader::supportedImageFormats();
 	QCoreApplication::setOrganizationName("Centre for Digital Music");
 	QCoreApplication::setApplicationName("Harmonic Motion");
 	Controller* c = new Controller(app);

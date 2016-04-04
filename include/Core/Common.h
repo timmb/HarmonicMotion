@@ -17,6 +17,15 @@
 #include "SceneMeta.h"
 #include "BaseData.h"
 
+namespace cinder
+{
+	namespace gl
+	{
+		class GlslProg;
+		typedef std::shared_ptr<GlslProg> GlslProgRef;
+	}
+}
+
 namespace hm
 {
 	// forward declarations
@@ -146,7 +155,8 @@ namespace hm
 		return x.sceneMeta;
 	}
 
-
+	// Set this to elapsedTime to trigger a shader recompile
+	extern double gRequestShaderRecompile;
 }
 
 	// For printing verbose debugging info

@@ -5,22 +5,43 @@
 using namespace hm;
 using namespace std;
 
-Image2d::Image2d(double timestamp, int id, SceneMetaPtr sceneMeta)
+Image2d::Image2d(Image2d const& rhs)
+: BaseData(rhs.timestamp, rhs.id, rhs.sceneMeta)
+, value(rhs.value.clone())
+, role(rhs.role)
+{
+
+}
+
+Image2d& Image2d::operator=(Image2d const& rhs)
+{
+	timestamp = rhs.timestamp;
+	id = rhs.id;
+	sceneMeta = rhs.sceneMeta;
+	role = rhs.role;
+	value = rhs.value.clone();
+	return *this;
+}
+
+Image2d::Image2d(double timestamp, int id, SceneMetaPtr sceneMeta, Role role)
 : BaseData(timestamp, id, sceneMeta)
 , value(480, 640, CV_8UC3)
+, role(role)
 {
 	
 }
 
-Image2d::Image2d(int width, int height, double timestamp, int id, SceneMetaPtr sceneMeta)
+Image2d::Image2d(int width, int height, double timestamp, int id, SceneMetaPtr sceneMeta, Role role)
 : BaseData(timestamp, id, sceneMeta)
 , value(height, width, CV_8UC3)
+, role(role)
 {
 	
 }
 
-Image2d::Image2d(ci::Surface8u surface, double timestamp, int id, SceneMetaPtr sceneMeta)
+Image2d::Image2d(ci::Surface8u surface, double timestamp, int id, SceneMetaPtr sceneMeta, Role role)
 : BaseData(timestamp, id, sceneMeta)
+, role(role)
 {
 	if (surface)
 	{
@@ -29,9 +50,33 @@ Image2d::Image2d(ci::Surface8u surface, double timestamp, int id, SceneMetaPtr s
 	checkValueHasDimensions();
 }
 
-Image2d::Image2d(cv::Mat matrix, double timestamp, int id, SceneMetaPtr sceneMeta)
+
+Image2d::Image2d(ci::Channel8u channel, double timestamp, int id, SceneMetaPtr sceneMeta, Role role)
+: BaseData(timestamp, id, sceneMeta)
+, role(role)
+{
+	if (channel)
+	{
+		value = ci::toOcv(channel);
+	}
+	checkValueHasDimensions();
+}
+
+Image2d::Image2d(ci::Channel16u channel, double timestamp, int id, SceneMetaPtr sceneMeta, Role role)
+: BaseData(timestamp, id, sceneMeta)
+, role(role)
+{
+	if (channel)
+	{
+		value = ci::toOcv(channel);
+	}
+	checkValueHasDimensions();
+}
+
+Image2d::Image2d(cv::Mat matrix, double timestamp, int id, SceneMetaPtr sceneMeta, Role role)
 : BaseData(timestamp, id, sceneMeta)
 , value(matrix)
+, role(role)
 {
 	checkValueHasDimensions();
 }
@@ -54,12 +99,6 @@ bool Image2d::invariant() const
 }
 
 
-ci::Surface8u Image2d::toSurface() const
-{
-	cv::Mat m(value);
-	return ci::Surface8u(ci::fromOcv(m));
-}
-
 
 
 
@@ -73,25 +112,25 @@ ostream& Image2d::printTo(ostream& out) const
 Image2d Image2d::operator*(Value const& rhs) const
 {
 	assert(invariant());
-	return Image2d(value * rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value * rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), role);
 }
 
 Image2d Image2d::operator/(Value const& rhs) const
 {
 	assert(invariant());
-	return Image2d(value / rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value / rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), role);
 }
 
 Image2d Image2d::operator+(Value const& rhs) const
 {
 	assert(invariant());
-	return Image2d(value + rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value + rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), role);
 }
 
 Image2d Image2d::operator-(Value const& rhs) const
 {
 	assert(invariant());
-	return Image2d(value - rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value - rhs.value, chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), role);
 }
 
 Image2d& Image2d::operator*=(Value const& rhs)
@@ -135,7 +174,8 @@ Image2d Image2d::operator*(Image2d const& rhs) const
 	return Image2d(value(outRows, outCols)*rhs.value(outRows, outCols),
 				   chooseTimestamp(*this, rhs),
 				   chooseId(*this, rhs),
-				   chooseSceneMeta(*this, rhs));
+				   chooseSceneMeta(*this, rhs),
+				   chooseRole(*this, rhs));
 }
 
 Image2d Image2d::operator/(Image2d const& rhs) const
@@ -143,7 +183,7 @@ Image2d Image2d::operator/(Image2d const& rhs) const
 	assert(invariant() && rhs.invariant());
 	cv::Range outRows(0, min(value.rows, rhs.value.rows));
 	cv::Range outCols(0, min(value.cols, rhs.value.cols));
-	return Image2d(value(outRows, outCols)/rhs.value(outRows, outCols), chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value(outRows, outCols) / rhs.value(outRows, outCols), chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), chooseRole(*this, rhs));
 }
 
 Image2d Image2d::operator+(Image2d const& rhs) const
@@ -151,7 +191,7 @@ Image2d Image2d::operator+(Image2d const& rhs) const
 	assert(invariant() && rhs.invariant());
 	cv::Range outRows(0, min(value.rows, rhs.value.rows));
 	cv::Range outCols(0, min(value.cols, rhs.value.cols));
-	return Image2d(value(outRows, outCols)+rhs.value(outRows, outCols), chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value(outRows, outCols) + rhs.value(outRows, outCols), chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), chooseRole(*this, rhs));
 }
 
 Image2d Image2d::operator-(Image2d const& rhs) const
@@ -159,7 +199,7 @@ Image2d Image2d::operator-(Image2d const& rhs) const
 	assert(invariant() && rhs.invariant());
 	cv::Range outRows(0, min(value.rows, rhs.value.rows));
 	cv::Range outCols(0, min(value.cols, rhs.value.cols));
-	return Image2d(value(outRows, outCols)-rhs.value(outRows, outCols), chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs));
+	return Image2d(value(outRows, outCols) - rhs.value(outRows, outCols), chooseTimestamp(*this, rhs), chooseId(*this, rhs), chooseSceneMeta(*this, rhs), chooseRole(*this, rhs));
 }
 
 
@@ -172,6 +212,7 @@ Image2d& Image2d::operator*=(Image2d const& rhs)
 	timestamp = chooseTimestamp(*this, rhs);
 	id = chooseId(*this, rhs);
 	sceneMeta = chooseSceneMeta(*this, rhs);
+	role = chooseRole(*this, rhs);
 	return *this;
 }
 
@@ -184,6 +225,7 @@ Image2d& Image2d::operator/=(Image2d const& rhs)
 	timestamp = chooseTimestamp(*this, rhs);
 	id = chooseId(*this, rhs);
 	sceneMeta = chooseSceneMeta(*this, rhs);
+	role = chooseRole(*this, rhs);
 	return *this;
 }
 
@@ -196,6 +238,7 @@ Image2d& Image2d::operator+=(Image2d const& rhs)
 	timestamp = chooseTimestamp(*this, rhs);
 	id = chooseId(*this, rhs);
 	sceneMeta = chooseSceneMeta(*this, rhs);
+	role = chooseRole(*this, rhs);
 	return *this;
 }
 
@@ -208,6 +251,7 @@ Image2d& Image2d::operator-=(Image2d const& rhs)
 	timestamp = chooseTimestamp(*this, rhs);
 	id = chooseId(*this, rhs);
 	sceneMeta = chooseSceneMeta(*this, rhs);
+	role = chooseRole(*this, rhs);
 	return *this;
 }
 

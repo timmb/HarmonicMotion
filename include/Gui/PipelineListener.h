@@ -25,6 +25,7 @@ namespace hm
 		virtual void parameterChangedExternally(ParameterPtr parameter) override;
 		virtual void parameterChangedInternally(ParameterPtr parameter) override;
 		virtual void loadFromJsonComplete(std::vector<std::string> const& errors) override;
+		virtual void clearComplete() override;
 		
 	Q_SIGNALS:
 		void sigNodeAdded(NodePtr node);
@@ -36,5 +37,6 @@ namespace hm
 		void sigParameterChangedExternally(ParameterPtr parameter);
 		void sigParameterChangedInternally(ParameterPtr parameter);
 		void sigLoadFromJsonComplete(QStringList errors);
+		void sigClearComplete();
 	};
 }

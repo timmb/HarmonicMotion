@@ -41,7 +41,7 @@ if (${OS} MATCHES "macosx")
 	SET(STATIC_LIBRARY_EXTENSION a)
 	SET(DYNAMIC_LIBRARY_EXTENSION dylib)
 elseif (${OS} MATCHES "windows")
-	set(QT5_PATH C:/Qt/Qt5.3.1/5.3/msvc2013_64_opengl CACHE PATH "Path to Qt5")
+	set(QT5_PATH C:/Qt/5.5/msvc2013_64 CACHE PATH "Path to Qt5")
 	set(STATIC_LIBRARY_EXTENSION lib)
 	set(DYNAMIC_LIBRARY_EXTENSION dll)
 endif()
@@ -167,13 +167,18 @@ link_directories(
 )
 elseif(${OS} MATCHES "windows")
 link_directories(
-#	${CinderDir}/lib/msw/x64
-# Cinder is shipped with boost builds that link to static runtime library
-# but we have to use dynamic linking to runtime library (for Qt) so we
-# use our own builds of boost instead. Likewise for OpenCV
+	#	${CinderDir}/lib/msw/x64
+	# Cinder is shipped with boost builds that link to static runtime library
+	# but we have to use dynamic linking to runtime library (for Qt) so we
+	# use our own builds of boost instead. Likewise for OpenCV
 	# ${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/lib/vc2013/x64
 	${HarmonicMotionDir}/lib/lib/windows/x64
 )
+endif()
+
+if (${IncludeKinectSDK2})
+	include_directories(${KinectSdk2IncludeDirs})
+	link_directories(${KinectSdk2LibDirs})
 endif()
 
 ADD_EXECUTABLE(HarmonicMotionGui MACOSX_BUNDLE WIN32 ${FoundSources} ${myprj_ui_hdrs} ${GeneratedMocSources} ${FoundHeaders} ${myprj_rccs_srcs} )
@@ -251,10 +256,12 @@ elseif (${OS} MATCHES "windows")
 		optimized opencv_imgproc249.${STATIC_LIBRARY_EXTENSION}
 		optimized opencv_features2d249.${STATIC_LIBRARY_EXTENSION}
 		optimized opencv_flann249.${STATIC_LIBRARY_EXTENSION}
+		optimized opencv_video249.lib
 		debug opencv_core249d.${STATIC_LIBRARY_EXTENSION}
 		debug opencv_imgproc249d.${STATIC_LIBRARY_EXTENSION}
 		debug opencv_features2d249d.${STATIC_LIBRARY_EXTENSION}
 		debug opencv_flann249d.${STATIC_LIBRARY_EXTENSION}
+		debug opencv_video249d.lib
 	)
 endif()
 
@@ -267,6 +274,10 @@ if (${INCLUDE_OPENNI})
 		libnimRecorder.${DYNAMIC_LIBRARY_EXTENSION}
 		libOpenNI.${DYNAMIC_LIBRARY_EXTENSION}
 	)
+endif()
+
+if (${IncludeKinectSDK2})
+	target_link_libraries(HarmonicMotionGui ${KinectSdk2Libs})
 endif()
 
 if (${OS} MATCHES "macosx")
@@ -333,6 +344,9 @@ if (${OS} MATCHES "windows")
 			icuin52.dll
 			icuuc52.dll
 		)
+	set(OtherDlls
+			${HarmonicMotionDir}/lib/CinderBlocks/Cinder-KCB2/lib/x64/KCBv2.dll
+	)
 
 # Until we figure a working method to make add_custom_command configuration-specific
 # if(CMAKE_BUILD_TYPE MATCHES DEBUG)
@@ -354,6 +368,7 @@ set(IMAGEFORMAT_DLLS ${Qt5ImageFormatsDebug} ${Qt5ImageFormatsRelease})
 		COMMAND set IMAGEFORMAT_DLLS=${IMAGEFORMAT_DLLS}
 		COMMAND set QT5_PATH=${QT5_PATH}
 		COMMAND set EXE_PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>
+		COMMAND set OTHER_DLLS=${OtherDlls}
 		COMMAND ${HarmonicMotionDir}/other/copy_in_dlls.bat
 		)
 endif()

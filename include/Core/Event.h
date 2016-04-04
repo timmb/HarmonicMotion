@@ -94,6 +94,12 @@ namespace hm
 		virtual std::string type() const { return "LoadFromJsonCompleteEvent"; }
 	};
 
+	struct ClearCompleteEvent : public Event {
+		ClearCompleteEvent() {}
+		virtual void notify(Listener* listener) override;
+		virtual std::string type() const { return "ClearCompleteEvent"; }
+	};
+
 }
 
 

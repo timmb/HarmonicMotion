@@ -21,7 +21,11 @@ namespace hm
 	bool NodeUnthreaded::stepProcessing()
 	{
 		boost::lock_guard<boost::mutex> lock(mProcessMutex);
-		assert(isProcessing());
+		// It's possible a thread might still call this function after stop processing has been called by the main thread.
+		if (!isProcessing())
+		{
+			return false;
+		}
 		updateParameters();
 		if (isEnabled())
 		{

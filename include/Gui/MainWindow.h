@@ -23,6 +23,7 @@ namespace hm
 	class WidgetPatchArea;
 	class NodeRenderer;
 	class WidgetRenderView;
+	class WidgetConsoleView;
 	
 	class MainWindow : public QMainWindow
 	{
@@ -48,23 +49,36 @@ namespace hm
 		void actionSave();
 		void actionSaveAs();
 		void actionOpen();
+		void actionOpenRecentFile();
 		void actionResetView();
 		
 		void addRenderView(NodeRendererPtr node);
 		void removeRenderView(NodeRendererPtr node);
-		
+
+		void addConsoleView(NodePtr node);
+		void removeConsoleView(NodePtr node);
+
 		// Debug actions
 		void actionPrintNodeNames();
 		void actionCheckDatatypeInvariant();
 		void actionPrintWidgets();
+		void actionRecompileShaders();
 		
 		// TODO: Implement close event and check whether we should save
+
+	protected Q_SLOTS:
+	// Use signals and slots here so that a restore state can be delayed until after
+	// events have been processed from loading a file that will cause dock widgets
+	// to be created
+	void slot_restoreState(QByteArray state);
 		
 	Q_SIGNALS:
 		void newInfoPanelText(QString);
+		void sig_restoreState(QByteArray state);
 		
 	protected:
 		virtual void resizeEvent(QResizeEvent* event) override;
+		virtual void moveEvent(QMoveEvent* event) override;
 		
 	private:
 		/// Asks the user if they want to save current document.
@@ -76,6 +90,12 @@ namespace hm
 		/// Saves the current pipeline to mOpenedFile, or launches actionSaveAs
 		/// if mOpenedFile does not point to a file
 		bool saveOpenFile();
+		/// Open the specified file
+		bool openFile(QString const& filename);
+		/// Updat ethe recent file actions, optionally with new file
+		void updateRecentFiles(QString const& newRecentFile = "");
+		/// Open the recent file in the list of recent files at index \p index
+		void openRecentFile(int index);
 		
 		QPlainTextEdit* mConsole;
 		QLayout* mLayout;
@@ -83,9 +103,17 @@ namespace hm
 		WidgetPatchArea* mPatchArea;
 		QScrollArea* mPatchScrollArea;
 		QString mOpenedFile;
+		QMenu* mMenuWindow;
 		
 		typedef QPair<QDockWidget*, WidgetRenderView*> RenderWidgetPair;
 		QList<RenderWidgetPair> mRenderViews;
+
+		typedef QPair<QDockWidget*, WidgetConsoleView*> ConsoleWidgetPair;
+		QList<ConsoleWidgetPair> mConsoleViews;
+
+		QList<QAction*> mRecentFilesActions;
+		QAction* mRecentFilesSeparator;
+		static int const mNumRecentFiles = 5;
 	};
 	
 	
