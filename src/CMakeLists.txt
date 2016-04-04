@@ -7,7 +7,7 @@ cmake_policy(SET CMP0043 NEW)
 project(HarmonicMotion CXX C)
 
 set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/..)
-set(CinderDir ${HarmonicMotionDir}/../Cinder CACHE PATH "The location of Cinder (see README.md for details of where to obtain Cinder).")
+set(CinderDir ${HarmonicMotionDir}/lib/Cinder CACHE PATH "The location of Cinder (see README.md for details of where to obtain Cinder).")
 
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
@@ -83,7 +83,7 @@ elseif (${OS} MATCHES "windows")
 	add_definitions(/EHsc)
 endif()
 
-if (${INCLUDE_OPENNI})
+if (${IncludeOpenNI})
 	set_property(
 		DIRECTORY APPEND PROPERTY
 		COMPILE_DEFINITIONS

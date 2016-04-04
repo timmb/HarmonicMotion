@@ -70,7 +70,8 @@ void NodeMovingAverage::step()
 	Data d = inlet(0)->dataIfNewerThan(mLastTimestamp);
 	if (!d.isNull())
 	{
-		outlet(0)->outputNewData(mMovingAverage.update(d));
+        Data data = mMovingAverage.update(d);
+		outlet(0)->outputNewData(data);
 	}
 }
 

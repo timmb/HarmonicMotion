@@ -36,7 +36,7 @@ set_property(
 # #-->
 
 if (${OS} MATCHES "macosx")
-	set(QT5_PATH $ENV{HOME}/Qt/5.3/clang_64/ CACHE PATH "Path to Qt5")
+	set(QT5_PATH $ENV{HOME}/Qt/5.6/clang_64/ CACHE PATH "Path to Qt5")
 
 	SET(STATIC_LIBRARY_EXTENSION a)
 	SET(DYNAMIC_LIBRARY_EXTENSION dylib)
@@ -165,6 +165,12 @@ if (${OS} MATCHES "macosx")
 link_directories(
 #	${CinderDir}/lib/macosx
 )
+	if (${IncludeOpenNI})
+		link_directories(
+			${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/lib/macosx
+			)
+	endif()
+
 elseif(${OS} MATCHES "windows")
 link_directories(
 	#	${CinderDir}/lib/msw/x64
@@ -172,7 +178,7 @@ link_directories(
 	# but we have to use dynamic linking to runtime library (for Qt) so we
 	# use our own builds of boost instead. Likewise for OpenCV
 	# ${HarmonicMotionDir}/lib/CinderBlocks/Cinder-OpenCV/lib/vc2013/x64
-	${HarmonicMotionDir}/lib/lib/windows/x64
+	${HarmonicMotionDir}/lib/windows/x64
 )
 endif()
 
@@ -265,7 +271,7 @@ elseif (${OS} MATCHES "windows")
 	)
 endif()
 
-if (${INCLUDE_OPENNI})
+if (${IncludeOpenNI})
 	TARGET_LINK_LIBRARIES(HarmonicMotionGui
 		# OpenNI
 		libusb-1.0.0.${DYNAMIC_LIBRARY_EXTENSION}

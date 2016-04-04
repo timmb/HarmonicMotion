@@ -11,7 +11,7 @@ file(GLOB FoundHeadersNodes ${PROJECT_INCLUDE_DIR}/nodes/*.h)
 file(GLOB FoundSourcesNodes nodes/*.cpp)
 
 # Addons
-if (${INCLUDE_OPENNI})
+if (${IncludeOpenNI})
 	message("Including OpenNI.")
 	file(GLOB VOpenNIHeaders ${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src/*.h)
 	file(GLOB VOpenNISources ${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src/*.cpp)
@@ -51,7 +51,7 @@ if(CMAKE_CONFIGURATION_TYPES)
 
 source_group("Source Files" FILES ${FoundHeaders} ${FoundSources})
 source_group("Source Files\\nodes" FILES ${FoundHeadersNodes} ${FoundSourcesNodes})
-if (${INCLUDE_OPENNI})
+if (${IncludeOpenNI})
 	source_group("Blocks\\VOpenNI" FILES ${VOpenNIHeaders} ${VOpenNISources})
 endif()
 if (${IncludeKinectSDK2})
@@ -77,7 +77,7 @@ set(HarmonicMotionCoreFiles
 	${KinectSdk2Sources}
 )
 
-# if(${INCLUDE_OPENNI})
+# if(${IncludeOpenNI})
 # 	set(HarmonicMotionCoreFiles
 # 		${HarmonicMotionCoreFiles}
 # 		${VOpenNIHeaders}

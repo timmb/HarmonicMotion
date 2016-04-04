@@ -1,3 +1,5 @@
+#ifdef HM_KINECT_SDK
+
 #include "nodes/NodeKinectKinectSdk.h"
 #include "Kinect2.h"
 #include <boost/thread/thread.hpp>
@@ -261,3 +263,5 @@ void NodeKinect::callbackInfraredFrame(Kinect2::InfraredFrame const& frame)
 		mInfraredOutlet->outputNewData(data);
 	}
 }
+
+#endif
