@@ -53,6 +53,7 @@ Node::Node(Params params, string className_, string type_, string description_)
 , mClassName(className_)
 , mType(type_)
 , mDescription(description_)
+, mNextConsoleListenerHandle(0)
 {
 	assert(mClassName != "");
 	// if no node name has been set, default it to the class name
@@ -68,7 +69,7 @@ Node::Node(Params params, string className_, string type_, string description_)
 
 Node::~Node()
 {
-	hm_debug("Destroying node "+toString());
+	hm_debug("Destroying node "+name()+" ("+className()+")");
 	if (isProcessing())
 	{
 		stopProcessing();
@@ -494,6 +495,37 @@ void Node::notifyCharacteristicsChanged()
 //		{
 //			dispatcher->dispatch(EventPtr(new NodeCharacteristicsChangedEvent(me)));
 //		}
+	}
+}
+
+
+int Node::addConsoleListener(std::function<void(std::string const&)> listenerFunction)
+{
+	boost::lock_guard<boost::mutex> lock(mConsoleListenersMutex);
+	mConsoleListeners.push_back(pair<int, function<void(string const&)>>(mNextConsoleListenerHandle, listenerFunction));
+	return mNextConsoleListenerHandle++;
+}
+
+bool Node::removeConsoleListener(int handle)
+{
+	boost::lock_guard<boost::mutex> lock(mConsoleListenersMutex);
+	for (auto it = mConsoleListeners.begin(); it != mConsoleListeners.end(); ++it)
+	{
+		if (it->first == handle)
+		{
+			mConsoleListeners.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
+void Node::outputConsoleText(std::string const& text) const
+{
+	boost::lock_guard<boost::mutex> lock(mConsoleListenersMutex);
+	for (auto const& pair : mConsoleListeners)
+	{
+		pair.second(text);
 	}
 }
 

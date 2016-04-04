@@ -68,3 +68,8 @@ void PipelineListener::loadFromJsonComplete(std::vector<std::string> const& erro
 }
 
 
+void PipelineListener::clearComplete()
+{
+	hm_debug("* PipelineListener::clearComplete");
+	Q_EMIT sigClearComplete();
+}

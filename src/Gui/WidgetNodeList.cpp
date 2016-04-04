@@ -23,6 +23,7 @@ WidgetNodeList::WidgetNodeList(MainWindow* mainWindow, QWidget* parent)
 : QDockWidget("Nodes", parent)
 {
 	loadStyleSheet();
+	setObjectName("widgetNodeList");
 	QBoxLayout* layout = new QVBoxLayout;
 	
 	// Iterate through nodes registered with factory and create prototype

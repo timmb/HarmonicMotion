@@ -19,8 +19,13 @@ namespace hm
 		{
 			NONE,
 			BLUR,
+			MEDIAN_BLUR,
 			THRESHOLD,
-			INVERT
+			INVERT,
+			RESIZE,
+			//DENOISE,
+			CLAMP,
+			NUM_PROCESSES
 		};
 		typedef int Process;
 
@@ -32,13 +37,39 @@ namespace hm
 		Process mProcess;
 		ParameterPtrT<Process> mProcessParameter;
 		
+		// Blur
 		int mBlurAmount;
 		
+		// Threshold
 		int mThreshold;
-		
+
+		// Resize
+		int mWidth;
+		int mHeight;
+		bool mLockAspectRatio;
+		float mPrevAspectRatio;
+		int mInterpolationMethod;
+
+		//// Denoise
+		//float mDenoiseAmount;
+		//int mTemplateWindowDiameter;
+		//int mSearchWindowDiameter;
+
+		// Clamp
+		bool mEnableClampMin;
+		float mClampMin;
+		ParameterPtr mClampMinParameter;
+		bool mEnableClampMax;
+		float mClampMax;
+		ParameterPtr mClampMaxParameter;
+
+		// Median blur
+		int mMedianBlurAmount;
+
 		std::map<Process, std::vector<ParameterPtr>> mParametersByProcess;
 		
 		double mTimestamp;
+		bool mHeightWasAdjusted, mWidthWasAdjusted;
 	};
 }
 

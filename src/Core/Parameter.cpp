@@ -170,6 +170,9 @@ namespace hm {
 			}
 			if (mHaveCharacteristicsChanged)
 			{
+				// if the characteristics have changed (e.g. bounds) then the internal
+				// value may no longer be valid, so we need to validate this
+				validateInternalValue();
 				mHaveCharacteristicsChanged = false;
 				boost::lock_guard<boost::mutex> lock(mChangeOfCharacteristicsCallbacksMutex);
 				for (auto & p: mChangeOfCharateristicsCallbacks)

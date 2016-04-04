@@ -33,18 +33,18 @@ QWidget {
 
 QLabel
 {
-	font-size: 11px;
+	font-size: 9pt;
 }
 
 #LabelNodeType
 {
 	font-weight: bold;
-	font-size: 13px;
+	font-size: 11pt;
 }
 
 QLineEdit
 {
-	font-size: 12px;
+	font-size: 10pt;
 }
 
 QSpinBox

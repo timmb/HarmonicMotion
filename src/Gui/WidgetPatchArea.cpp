@@ -38,6 +38,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QScrollArea* parent)
 , mMouseGrabber(new MouseGrabber(this))
 , mMousePressFilter(new PatchAreaMousePressFilter(this))
 , mContainingScrollArea(parent)
+, mIsDirty(false)
 {
 	setObjectName("WidgetPatchArea");
 	loadStyleSheet();
@@ -68,6 +69,8 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QScrollArea* parent)
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigPatchCordRemoved(OutletPtr, InletPtr)), this, SLOT(markDirty())));
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigParameterChangedInternally(ParameterPtr)), this, SLOT(markDirty())));
 	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigParameterChangedExternally(ParameterPtr)), this, SLOT(markDirty())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigLoadFromJsonComplete(QStringList)), this, SLOT(markClean())));
+	BOOST_VERIFY(connect(mPipelineListener, SIGNAL(sigClearComplete()), this, SLOT(markClean())));
 	
 	// Queued connection to allow it to happen on the next cycle of the event
 	// loop
@@ -77,6 +80,7 @@ WidgetPatchArea::WidgetPatchArea(PipelinePtr pipeline, QScrollArea* parent)
 	setFocusPolicy(Qt::ClickFocus);
 	setAutoFillBackground(true);
 	installEventFilter(mMousePressFilter);
+	//markClean();
 }
 
 WidgetPatchArea::~WidgetPatchArea()
@@ -463,6 +467,10 @@ void WidgetPatchArea::nodeAdded(NodePtr node)
 		}
 	}
 
+	if (node->hasConsoleOutput())
+	{
+		Q_EMIT nodeConsoleAdded(node);
+	}
 }
 
 void WidgetPatchArea::nodeRemoved(NodePtr node)
@@ -543,6 +551,10 @@ void WidgetPatchArea::nodeRemoved(NodePtr node)
 		{
 			Q_EMIT nodeRendererRemoved(n);
 		}
+	}
+	if (node->hasConsoleOutput())
+	{
+		Q_EMIT nodeConsoleRemoved(node);
 	}
 }
 
@@ -697,7 +709,6 @@ void WidgetPatchArea::patchCordAdded(OutletPtr outlet, InletPtr inlet)
 	assert(isConnectionValid(widgetOutlet, widgetInlet));
     WidgetPatchCord* p = new WidgetPatchCord(this, widgetOutlet, widgetInlet);
 	mWidgetPatchCords << p;
-
 }
 
 void WidgetPatchArea::patchCordRemoved(OutletPtr outlet, InletPtr inlet)
@@ -915,12 +926,14 @@ void WidgetPatchArea::raise(WidgetNode* w)
 
 void WidgetPatchArea::markDirty()
 {
+	//hm_debug(elapsedTime() << " Marked as dirty");
 	mIsDirty = true;
 	setWindowModified(true);
 }
 
 void WidgetPatchArea::markClean()
 {
+	//hm_debug(elapsedTime() << " Marked as clean");
 	mIsDirty = false;
 	setWindowModified(false);
 }

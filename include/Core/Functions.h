@@ -39,10 +39,25 @@ namespace hm
 	/// size with later values being taken unconditionally from the later
 	/// list
 	ListValue maximum(ListValue const& lhs, ListValue const& rhs);
+	/// max on images will return an image with each pixel the maximum
+	/// between the two corresponding pixels in the source images.
+	/// The output will be the minimum size of the inputs and the type
+	/// of lhs.
+	Image2d maximum(Image2d const& lhs, Image2d const& rhs);
 	/// Generic function for unordered datatypes
 	template <typename T>
 	typename std::enable_if<!supports_maximum<T>::value, DataNull>::type
 	maximum(T const& lhs, T const& rhs)
+	{
+		return DataNull();
+	}
+
+	Value minimum(Value const& lhs, Value const& rhs);
+	ListValue minimum(ListValue const& lhs, ListValue const& rhs);
+	Image2d minimum(Image2d const& lhs, Image2d const& rhs);
+	template <typename T>
+	typename std::enable_if<!supports_minimum<T>::value, DataNull>::type
+	minimum(T const& lhs, T const& rhs)
 	{
 		return DataNull();
 	}

@@ -43,20 +43,30 @@ namespace hm
 	/// to make it easy to iterate through values
 	enum Joint_
 	{
-		HEAD,
+		SPINE_BASE,
+		SPINE_MID,
+		SPINE_TOP,
 		NECK,
-		TORSO,
+		HEAD,
 		LEFT_SHOULDER,
 		LEFT_ELBOW,
+		LEFT_WRIST,
 		LEFT_HAND,
+		LEFT_HAND_TIP,
+		LEFT_THUMB,
 		RIGHT_SHOULDER,
 		RIGHT_ELBOW,
+		RIGHT_WRIST,
 		RIGHT_HAND,
+		RIGHT_HAND_TIP,
+		RIGHT_THUMB,
 		LEFT_HIP,
 		LEFT_KNEE,
+		LEFT_ANKLE,
 		LEFT_FOOT,
 		RIGHT_HIP,
 		RIGHT_KNEE,
+		RIGHT_ANKLE,
 		RIGHT_FOOT,
 		NUM_JOINTS
 	};
@@ -87,20 +97,30 @@ namespace hm
 	/// joints
 	enum Limb_
 	{
-		UPPER_SPINE, ///< Neck to head
-		SPINE, ///< Torso to neck
+		NECK_TO_HEAD,
+		SPINE_TO_NECK, ///< SpineShoulder to Neck
+		UPPER_SPINE, ///< mid spine to top spine
+		LOWER_SPINE, ///< base spine to mid spine
 		LEFT_COLLAR, ///< neck to shoulder
 		RIGHT_COLLAR,
-		LEFT_ABDOMEN, /// Torso to hip
+		LEFT_ABDOMEN, /// base spine to hip
 		RIGHT_ABDOMEN,
 		LEFT_FOREARM,
 		LEFT_UPPERARM,
+		LEFT_WRIST_TO_HAND,
+		LEFT_HAND_TO_THUMB,
+		LEFT_FINGERS, ///< hand to hand tip
 		RIGHT_FOREARM,
 		RIGHT_UPPERARM,
-		LEFT_THIGH,
+		RIGHT_WRIST_TO_HAND,
+		RIGHT_HAND_TO_THUMB,
+		RIGHT_FINGERS,
+		LEFT_THIGH, ///< knee to ankle
+		LEFT_ANKLE_TO_FOOT,
 		LEFT_CALF,
 		RIGHT_THIGH,
 		RIGHT_CALF,
+		RIGHT_ANKLE_TO_FOOT,
 		NUM_LIMBS
 	};
 	typedef int Limb;

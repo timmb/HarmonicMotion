@@ -44,6 +44,9 @@ namespace hm
 		/// \param errors If empty then the load was successful, otherwise
 		/// a list of error messages.
 		virtual void loadFromJsonComplete(std::vector<std::string> const& errors) {}
+
+		/// Triggered when a clear() request to wipe the pipeline has completed
+		virtual void clearComplete() {}
 	};
 
 }

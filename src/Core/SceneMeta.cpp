@@ -38,7 +38,6 @@ void SceneMeta::setupWindowLetterbox(int pixelWidth, int pixelHeight) const
 	if (viewportSize != Vec2f())
 	{
 		
-		// less confusing names:
 		Vec2f const& inputSize = viewportSize;
 		Vec2f outputSize(pixelWidth, pixelHeight);
 		
@@ -57,7 +56,7 @@ void SceneMeta::setupWindowLetterbox(int pixelWidth, int pixelHeight) const
 			scale = outputSize.x / inputSize.x;
 			offset.y = int((outputSize.y - scale * inputSize.y) / 2);
 		}
-		else if (inputAspect < outputAspect)
+		else
 		{
 			// requires letterboxes on left and right
 			scale = outputSize.y / inputSize.y;

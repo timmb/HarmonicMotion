@@ -48,3 +48,8 @@ void LoadFromJsonCompleteEvent::notify(Listener* listener)
 {
 	listener->loadFromJsonComplete(errors);
 }
+
+void ClearCompleteEvent::notify(Listener* listener)
+{
+	listener->clearComplete();
+}

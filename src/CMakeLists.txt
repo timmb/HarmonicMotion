@@ -7,7 +7,7 @@ cmake_policy(SET CMP0043 NEW)
 project(HarmonicMotion CXX C)
 
 set(HarmonicMotionDir ${PROJECT_SOURCE_DIR}/..)
-set(CinderDir ${HarmonicMotionDir}/../Cinder CACHE PATH "The location of Cinder (see README.md for details of where to obtain Cinder).")
+set(CinderDir ${HarmonicMotionDir}/lib/Cinder CACHE PATH "The location of Cinder (see README.md for details of where to obtain Cinder).")
 
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
@@ -19,6 +19,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 set(IncludeOpenNI (${OS} MATCHES macosx) CACHE BOOL "Include OpenNI (only supported on Mac OSX)")
+set(IncludeKinectSDK2 (${OS} MATCHES windows) CACHE BOOL "Include Microsoft Kinect SDK v2 (only supported on Windows 8+ with Kinect v2 hardware)")
 
 
 set(CMAKE_DEBUG_POSTFIX "Debug")
@@ -82,12 +83,20 @@ elseif (${OS} MATCHES "windows")
 	add_definitions(/EHsc)
 endif()
 
-if (${INCLUDE_OPENNI})
+if (${IncludeOpenNI})
 	set_property(
 		DIRECTORY APPEND PROPERTY
 		COMPILE_DEFINITIONS
 		HM_OPENNI
 	)
+endif()
+
+if (${IncludeKinectSDK2})
+	set_property(
+		DIRECTORY APPEND PROPERTY
+		COMPILE_DEFINITIONS
+		HM_KINECTSDK
+		)
 endif()
 
 set(ExternalIncludeDirs 	
@@ -98,6 +107,23 @@ set(ExternalIncludeDirs
 	${HarmonicMotionDir}/lib/CinderBlocks/BlockOpenNI/src
 	${HarmonicMotionDir}/lib/CinderBlocks/OSC/src
 	${HarmonicMotionDir}/lib/opencv
+)
+
+# Kinect SDK variables
+
+set(KinectSdk2IncludeDirs
+	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-KCB2/lib
+	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-KCB2/src
+	$ENV{KINECTSDK20_DIR}/inc
+)
+
+set(KinectSdk2LibDirs
+	$ENV{KINECTSDK20_DIR}/Lib/x64
+	${HarmonicMotionDir}/lib/CinderBlocks/Cinder-KCB2/lib/x64
+)
+
+set(KinectSdk2Libs
+	Kinect20.lib
 )
 
 

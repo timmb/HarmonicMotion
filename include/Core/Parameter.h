@@ -184,6 +184,11 @@ namespace hm {
 		/// value and return false.
 		virtual bool checkExternalValue() = 0;
 
+		/// In certain situations (e.g. after a bounds change), the internal value
+		/// may have become invalid. Derived class should ensure that after
+		/// this call the internal value is valid.
+		virtual void validateInternalValue() = 0;
+
 		/// Next handle for any callback function
 		int mNextHandle;
 		
@@ -273,7 +278,7 @@ namespace hm
 		, mHasNewExternalValue(false)
 		{
 			assert(mValue != nullptr);
-			*mValue = initialValue;
+			*mValue = mExternalValue;
 		}
 		
 		virtual Type type() const override;
@@ -346,15 +351,21 @@ namespace hm
 		}
 		
 	protected:
+
+		/// Check any validation restrictions hold on internal value
+		virtual void validateInternalValue() override
+		{
+			validate(*mValue);
+		}
 		
-		virtual bool checkExternalValue()
+		virtual bool checkExternalValue() override
 		{
 			assert(!isDetached());
 			// If we have a new external value, write it to mValue
 			if (mHasNewExternalValue)
 			{
 				boost::lock_guard<boost::mutex> lock(mExternalValueMutex);
-				validateExternalValue(mExternalValue);
+				validate(mExternalValue);
 				*mValue = mExternalValue;
 				mHasNewExternalValue = false;
 				return true;
@@ -395,7 +406,7 @@ namespace hm
 	private:
 		/// If applicable, check \p value is in range and valid. (Done in
 		/// specialisations of this function.)
-		void validateExternalValue(T& value) const {}
+		void validate(T& value) const {}
 		
 		T* mValue;
 		T mExternalValue;
@@ -431,13 +442,13 @@ namespace hm
 	//void Parameter<double>::validateExternalValue(double& value) const;
 
 	template<> inline
-	void Parameter<int>::validateExternalValue(int& value) const
+	void Parameter<int>::validate(int& value) const
 	{
 		value = std::max<int>(hardMin(), std::min<int>(hardMax(), value));
 	}
 
 	template<>  inline
-	void Parameter<double>::validateExternalValue(double& value) const
+		void Parameter<double>::validate(double& value) const
 	{
 		value = std::max<double>(hardMin(), std::min<double>(hardMax(), value));
 	}

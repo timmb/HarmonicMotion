@@ -17,14 +17,20 @@ namespace hm
 	public:
 		NodePrinter(Params params=Params(), std::string className="NodePrinter");
 		
+		virtual bool hasConsoleOutput() const override { return true; }
+		virtual bool isConsoleShownByDefault() const override { return true; }
+
 	protected:
 		virtual NodePtr create(Node::Params params) const override;
 		virtual void step() override;
 		
 	private:
-		Params mParams;
 		InletPtr mInlet;
 		double mLastTimestamp;
+		int mMaxBufferSize;
+		bool mEnableWordWrap;
+		/// Ignores new input
+		bool mEnableFreeze;
 	};
 }
 

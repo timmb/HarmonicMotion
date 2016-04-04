@@ -145,7 +145,7 @@ bool WidgetPatchCord::isLineNear(QPoint const& point) const
 {
 	QLine relLine(mLine.p1() - pos(), mLine.p2() - pos());
 	double d = distanceFromPointToLine(QVector2D(relLine.p1()), QVector2D(relLine.p2()), QVector2D(point));
-	return d < 2.f;
+	return d < 5.f;
 }
 
 

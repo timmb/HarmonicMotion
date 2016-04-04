@@ -1,0 +1,156 @@
+{
+   "nodes" : [
+      {
+         "parameters" : {
+            "Mirror output" : true
+         },
+         "settings" : {
+            "guiLocationX" : 57,
+            "guiLocationY" : 51,
+            "name" : "Kinect (Microsoft SDK 2)"
+         },
+         "type" : "Kinect (Microsoft SDK 2)"
+      },
+      {
+         "parameters" : {
+            "Mode" : 0
+         },
+         "settings" : {
+            "guiLocationX" : 814,
+            "guiLocationY" : 48,
+            "name" : "Select skeleton"
+         },
+         "type" : "Select skeleton"
+      },
+      {
+         "settings" : {
+            "guiLocationX" : 152,
+            "guiLocationY" : 453,
+            "name" : "Speed and Acceleration"
+         },
+         "type" : "Speed and Acceleration"
+      },
+      {
+         "parameters" : {
+            "Expression" : "o1 = i1*10000",
+            "Number of inlets" : 1,
+            "Number of outlets" : 1
+         },
+         "settings" : {
+            "guiLocationX" : 354,
+            "guiLocationY" : 584,
+            "name" : "Expression"
+         },
+         "type" : "Expression"
+      },
+      {
+         "parameters" : {
+            "Blend factor" : 0.850
+         },
+         "settings" : {
+            "guiLocationX" : 1018,
+            "guiLocationY" : 920,
+            "name" : "Mixer"
+         },
+         "type" : "Mixer"
+      },
+      {
+         "parameters" : {
+            "Alpha" : 0.50,
+            "Beta" : 0.50
+         },
+         "settings" : {
+            "guiLocationX" : 122,
+            "guiLocationY" : 248,
+            "name" : "Filter"
+         },
+         "type" : "Filter"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : false,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 4,
+            "Lower bound" : -1.0,
+            "Renderer" : 0,
+            "Scale values by" : 1.0,
+            "Upper bound" : 1.0
+         },
+         "settings" : {
+            "guiLocationX" : 1335,
+            "guiLocationY" : 250,
+            "name" : "Filtered Scene"
+         },
+         "type" : "Renderer"
+      },
+      {
+         "parameters" : {
+            "Decay rate" : 0.9990
+         },
+         "settings" : {
+            "guiLocationX" : 331,
+            "guiLocationY" : 866,
+            "name" : "Peak decay"
+         },
+         "type" : "Peak decay"
+      },
+      {
+         "parameters" : {
+            "Buffer size" : 1000,
+            "Freeze" : false,
+            "Word wrap" : false
+         },
+         "settings" : {
+            "guiLocationX" : 1579,
+            "guiLocationY" : 881,
+            "name" : "Printer"
+         },
+         "type" : "Printer"
+      }
+   ],
+   "patchcords" : [
+      {
+         "inlet" : "/Select skeleton/inlets/0",
+         "outlet" : "/Kinect (Microsoft SDK 2)/outlets/0"
+      },
+      {
+         "inlet" : "/Filter/inlets/0",
+         "outlet" : "/Select skeleton/outlets/0"
+      },
+      {
+         "inlet" : "/Speed and Acceleration/inlets/0",
+         "outlet" : "/Filter/outlets/0"
+      },
+      {
+         "inlet" : "/Filtered Scene/inlets/0",
+         "outlet" : "/Filter/outlets/0"
+      },
+      {
+         "inlet" : "/Mixer/inlets/1",
+         "outlet" : "/Expression/outlets/0"
+      },
+      {
+         "inlet" : "/Mixer/inlets/0",
+         "outlet" : "/Peak decay/outlets/0"
+      },
+      {
+         "inlet" : "/Filtered Scene/inlets/1",
+         "outlet" : "/Mixer/outlets/0"
+      },
+      {
+         "inlet" : "/Expression/inlets/0",
+         "outlet" : "/Speed and Acceleration/outlets/0"
+      },
+      {
+         "inlet" : "/Peak decay/inlets/0",
+         "outlet" : "/Expression/outlets/0"
+      },
+      {
+         "inlet" : "/Printer/inlets/0",
+         "outlet" : "/Mixer/outlets/0"
+      }
+   ],
+   "windowState" : "AAAA/wAAAAD9AAAAAgAAAAAAAAFUAAAEb/wCAAAAAfsAAAAcAHcAaQBkAGcAZQB0AE4AbwBkAGUATABpAHMAdAEAAAAmAAAEbwAAALUA////AAAAAwAAC0AAAAHu/AEAAAAI+wAAABAAZABvAGMAawBJAG4AZgBvAQAAAAAAAAT+AAAAjAD////7AAAAOgByAGUAbgBkAGUAcgBlAHIAXwBRAHUAYQBuAHQAaQB0AHkAIABvAGYAIABNAG8AdABpAG8AbgAgADIBAAAHgQAAAZcAAAAAAAAAAPsAAAAyAHIAZQBuAGQAZQByAGUAcgBfAFUAcwBlAHIAIABJAG4AZABlAHgAIABpAG0AYQBnAGUBAAAGcgAAAqYAAAAAAAAAAPsAAAAYAHIAZQBuAGQAZQByAGUAcgBfAFEATwBNAQAACSAAAAF2AAAAAAAAAAD7AAAAJgByAGUAbgBkAGUAcgBlAHIAXwBSAGUAbgBkAGUAcgBlAHIAIAAyAQAABEAAAAFgAAAAAAAAAAD7AAAALgByAGUAbgBkAGUAcgBlAHIAXwBGAGkAbAB0AGUAcgBlAGQAIABTAGMAZQBuAGUBAAAFBgAAAlkAAACDAP////sAAAAiAHIAZQBuAGQAZQByAGUAcgBfAFIAZQBuAGQAZQByAGUAcgEAAAYvAAAB1AAAAAAAAAAA+wAAAB4AYwBvAG4AcwBvAGwAZQBfAFAAcgBpAG4AdABlAHIBAAAHZwAAA9kAAACMAP///wAACeQAAARvAAAABAAAAAQAAAAIAAAACPwAAAAA"
+}

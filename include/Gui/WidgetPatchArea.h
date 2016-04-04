@@ -43,10 +43,6 @@ namespace hm
 		/// \return Whether the pipeline is dirty (i.e. has unsaved data)
 		bool isDirty() const { return mIsDirty; }
 		
-		/// Clears the dirty flag indicating that there is now no unsaved
-		/// data on this pipeline.
-		void markClean();
-		
 		/// \return A shared pointer to the pipeline represented by this patch
 		/// area
 		PipelinePtr pipeline() const { return mPipeline; }
@@ -112,6 +108,9 @@ namespace hm
 		/// Mark the pipeline as dirty, meaning the user will be prompted
 		/// to save the next time they do something that would lose everything
 		void markDirty();
+		/// Clears the dirty flag indicating that there is now no unsaved
+		/// data on this pipeline.
+		void markClean();
 		/// Recreate the entire view of the pipeline. Use this if something
 		/// causes the view to go out of sync with the pipeline.
 		void resetView();
@@ -138,6 +137,8 @@ namespace hm
 		
 		void nodeRendererAdded(NodeRendererPtr node);
 		void nodeRendererRemoved(NodeRendererPtr node);
+		void nodeConsoleAdded(NodePtr node);
+		void nodeConsoleRemoved(NodePtr node);
 		/// This will reset the view on the next loop of the event cycle.
 		/// Do not signal this directly - use resetView() instead.
 		void sig_resetView();

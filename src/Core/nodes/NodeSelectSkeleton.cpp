@@ -40,7 +40,7 @@ void NodeSelectSkeleton::step()
 				int closestArg = -1;
 				for (int i=0; i<scene.value.size(); i++)
 				{
-					double dist = magnitude(scene.value[i].joint(TORSO)).value;
+					double dist = magnitude(scene.value[i].joint(SPINE_BASE)).value;
 					if (dist < closest)
 					{
 						closest = dist;

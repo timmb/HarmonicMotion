@@ -2,6 +2,9 @@
 
 #include "NodeThreaded.h"
 
+// TODO: Implement openni and kinect sdk as delegate
+// classes with a single unified Kinect node
+
 #ifdef HM_OPENNI
 
 namespace V
@@ -59,5 +62,3 @@ namespace hm
 hm_register_node(NodeKinect)
 
 #endif
-
-

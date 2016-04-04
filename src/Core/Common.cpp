@@ -10,6 +10,8 @@
 #include "cinder/Timer.h"
 #include <sstream>
 #include "Data.h"
+#include "cinder/gl/GlslProg.h"
+
 
 namespace hm
 {
@@ -47,5 +49,5 @@ namespace hm
 		return x.timestamp;
 	}
 
-	
+	double gRequestShaderRecompile = 0.f;
 }

@@ -1,3 +1,4 @@
+
 #ifdef HM_OPENNI
 
 #include "nodes/NodeKinect.h"
@@ -28,36 +29,53 @@ int jointToVBone(Joint jointId)
 {
 	switch (jointId)
 	{
-		case HEAD:
-			return SKEL_HEAD;
-		case NECK:
-			return SKEL_NECK;
-		case TORSO:
-			return SKEL_TORSO;
-		case LEFT_SHOULDER:
-			return SKEL_LEFT_SHOULDER;
-		case LEFT_ELBOW:
-			return SKEL_LEFT_ELBOW;
-		case LEFT_HAND:
-			return SKEL_LEFT_HAND;
-		case RIGHT_SHOULDER:
-			return SKEL_RIGHT_SHOULDER;
-		case RIGHT_ELBOW:
-			return SKEL_RIGHT_ELBOW;
-		case RIGHT_HAND:
-			return SKEL_RIGHT_HAND;
-		case LEFT_HIP:
-			return SKEL_LEFT_HIP;
-		case LEFT_KNEE:
-			return SKEL_LEFT_KNEE;
-		case LEFT_FOOT:
-			return SKEL_LEFT_FOOT;
-		case RIGHT_HIP:
-			return SKEL_RIGHT_HIP;
-		case RIGHT_KNEE:
-			return SKEL_RIGHT_KNEE;
-		case RIGHT_FOOT:
-			return SKEL_RIGHT_FOOT;
+        case SPINE_BASE:
+            return SKEL_WAIST;
+        case SPINE_MID:
+            return SKEL_TORSO;
+        case SPINE_TOP:
+        case NECK:
+            return SKEL_NECK;
+        case HEAD:
+            return SKEL_HEAD;
+        case LEFT_SHOULDER:
+            return SKEL_LEFT_SHOULDER;
+        case LEFT_ELBOW:
+            return SKEL_LEFT_ELBOW;
+        case LEFT_WRIST:
+            return SKEL_LEFT_WRIST;
+        case LEFT_HAND:
+            return SKEL_LEFT_HAND;
+        case LEFT_HAND_TIP:
+        case LEFT_THUMB:
+            return SKEL_LEFT_FINGERTIP;
+        case RIGHT_SHOULDER:
+            return SKEL_RIGHT_SHOULDER;
+        case RIGHT_ELBOW:
+            return SKEL_RIGHT_ELBOW;
+        case RIGHT_WRIST:
+            return SKEL_RIGHT_WRIST;
+        case RIGHT_HAND:
+            return SKEL_RIGHT_HAND;
+        case RIGHT_HAND_TIP:
+        case RIGHT_THUMB:
+            return SKEL_RIGHT_FINGERTIP;
+        case LEFT_HIP:
+            return SKEL_LEFT_HIP;
+        case LEFT_KNEE:
+            return SKEL_LEFT_KNEE;
+        case LEFT_ANKLE:
+            return SKEL_LEFT_ANKLE;
+        case LEFT_FOOT:
+            return SKEL_LEFT_FOOT;
+        case RIGHT_HIP:
+            return SKEL_RIGHT_HIP;
+        case RIGHT_KNEE:
+            return SKEL_RIGHT_KNEE;
+        case RIGHT_ANKLE:
+            return SKEL_RIGHT_ANKLE;
+        case RIGHT_FOOT:
+            return SKEL_RIGHT_FOOT;
 		default:
 			assert(false);
 			return 0;
