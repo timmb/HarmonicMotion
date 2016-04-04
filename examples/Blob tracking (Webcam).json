@@ -1,0 +1,146 @@
+{
+   "nodes" : [
+      {
+         "parameters" : {
+            "Requested height" : 480,
+            "Requested width" : 640,
+            "Source" : 1
+         },
+         "settings" : {
+            "guiLocationX" : 5,
+            "guiLocationY" : 35,
+            "name" : "Camera"
+         },
+         "type" : "Camera"
+      },
+      {
+         "parameters" : {
+            "Blur amount" : 0,
+            "Height" : 240,
+            "Interpolation" : 0,
+            "Max clamp" : true,
+            "Max value" : 65535.0,
+            "Median blur amount" : 1,
+            "Min clamp" : true,
+            "Min value" : 0.0,
+            "Process" : 3,
+            "Threshold" : 128,
+            "Width" : 320
+         },
+         "settings" : {
+            "guiLocationX" : 185,
+            "guiLocationY" : 297,
+            "name" : "Image processor"
+         },
+         "type" : "Image processor"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : false,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 4,
+            "Lower bound" : -1.0,
+            "Renderer" : 1,
+            "Scale values by" : 1.0,
+            "Upper bound" : 1.0
+         },
+         "settings" : {
+            "guiLocationX" : 816,
+            "guiLocationY" : 389,
+            "name" : "Renderer"
+         },
+         "type" : "Renderer"
+      },
+      {
+         "parameters" : {
+            "Blur amount" : 16,
+            "Height" : 240,
+            "Interpolation" : 0,
+            "Max clamp" : true,
+            "Max value" : 65535.0,
+            "Median blur amount" : 1,
+            "Min clamp" : true,
+            "Min value" : 0.0,
+            "Process" : 1,
+            "Threshold" : 128,
+            "Width" : 320
+         },
+         "settings" : {
+            "guiLocationX" : 204,
+            "guiLocationY" : 188,
+            "name" : "Image processor 2"
+         },
+         "type" : "Image processor"
+      },
+      {
+         "parameters" : {
+            "Filter by area" : true,
+            "Filter by circularity" : false,
+            "Filter by convexity" : false,
+            "Filter by inertia ratio" : true,
+            "Max area" : 50000.0,
+            "Max circularity" : 3.402823466385289e+38,
+            "Max convexity" : 3.402823466385289e+38,
+            "Max inertia ratio" : 3.402823466385289e+38,
+            "Min area" : 25.0,
+            "Min circularity" : 0.8000000119209290,
+            "Min convexity" : 0.9499999880790710,
+            "Min inertia ratio" : 0.1000000014901161
+         },
+         "settings" : {
+            "guiLocationX" : 487,
+            "guiLocationY" : 375,
+            "name" : "Blob tracker"
+         },
+         "type" : "Blob tracker"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : false,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 4,
+            "Lower bound" : -1.0,
+            "Renderer" : 1,
+            "Scale values by" : 1.0,
+            "Upper bound" : 1.0
+         },
+         "settings" : {
+            "guiLocationX" : 834,
+            "guiLocationY" : 96,
+            "name" : "Renderer 2"
+         },
+         "type" : "Renderer"
+      }
+   ],
+   "patchcords" : [
+      {
+         "inlet" : "/Image processor 2/inlets/0",
+         "outlet" : "/Camera/outlets/0"
+      },
+      {
+         "inlet" : "/Image processor/inlets/0",
+         "outlet" : "/Image processor 2/outlets/0"
+      },
+      {
+         "inlet" : "/Blob tracker/inlets/0",
+         "outlet" : "/Image processor/outlets/0"
+      },
+      {
+         "inlet" : "/Renderer/inlets/0",
+         "outlet" : "/Blob tracker/outlets/0"
+      },
+      {
+         "inlet" : "/Renderer/inlets/1",
+         "outlet" : "/Blob tracker/outlets/1"
+      },
+      {
+         "inlet" : "/Renderer 2/inlets/0",
+         "outlet" : "/Image processor/outlets/0"
+      }
+   ],
+   "windowState" : "AAAA/wAAAAD9AAAAAgAAAAAAAAEfAAACLvwCAAAAAfsAAAAcAHcAaQBkAGcAZQB0AE4AbwBkAGUATABpAHMAdAEAAAAAAAACLgAAAGAA////AAAAAwAABXYAAAEo/AEAAAAD+wAAABAAZABvAGMAawBJAG4AZgBvAQAAAAAAAAM2AAAATwD////7AAAAIgByAGUAbgBkAGUAcgBlAHIAXwBSAGUAbgBkAGUAcgBlAHIBAAADNwAAAPkAAAA+AP////sAAAAmAHIAZQBuAGQAZQByAGUAcgBfAFIAZQBuAGQAZQByAGUAcgAgADIBAAAEMQAAAUUAAAA+AP///wAABFYAAAIuAAAABAAAAAQAAAAIAAAACPwAAAAA"
+}

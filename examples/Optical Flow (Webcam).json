@@ -1,0 +1,64 @@
+{
+   "nodes" : [
+      {
+         "parameters" : {
+            "Requested height" : 480,
+            "Requested width" : 640,
+            "Source" : 1
+         },
+         "settings" : {
+            "guiLocationX" : 40,
+            "guiLocationY" : 21,
+            "name" : "Camera"
+         },
+         "type" : "Camera"
+      },
+      {
+         "parameters" : {
+            "Gaussian filter" : false,
+            "Iterations" : 5,
+            "Levels" : 4,
+            "Poly N" : 7,
+            "Poly Sigma" : 1.50,
+            "Pyramid scale" : 0.50,
+            "Window size" : 25
+         },
+         "settings" : {
+            "guiLocationX" : 343,
+            "guiLocationY" : 37,
+            "name" : "Optical flow"
+         },
+         "type" : "Optical flow"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : false,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 16,
+            "Lower bound" : -1.0,
+            "Renderer" : 1,
+            "Scale values by" : 1.0,
+            "Upper bound" : 1.0
+         },
+         "settings" : {
+            "guiLocationX" : 682,
+            "guiLocationY" : 35,
+            "name" : "Renderer"
+         },
+         "type" : "Renderer"
+      }
+   ],
+   "patchcords" : [
+      {
+         "inlet" : "/Optical flow/inlets/0",
+         "outlet" : "/Camera/outlets/0"
+      },
+      {
+         "inlet" : "/Renderer/inlets/0",
+         "outlet" : "/Optical flow/outlets/0"
+      }
+   ],
+   "windowState" : "AAAA/wAAAAD9AAAAAgAAAAAAAAEfAAACgPwCAAAAAfsAAAAcAHcAaQBkAGcAZQB0AE4AbwBkAGUATABpAHMAdAEAAAAAAAACgAAAAGAA////AAAAAwAABXYAAADW/AEAAAAD+wAAABAAZABvAGMAawBJAG4AZgBvAQAAAAAAAAQvAAAATwD////7AAAAIgByAGUAbgBkAGUAcgBlAHIAXwBSAGUAbgBkAGUAcgBlAHIBAAAEMAAAAUYAAAA+AP////sAAAAeAGMAbwBuAHMAbwBsAGUAXwBQAHIAaQBuAHQAZQByAQAABJ4AAADYAAAAAAAAAAAAAARWAAACgAAAAAQAAAAEAAAACAAAAAj8AAAAAA=="
+}
