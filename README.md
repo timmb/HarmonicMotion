@@ -23,6 +23,8 @@ http://nime2014.org/proceedings/papers/273_paper.pdf
 
 - 2D camera support does not appear to work on Windows.
 
+- Expressions in the expression node support the following: +, -, *, /, construction of Point3ds as (x, y, z) (e.g. "(0.1, 0.5, 0.3)"). Each line of the expression should be an expression defining an outlet in terms of the inlets, e.g. o1 = 5 * i1 + 3 * (i2 + i3).
+
 
 ## Build instructions
 

@@ -1,0 +1,101 @@
+{
+   "nodes" : [
+      {
+         "parameters" : {
+            "Mirror output" : true
+         },
+         "settings" : {
+            "guiLocationX" : 6,
+            "guiLocationY" : 137,
+            "name" : "Kinect (Microsoft SDK 2)"
+         },
+         "type" : "Kinect (Microsoft SDK 2)"
+      },
+      {
+         "parameters" : {
+            "Destination hostname" : "localhost",
+            "Destination port" : 7110,
+            "OSC address prefix" : "hm"
+         },
+         "settings" : {
+            "guiLocationX" : 1913,
+            "guiLocationY" : 194,
+            "name" : "OSC out"
+         },
+         "type" : "OSC out"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : false,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 4,
+            "Lower bound" : -1.0,
+            "Renderer" : 1,
+            "Scale values by" : 1.0,
+            "Upper bound" : 1.0
+         },
+         "settings" : {
+            "guiLocationX" : 952,
+            "guiLocationY" : 703,
+            "name" : "User Index image"
+         },
+         "type" : "Renderer"
+      },
+      {
+         "parameters" : {
+            "Normalization limit window (frames)" : 3,
+            "Normalized window (frames)" : 3
+         },
+         "settings" : {
+            "guiLocationX" : 955,
+            "guiLocationY" : 536,
+            "name" : "Quantity of Motion"
+         },
+         "type" : "Quantity of Motion"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : false,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 4,
+            "Lower bound" : 0.0,
+            "Renderer" : 2,
+            "Scale values by" : 1.0,
+            "Upper bound" : 0.010
+         },
+         "settings" : {
+            "guiLocationX" : 1765,
+            "guiLocationY" : 693,
+            "name" : "QOM"
+         },
+         "type" : "Renderer"
+      }
+   ],
+   "patchcords" : [
+      {
+         "inlet" : "/Quantity of Motion/inlets/0",
+         "outlet" : "/Kinect (Microsoft SDK 2)/outlets/2"
+      },
+      {
+         "inlet" : "/QOM/inlets/0",
+         "outlet" : "/Quantity of Motion/outlets/0"
+      },
+      {
+         "inlet" : "/OSC out/inlets/0",
+         "outlet" : "/Quantity of Motion/outlets/0"
+      },
+      {
+         "inlet" : "/User Index image/inlets/0",
+         "outlet" : "/Quantity of Motion/outlets/1"
+      },
+      {
+         "inlet" : "/Quantity of Motion/inlets/1",
+         "outlet" : "/Kinect (Microsoft SDK 2)/outlets/1"
+      }
+   ],
+   "windowState" : "AAAA/wAAAAD9AAAAAgAAAAAAAAFUAAAEYvwCAAAAAfsAAAAcAHcAaQBkAGcAZQB0AE4AbwBkAGUATABpAHMAdAEAAAAmAAAEYgAAALUA////AAAAAwAACpYAAAGc/AEAAAAG+wAAABAAZABvAGMAawBJAG4AZgBvAQAAAAAAAAZqAAAAjAD////7AAAAOgByAGUAbgBkAGUAcgBlAHIAXwBRAHUAYQBuAHQAaQB0AHkAIABvAGYAIABNAG8AdABpAG8AbgAgADIBAAAHgQAAAZcAAAAAAAAAAPsAAAAiAHIAZQBuAGQAZQByAGUAcgBfAFIAZQBuAGQAZQByAGUAcgEAAAblAAACMwAAAAAAAAAA+wAAACYAcgBlAG4AZABlAHIAZQByAF8AUgBlAG4AZABlAHIAZQByACAAMgEAAAkgAAABdgAAAAAAAAAA+wAAADIAcgBlAG4AZABlAHIAZQByAF8AVQBzAGUAcgAgAEkAbgBkAGUAeAAgAGkAbQBhAGcAZQEAAAZyAAACpgAAAIMA////+wAAABgAcgBlAG4AZABlAHIAZQByAF8AUQBPAE0BAAAJIAAAAXYAAACDAP///wAACToAAARiAAAABAAAAAQAAAAIAAAACPwAAAAA"
+}

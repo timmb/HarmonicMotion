@@ -1,0 +1,58 @@
+{
+   "nodes" : [
+      {
+         "parameters" : {
+            "Mirror output" : true
+         },
+         "settings" : {
+            "guiLocationX" : 6,
+            "guiLocationY" : 137,
+            "name" : "Kinect (Microsoft SDK 2)"
+         },
+         "type" : "Kinect (Microsoft SDK 2)"
+      },
+      {
+         "parameters" : {
+            "Destination hostname" : "localhost",
+            "Destination port" : 7110,
+            "OSC address prefix" : "hm"
+         },
+         "settings" : {
+            "guiLocationX" : 1913,
+            "guiLocationY" : 194,
+            "name" : "OSC out"
+         },
+         "type" : "OSC out"
+      },
+      {
+         "parameters" : {
+            "Automatically set bounds" : true,
+            "Buffer size" : 50,
+            "Cycle 16 bit images" : true,
+            "Flow field scale" : 1.0,
+            "Flow field window size" : 4,
+            "Lower bound" : -1.0,
+            "Renderer" : 0,
+            "Scale values by" : 1.0,
+            "Upper bound" : 1.0
+         },
+         "settings" : {
+            "guiLocationX" : 902,
+            "guiLocationY" : 692,
+            "name" : "Scene"
+         },
+         "type" : "Renderer"
+      }
+   ],
+   "patchcords" : [
+      {
+         "inlet" : "/Scene/inlets/0",
+         "outlet" : "/Kinect (Microsoft SDK 2)/outlets/0"
+      },
+      {
+         "inlet" : "/OSC out/inlets/0",
+         "outlet" : "/Kinect (Microsoft SDK 2)/outlets/0"
+      }
+   ],
+   "windowState" : "AAAA/wAAAAD9AAAAAgAAAAAAAAFUAAAEYvwCAAAAAfsAAAAcAHcAaQBkAGcAZQB0AE4AbwBkAGUATABpAHMAdAEAAAAmAAAEYgAAALUA////AAAAAwAACpYAAAGc/AEAAAAH+wAAABAAZABvAGMAawBJAG4AZgBvAQAAAAAAAAkYAAAAjAD////7AAAAOgByAGUAbgBkAGUAcgBlAHIAXwBRAHUAYQBuAHQAaQB0AHkAIABvAGYAIABNAG8AdABpAG8AbgAgADIBAAAHgQAAAZcAAAAAAAAAAPsAAAAiAHIAZQBuAGQAZQByAGUAcgBfAFIAZQBuAGQAZQByAGUAcgEAAAblAAACMwAAAAAAAAAA+wAAACYAcgBlAG4AZABlAHIAZQByAF8AUgBlAG4AZABlAHIAZQByACAAMgEAAAkgAAABdgAAAAAAAAAA+wAAADIAcgBlAG4AZABlAHIAZQByAF8AVQBzAGUAcgAgAEkAbgBkAGUAeAAgAGkAbQBhAGcAZQEAAAfXAAABQQAAAAAAAAAA+wAAABgAcgBlAG4AZABlAHIAZQByAF8AUQBPAE0BAAAI7AAAAaoAAAAAAAAAAPsAAAAcAHIAZQBuAGQAZQByAGUAcgBfAFMAYwBlAG4AZQEAAAkgAAABdgAAAIMA////AAAJOgAABGIAAAAEAAAABAAAAAgAAAAI/AAAAAA="
+}
