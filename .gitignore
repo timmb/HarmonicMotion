@@ -228,7 +228,3 @@ xcode
 vs2013/
 lib/lib/windows/x64/cinder-v120.lib
 lib/lib/windows/x64/cinder-v120_d.lib
-lib/lib/macosx/libcinder.a
-lib/lib/macosx/libcinder_d.a
-
-lib/
